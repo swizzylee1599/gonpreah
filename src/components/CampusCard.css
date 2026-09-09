@@ -1,0 +1,75 @@
+.gp-campus-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--raise);
+  border: 1px solid var(--hair);
+  border-radius: var(--radius-panel);
+  padding: 2rem;
+  text-decoration: none;
+  isolation: isolate;
+}
+
+.gp-campus-card__flood {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: translateY(100%);
+  transition: transform 240ms ease;
+  z-index: 0;
+}
+
+.gp-campus-card:hover .gp-campus-card__flood,
+.gp-campus-card:focus-visible .gp-campus-card__flood {
+  transform: translateY(0);
+}
+
+.gp-campus-card__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  color: var(--paper);
+}
+
+.gp-campus-card:hover .gp-campus-card__content,
+.gp-campus-card:focus-visible .gp-campus-card__content {
+  color: var(--accent-ink);
+}
+
+.gp-campus-card__stage {
+  font-family: var(--font-body-en);
+  font-weight: 700;
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.gp-campus-card:hover .gp-campus-card__stage,
+.gp-campus-card:focus-visible .gp-campus-card__stage {
+  color: inherit;
+}
+
+.gp-campus-card__title {
+  font-family: var(--font-display-en);
+  text-transform: uppercase;
+  font-size: var(--text-subhead);
+  line-height: 0.95;
+}
+
+.gp-campus-card__km {
+  font-family: var(--font-display-km);
+  font-size: max(24px, calc(var(--text-subhead) * 0.88));
+  line-height: 1.4;
+  opacity: 0.75;
+}
+
+.gp-campus-card__focus {
+  font-family: var(--font-body-en);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  opacity: 0.85;
+  max-width: 32ch;
+}

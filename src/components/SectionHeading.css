@@ -1,0 +1,59 @@
+.gp-section-heading {
+  color: var(--paper);
+}
+
+.gp-section-heading__hair {
+  display: none;
+  height: 1px;
+  width: 100%;
+  background: var(--hair);
+  margin-bottom: 1.5em;
+}
+
+.gp-section-heading__eyebrow {
+  margin: 0 0 0.6em;
+  font-family: var(--font-body-en);
+  font-weight: 700;
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.gp-section-heading__title {
+  margin: 0;
+  font-family: var(--font-display-en);
+  text-transform: uppercase;
+  font-size: var(--text-section);
+  line-height: 0.9;
+  letter-spacing: var(--tracking-display);
+  transform: skewX(var(--tilt));
+  transform-origin: left center;
+  width: fit-content;
+}
+
+.gp-section-heading__km {
+  margin: 0.3em 0 0;
+  font-family: var(--font-display-km);
+  font-size: max(24px, calc(var(--text-section) * 0.88));
+  line-height: 1.4;
+  color: var(--mute);
+}
+
+.gp-section-heading__rule {
+  display: none;
+  height: var(--rule-height);
+  width: 64px;
+  background: var(--accent);
+  margin-top: 0.8em;
+}
+
+/* Poipet: 4px rule under the title, like a record being entered. */
+.gp-section-heading[data-campus='poipet'] .gp-section-heading__rule {
+  display: block;
+}
+
+/* Siem Reap: a full-width hairline above the title - a horizon, not a stamp. */
+.gp-section-heading[data-campus='siemreap'] .gp-section-heading__hair {
+  display: block;
+}

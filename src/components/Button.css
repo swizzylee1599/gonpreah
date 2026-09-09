@@ -1,0 +1,54 @@
+.gp-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  border: 1px solid transparent;
+  border-radius: var(--radius-button);
+  font-family: var(--font-body-en);
+  font-weight: 700;
+  font-size: var(--text-body);
+  line-height: 1;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 120ms ease, opacity 120ms ease;
+}
+
+.gp-button--md {
+  padding: 0.9em 1.6em;
+}
+
+.gp-button--lg {
+  padding: 1.1em 2.2em;
+  font-size: calc(var(--text-body) * 1.1);
+}
+
+.gp-button--primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.gp-button--secondary {
+  background: var(--raise);
+  color: var(--paper);
+  border-color: var(--hair);
+}
+
+.gp-button--ghost {
+  background: transparent;
+  color: var(--paper);
+  border-color: var(--hair);
+}
+
+.gp-button:hover {
+  opacity: 0.88;
+}
+
+.gp-button:active {
+  transform: scale(0.98);
+}
+
+.gp-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

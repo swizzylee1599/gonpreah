@@ -1,0 +1,44 @@
+.gp-ticker {
+  overflow: hidden;
+  background: var(--accent);
+  white-space: nowrap;
+}
+
+.gp-ticker:not([data-campus]) {
+  background: var(--raise);
+}
+
+.gp-ticker__track {
+  display: inline-flex;
+  animation: gp-ticker-scroll linear infinite;
+}
+
+.gp-ticker__item {
+  display: inline-block;
+  padding: 0.6em 1em;
+  font-family: var(--font-body-en);
+  font-weight: 700;
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.gp-ticker:not([data-campus]) .gp-ticker__item {
+  color: var(--paper);
+}
+
+@keyframes gp-ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gp-ticker__track {
+    animation: none;
+  }
+}

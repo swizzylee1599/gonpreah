@@ -1,0 +1,12 @@
+.gp-divider {
+  border: none;
+  height: 1px;
+  width: 100%;
+  margin: 0;
+  background: var(--hair);
+}
+
+.gp-divider--accent[data-campus] {
+  height: var(--rule-height);
+  background: var(--accent);
+}

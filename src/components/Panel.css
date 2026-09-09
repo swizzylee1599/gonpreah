@@ -1,0 +1,14 @@
+.gp-panel {
+  background: var(--raise);
+  border: 1px solid var(--hair);
+  border-radius: var(--radius-panel);
+  color: var(--paper);
+}
+
+.gp-panel--md {
+  padding: 1.5rem;
+}
+
+.gp-panel--lg {
+  padding: var(--section-pad);
+}

@@ -1,0 +1,32 @@
+.gp-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  font-family: var(--font-display-en);
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: var(--tracking-display);
+  color: var(--paper);
+  white-space: nowrap;
+}
+
+.gp-wordmark--hero {
+  font-size: var(--text-hero);
+}
+
+.gp-wordmark--section {
+  font-size: var(--text-section);
+}
+
+.gp-wordmark--subhead {
+  font-size: var(--text-subhead);
+}
+
+.gp-wordmark__divider {
+  color: var(--hair);
+  font-weight: 400;
+}
+
+.gp-wordmark__campus {
+  color: var(--accent);
+}

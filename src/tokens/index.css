@@ -1,0 +1,81 @@
+@import '../fonts/faces.css';
+
+/**
+ * GonPreah brand tokens.
+ * Foundation (--ink/--paper/--raise/--hair/--mute) is identical everywhere.
+ * Campus tempo (--accent, --radius-*, --section-pad, --tilt) switches on
+ * [data-campus="poipet" | "siemreap" | "phnompenh"].
+ */
+:root {
+  /* Foundation */
+  --ink: #000000;
+  --paper: #ffffff;
+  --raise: #0d0d0d;
+  --hair: #242424;
+  --mute: #8c8c8c;
+
+  /* Type families */
+  --font-display-en: 'Anton', 'Arial Narrow', sans-serif;
+  --font-display-km: 'Koulen', sans-serif;
+  --font-body-en: 'Inter', -apple-system, sans-serif;
+  --font-body-km: 'Kantumruy Pro', sans-serif;
+
+  /* Type scale - 1.5 ratio, five steps, no more */
+  --text-hero: clamp(56px, 10vw, 120px);
+  --text-section: clamp(36px, 5vw, 64px);
+  --text-subhead: clamp(22px, 2.6vw, 32px);
+  --text-body: 17px;
+  --text-label: 11px;
+  --tracking-label: 0.15em;
+  --tracking-display: 0.005em;
+
+  /* Neutral tempo (no campus context: gonpreah.org root pages) */
+  --accent: var(--mute);
+  --accent-ink: var(--ink);
+  --radius-panel: 8px;
+  --radius-button: 8px;
+  --radius-image: 8px;
+  --section-pad: 4rem;
+  --tilt: 0deg;
+  --rule-height: 2px;
+  --wash-image: none;
+}
+
+/* Poipet - dense, evidentiary. Zero radius, tight margins, lime rule. */
+[data-campus='poipet'] {
+  --accent: #a3ff12;
+  --accent-ink: #000000;
+  --radius-panel: 0px;
+  --radius-button: 0px;
+  --radius-image: 0px;
+  --section-pad: 2.5rem;
+  --tilt: 0deg;
+  --rule-height: 4px;
+  --wash-image: linear-gradient(to top, rgba(163, 255, 18, 0.55), rgba(163, 255, 18, 0) 45%);
+}
+
+/* Siem Reap - open, welcoming. Generous padding, full rounding, soft glow. */
+[data-campus='siemreap'] {
+  --accent: #ffe01f;
+  --accent-ink: #000000;
+  --radius-panel: 20px;
+  --radius-button: 9999px;
+  --radius-image: 20px;
+  --section-pad: 6rem;
+  --tilt: 0deg;
+  --rule-height: 1px;
+  --wash-image: radial-gradient(circle at top right, rgba(255, 224, 31, 0.45), rgba(255, 224, 31, 0) 55%);
+}
+
+/* Phnom Penh - kinetic. Square, tilted, diagonal persimmon wash. */
+[data-campus='phnompenh'] {
+  --accent: #ff5533;
+  --accent-ink: #ffffff;
+  --radius-panel: 4px;
+  --radius-button: 4px;
+  --radius-image: 4px;
+  --section-pad: 3rem;
+  --tilt: -7deg;
+  --rule-height: 3px;
+  --wash-image: linear-gradient(135deg, rgba(255, 85, 51, 0.5), rgba(255, 85, 51, 0) 60%);
+}

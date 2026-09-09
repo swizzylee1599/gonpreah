@@ -1,0 +1,28 @@
+.gp-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-body-en);
+  font-weight: 700;
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.gp-badge[data-campus] {
+  color: var(--accent);
+}
+
+.gp-badge--pill[data-campus] {
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 0.35em 0.9em;
+  border-radius: 9999px;
+}
+
+.gp-badge--pill:not([data-campus]) {
+  background: var(--hair);
+  color: var(--paper);
+  padding: 0.35em 0.9em;
+  border-radius: 9999px;
+}

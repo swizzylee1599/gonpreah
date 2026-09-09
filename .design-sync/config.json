@@ -1,0 +1,7 @@
+{
+  "pkg": "@gonpreah/brand",
+  "globalName": "GonPreah",
+  "shape": "package",
+  "buildCmd": "npm run build",
+  "cssEntry": "dist/index.css"
+}

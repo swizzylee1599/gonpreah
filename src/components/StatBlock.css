@@ -1,0 +1,27 @@
+.gp-stat-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+
+.gp-stat-block__label {
+  margin: 0;
+  font-family: var(--font-body-en);
+  font-weight: 700;
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.gp-stat-block[data-campus] .gp-stat-block__label {
+  color: var(--accent);
+}
+
+.gp-stat-block__value {
+  margin: 0;
+  font-family: var(--font-display-en);
+  font-size: clamp(40px, 6vw, 88px);
+  line-height: 0.9;
+  color: var(--paper);
+}
