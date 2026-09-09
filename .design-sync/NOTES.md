@@ -35,7 +35,24 @@ reference image), not an existing product's shipped code.
 
 ## Known render warns
 
-(none yet - fill in during the validate loop)
+- `[FONT_MISSING] "Arial Narrow"` - this is the CSS fallback in
+  `--font-display-en: 'Anton', 'Arial Narrow', sans-serif` (tokens/index.css),
+  not a brand font. Accepted substitute: it's a common system font used only
+  if Anton fails to load; no woff2 needed. Recorded here per validate's
+  FONT_MISSING guidance.
+- `[GRID_OVERFLOW]` on `CampusCard` and `Wordmark` - fixed via
+  `cfg.overrides.<Name>.cardMode: "column"` (both render wider than a grid
+  cell: CampusCard's three-up selector, Wordmark's side-by-side campus
+  variants). Column mode can't re-flag; no action needed on future syncs
+  unless a new wide story is added to either.
+
+## Design guidance learned while authoring previews
+
+- `StickerBadge` copy should stay short (1-3 words). At 2-4deg rotation, a
+  long string ("Opens January 2028") reads as a slanted banner rather than a
+  compact tag - the rotation math amplifies with element width. Graded
+  `good` as-is (matches the brief's literal spec), but prefer short labels
+  in real usage.
 
 ## Upload status
 

@@ -3,5 +3,10 @@
   "globalName": "GonPreah",
   "shape": "package",
   "buildCmd": "npm run build",
-  "cssEntry": "dist/index.css"
+  "cssEntry": "dist/index.css",
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "CampusCard": { "cardMode": "column" },
+    "Wordmark": { "cardMode": "column" }
+  }
 }
