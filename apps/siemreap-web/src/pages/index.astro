@@ -1,0 +1,109 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Wordmark, BilingualHeading, Badge, SectionHeading, Button, Panel, Divider } from '@gonpreah/brand';
+---
+
+<Layout title="YWAM Siem Reap | Heart for Cambodia, vision for the world">
+  <header
+    style="display:flex;align-items:center;justify-content:space-between;padding:1.5rem 2.5rem;border-bottom:1px solid var(--hair);"
+  >
+    <Wordmark client:load campus="siemreap" size="subhead" />
+    <nav style="display:flex;gap:2rem;">
+      <a href="#about" style="color:var(--paper);text-decoration:none;font-size:14px;">About</a>
+      <a href="#get-involved" style="color:var(--paper);text-decoration:none;font-size:14px;">Get Involved</a>
+      <a href="#give" style="color:var(--paper);text-decoration:none;font-size:14px;">Give</a>
+    </nav>
+  </header>
+
+  <main style="max-width:1100px;margin:0 auto;padding:0 2.5rem;">
+    <section style="padding:5rem 0 3rem;display:flex;flex-direction:column;gap:1.5rem;">
+      <Badge client:load campus="siemreap">Open since 2024</Badge>
+      <BilingualHeading
+        client:load
+        level="hero"
+        as="h1"
+        en="Heart for Cambodia, vision for the world"
+      />
+      <p style="color:var(--mute);font-size:20px;max-width:52ch;margin:0;">
+        The movement's front door: discipleship, training, sending, and community &mdash;
+        for Cambodians and internationals alike.
+      </p>
+      <div style="display:flex;gap:1rem;margin-top:0.5rem;">
+        <Button client:load campus="siemreap" href="#get-involved">Get Involved</Button>
+        <Button client:load campus="siemreap" variant="ghost" href="#about">Learn More</Button>
+      </div>
+    </section>
+
+    <Divider client:load />
+
+    <section id="about" style="padding:4rem 0;">
+      <SectionHeading
+        client:load
+        campus="siemreap"
+        eyebrow="What happens here"
+        title="Discipleship, training, sending"
+      />
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:2.5rem;">
+        <Panel client:load campus="siemreap">
+          <h3 style="font-family:var(--font-display-en);text-transform:uppercase;font-size:20px;margin:0 0 0.5em;">
+            Discipleship &amp; Training
+          </h3>
+          <p style="color:var(--mute);font-size:14px;line-height:1.6;margin:0;">
+            Raising Cambodian leaders through discipleship schools and hands-on training.
+          </p>
+        </Panel>
+        <Panel client:load campus="siemreap">
+          <h3 style="font-family:var(--font-display-en);text-transform:uppercase;font-size:20px;margin:0 0 0.5em;">
+            Sending
+          </h3>
+          <p style="color:var(--mute);font-size:14px;line-height:1.6;margin:0;">
+            Equipping and sending teams out to serve across Cambodia and beyond.
+          </p>
+        </Panel>
+        <Panel client:load campus="siemreap">
+          <h3 style="font-family:var(--font-display-en);text-transform:uppercase;font-size:20px;margin:0 0 0.5em;">
+            Community
+          </h3>
+          <p style="color:var(--mute);font-size:14px;line-height:1.6;margin:0;">
+            A gathering place for Cambodian and international believers alike &mdash; the
+            movement's front door.
+          </p>
+        </Panel>
+      </div>
+    </section>
+
+    <Divider client:load />
+
+    <section id="get-involved" style="padding:4rem 0;">
+      <SectionHeading
+        client:load
+        campus="siemreap"
+        eyebrow="Join us"
+        title="Get involved"
+      />
+      <p style="color:var(--mute);font-size:15px;max-width:56ch;margin-top:1rem;">
+        [Placeholder &mdash; add real volunteer, internship, or visiting-team pathways here.]
+      </p>
+    </section>
+
+    <Divider client:load />
+
+    <section id="give" style="padding:4rem 0;display:flex;flex-direction:column;align-items:flex-start;gap:1.25rem;">
+      <SectionHeading client:load campus="siemreap" eyebrow="Support the work" title="Give" />
+      <p style="color:var(--mute);font-size:15px;max-width:50ch;margin:0;">
+        [Placeholder &mdash; connect a real donation link before launch.]
+      </p>
+      <Button client:load campus="siemreap" size="lg" href="#">
+        Give
+      </Button>
+    </section>
+  </main>
+
+  <footer style="border-top:1px solid var(--hair);padding:3rem 2.5rem 4rem;color:var(--mute);font-size:13px;">
+    <Wordmark client:load campus="siemreap" size="subhead" />
+    <p style="margin-top:1rem;max-width:60ch;">
+      YWAM Siem Reap is part of the GonPreah movement (YWAM Cambodia / YWAM Global).
+      [Placeholder &mdash; add real contact info and legal footer before launch.]
+    </p>
+  </footer>
+</Layout>
