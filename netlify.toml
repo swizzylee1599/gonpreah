@@ -1,0 +1,6 @@
+[build]
+  command = "npm install && npm run build --workspace=@gonpreah/brand && npm run build --workspace=@gonpreah/siemreap-web"
+  publish = "apps/siemreap-web/dist"
+
+[build.environment]
+  NODE_VERSION = "22"
