@@ -1,0 +1,43 @@
+---
+import SrLayout from '../layouts/SrLayout.astro';
+import Footer from '../components/sr/Footer.astro';
+import PageHead from '../components/sr/PageHead.astro';
+import Cta from '../components/sr/Cta.astro';
+
+const steps: [string, string][] = [
+  ['Get in touch', 'Send us a message with the school you are interested in and roughly when you want to come.'],
+  ['Application', 'A written application covering your story, your health and your church background.'],
+  ['References', 'Two references, one of them from a church leader who knows you.'],
+  ['Interview', 'A conversation with our staff — a two-way one. You should be asking us questions too.'],
+  ['Acceptance and fees', 'Once accepted, we send the fee breakdown, packing list and visa guidance.'],
+  ['Arrive', 'We collect you from Siem Reap airport and get you settled on the base.'],
+];
+---
+<SrLayout title="How to Apply | YWAM Siem Reap">
+  <PageHead eyebrow="How to apply" km="ដាក់ពាក្យ"
+    lead="Six steps, no surprises. Most people are through in a few weeks.">
+    Start your <span style="color:var(--sr-pink);">application</span>
+  </PageHead>
+  <section class="sec">
+    <div class="wrap" style="display:flex;flex-direction:column;">
+      {steps.map(([t, d], n) => (
+        <div class="reveal" style="display:grid;grid-template-columns:90px 1fr;gap:26px;padding:30px 0;border-top:1px solid #232323;">
+          <span class="disp" style="font-size:32px;color:var(--sr-pink);font-weight:500;">{'0' + (n + 1)}</span>
+          <div>
+            <h3 class="disp" style="margin:0;font-size:22px;font-weight:500;">{t}</h3>
+            <p class="body" style="margin:12px 0 0;max-width:56ch;font-size:16px;">{d}</p>
+          </div>
+        </div>
+      ))}
+      <div style="border-top:1px solid #232323;"></div>
+      <p class="muted" style="font-size:14px;margin-top:26px;">Application form and fee schedule pending publication.</p>
+    </div>
+  </section>
+  <Cta
+    title="Ready when you are"
+    body="Write to us and we will send the current application form for your school."
+    primary={['contact', 'Contact the base']}
+    secondary={['schools', 'See schools']}
+  />
+  <Footer />
+</SrLayout>

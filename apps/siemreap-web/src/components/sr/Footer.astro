@@ -1,0 +1,42 @@
+---
+import { ROUTE_PATH } from '../../lib/sr-routes';
+---
+<footer style="border-top:1px solid #1e1e1e;padding:70px 0 46px;">
+  <div class="wrap" style="display:grid;grid-template-columns:1.4fr repeat(3,minmax(0,1fr));gap:40px;">
+    <div>
+      <span class="disp" style="font-size:19px;letter-spacing:.2em;display:block;">YWAM</span>
+      <span class="disp" style="font-size:19px;letter-spacing:.2em;color:var(--sr-pink);">Siem Reap</span>
+      <p class="km" style="font-size:24px;margin:16px 0 0;color:#cfcfcf;">សៀមរាប · Siem Reap, Cambodia</p>
+      <p class="body" style="font-size:14px;margin-top:16px;max-width:34ch;">A GonPreah campus · Youth With A Mission Cambodia</p>
+      <p class="muted" style="font-size:13px;margin-top:10px;max-width:34ch;">Under the covering of YWAM Global &amp; YWAM Cambodia</p>
+    </div>
+    <div>
+      <p class="eyebrow" style="color:var(--gp-grey);">Students</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
+        <a href={ROUTE_PATH.schools} style="color:#d8d8d8;font-size:15px;">Schools &amp; Courses</a>
+        <a href={ROUTE_PATH.apply} style="color:#d8d8d8;font-size:15px;">How to Apply</a>
+        <a href={ROUTE_PATH.visit} style="color:#d8d8d8;font-size:15px;">Campus Life</a>
+      </div>
+    </div>
+    <div>
+      <p class="eyebrow" style="color:var(--gp-grey);">Get Involved</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
+        <a href={ROUTE_PATH.visit} style="color:#d8d8d8;font-size:15px;">Short-Term Teams</a>
+        <a href={ROUTE_PATH.staff} style="color:#d8d8d8;font-size:15px;">Join Staff</a>
+        <a href={ROUTE_PATH.give} style="color:#d8d8d8;font-size:15px;">Give</a>
+      </div>
+    </div>
+    <div>
+      <p class="eyebrow" style="color:var(--gp-grey);">GonPreah</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
+        <a href="https://gonpreah.org" style="color:#d8d8d8;font-size:15px;">Poipet</a>
+        <a href="https://gonpreah.org" style="color:#d8d8d8;font-size:15px;">Phnom Penh</a>
+        <a href="https://gonpreah.org" style="color:#d8d8d8;font-size:15px;">gonpreah.org ↗</a>
+      </div>
+    </div>
+  </div>
+  <div class="wrap" style="margin-top:54px;padding-top:26px;border-top:1px solid #1e1e1e;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+    <span class="muted" style="font-size:13px;max-width:70ch;">Khmer is placeholder pending native review. កូនព្រះ is confirmed; check anything else before launch.</span>
+    <span class="muted" style="font-size:13px;">Address, phone and email pending</span>
+  </div>
+</footer>

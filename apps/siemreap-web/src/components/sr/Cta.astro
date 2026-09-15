@@ -1,0 +1,21 @@
+---
+import { ROUTE_PATH } from '../../lib/sr-routes';
+
+interface Props {
+  title: string;
+  body: string;
+  primary?: [string, string];
+  secondary?: [string, string];
+}
+const { title, body, primary = ['apply', 'Apply'], secondary = ['contact', 'Contact us'] } = Astro.props;
+---
+<section class="sec" style="padding-top:0;">
+  <div class="wrap reveal card" style="padding:56px 48px;">
+    <h2 class="disp" style="margin:0;font-size:clamp(26px,3vw,40px);font-weight:500;max-width:24ch;">{title}</h2>
+    <p class="body" style="margin:18px 0 0;max-width:52ch;">{body}</p>
+    <div style="display:flex;gap:14px;margin-top:30px;flex-wrap:wrap;">
+      <a class="btn btn--solid" href={ROUTE_PATH[primary[0]]}>{primary[1]}</a>
+      <a class="btn" href={ROUTE_PATH[secondary[0]]}>{secondary[1]}</a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,22 @@
+---
+import PhotoSlot from './PhotoSlot.astro';
+
+interface Props {
+  name: string;
+  abbr: string;
+  body: string;
+  when: string;
+}
+const { name, abbr, body, when } = Astro.props;
+---
+<a class="schoolcard" href="/schools">
+  <span style="display:block;height:300px;position:relative;">
+    <PhotoSlot label={`Drop a photo — ${name}`} radius={0} />
+  </span>
+  <span style="display:flex;flex-direction:column;flex:1;padding:28px 26px 32px;min-height:196px;">
+    <span class="muted" style="font-size:12px;letter-spacing:.2em;">{abbr}</span>
+    <span class="disp" style="display:block;font-size:22px;font-weight:500;margin-top:10px;line-height:1.2;">{name}</span>
+    <span class="body" style="display:block;font-size:15px;margin-top:14px;flex:1;">{body}</span>
+    <span style="display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--sr-pink);margin-top:22px;">{when}</span>
+  </span>
+</a>

@@ -1,0 +1,39 @@
+---
+import '../styles/sr.css';
+import Nav from '../components/sr/Nav.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  spacer?: boolean;
+}
+const {
+  title,
+  description = 'YWAM Siem Reap — a Youth With A Mission training base in Cambodia. Heart for Cambodia, vision for the world.',
+  spacer = true,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="sr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=Koulen&family=Nunito+Sans:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="sr">
+    <div class="srbar"></div>
+    <div style="min-height:100vh;background:var(--sr-ink);">
+      <Nav />
+      {spacer && <div style="height:93px;"></div>}
+      <slot />
+    </div>
+  </body>
+</html>

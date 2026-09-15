@@ -1,0 +1,8 @@
+---
+interface Props {
+  label: string;
+  radius?: number;
+}
+const { label, radius = 20 } = Astro.props;
+---
+<div class="photo-slot" style={`border-radius:${radius}px`}>{label}</div>

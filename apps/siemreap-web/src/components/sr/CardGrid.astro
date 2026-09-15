@@ -1,0 +1,19 @@
+---
+interface Props {
+  items: [string, string][];
+  cols?: 2 | 3;
+}
+const { items, cols = 3 } = Astro.props;
+---
+<section class="sec">
+  <div class={'wrap reveal ' + (cols === 2 ? 'grid2' : 'grid3')}>
+    {items.map(([t, d], n) => (
+      <div class="card">
+        <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">{'0' + (n + 1)}</p>
+        <h3 class="disp" style="margin:18px 0 0;font-size:21px;font-weight:500;">{t}</h3>
+        <span class="rule" style="margin:18px 0;"></span>
+        <p class="body" style="margin:0;font-size:16px;">{d}</p>
+      </div>
+    ))}
+  </div>
+</section>

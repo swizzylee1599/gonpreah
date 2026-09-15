@@ -1,0 +1,42 @@
+---
+import SrLayout from '../layouts/SrLayout.astro';
+import Footer from '../components/sr/Footer.astro';
+import PageHead from '../components/sr/PageHead.astro';
+import Cta from '../components/sr/Cta.astro';
+
+const list: [string, string, string, string][] = [
+  ['Discipleship Training School', '6 months · English', 'Three months of lecture phase in Siem Reap followed by three months of outreach. The entry point to everything else in YWAM.', 'Next intake pending'],
+  ['Khmer DTS', '6 months · Khmer', 'The same school taught in Khmer by Khmer staff, for Cambodian students.', 'Next intake pending'],
+  ['School of Biblical Studies', '9 months · English', 'Inductive study through all 66 books of the Bible.', 'Dates pending'],
+  ['Short-Term Outreach', '2–4 weeks', 'Join a team already working in Siem Reap villages. For groups and individuals.', 'Year-round'],
+];
+---
+<SrLayout title="Schools &amp; Courses | YWAM Siem Reap">
+  <PageHead eyebrow="Schools & training" km="សាលា"
+    lead="Every YWAM journey starts with DTS. What follows depends on what God has put in you.">
+    Schools and <span style="color:var(--sr-pink);">courses</span>
+  </PageHead>
+  <section class="sec">
+    <div class="wrap" style="display:flex;flex-direction:column;gap:20px;">
+      {list.map(([t, meta, d, when]) => (
+        <div class="card reveal" style="display:grid;grid-template-columns:1fr auto;gap:34px;align-items:center;">
+          <div>
+            <p class="eyebrow">{meta}</p>
+            <h3 class="disp" style="margin:14px 0 0;font-size:26px;font-weight:500;">{t}</h3>
+            <p class="body" style="margin:14px 0 0;max-width:58ch;font-size:16px;">{d}</p>
+          </div>
+          <div style="text-align:right;">
+            <p style="margin:0;color:var(--sr-pink);font-size:13px;letter-spacing:.14em;text-transform:uppercase;">{when}</p>
+            <a class="btn btn--plain" style="margin-top:18px;display:inline-flex;" href="/apply">Apply</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+  <Cta
+    title="Not sure which school fits?"
+    body="Tell us where you are and what you are drawn to. We will point you at the right one — including if that is another base."
+    secondary={['contact', 'Ask a question']}
+  />
+  <Footer />
+</SrLayout>

@@ -1,0 +1,67 @@
+---
+import { NAV, ROUTE_PATH } from '../../lib/sr-routes';
+const currentPath = Astro.url.pathname;
+const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
+---
+<nav class="sr-nav" id="sr-nav">
+  <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:28px;padding:10px 40px;">
+    <a href="/" aria-label="YWAM Siem Reap — home" style="display:flex;align-items:center;">
+      <img src="/images/sr-logo.png" alt="YWAM Siem Reap" class="srlogo" style="display:block;height:72px;width:auto;filter:invert(1);" />
+    </a>
+    <div style="display:flex;align-items:center;gap:30px;">
+      <div class="navbar" style="display:flex;gap:30px;">
+        {NAV.map(([label, items]) => (
+          <div class={'navgroup' + (items.some(([id]) => isCurrent(id)) ? ' is-current' : '')}>
+            <button type="button">{label}</button>
+            <div class="navdrop">
+              {items.map(([id, t, d]) => (
+                <a class="navdrop-row" href={ROUTE_PATH[id]}>
+                  <span class="t">{t}</span>
+                  <span class="d">{d}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <a class="btn btn--solid" style="padding:12px 26px;font-size:14px;" href="/apply">Apply</a>
+      <button class="navtoggle" id="sr-nav-toggle" aria-label="Menu" aria-expanded="false">
+        <span><i></i><i></i><i></i></span>
+      </button>
+    </div>
+  </div>
+  <div class="navpanel">
+    <div class="wrap" style="display:flex;flex-direction:column;gap:22px;">
+      {NAV.map(([label, items]) => (
+        <div>
+          <p class="eyebrow" style="color:var(--gp-grey);">{label}</p>
+          <div style="display:flex;flex-direction:column;gap:4px;margin-top:10px;">
+            {items.map(([id, t]) => (
+              <a class={'navpanel-row' + (isCurrent(id) ? ' is-current' : '')} href={ROUTE_PATH[id]}>{t}</a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</nav>
+
+<script>
+  const nav = document.getElementById('sr-nav');
+  const toggle = document.getElementById('sr-nav-toggle');
+  if (nav && toggle) {
+    toggle.addEventListener('click', () => {
+      const open = nav.classList.toggle('is-mobile-open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+
+    let lastY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      if (nav.classList.contains('is-mobile-open')) return;
+      const y = window.scrollY;
+      const down = y > lastY;
+      nav.classList.toggle('is-hidden', down && y > 140);
+      lastY = y;
+    }, { passive: true });
+  }
+</script>

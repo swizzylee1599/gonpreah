@@ -1,0 +1,38 @@
+---
+import SrLayout from '../layouts/SrLayout.astro';
+import Footer from '../components/sr/Footer.astro';
+import PageHead from '../components/sr/PageHead.astro';
+import CardGrid from '../components/sr/CardGrid.astro';
+import Cta from '../components/sr/Cta.astro';
+import PhotoSlot from '../components/sr/PhotoSlot.astro';
+---
+<SrLayout title="Staff &amp; Teams | YWAM Siem Reap">
+  <PageHead eyebrow="Staff & teams" km="ក្រុមការងារ"
+    lead="Staff here are Khmer and international, some for two years, some for twenty. All of them raise their own support.">
+    Serve <span style="color:var(--sr-pink);">long term</span>
+  </PageHead>
+  <section class="sec">
+    <div class="wrap grid3 reveal">
+      {[0, 1, 2, 3, 4, 5].map(() => (
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div style="height:250px;"><PhotoSlot label="Staff portrait" radius={0} /></div>
+          <div style="padding:22px 24px 26px;">
+            <p class="disp" style="margin:0;font-size:17px;font-weight:500;">Name pending</p>
+            <p class="muted" style="margin:6px 0 0;font-size:14px;">Role pending</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+  <CardGrid cols={2} items={[
+    ['Joining staff', 'Staff complete a DTS first, then apply to a role on the base. We will talk you through visas, support raising and housing.'],
+    ['Mission builders', 'Trades, admin and practical skills for a few months at a time — often the most useful people on site.'],
+  ]} />
+  <Cta
+    title="Think you might belong here?"
+    body="Tell us what you do and when you are free. We would rather hear from you early than late."
+    primary={['contact', 'Get in touch']}
+    secondary={['about', 'About the base']}
+  />
+  <Footer />
+</SrLayout>

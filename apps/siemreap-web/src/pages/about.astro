@@ -1,0 +1,42 @@
+---
+import SrLayout from '../layouts/SrLayout.astro';
+import Footer from '../components/sr/Footer.astro';
+import PageHead from '../components/sr/PageHead.astro';
+import CardGrid from '../components/sr/CardGrid.astro';
+import Cta from '../components/sr/Cta.astro';
+import PhotoSlot from '../components/sr/PhotoSlot.astro';
+---
+<SrLayout title="About Us | YWAM Siem Reap">
+  <PageHead eyebrow="About us" km="អំពីយើង"
+    lead="YWAM Siem Reap is a Youth With A Mission base in northern Cambodia — a training centre, a sending base, and a community of Khmer and international staff.">
+    Who we <span style="color:var(--sr-pink);">are</span>
+  </PageHead>
+  <section class="sec">
+    <div class="wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;">
+      <div style="height:380px;"><PhotoSlot label="Base or community photo" /></div>
+      <div>
+        <h2 class="disp" style="margin:0;font-size:32px;font-weight:500;">Heart for Cambodia, vision for the world</h2>
+        <p class="body" style="margin-top:20px;">
+          Cambodia is young — most of the country is under thirty. We train that generation to know God and to carry His work themselves, rather than wait for it to arrive from somewhere else.
+        </p>
+        <p class="body" style="margin-top:16px;">
+          Siem Reap is our front door. Students arrive here for training, are sent from here into Khmer villages and the nations, and many stay to build what comes next.
+        </p>
+      </div>
+    </div>
+  </section>
+  <CardGrid items={[
+    ['Know God', 'Everything starts with who God is and who you are to Him. Not technique, not strategy.'],
+    ['Khmer-led', 'Cambodians lead the work in Cambodia. International staff serve that, not the other way round.'],
+    ['Sent, not stationed', 'Training exists to send people out — into villages, cities and nations.'],
+    ['Family and community', 'We live close together. Meals, worship and work are shared.'],
+    ['Open books', 'We publish what things cost and where gifts go.'],
+    ["Part of YWAM", "We hold YWAM's statement of purpose, core beliefs and foundational values."],
+  ]} />
+  <Cta
+    title="Come and see what we do"
+    body="The best way to understand the base is to visit it. Short-term teams and individual visits are both welcome."
+    primary={['visit', 'Plan a visit']}
+  />
+  <Footer />
+</SrLayout>

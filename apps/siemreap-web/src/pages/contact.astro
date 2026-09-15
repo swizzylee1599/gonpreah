@@ -1,0 +1,42 @@
+---
+import SrLayout from '../layouts/SrLayout.astro';
+import Footer from '../components/sr/Footer.astro';
+import PageHead from '../components/sr/PageHead.astro';
+
+const fields: [string, boolean?][] = [
+  ['Your name'], ['Email'], ['What are you asking about?'], ['Message', true],
+];
+const details: [string, string][] = [
+  ['Base address', 'Pending'], ['Phone', 'Pending'], ['Email', 'Pending'], ['Social', 'Pending'],
+];
+---
+<SrLayout title="Contact | YWAM Siem Reap">
+  <PageHead eyebrow="Contact" km="ទំនាក់ទំនង" lead="Someone on staff reads every message.">
+    Talk to <span style="color:var(--sr-pink);">the base</span>
+  </PageHead>
+  <section class="sec">
+    <div class="wrap" style="display:grid;grid-template-columns:1fr .8fr;gap:56px;align-items:start;">
+      <form class="card">
+        {fields.map(([label, tall]) => (
+          <label style="display:block;margin-bottom:20px;">
+            <span class="eyebrow" style="color:var(--gp-grey);">{label}</span>
+            {tall
+              ? <textarea rows={5} style="display:block;width:100%;margin-top:10px;background:#101010;border:1px solid #2a2a2a;border-radius:14px;color:#fff;padding:14px 16px;font:inherit;box-sizing:border-box;"></textarea>
+              : <input style="display:block;width:100%;margin-top:10px;background:#101010;border:1px solid #2a2a2a;border-radius:999px;color:#fff;padding:14px 18px;font:inherit;box-sizing:border-box;" />}
+          </label>
+        ))}
+        <button class="btn btn--solid" type="submit">Send message</button>
+      </form>
+      <div>
+        {details.map(([k, v]) => (
+          <div style="padding:20px 0;border-top:1px solid #232323;">
+            <p class="eyebrow" style="color:var(--gp-grey);">{k}</p>
+            <p style="margin:8px 0 0;font-size:17px;">{v}</p>
+          </div>
+        ))}
+        <div style="border-top:1px solid #232323;"></div>
+      </div>
+    </div>
+  </section>
+  <Footer />
+</SrLayout>

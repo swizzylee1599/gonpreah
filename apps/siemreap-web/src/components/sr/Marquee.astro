@@ -1,0 +1,20 @@
+---
+const PHRASE_PAIRS = [
+  { en: 'One nation · One generation', km: 'មួយជាតិ · មួយជំនាន់' },
+];
+const set = Array.from({ length: 4 }, () => PHRASE_PAIRS[0]);
+---
+<div style="overflow:hidden;border-top:1px solid #232323;border-bottom:1px solid #232323;padding:26px 0;">
+  <div class="marq">
+    {[0, 1].map((k) => (
+      <div class="marqset" aria-hidden={k === 1 ? 'true' : undefined}>
+        {set.map((it) => (
+          <>
+            <span class="disp" style="font-size:15px;letter-spacing:.34em;text-transform:uppercase;color:#d8d8d8;white-space:nowrap;">{it.en}</span>
+            <span class="km" style="font-size:21px;color:var(--sr-pink);white-space:nowrap;">{it.km}</span>
+          </>
+        ))}
+      </div>
+    ))}
+  </div>
+</div>
