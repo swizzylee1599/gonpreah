@@ -192,6 +192,7 @@ body.sr {
   .sr .wrap { padding: 0 20px; }
   .sr .sec { padding: 56px 0; }
   .sr .body { font-size: 16px; }
+  .sr [style*="grid-template-columns"] { grid-template-columns: minmax(0, 1fr) !important; }
   .sr .card { padding: 26px 22px; }
   .sr .btn { padding: 13px 22px; font-size: 14px; }
   .sr .hscroll { padding: 4px 20px 20px; scroll-padding-left: 20px; }

@@ -15,12 +15,7 @@
 <script>
   const video = document.getElementById('sr-hero-video') as HTMLVideoElement | null;
   if (video) {
-    const isPhone = window.matchMedia('(max-width: 760px)').matches;
-    if (isPhone) {
-      video.remove();
-    } else {
-      video.addEventListener('canplay', () => { video.style.opacity = '1'; });
-      video.addEventListener('error', () => { video.remove(); });
-    }
+    video.addEventListener('canplay', () => { video.style.opacity = '1'; });
+    video.addEventListener('error', () => { video.remove(); });
   }
 </script>
