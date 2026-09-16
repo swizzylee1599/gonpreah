@@ -104,6 +104,19 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
         const schoolsViewport = document.querySelector('.schools-viewport');
         const track = document.querySelector('.hscroll');
         if (video instanceof HTMLVideoElement && stack) {
+          // Many mobile browsers (iOS Safari especially) never actually
+          // decode a video's frames if it's only ever seeked via JS and
+          // has never been played — programmatic currentTime/fastSeek
+          // calls silently no-op on an unprimed video. A muted,
+          // playsinline video is allowed to autoplay, so kick it off and
+          // immediately pause to "wake up" the decoder before any seeks.
+          const primeVideo = () => {
+            const p = video.play();
+            if (p && typeof p.then === 'function') p.then(() => video.pause()).catch(() => {});
+          };
+          if (video.readyState >= 2) primeVideo();
+          else video.addEventListener('loadeddata', primeVideo, { once: true });
+
           let seeking = false;
           let latestTarget = 0;
           let dirty = false;
