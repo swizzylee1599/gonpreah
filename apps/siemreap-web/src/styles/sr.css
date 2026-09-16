@@ -124,11 +124,13 @@ body.sr {
 @keyframes sr-linein { from { opacity: 0; transform: translateY(40px) rotate(1.4deg); } to { opacity: 1; transform: none; } }
 @keyframes sr-riseup { from { opacity: 0; transform: translateY(28px); } to { opacity: .7; transform: none; } }
 
-.sr .planefly { opacity: 0; animation: sr-planefly 1.8s cubic-bezier(.4,0,.2,1) 1.5s both; }
+.sr .planefly { opacity: 0; animation: sr-planefly 1.9s cubic-bezier(.3,0,.4,1) 1.5s both; }
 @keyframes sr-planefly {
-  0% { opacity: 0; transform: translate(0, 0) scale(.7) rotate(-8deg); }
-  15% { opacity: 1; transform: translate(6px, -4px) scale(.85) rotate(-8deg); }
-  100% { opacity: 0; transform: translate(140px, -110px) scale(1.2) rotate(-14deg); }
+  0% { opacity: 0; transform: translate(0, 0) scale(.6) rotate(2deg); }
+  10% { opacity: 1; transform: translate(8px, 5px) scale(.8) rotate(6deg); }
+  40% { opacity: 1; transform: translate(55px, -8px) scale(.95) rotate(-6deg); }
+  70% { opacity: 1; transform: translate(120px, -58px) scale(1.05) rotate(-22deg); }
+  100% { opacity: 0; transform: translate(200px, -150px) scale(1.15) rotate(-38deg); }
 }
 @media (prefers-reduced-motion: reduce) {
   .sr .planefly { display: none; }
