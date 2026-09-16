@@ -82,10 +82,12 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
               </p>
             </div>
           </div>
-          <div class="hscroll" style="margin-top:40px;">
-            {SCHOOL_ROWS.map(([name, abbr, body, when]) => (
-              <SchoolCard name={name} abbr={abbr} body={body} when={when} />
-            ))}
+          <div class="schools-viewport" style="margin-top:40px;">
+            <div class="hscroll">
+              {SCHOOL_ROWS.map(([name, abbr, body, when]) => (
+                <SchoolCard name={name} abbr={abbr} body={body} when={when} />
+              ))}
+            </div>
           </div>
           <div class="wrap">
             <p class="muted" style="margin:0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;">Scroll for more →</p>
@@ -99,6 +101,8 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
         const text = document.querySelector('.video3d-text');
         const scrim = document.querySelector('.video3d-scrim');
         const cover = document.querySelector('.th-cover');
+        const schoolsViewport = document.querySelector('.schools-viewport');
+        const track = document.querySelector('.hscroll');
         if (video instanceof HTMLVideoElement && stack) {
           let seeking = false;
           let latestTarget = 0;
@@ -131,13 +135,16 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
 
           // The stack is one long pin: the video/text stay fixed in place
           // for the whole thing. Within that single scroll range: text and
-          // the dark scrim fade out early (0-18%), the video scrubs through
-          // its whole clip across the first 55%, then holds its last frame
-          // while the "Train here" cover (heading + school cards together,
-          // now much taller than one viewport) slides up over it (55-100%).
-          const FADE_END = 0.18;
-          const VIDEO_END = 0.55;
-          const COVER_START = 0.55;
+          // the dark scrim fade out early (0-12%), the video scrubs through
+          // its whole clip across the first 35%, then the "Train here"
+          // cover slides up over it (35-55%), then the school cards track
+          // scrolls sideways through all the cards (55-100%) before the
+          // pin finally releases into the next section.
+          const FADE_END = 0.12;
+          const VIDEO_END = 0.35;
+          const COVER_START = 0.35;
+          const COVER_END = 0.55;
+          const CARDS_START = 0.55;
           let ticking = false;
           const update = () => {
             ticking = false;
@@ -160,8 +167,16 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
             if (scrim) scrim.style.opacity = String(1 - fade);
 
             if (cover) {
-              const coverProgress = Math.min(1, Math.max(0, (progress - COVER_START) / (1 - COVER_START)));
+              const coverProgress = Math.min(1, Math.max(0, (progress - COVER_START) / (COVER_END - COVER_START)));
               cover.style.transform = `translateY(${(1 - coverProgress) * 100}%)`;
+            }
+
+            if (track && schoolsViewport) {
+              const maxScroll = track.scrollWidth - schoolsViewport.clientWidth;
+              if (maxScroll > 0) {
+                const cardsProgress = Math.min(1, Math.max(0, (progress - CARDS_START) / (1 - CARDS_START)));
+                track.style.transform = `translateX(${-cardsProgress * maxScroll}px)`;
+              }
             }
           };
           const onScroll = () => {

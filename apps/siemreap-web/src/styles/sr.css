@@ -59,7 +59,7 @@ body.sr {
 .sr .reveal { opacity: 1; transform: none; }
 .sr .srbar { position: fixed; left: 0; top: 0; height: 3px; width: 100%; background: var(--sr-pink); transform-origin: 0 50%; transform: scaleX(0); z-index: 70; }
 
-.sr .gonpreah-stack { position: relative; height: 750vh; }
+.sr .gonpreah-stack { position: relative; height: 1100vh; }
 .sr .video3d-pin {
   position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden;
   display: flex; align-items: center;
@@ -214,13 +214,9 @@ body.sr {
 .sr .marq:hover { animation-play-state: paused; }
 .sr .marqset { display: flex; align-items: center; gap: 56px; padding-right: 56px; flex: none; }
 
-.sr .hscroll {
-  display: flex; gap: 22px; overflow-x: auto; scroll-snap-type: x mandatory;
-  padding: 4px 40px 22px; scrollbar-width: thin; scrollbar-color: #3a3a3a transparent;
-}
-.sr .hscroll > * { scroll-snap-align: start; flex: 0 0 clamp(268px, 30vw, 382px); }
-.sr .hscroll::-webkit-scrollbar { height: 6px; }
-.sr .hscroll::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 99px; }
+.sr .schools-viewport { overflow: hidden; }
+.sr .hscroll { display: flex; gap: 22px; padding: 4px 40px 22px; will-change: transform; }
+.sr .hscroll > * { flex: 0 0 clamp(300px, 34vw, 430px); }
 
 .sr .schoolcard {
   display: flex; flex-direction: column; text-align: left;
