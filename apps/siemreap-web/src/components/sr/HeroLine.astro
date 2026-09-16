@@ -13,11 +13,6 @@ const BREAK_AFTER = new Set([1, 2, 4]);
           <span class="hw"><i class={i % 2 === 0 ? 'hw-a' : 'hw-b'} style={`--d:${(0.075 * i + 0.12).toFixed(3)}s`}>{en}</i></span>
         </span>
         <span class="hswap hkmw km" aria-hidden="true" style="font-size:.86em;letter-spacing:-0.01em;">{km}</span>
-        {i === 5 && (
-          <svg class="planefly" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" style="position:absolute;top:-6px;right:-4px;">
-            <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z" fill="#fff" />
-          </svg>
-        )}
       </span>{' '}
       {BREAK_AFTER.has(i) && <br class="hero-break" />}
     </>
