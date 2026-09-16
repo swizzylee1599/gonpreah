@@ -105,14 +105,16 @@ body.sr {
 .sr .heroword { display: inline-block; animation: sr-rise .9s cubic-bezier(.22,.61,.36,1) both; animation-delay: var(--d); }
 .sr .hw { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .1em; cursor: default; }
 .sr .hstack { cursor: default; }
-.sr .hpair { position: relative; display: inline-block; vertical-align: bottom; }
-.sr .hswap { display: inline-block; transition: opacity .45s ease, filter .45s ease, transform .55s cubic-bezier(.16,1,.3,1), letter-spacing .55s ease; }
+.sr .hpair { position: relative; display: inline-grid; vertical-align: bottom; }
+.sr .hswap {
+  grid-area: 1 / 1; align-self: center; justify-self: center;
+  display: inline-block; transition: opacity .45s ease, filter .45s ease, transform .55s cubic-bezier(.16,1,.3,1), letter-spacing .55s ease;
+}
 .sr .hpair > .hkmw {
-  position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%, -50%) translateY(.16em) scale(.96);
+  transform: translateY(.16em) scale(.96);
   opacity: 0; filter: blur(14px); white-space: nowrap;
 }
-.sr .hpair:hover > .hkmw { opacity: 1; filter: blur(0); transform: translate(-50%, -50%); }
+.sr .hpair:hover > .hkmw { opacity: 1; filter: blur(0); transform: none; }
 .sr .hpair:hover > .henw { opacity: 0; filter: blur(14px); transform: translateY(-.2em) scale(1.06); letter-spacing: .24em; }
 .sr .hw > i { display: inline-block; font-style: normal; animation: sr-word 1.15s cubic-bezier(.16,1,.3,1) both; animation-delay: var(--d); transition: opacity .25s ease; }
 .sr .hline:hover .hw > i { opacity: .34; }
