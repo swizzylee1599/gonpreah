@@ -10,10 +10,10 @@ interface Props {
 const { name, abbr, body, when } = Astro.props;
 ---
 <a class="schoolcard" href="/schools">
-  <span style="display:block;height:360px;position:relative;">
+  <span class="schoolcard-photo" style="display:block;position:relative;">
     <PhotoSlot label={`Drop a photo — ${name}`} radius={0} />
   </span>
-  <span style="display:flex;flex-direction:column;flex:1;padding:30px 28px 34px;min-height:216px;">
+  <span class="schoolcard-body" style="display:flex;flex-direction:column;flex:1;">
     <span class="muted" style="font-size:12px;letter-spacing:.2em;">{abbr}</span>
     <span class="disp" style="display:block;font-size:22px;font-weight:500;margin-top:10px;line-height:1.2;">{name}</span>
     <span class="body" style="display:block;font-size:15px;margin-top:14px;flex:1;">{body}</span>
