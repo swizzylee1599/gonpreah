@@ -105,6 +105,10 @@ body.sr {
 .sr .heroword { display: inline-block; animation: sr-rise .9s cubic-bezier(.22,.61,.36,1) both; animation-delay: var(--d); }
 .sr .hw { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .1em; cursor: default; }
 .sr .hstack { cursor: default; }
+.sr .hero-break { display: none; }
+@media (min-width: 761px) {
+  .sr .hero-break { display: block; }
+}
 .sr .hpair { position: relative; display: inline-grid; vertical-align: bottom; }
 .sr .hswap {
   grid-area: 1 / 1; align-self: center; justify-self: center;
