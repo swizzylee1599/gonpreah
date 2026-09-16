@@ -150,7 +150,23 @@ body.sr {
   .sr .flip-slide { transition: none; }
   .sr .hw > i { animation: none; transform: none; opacity: 1; filter: none; }
   .sr .hswap { transition: none; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
+
+/*
+ * Page-to-page header transition: the outgoing title dissolves away the
+ * same way the hero hover-swap fades a word out (blur + drift + scale),
+ * then the incoming page's title reforms the same way. The rest of the
+ * page (identical black background/nav on every route) crossfades with
+ * the browser's default, which already reads as seamless.
+ */
+::view-transition-group(page-title) { animation: none; }
+::view-transition-image-pair(page-title) { isolation: isolate; }
+::view-transition-old(page-title), ::view-transition-new(page-title) { mix-blend-mode: normal; }
+::view-transition-old(page-title) { animation: sr-page-out .45s cubic-bezier(.4,0,.2,1) both; }
+::view-transition-new(page-title) { animation: sr-page-in .45s cubic-bezier(.4,0,.2,1) .18s both; }
+@keyframes sr-page-out { to { opacity: 0; filter: blur(16px); transform: translateY(-18px) scale(1.04); } }
+@keyframes sr-page-in { from { opacity: 0; filter: blur(16px); transform: translateY(18px) scale(.96); } }
 
 @keyframes sr-marq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .sr .marq { display: flex; width: max-content; animation: sr-marq 34s linear infinite; }
