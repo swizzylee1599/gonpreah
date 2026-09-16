@@ -3,6 +3,7 @@ const HERO_PAIRS: [string, string][] = [
   ['Heart', 'ដួងចិត្ត'], ['for', 'សម្រាប់'], ['Cambodia,', 'កម្ពុជា'],
   ['vision', 'ចក្ខុវិស័យ'], ['for', 'សម្រាប់'], ['the world', 'ពិភពលោក'],
 ];
+const BREAK_AFTER = new Set([1, 2, 4]);
 ---
 <h1 class="disp hstack hline" style="margin:20px 0 0;font-size:clamp(44px,7vw,96px);font-weight:500;line-height:1.16;letter-spacing:.03em;max-width:16ch;pointer-events:auto;">
   {HERO_PAIRS.map(([en, km], i) => (
@@ -13,6 +14,7 @@ const HERO_PAIRS: [string, string][] = [
         </span>
         <span class="hswap hkmw km" aria-hidden="true" style="font-size:.86em;letter-spacing:-0.01em;">{km}</span>
       </span>{' '}
+      {BREAK_AFTER.has(i) && <br class="hero-break" />}
     </>
   ))}
 </h1>
