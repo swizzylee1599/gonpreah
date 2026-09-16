@@ -154,19 +154,46 @@ body.sr {
 }
 
 /*
- * Page-to-page header transition: the outgoing title dissolves away the
- * same way the hero hover-swap fades a word out (blur + drift + scale),
- * then the incoming page's title reforms the same way. The rest of the
- * page (identical black background/nav on every route) crossfades with
- * the browser's default, which already reads as seamless.
+ * Page-to-page header transition: each word of the outgoing title
+ * scatters apart (its own drift direction, rotation and delay) instead
+ * of the whole title moving as one rigid block, then the incoming
+ * page's words fly back together from their own scattered offsets to
+ * reconstruct the new title. The rest of the page (identical black
+ * background/nav on every route) crossfades with the browser's
+ * default, which already reads as seamless.
  */
-::view-transition-group(page-title) { animation: none; }
-::view-transition-image-pair(page-title) { isolation: isolate; }
-::view-transition-old(page-title), ::view-transition-new(page-title) { mix-blend-mode: normal; }
-::view-transition-old(page-title) { animation: sr-page-out .45s cubic-bezier(.4,0,.2,1) both; }
-::view-transition-new(page-title) { animation: sr-page-in .45s cubic-bezier(.4,0,.2,1) .18s both; }
-@keyframes sr-page-out { to { opacity: 0; filter: blur(16px); transform: translateY(-18px) scale(1.04); } }
-@keyframes sr-page-in { from { opacity: 0; filter: blur(16px); transform: translateY(18px) scale(.96); } }
+.sr .pt-word { display: inline-block; vertical-align: bottom; }
+::view-transition-group(page-title-w0), ::view-transition-group(page-title-w1),
+::view-transition-group(page-title-w2), ::view-transition-group(page-title-w3),
+::view-transition-group(page-title-w4), ::view-transition-group(page-title-w5) { animation: none; }
+::view-transition-image-pair(page-title-w0), ::view-transition-image-pair(page-title-w1),
+::view-transition-image-pair(page-title-w2), ::view-transition-image-pair(page-title-w3),
+::view-transition-image-pair(page-title-w4), ::view-transition-image-pair(page-title-w5) { isolation: isolate; }
+::view-transition-old(page-title-w0), ::view-transition-old(page-title-w1),
+::view-transition-old(page-title-w2), ::view-transition-old(page-title-w3),
+::view-transition-old(page-title-w4), ::view-transition-old(page-title-w5),
+::view-transition-new(page-title-w0), ::view-transition-new(page-title-w1),
+::view-transition-new(page-title-w2), ::view-transition-new(page-title-w3),
+::view-transition-new(page-title-w4), ::view-transition-new(page-title-w5) { mix-blend-mode: normal; }
+
+::view-transition-old(page-title-w0) { animation: sr-word-out-a .38s ease both; }
+::view-transition-old(page-title-w1) { animation: sr-word-out-b .38s ease .03s both; }
+::view-transition-old(page-title-w2) { animation: sr-word-out-a .38s ease .06s both; }
+::view-transition-old(page-title-w3) { animation: sr-word-out-b .38s ease .09s both; }
+::view-transition-old(page-title-w4) { animation: sr-word-out-a .38s ease .12s both; }
+::view-transition-old(page-title-w5) { animation: sr-word-out-b .38s ease .15s both; }
+
+::view-transition-new(page-title-w0) { animation: sr-word-in-a .42s cubic-bezier(.16,1,.3,1) .2s both; }
+::view-transition-new(page-title-w1) { animation: sr-word-in-b .42s cubic-bezier(.16,1,.3,1) .24s both; }
+::view-transition-new(page-title-w2) { animation: sr-word-in-a .42s cubic-bezier(.16,1,.3,1) .28s both; }
+::view-transition-new(page-title-w3) { animation: sr-word-in-b .42s cubic-bezier(.16,1,.3,1) .32s both; }
+::view-transition-new(page-title-w4) { animation: sr-word-in-a .42s cubic-bezier(.16,1,.3,1) .36s both; }
+::view-transition-new(page-title-w5) { animation: sr-word-in-b .42s cubic-bezier(.16,1,.3,1) .4s both; }
+
+@keyframes sr-word-out-a { to { opacity: 0; filter: blur(14px); transform: translate(-26px, -18px) rotate(-7deg) scale(1.08); } }
+@keyframes sr-word-out-b { to { opacity: 0; filter: blur(14px); transform: translate(24px, 16px) rotate(6deg) scale(1.06); } }
+@keyframes sr-word-in-a { from { opacity: 0; filter: blur(14px); transform: translate(-22px, 16px) rotate(-6deg) scale(.94); } }
+@keyframes sr-word-in-b { from { opacity: 0; filter: blur(14px); transform: translate(20px, -14px) rotate(5deg) scale(.95); } }
 
 @keyframes sr-marq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .sr .marq { display: flex; width: max-content; animation: sr-marq 34s linear infinite; }

@@ -3,14 +3,26 @@ interface Props {
   eyebrow: string;
   km?: string;
   lead?: string;
+  title: string;
+  highlight?: string;
 }
-const { eyebrow, km, lead } = Astro.props;
+const { eyebrow, km, lead, title, highlight } = Astro.props;
+const words = title.split(' ');
+const highlightCount = highlight ? highlight.split(' ').length : 0;
 ---
 <section style="padding:90px 0 0;">
   <div class="wrap">
     <p class="eyebrow">{eyebrow}</p>
-    <h1 class="disp" transition:name="page-title" style="margin:20px 0 0;font-size:clamp(40px,6vw,78px);font-weight:500;line-height:1.06;max-width:18ch;">
-      <slot />
+    <h1 class="disp" style="margin:20px 0 0;font-size:clamp(40px,6vw,78px);font-weight:500;line-height:1.06;max-width:18ch;">
+      {words.map((word, i) => (
+        <>
+          <span
+            class="pt-word"
+            transition:name={`page-title-w${i}`}
+            style={i >= words.length - highlightCount ? 'color:var(--sr-pink);' : undefined}
+          >{word}</span>{' '}
+        </>
+      ))}
     </h1>
     {km && <p class="km" style="font-size:28px;margin:18px 0 0;color:#dcdcdc;">{km}</p>}
     <span class="rule" style="margin:30px 0 0;"></span>

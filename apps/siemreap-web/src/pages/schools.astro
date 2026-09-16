@@ -12,10 +12,8 @@ const list: [string, string, string, string][] = [
 ];
 ---
 <SrLayout title="Schools &amp; Courses | YWAM Siem Reap">
-  <PageHead eyebrow="Schools & training" km="សាលា"
-    lead="Every YWAM journey starts with DTS. What follows depends on what God has put in you.">
-    Schools and <span style="color:var(--sr-pink);">courses</span>
-  </PageHead>
+  <PageHead eyebrow="Schools & training" km="សាលា" title="Schools and courses" highlight="courses"
+    lead="Every YWAM journey starts with DTS. What follows depends on what God has put in you." />
   <section class="sec">
     <div class="wrap" style="display:flex;flex-direction:column;gap:20px;">
       {list.map(([t, meta, d, when]) => (
