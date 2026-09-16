@@ -59,7 +59,7 @@ body.sr {
 .sr .reveal { opacity: 1; transform: none; }
 .sr .srbar { position: fixed; left: 0; top: 0; height: 3px; width: 100%; background: var(--sr-pink); transform-origin: 0 50%; transform: scaleX(0); z-index: 70; }
 
-.sr .video3d-pinwrap { position: relative; height: 250vh; }
+.sr .gonpreah-stack { position: relative; height: 350vh; }
 .sr .video3d-pin {
   position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden;
   display: flex; align-items: center;
@@ -69,9 +69,18 @@ body.sr {
   position: absolute; inset: 0;
   background: linear-gradient(to top, rgba(11,11,11,.94) 0%, rgba(11,11,11,.55) 55%, rgba(11,11,11,.75) 100%);
 }
+.sr .th-cover {
+  position: sticky; top: 0; height: 100vh; margin-top: -100vh; z-index: 5;
+  overflow: hidden; box-sizing: border-box;
+  display: flex; align-items: flex-end; padding-bottom: 60px;
+  background: linear-gradient(#131313, var(--sr-ink) 42%);
+  border-radius: 30px 30px 0 0; box-shadow: 0 -34px 70px rgba(0,0,0,.65);
+  transform: translateY(100%);
+}
 @media (prefers-reduced-motion: reduce) {
-  .sr .video3d-pinwrap { height: auto; }
+  .sr .gonpreah-stack { height: auto; }
   .sr .video3d-pin { position: relative; height: auto; min-height: 60vh; padding: 90px 0; }
+  .sr .th-cover { position: relative; margin-top: 0; height: auto; padding: 84px 0 40px; transform: none; }
 }
 
 .sr .photo-slot {
@@ -99,7 +108,6 @@ body.sr {
   .sr .driftback { animation: sr-driftback linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
   .sr .scaleup { animation: sr-scaleup linear both; animation-timeline: view(); animation-range: entry 0% cover 45%; }
   .sr .linein { animation: sr-linein linear both; animation-timeline: view(); animation-range: entry 5% entry 65%; }
-  .sr .flipin { animation: sr-flip linear both; animation-timeline: view(); animation-range: entry 0% entry 88%; transform-origin: 50% 0; }
   .sr .riseup { animation: sr-riseup linear both; animation-timeline: view(); animation-range: entry 0% entry 55%; }
 }
 
@@ -115,8 +123,6 @@ body.sr {
 @keyframes sr-driftback { from { transform: translateX(12%); } to { transform: translateX(-12%); } }
 @keyframes sr-scaleup { from { transform: scale(.74); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @keyframes sr-linein { from { opacity: 0; transform: translateY(40px) rotate(1.4deg); } to { opacity: 1; transform: none; } }
-.sr .flipwrap { perspective: 1500px; perspective-origin: 50% 0; }
-@keyframes sr-flip { from { transform: rotateX(-14deg) translateY(120px) scale(.93); opacity: .25; } 70% { opacity: 1; } to { transform: none; opacity: 1; } }
 @keyframes sr-riseup { from { opacity: 0; transform: translateY(28px); } to { opacity: .7; transform: none; } }
 
 .sr .heroword { display: inline-block; animation: sr-rise .9s cubic-bezier(.22,.61,.36,1) both; animation-delay: var(--d); }
@@ -152,7 +158,6 @@ body.sr {
 
 @media (prefers-reduced-motion: reduce) {
   .sr .marq { animation: none; }
-  .sr .flipin { animation: none !important; transform: none; opacity: 1; }
   .sr .reveal, .sr .heroword, .sr .herofade, .sr .heroimg, .sr .drift, .sr .driftback,
   .sr .scaleup, .sr .linein, .sr .par, .sr .parslow, .sr .wipe, .sr .growrule, .sr .stag > * {
     animation: none !important; opacity: 1; transform: none; clip-path: none;

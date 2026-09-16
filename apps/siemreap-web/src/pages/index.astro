@@ -42,7 +42,7 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
     <div style="position:relative;z-index:1;">
       <Marquee />
 
-      <div class="video3d-pinwrap">
+      <div class="gonpreah-stack">
         <div class="video3d-pin">
           <video
             class="scroll3d"
@@ -53,7 +53,7 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
             aria-label="The GonPreah community, rotating in 3D"
           />
           <div class="video3d-scrim"></div>
-          <div class="wrap" style="position:relative;z-index:1;max-width:720px;">
+          <div class="video3d-text wrap" style="position:relative;z-index:1;max-width:720px;">
             <div style="display:flex;align-items:center;gap:16px;">
               <img
                 src="/images/gonpreah-seal.png"
@@ -73,12 +73,36 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
             <a class="btn btn--plain" href="https://gonpreah.org" style="display:inline-flex;margin-top:30px;">Learn more about GonPreah ↗</a>
           </div>
         </div>
+        <div class="th-cover">
+          <div class="wrap">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:50px;align-items:end;">
+              <h2 class="disp" style="margin:0;font-size:clamp(30px,4.2vw,56px);font-weight:500;">Train here</h2>
+              <p class="body" style="margin:0;max-width:46ch;">
+                Four schools, run in Khmer and English. Every one begins with who you are and ends with where you're sent.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <section class="sec" style="padding-top:22px;background:var(--sr-ink);">
+        <div class="hscroll">
+          {SCHOOL_ROWS.map(([name, abbr, body, when]) => (
+            <SchoolCard name={name} abbr={abbr} body={body} when={when} />
+          ))}
+        </div>
+        <div class="wrap">
+          <p class="muted" style="margin:0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;">Scroll for more →</p>
+        </div>
+      </section>
 
       <script>
         const video = document.querySelector('.scroll3d');
-        const pinwrap = document.querySelector('.video3d-pinwrap');
-        if (video instanceof HTMLVideoElement && pinwrap) {
+        const stack = document.querySelector('.gonpreah-stack');
+        const text = document.querySelector('.video3d-text');
+        const scrim = document.querySelector('.video3d-scrim');
+        const cover = document.querySelector('.th-cover');
+        if (video instanceof HTMLVideoElement && stack) {
           let seeking = false;
           let latestTarget = 0;
           let dirty = false;
@@ -97,14 +121,39 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
             if (dirty) seekTo(latestTarget);
           });
 
+          // The stack is one long pin: the video/text stay fixed in place
+          // for the whole thing. Within that single scroll range: text and
+          // the dark scrim fade out early (0-25%), the video scrubs through
+          // its whole clip across the first 70%, then holds its last frame
+          // while the "Train here" cover slides up over it (70-100%).
+          const FADE_END = 0.25;
+          const VIDEO_END = 0.7;
+          const COVER_START = 0.7;
           let ticking = false;
           const update = () => {
             ticking = false;
-            if (!video.duration || Number.isNaN(video.duration)) return;
-            const rect = pinwrap.getBoundingClientRect();
+            const rect = stack.getBoundingClientRect();
             const scrollable = rect.height - window.innerHeight;
             const progress = scrollable <= 0 ? 0 : Math.min(1, Math.max(0, -rect.top / scrollable));
-            seekTo(progress * video.duration);
+
+            if (video.duration && !Number.isNaN(video.duration)) {
+              const videoProgress = Math.min(1, progress / VIDEO_END);
+              seekTo(videoProgress * video.duration);
+            }
+
+            const fade = Math.min(1, progress / FADE_END);
+            if (text) {
+              text.style.opacity = String(1 - fade);
+              text.style.transform = `translateY(${-24 * fade}px) scale(${1 - 0.05 * fade})`;
+              text.style.filter = `blur(${fade * 10}px)`;
+              text.style.pointerEvents = fade > 0.9 ? 'none' : '';
+            }
+            if (scrim) scrim.style.opacity = String(1 - fade);
+
+            if (cover) {
+              const coverProgress = Math.min(1, Math.max(0, (progress - COVER_START) / (1 - COVER_START)));
+              cover.style.transform = `translateY(${(1 - coverProgress) * 100}%)`;
+            }
           };
           const onScroll = () => {
             if (!ticking) {
@@ -116,27 +165,6 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
           window.addEventListener('scroll', onScroll, { passive: true });
         }
       </script>
-
-      <div class="flipwrap">
-        <section class="sec flipin" style="padding-top:84px;background:linear-gradient(#131313, var(--sr-ink) 42%);border-top:1px solid #2a2a2a;border-radius:30px 30px 0 0;box-shadow:0 -34px 70px rgba(0,0,0,.65);">
-          <div class="wrap">
-            <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:50px;align-items:end;">
-              <h2 class="disp" style="margin:0;font-size:clamp(30px,4.2vw,56px);font-weight:500;">Train here</h2>
-              <p class="body" style="margin:0;max-width:46ch;">
-                Four schools, run in Khmer and English. Every one begins with who you are and ends with where you're sent.
-              </p>
-            </div>
-          </div>
-          <div class="hscroll" style="margin-top:48px;">
-            {SCHOOL_ROWS.map(([name, abbr, body, when]) => (
-              <SchoolCard name={name} abbr={abbr} body={body} when={when} />
-            ))}
-          </div>
-          <div class="wrap">
-            <p class="muted" style="margin:0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;">Scroll for more →</p>
-          </div>
-        </section>
-      </div>
 
       <section class="sec" style="padding-top:0;">
         <div class="wrap" style="display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:50px;align-items:center;">
