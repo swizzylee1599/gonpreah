@@ -185,6 +185,7 @@ body.sr {
 @media (max-width: 1000px) {
   .sr .wrap { padding: 0 24px; }
   .sr .navbar { display: none !important; }
+  .sr .navapply { display: none !important; }
   .sr .navtoggle { display: block !important; }
   .sr .sec { padding: 64px 0; }
   .sr .grid3, .sr .grid2 { grid-template-columns: 1fr; }
@@ -201,4 +202,5 @@ body.sr {
   .sr .hscroll > * { flex: 0 0 78vw; }
   .sr .srlogo { height: 50px !important; }
   .sr .marqset { gap: 34px; padding-right: 34px; }
+  .sr .sr-hero-copy { padding-bottom: 15vh !important; }
 }
