@@ -59,7 +59,7 @@ body.sr {
 .sr .reveal { opacity: 1; transform: none; }
 .sr .srbar { position: fixed; left: 0; top: 0; height: 3px; width: 100%; background: var(--sr-pink); transform-origin: 0 50%; transform: scaleX(0); z-index: 70; }
 
-.sr .gonpreah-stack { position: relative; height: 500vh; }
+.sr .gonpreah-stack { position: relative; height: 750vh; }
 .sr .video3d-pin {
   position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden;
   display: flex; align-items: center;
@@ -70,9 +70,8 @@ body.sr {
   background: linear-gradient(to top, rgba(11,11,11,.94) 0%, rgba(11,11,11,.55) 55%, rgba(11,11,11,.75) 100%);
 }
 .sr .th-cover {
-  position: sticky; top: 0; height: 100vh; margin-top: -100vh; z-index: 5;
-  overflow: hidden; box-sizing: border-box;
-  display: flex; align-items: flex-start; padding-top: 90px;
+  position: sticky; top: 0; z-index: 5;
+  box-sizing: border-box; padding: 90px 0 60px;
   background: linear-gradient(#131313, var(--sr-ink) 42%);
   border-radius: 30px 30px 0 0; box-shadow: 0 -34px 70px rgba(0,0,0,.65);
   transform: translateY(100%);
@@ -80,7 +79,7 @@ body.sr {
 @media (prefers-reduced-motion: reduce) {
   .sr .gonpreah-stack { height: auto; }
   .sr .video3d-pin { position: relative; height: auto; min-height: 60vh; padding: 90px 0; }
-  .sr .th-cover { position: relative; margin-top: 0; height: auto; padding: 84px 0 40px; transform: none; }
+  .sr .th-cover { position: relative; margin-top: 0 !important; padding: 84px 0 40px; transform: none; }
 }
 
 .sr .photo-slot {
