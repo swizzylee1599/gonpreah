@@ -124,6 +124,16 @@ body.sr {
 @keyframes sr-linein { from { opacity: 0; transform: translateY(40px) rotate(1.4deg); } to { opacity: 1; transform: none; } }
 @keyframes sr-riseup { from { opacity: 0; transform: translateY(28px); } to { opacity: .7; transform: none; } }
 
+.sr .planefly { opacity: 0; animation: sr-planefly 1.8s cubic-bezier(.4,0,.2,1) 1.5s both; }
+@keyframes sr-planefly {
+  0% { opacity: 0; transform: translate(0, 0) scale(.7) rotate(-8deg); }
+  15% { opacity: 1; transform: translate(6px, -4px) scale(.85) rotate(-8deg); }
+  100% { opacity: 0; transform: translate(140px, -110px) scale(1.2) rotate(-14deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sr .planefly { display: none; }
+}
+
 .sr .heroword { display: inline-block; animation: sr-rise .9s cubic-bezier(.22,.61,.36,1) both; animation-delay: var(--d); }
 .sr .hw { display: inline-block; vertical-align: bottom; padding-bottom: .1em; cursor: default; }
 .sr .hstack { cursor: default; }
