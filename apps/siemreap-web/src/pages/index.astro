@@ -14,11 +14,11 @@ import SchoolCard from '../components/sr/SchoolCard.astro';
 // the first frame during preload instead of waiting for playback.
 const GONPREAH_3D_VIDEO = '/video/gonpreah-community-3d.mp4#t=0.001';
 
-const SCHOOL_ROWS: [string, string, string, string, string?][] = [
-  ['Discipleship Training School', 'DTS', 'The doorway into everything else. Lecture phase, then outreach phase.', 'Two intakes a year', '/images/schools/dts.jpg'],
-  ['Discipleship Bible School', 'DBS', "An extended season in the Word, for those who want depth before they're sent.", 'Annual'],
-  ['Bible Counseling School', 'BCS', 'Training for those caring for people who carry trauma — a growing need across Cambodia.', 'New'],
-  ['Social Media School', 'SMS', 'Storytelling and digital ministry, for the generation already living there.', 'New'],
+const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; photo?: string; href?: string }[] = [
+  { name: 'Discipleship Training School', abbr: 'DTS', body: 'The doorway into everything else. Lecture phase, then outreach phase.', when: 'Two intakes a year', photo: '/images/schools/dts.jpg', href: '/schools/dts' },
+  { name: 'Discipleship Bible School', abbr: 'DBS', body: "An extended season in the Word, for those who want depth before they're sent.", when: 'Annual' },
+  { name: 'Bible Counseling School', abbr: 'BCS', body: 'Training for those caring for people who carry trauma — a growing need across Cambodia.', when: 'New' },
+  { name: 'Social Media School', abbr: 'SMS', body: 'Storytelling and digital ministry, for the generation already living there.', when: 'New' },
 ];
 ---
 <SrLayout title="YWAM Siem Reap | Heart for Cambodia, vision for the world" spacer={false}>
@@ -30,7 +30,7 @@ const SCHOOL_ROWS: [string, string, string, string, string?][] = [
       </div>
       <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top, rgba(11,11,11,.96) 4%, rgba(11,11,11,.45) 55%, rgba(11,11,11,.7));"></div>
       <div class="wrap herofade sr-hero-copy" style="position:relative;pointer-events:none;padding:clamp(28px,5vh,56px) clamp(20px,5vw,40px) clamp(36px,8vh,86px);">
-        <p class="eyebrow">Youth With A Mission · Cambodia</p>
+        <p class="eyebrow">Youth With A Mission · Siem Reap, Cambodia</p>
         <HeroLine />
         <p class="body" style="margin:26px 0 0;max-width:50ch;">
           Empowering the next generation to transform their nation and the world
@@ -89,9 +89,7 @@ const SCHOOL_ROWS: [string, string, string, string, string?][] = [
           </div>
           <div class="schools-deck" style="margin-top:40px;">
             <div class="deck">
-              {SCHOOL_ROWS.map(([name, abbr, body, when, photo]) => (
-                <SchoolCard name={name} abbr={abbr} body={body} when={when} photo={photo} />
-              ))}
+              {SCHOOL_ROWS.map((school) => <SchoolCard {...school} />)}
             </div>
           </div>
           <div class="wrap">
