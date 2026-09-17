@@ -2,7 +2,7 @@
 import SrLayout from '../../layouts/SrLayout.astro';
 import Footer from '../../components/sr/Footer.astro';
 import PageHead from '../../components/sr/PageHead.astro';
-import PhotoSlot from '../../components/sr/PhotoSlot.astro';
+import PhotoStrip from '../../components/sr/PhotoStrip.astro';
 import Cta from '../../components/sr/Cta.astro';
 
 const JOURNEY: { title: string; body: string; photo: string; alt: string }[] = [
@@ -24,6 +24,20 @@ const JOURNEY: { title: string; body: string; photo: string; alt: string }[] = [
     photo: '/images/gonpreah-community.jpg',
     alt: 'The GonPreah community in Siem Reap',
   },
+];
+
+// Photo strips for each phase — swap `label` slots for `{ src, alt }` as photos arrive.
+const LECTURE_PHOTOS: { src?: string; alt?: string; label?: string }[] = [
+  { src: '/images/schools/dts.jpg', alt: 'DTS students studying together on campus' },
+  { label: 'Drop a photo — a speaker teaching' },
+  { label: 'Drop a photo — small groups' },
+  { label: 'Drop a photo — worship' },
+];
+const OUTREACH_PHOTOS: { src?: string; alt?: string; label?: string }[] = [
+  { label: 'Drop a photo — an outreach team in a village' },
+  { label: 'Drop a photo — serving with a local church' },
+  { label: 'Drop a photo — a kids programme' },
+  { label: 'Drop a photo — the team on the road' },
 ];
 
 const INFO: [string, string][] = [
@@ -131,12 +145,11 @@ const FAQ: [string, string][] = [
           step.style.transform = `translateY(${(1 - tw) * 26 * dir}px)`;
           step.style.pointerEvents = tw > 0.5 ? '' : 'none';
           if (photos[i]) {
-            // Flip: the current photo turns away to the left as the next turns in from the right.
-            const angle = Math.max(-1, Math.min(1, i - d)) * 90;
-            const facing = Math.abs(angle) < 90;
-            photos[i].style.opacity = facing ? '1' : '0';
-            photos[i].style.transform = `rotateY(${angle}deg)`;
-            photos[i].style.filter = `brightness(${1 - (Math.abs(angle) / 90) * 0.55})`;
+            // Card deal: each photo slides in from the right over the one before it, which stays put underneath.
+            const t = i === 0 ? 1 : Math.min(1, Math.max(0, d - (i - 1)));
+            const e = t * t * (3 - 2 * t);
+            photos[i].style.transform = `translate(${(1 - e) * 108}%, ${(1 - e) * 6}%) rotate(${(1 - e) * 5}deg)`;
+            photos[i].style.zIndex = String(i + 1);
           }
           if (labels[i]) labels[i].style.opacity = String(0.35 + 0.65 * w);
         });
@@ -163,9 +176,7 @@ const FAQ: [string, string][] = [
     <div class="wrap grid2 stag">
       <div class="card phase">
         <div class="phase-photo wipe">
-          <div class="parslow" style="height:112%;margin-top:-6%;">
-            <img src="/images/schools/dts.jpg" alt="DTS students in lecture phase studying together" loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" />
-          </div>
+          <PhotoStrip items={LECTURE_PHOTOS} label="Photos from lecture phase" duration={36} />
         </div>
         <div class="phase-body">
           <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">Lecture phase · 3 months</p>
@@ -177,9 +188,7 @@ const FAQ: [string, string][] = [
       </div>
       <div class="card phase">
         <div class="phase-photo wipe">
-          <div class="parslow" style="height:112%;margin-top:-6%;">
-            <PhotoSlot label="Drop a photo — an outreach team in a village" radius={0} />
-          </div>
+          <PhotoStrip items={OUTREACH_PHOTOS} label="Photos from outreach phase" duration={42} reverse />
         </div>
         <div class="phase-body">
           <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">Outreach phase · 3 months</p>

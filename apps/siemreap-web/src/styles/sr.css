@@ -176,14 +176,17 @@ body.sr {
   .sr .pagehead--photo .rule, .sr .pagehead--photo .body { animation: none !important; }
   .sr .journey-stack { height: auto; }
   .sr .journey-pin { position: relative; height: auto; padding: 84px 0 40px; }
-  .sr .jp-photo { opacity: 1 !important; transform: none !important; filter: none !important; }
+  .sr .jp-photo { transform: none !important; box-shadow: none; }
   .sr .jp-photo:not(:first-child) { display: none; }
+  .sr .breakdown { margin-top: 0; padding-top: 0; }
+  .sr .gallery { overflow-x: auto; }
+  .sr .gallery-track { animation: none !important; }
+  .sr .gallery-set[aria-hidden] { display: none; }
   .sr .jp-steps { display: flex; flex-direction: column; gap: 34px; }
   .sr .jp-step { opacity: 1 !important; transform: none !important; }
   .sr .jp-head { transform: none !important; }
   .sr .jp-grid { opacity: 1 !important; }
   .sr .jp-rail { display: none; }
-  .sr .breakdown { margin-top: 0; padding-top: 0; }
   .sr .bd-head { animation: none !important; opacity: 1; transform: none; }
 }
 
@@ -205,14 +208,23 @@ body.sr {
   display: flex; flex-direction: column; justify-content: center; padding: 100px 0 40px; overflow: hidden;
 }
 .sr .jp-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(30px, 5vw, 70px); align-items: center; margin-top: 40px; }
-.sr .jp-photos { position: relative; height: clamp(280px, 44vh, 500px); perspective: 1400px; }
+.sr .jp-photos { position: relative; height: clamp(280px, 44vh, 500px); border-radius: 20px; overflow: hidden; background: var(--sr-raise); }
 .sr .jp-photo {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 20px;
-  opacity: 0; backface-visibility: hidden; transform-origin: 50% 50%; will-change: opacity, transform;
+  transform: translateX(108%); transform-origin: 50% 100%; will-change: transform;
+  box-shadow: -18px 0 40px rgba(0,0,0,.45);
 }
 .sr .jp-head { will-change: transform; }
 /* The breakdown rides up over the tail of the pinned journey stack. */
 .sr .breakdown { position: relative; z-index: 2; margin-top: -50vh; padding-top: 30px; background: var(--sr-ink); }
+.sr .gallery { overflow: hidden; }
+.sr .gallery-track { display: flex; width: max-content; animation: sr-gallery var(--gallery-duration, 40s) linear infinite; }
+.sr .gallery-track--reverse { animation-direction: reverse; }
+.sr .gallery:hover .gallery-track { animation-play-state: paused; }
+.sr .gallery-set { display: flex; gap: 10px; padding-right: 10px; }
+.sr .gallery-item { flex: none; width: clamp(180px, 17vw, 250px); height: 260px; overflow: hidden; background: var(--sr-raise); }
+.sr .phase-photo .gallery, .sr .phase-photo .gallery-track, .sr .phase-photo .gallery-set { height: 100%; }
+@keyframes sr-gallery { to { transform: translateX(-50%); } }
 .sr .jp-steps { display: grid; }
 .sr .jp-step { grid-area: 1 / 1; opacity: 0; will-change: opacity, transform; }
 .sr .jp-rail { display: flex; flex-wrap: wrap; gap: 8px 28px; position: relative; margin-top: 38px; padding-top: 16px; }
@@ -380,6 +392,8 @@ body.sr {
   .sr .jp-step .body { font-size: 15px; }
   .sr .jp-rail { margin-top: 22px; gap: 6px 16px; }
   .sr .jp-rail-label { font-size: 11px; }
+  .sr .gallery-item { width: 56vw; height: 200px; }
+  .sr .gallery-set { gap: 8px; padding-right: 8px; }
   .sr .phase-photo { height: 200px; }
   .sr .phase-body { padding: 24px 22px 26px; }
   .sr .info { padding: 30px 22px; }
