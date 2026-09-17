@@ -14,8 +14,8 @@ import SchoolCard from '../components/sr/SchoolCard.astro';
 // the first frame during preload instead of waiting for playback.
 const GONPREAH_3D_VIDEO = '/video/gonpreah-community-3d.mp4#t=0.001';
 
-const SCHOOL_ROWS: [string, string, string, string][] = [
-  ['Discipleship Training School', 'DTS', 'The doorway into everything else. Lecture phase, then outreach phase.', 'Two intakes a year'],
+const SCHOOL_ROWS: [string, string, string, string, string?][] = [
+  ['Discipleship Training School', 'DTS', 'The doorway into everything else. Lecture phase, then outreach phase.', 'Two intakes a year', '/images/schools/dts.jpg'],
   ['Discipleship Bible School', 'DBS', "An extended season in the Word, for those who want depth before they're sent.", 'Annual'],
   ['Bible Counseling School', 'BCS', 'Training for those caring for people who carry trauma — a growing need across Cambodia.', 'New'],
   ['Social Media School', 'SMS', 'Storytelling and digital ministry, for the generation already living there.', 'New'],
@@ -89,8 +89,8 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
           </div>
           <div class="schools-viewport" style="margin-top:40px;">
             <div class="hscroll">
-              {SCHOOL_ROWS.map(([name, abbr, body, when]) => (
-                <SchoolCard name={name} abbr={abbr} body={body} when={when} />
+              {SCHOOL_ROWS.map(([name, abbr, body, when, photo]) => (
+                <SchoolCard name={name} abbr={abbr} body={body} when={when} photo={photo} />
               ))}
             </div>
           </div>
