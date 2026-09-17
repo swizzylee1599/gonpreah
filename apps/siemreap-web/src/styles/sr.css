@@ -188,8 +188,8 @@ body.sr {
 
 .sr .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .sr .globe-o { display: inline-block; width: .8em; height: .8em; vertical-align: -.06em; margin: 0 .03em 0 .01em; overflow: visible; }
-.sr .globe-o-spin { animation: sr-globe-spin 2.6s linear infinite; }
-@keyframes sr-globe-spin { to { transform: translateX(22px); } }
+.sr .globe-o-spin { animation: sr-globe-spin 18s linear infinite; }
+@keyframes sr-globe-spin { to { transform: translateX(-176px); } }
 
 .sr .pagehead--photo {
   position: relative; overflow: hidden; min-height: 78vh;
