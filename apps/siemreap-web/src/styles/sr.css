@@ -170,6 +170,8 @@ body.sr {
   .sr .hw > i { animation: none; transform: none; opacity: 1; filter: none; }
   .sr .hswap { transition: none; }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  .sr .pagehead-photo, .sr .pagehead--photo .eyebrow, .sr .pagehead--photo .km,
+  .sr .pagehead--photo .rule, .sr .pagehead--photo .body { animation: none !important; }
 }
 
 /*
@@ -193,34 +195,20 @@ body.sr {
   background: linear-gradient(to top, rgba(11,11,11,.97) 0%, rgba(11,11,11,.72) 45%, rgba(11,11,11,.35) 100%);
 }
 .sr .pagehead--photo .wrap { width: 100%; text-shadow: 0 2px 28px rgba(0,0,0,.7), 0 1px 3px rgba(0,0,0,.6); }
-/* School card -> school page: the photo morphs and crossfades into the
-   header (0-.8s), the scrim settles over it (.3-.9s), then the copy
-   rises in (.55-1.2s). The rest of the page crossfades underneath. */
+/* Page changes fade through the site's black: the old page dips out
+   (0-.3s), the new one fades up (.3-.8s) while the title words come
+   back together. Photo headers drift in slowly and their copy rises. */
+::view-transition { background: var(--sr-ink); }
+::view-transition-old(root) { animation: sr-vt-fade-out .3s ease-in both; }
+::view-transition-new(root) { animation: sr-vt-fade-in .5s ease-out .3s both; }
 @keyframes sr-vt-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes sr-vt-fade-out { from { opacity: 1; } to { opacity: 0; } }
-@keyframes sr-vt-rise-in { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
-::view-transition-old(root), ::view-transition-new(root) { animation-duration: .55s; }
-::view-transition-group(school-photo-dts), ::view-transition-group(school-photo-dbs),
-::view-transition-group(school-photo-bcs), ::view-transition-group(school-photo-sms) {
-  animation-duration: .8s; animation-timing-function: cubic-bezier(.22,.61,.36,1); z-index: 2;
-}
-::view-transition-image-pair(school-photo-dts), ::view-transition-image-pair(school-photo-dbs),
-::view-transition-image-pair(school-photo-bcs), ::view-transition-image-pair(school-photo-sms) { isolation: isolate; }
-::view-transition-old(school-photo-dts), ::view-transition-new(school-photo-dts),
-::view-transition-old(school-photo-dbs), ::view-transition-new(school-photo-dbs),
-::view-transition-old(school-photo-bcs), ::view-transition-new(school-photo-bcs),
-::view-transition-old(school-photo-sms), ::view-transition-new(school-photo-sms) {
-  width: 100%; height: 100%; object-fit: cover; mix-blend-mode: normal;
-  animation-duration: .8s; animation-timing-function: ease-in-out;
-}
-::view-transition-old(school-photo-dts), ::view-transition-old(school-photo-dbs),
-::view-transition-old(school-photo-bcs), ::view-transition-old(school-photo-sms) { animation-name: sr-vt-fade-out; }
-::view-transition-new(school-photo-dts), ::view-transition-new(school-photo-dbs),
-::view-transition-new(school-photo-bcs), ::view-transition-new(school-photo-sms) { animation-name: sr-vt-fade-in; }
-::view-transition-group(pagehead-scrim) { z-index: 3; }
-::view-transition-new(pagehead-scrim) { animation: sr-vt-fade-in .6s ease .3s both; }
-::view-transition-group(pagehead-copy) { z-index: 4; }
-::view-transition-new(pagehead-copy) { animation: sr-vt-rise-in .65s cubic-bezier(.16,1,.3,1) .55s both; }
+@keyframes sr-kenburns { from { transform: scale(1.1); } to { transform: none; } }
+@keyframes sr-head-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.sr .pagehead-photo { transform-origin: 50% 40%; animation: sr-kenburns 1.8s cubic-bezier(.22,.61,.36,1) both; }
+.sr .pagehead--photo .eyebrow { animation: sr-head-in .7s cubic-bezier(.16,1,.3,1) .45s both; }
+.sr .pagehead--photo .km, .sr .pagehead--photo .rule { animation: sr-head-in .7s cubic-bezier(.16,1,.3,1) .85s both; }
+.sr .pagehead--photo .body { animation: sr-head-in .7s cubic-bezier(.16,1,.3,1) .95s both; }
 ::view-transition-group(page-title-w0), ::view-transition-group(page-title-w1),
 ::view-transition-group(page-title-w2), ::view-transition-group(page-title-w3),
 ::view-transition-group(page-title-w4), ::view-transition-group(page-title-w5) { animation: none; }
@@ -241,12 +229,12 @@ body.sr {
 ::view-transition-old(page-title-w4) { animation: sr-word-out-a .38s ease .12s both; }
 ::view-transition-old(page-title-w5) { animation: sr-word-out-b .38s ease .15s both; }
 
-::view-transition-new(page-title-w0) { animation: sr-word-in-a .42s cubic-bezier(.16,1,.3,1) .2s both; }
-::view-transition-new(page-title-w1) { animation: sr-word-in-b .42s cubic-bezier(.16,1,.3,1) .24s both; }
-::view-transition-new(page-title-w2) { animation: sr-word-in-a .42s cubic-bezier(.16,1,.3,1) .28s both; }
-::view-transition-new(page-title-w3) { animation: sr-word-in-b .42s cubic-bezier(.16,1,.3,1) .32s both; }
-::view-transition-new(page-title-w4) { animation: sr-word-in-a .42s cubic-bezier(.16,1,.3,1) .36s both; }
-::view-transition-new(page-title-w5) { animation: sr-word-in-b .42s cubic-bezier(.16,1,.3,1) .4s both; }
+::view-transition-new(page-title-w0) { animation: sr-word-in-a .46s cubic-bezier(.16,1,.3,1) .42s both; }
+::view-transition-new(page-title-w1) { animation: sr-word-in-b .46s cubic-bezier(.16,1,.3,1) .47s both; }
+::view-transition-new(page-title-w2) { animation: sr-word-in-a .46s cubic-bezier(.16,1,.3,1) .52s both; }
+::view-transition-new(page-title-w3) { animation: sr-word-in-b .46s cubic-bezier(.16,1,.3,1) .57s both; }
+::view-transition-new(page-title-w4) { animation: sr-word-in-a .46s cubic-bezier(.16,1,.3,1) .62s both; }
+::view-transition-new(page-title-w5) { animation: sr-word-in-b .46s cubic-bezier(.16,1,.3,1) .67s both; }
 
 @keyframes sr-word-out-a { to { opacity: 0; filter: blur(14px); transform: translate(-26px, -18px) rotate(-7deg) scale(1.08); } }
 @keyframes sr-word-out-b { to { opacity: 0; filter: blur(14px); transform: translate(24px, 16px) rotate(6deg) scale(1.06); } }
