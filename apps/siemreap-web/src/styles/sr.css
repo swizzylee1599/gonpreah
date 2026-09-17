@@ -172,6 +172,13 @@ body.sr {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
   .sr .pagehead-photo, .sr .pagehead--photo .eyebrow, .sr .pagehead--photo .km,
   .sr .pagehead--photo .rule, .sr .pagehead--photo .body { animation: none !important; }
+  .sr .journey-stack { height: auto; }
+  .sr .journey-pin { position: relative; height: auto; padding: 84px 0 40px; }
+  .sr .jp-photo { opacity: 1 !important; transform: none !important; }
+  .sr .jp-photo:not(:first-child) { display: none; }
+  .sr .jp-steps { display: flex; flex-direction: column; gap: 34px; }
+  .sr .jp-step { opacity: 1 !important; transform: none !important; }
+  .sr .jp-rail { display: none; }
 }
 
 /*
@@ -185,11 +192,22 @@ body.sr {
  */
 .sr .pt-word { display: inline-block; vertical-align: bottom; }
 
-/* School page: journey rows, phase cards, info card, FAQ */
-.sr .journey { display: flex; flex-direction: column; gap: clamp(56px, 8vw, 110px); }
-.sr .story { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(30px, 5vw, 70px); align-items: center; }
-.sr .story--flip .story-photo { order: 2; }
-.sr .story-photo { height: clamp(300px, 34vw, 460px); overflow: hidden; border-radius: 20px; }
+/* School page: pinned journey stepper, phase cards, info card, FAQ */
+.sr .journey-stack { position: relative; height: 320vh; }
+.sr .journey-pin {
+  position: sticky; top: 0; height: 100vh; box-sizing: border-box;
+  display: flex; flex-direction: column; justify-content: center; padding: 100px 0 40px; overflow: hidden;
+}
+.sr .jp-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(30px, 5vw, 70px); align-items: center; margin-top: 40px; }
+.sr .jp-photos { position: relative; height: clamp(280px, 44vh, 500px); border-radius: 20px; overflow: hidden; background: var(--sr-raise); }
+.sr .jp-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; will-change: opacity, transform; }
+.sr .jp-steps { display: grid; }
+.sr .jp-step { grid-area: 1 / 1; opacity: 0; will-change: opacity, transform; }
+.sr .jp-rail { display: flex; flex-wrap: wrap; gap: 8px 28px; position: relative; margin-top: 38px; padding-top: 16px; }
+.sr .jp-rail-label { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #dcdcdc; opacity: .35; }
+.sr .jp-rail-label b { font-weight: 500; color: var(--sr-pink); margin-right: 6px; }
+.sr .jp-rail-bar { position: absolute; left: 0; right: 0; top: 0; height: 1px; background: #232323; }
+.sr .jp-rail-bar i { display: block; height: 100%; width: 100%; background: #fff; transform: scaleX(0); transform-origin: left; }
 .sr .phase { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
 .sr .phase-photo { height: 260px; overflow: hidden; }
 .sr .phase-body { padding: 30px 30px 34px; }
@@ -344,9 +362,12 @@ body.sr {
   .sr .schoolcard-body { padding: 20px 20px 22px; min-height: 168px; }
   .sr .th-cover { padding: 50px 0 36px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
   .sr .schools-deck { margin-top: 24px !important; }
-  .sr .story { grid-template-columns: minmax(0, 1fr); gap: 22px; }
-  .sr .story--flip .story-photo { order: 0; }
-  .sr .story-photo { height: 240px; }
+  .sr .journey-pin { padding: 84px 0 28px; justify-content: flex-start; }
+  .sr .jp-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; margin-top: 22px; }
+  .sr .jp-photos { height: 30vh; }
+  .sr .jp-step .body { font-size: 15px; }
+  .sr .jp-rail { margin-top: 22px; gap: 6px 16px; }
+  .sr .jp-rail-label { font-size: 11px; }
   .sr .phase-photo { height: 200px; }
   .sr .phase-body { padding: 24px 22px 26px; }
   .sr .info { padding: 30px 22px; }
