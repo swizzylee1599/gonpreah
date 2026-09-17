@@ -61,8 +61,10 @@ const FAQ: [string, string][] = [
   <div class="journey-stack">
     <div class="journey-pin">
       <div class="wrap">
-        <p class="eyebrow">Begin your journey</p>
-        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Know God. Discover your calling.</h2>
+        <div class="jp-head">
+          <p class="eyebrow">Begin your journey</p>
+          <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Know God. Discover your calling.</h2>
+        </div>
         <div class="jp-grid">
           <div class="jp-photos">
             {JOURNEY.map((step, i) => (
@@ -92,7 +94,10 @@ const FAQ: [string, string][] = [
 
   <script>
     // Pinned stepper: the panel stays put while scrolling through the
-    // stack; progress crossfades the photos and swaps the step copy.
+    // stack. The first 78% of progress flips through the photos and
+    // swaps the step copy; the last 22% slides the heading off to the
+    // right and fades the rest while the breakdown section rides up over it.
+    const STEPS_END = 0.78;
     let ctrl = null;
     const init = () => {
       if (ctrl) ctrl.abort();
@@ -100,6 +105,9 @@ const FAQ: [string, string][] = [
       const { signal } = ctrl;
       const stack = document.querySelector('.journey-stack');
       if (!stack) return;
+      const head = stack.querySelector('.jp-head');
+      const grid = stack.querySelector('.jp-grid');
+      const rail = stack.querySelector('.jp-rail');
       const photos = [...stack.querySelectorAll('.jp-photo')];
       const steps = [...stack.querySelectorAll('.jp-step')];
       const labels = [...stack.querySelectorAll('.jp-rail-label')];
@@ -112,20 +120,31 @@ const FAQ: [string, string][] = [
         const rect = stack.getBoundingClientRect();
         const scrollable = rect.height - window.innerHeight;
         const p = scrollable <= 0 ? 0 : Math.min(1, Math.max(0, -rect.top / scrollable));
-        const d = p * (n - 1);
+        const d = Math.min(1, p / STEPS_END) * (n - 1);
+        const exit = Math.min(1, Math.max(0, (p - STEPS_END) / (1 - STEPS_END)));
         steps.forEach((step, i) => {
           const w = Math.max(0, 1 - Math.abs(d - i));
           const dir = d > i ? -1 : 1;
-          step.style.opacity = String(w);
-          step.style.transform = `translateY(${(1 - w) * 26 * dir}px)`;
-          step.style.pointerEvents = w > 0.5 ? '' : 'none';
+          // Copy holds while its photo is mostly facing, and hands over in a short window around the midpoint.
+          const tw = Math.min(1, Math.max(0, (w - 0.35) / 0.3));
+          step.style.opacity = String(tw);
+          step.style.transform = `translateY(${(1 - tw) * 26 * dir}px)`;
+          step.style.pointerEvents = tw > 0.5 ? '' : 'none';
           if (photos[i]) {
-            photos[i].style.opacity = String(w);
-            photos[i].style.transform = `scale(${1.06 - 0.06 * w})`;
+            // Flip: the current photo turns away to the left as the next turns in from the right.
+            const angle = Math.max(-1, Math.min(1, i - d)) * 90;
+            const facing = Math.abs(angle) < 90;
+            photos[i].style.opacity = facing ? '1' : '0';
+            photos[i].style.transform = `rotateY(${angle}deg)`;
+            photos[i].style.filter = `brightness(${1 - (Math.abs(angle) / 90) * 0.55})`;
           }
           if (labels[i]) labels[i].style.opacity = String(0.35 + 0.65 * w);
         });
-        if (bar) bar.style.transform = `scaleX(${p})`;
+        if (bar) bar.style.transform = `scaleX(${Math.min(1, p / STEPS_END)})`;
+        const ease = exit * exit * (3 - 2 * exit);
+        if (head) head.style.transform = `translateX(${ease * 110}vw)`;
+        if (grid) grid.style.opacity = String(1 - ease);
+        if (rail) rail.style.opacity = String(1 - ease);
       };
       const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
       update();
@@ -136,8 +155,8 @@ const FAQ: [string, string][] = [
     document.addEventListener('astro:page-load', init);
   </script>
 
-  <section class="sec" style="padding-top:0;">
-    <div class="wrap reveal" style="margin-bottom:34px;">
+  <section class="sec breakdown">
+    <div class="wrap bd-head" style="margin-bottom:34px;">
       <p class="eyebrow">DTS breakdown</p>
       <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Three months here. Three months to the nations.</h2>
     </div>
