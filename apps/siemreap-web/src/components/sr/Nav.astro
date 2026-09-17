@@ -47,13 +47,20 @@ const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
 </nav>
 
 <script>
-  const nav = document.getElementById('sr-nav');
-  const toggle = document.getElementById('sr-nav-toggle');
-  if (nav && toggle) {
+  // The nav is re-rendered on every client-side navigation, so bind to
+  // the current element each time and drop the previous page's listeners.
+  let ctrl: AbortController | null = null;
+  const init = () => {
+    ctrl?.abort();
+    ctrl = new AbortController();
+    const { signal } = ctrl;
+    const nav = document.getElementById('sr-nav');
+    const toggle = document.getElementById('sr-nav-toggle');
+    if (!nav || !toggle) return;
     toggle.addEventListener('click', () => {
       const open = nav.classList.toggle('is-mobile-open');
       toggle.setAttribute('aria-expanded', String(open));
-    });
+    }, { signal });
 
     let lastY = window.scrollY;
     window.addEventListener('scroll', () => {
@@ -62,6 +69,8 @@ const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
       const down = y > lastY;
       nav.classList.toggle('is-hidden', down && y > 140);
       lastY = y;
-    }, { passive: true });
-  }
+    }, { passive: true, signal });
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
 </script>

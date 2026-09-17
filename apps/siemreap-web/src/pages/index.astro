@@ -114,6 +114,14 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
       </div>
 
       <script>
+        // Re-runs after every client-side navigation: the DOM is swapped
+        // but hoisted scripts only execute once. The previous page's
+        // window listeners are dropped through the abort signal.
+        let ctrl = null;
+        const init = () => {
+        if (ctrl) ctrl.abort();
+        ctrl = new AbortController();
+        const { signal } = ctrl;
         const video = document.querySelector('.scroll3d');
         const stack = document.querySelector('.gonpreah-stack');
         const scrim = document.querySelector('.video3d-scrim');
@@ -161,12 +169,12 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
           if (cover) {
             const setCoverMargin = () => { cover.style.marginTop = `-${cover.offsetHeight}px`; };
             setCoverMargin();
-            window.addEventListener('resize', setCoverMargin);
+            window.addEventListener('resize', setCoverMargin, { signal });
           }
           if (batCover) {
             const setBatMargin = () => { batCover.style.marginTop = `-${batCover.offsetHeight}px`; };
             setBatMargin();
-            window.addEventListener('resize', setBatMargin);
+            window.addEventListener('resize', setBatMargin, { signal });
           }
 
           // The stack is one long pin: the video/text stay fixed in place
@@ -245,8 +253,11 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
             }
           };
           update();
-          window.addEventListener('scroll', onScroll, { passive: true });
+          window.addEventListener('scroll', onScroll, { passive: true, signal });
         }
+        };
+        init();
+        document.addEventListener('astro:page-load', init);
       </script>
 
       <section class="sec" style="padding-top:0;">
