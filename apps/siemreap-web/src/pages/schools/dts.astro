@@ -3,6 +3,7 @@ import SrLayout from '../../layouts/SrLayout.astro';
 import Footer from '../../components/sr/Footer.astro';
 import PageHead from '../../components/sr/PageHead.astro';
 import PhotoSlot from '../../components/sr/PhotoSlot.astro';
+import Cta from '../../components/sr/Cta.astro';
 
 const JOURNEY: { title: string; body: string; photo: string; alt: string }[] = [
   {
@@ -59,8 +60,8 @@ const FAQ: [string, string][] = [
 
   <section class="sec" style="padding-bottom:0;">
     <div class="wrap reveal">
-      <p class="eyebrow">Know God. Discover your calling.</p>
-      <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;max-width:20ch;">Find a purpose greater than your own desire.</h2>
+      <p class="eyebrow">Begin your journey</p>
+      <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Know God. Discover your calling.</h2>
     </div>
   </section>
 
@@ -176,5 +177,11 @@ const FAQ: [string, string][] = [
       </div>
     </div>
   </section>
+  <Cta
+    title="Find a purpose greater than your own desire."
+    body="DTS starts every January in Siem Reap. Tell us a little about yourself and we will walk you through the dates, the cost and what to expect."
+    primary={['apply', 'Apply for DTS']}
+    secondary={['contact', 'Ask a question']}
+  />
   <Footer />
 </SrLayout>
