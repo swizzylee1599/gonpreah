@@ -2,81 +2,179 @@
 import SrLayout from '../../layouts/SrLayout.astro';
 import Footer from '../../components/sr/Footer.astro';
 import PageHead from '../../components/sr/PageHead.astro';
-import CardGrid from '../../components/sr/CardGrid.astro';
-import Cta from '../../components/sr/Cta.astro';
+import PhotoSlot from '../../components/sr/PhotoSlot.astro';
 
-const PILLARS: [string, string][] = [
-  ['Apply for DTS', 'Join our community surrounded by leaders and friends who have a heart to serve God and the nations. We will help you find your identity in Christ and your purpose in the world.'],
-  ['Know God', "In the six months, you will study God's word and make it known to the nations. Learn to hear God's voice and to walk out in the calling He has for you."],
-  ['Discover your calling', 'Find your purpose in the world. God has a distinctive calling on each of our lives and has given you skills and passion for a purpose. Through DTS, you will be equipped and empowered to use the gifts God has given you to bring His love into your community.'],
+const JOURNEY: { title: string; body: string; photo: string; alt: string }[] = [
+  {
+    title: 'Apply for DTS',
+    body: 'Join our community surrounded by leaders and friends who have a heart to serve God and the nations. We will help you find your identity in Christ and your purpose in the world.',
+    photo: '/images/gonpreah-worship-1.jpg',
+    alt: 'Students worshipping together on the Siem Reap campus',
+  },
+  {
+    title: 'Know God',
+    body: "In the six months, you will study God's word and make it known to the nations. Learn to hear God's voice and to walk out in the calling He has for you.",
+    photo: '/images/gonpreah-worship-2.jpg',
+    alt: 'A worship gathering at YWAM Siem Reap',
+  },
+  {
+    title: 'Discover your calling',
+    body: 'Find your purpose in the world. God has a distinctive calling on each of our lives and has given you skills and passion for a purpose. Through DTS, you will be equipped and empowered to use the gifts God has given you to bring His love into your community.',
+    photo: '/images/gonpreah-community.jpg',
+    alt: 'The GonPreah community in Siem Reap',
+  },
 ];
 
-const FACTS: [string, string][] = [
-  ['Length', '6 months'],
-  ['Training phase', '3 months · 12 weeks of lecture, 12 topics'],
-  ['Outreach phase', '3 months · Cambodia and the nations'],
-  ['Language', 'English — a Khmer DTS runs alongside'],
-  ['Intakes', 'Two a year'],
-  ['Where', 'Siem Reap, Cambodia'],
+const INFO: [string, string][] = [
+  ['Next school', 'January — runs once a year'],
+  ['Arrival day', 'To be announced'],
+  ['Departure day', 'To be announced'],
+  ['Location', 'Siem Reap, Cambodia'],
+  ['Prerequisites', 'Must be 18+'],
 ];
 
+const LECTURE_COST: [string, string][] = [
+  ['Country A', '$2,000 USD'],
+  ['Country B', '$1,500 USD'],
+  ['Country C', '$620 USD'],
+];
+
+const FAQ: [string, string][] = [
+  ['Who can apply for DTS?', 'Anyone 18 or over with a hunger to know God and make Him known. You do not need any previous Bible training or ministry experience — DTS is the starting point.'],
+  ['What language is the school taught in?', 'This DTS is taught in English. A Khmer-language DTS runs alongside it for Cambodian students.'],
+  ['What do Country A, B and C mean?', 'School fees are tiered by the country on your passport so the school stays accessible to students from every nation. When you apply, we will tell you which tier applies to you.'],
+  ['What does the fee cover?', 'Lecture phase fees cover your teaching, accommodation and meals on campus in Siem Reap. Outreach fees cover travel, accommodation and food during the outreach phase. Flights to and from Cambodia, visas, insurance and personal spending are not included.'],
+  ['Where does outreach go?', 'Outreach teams serve in villages around Siem Reap and across Cambodia, and to other nations in Southeast Asia and beyond. Locations are confirmed during the lecture phase, and outreach costs range from $1,500 to $2,500 USD depending on where your team goes.'],
+  ['When does the school start?', 'DTS runs once a year, starting in January. Arrival and departure days for the next school will be published here — or email dts@ywamsiemreap.org and we will send you the dates.'],
+  ['What is a week in lecture phase like?', 'A different speaker and topic each week — twelve weeks, twelve topics, from leaders locally and internationally — alongside worship, small groups, time in the Word, and serving in the local community.'],
+  ['What happens after DTS?', 'DTS is the entry point to the University of the Nations. Many students go on to further schools, join staff at a YWAM base, or take what they have learned back into their church, work and city.'],
+];
 ---
 <SrLayout title="Discipleship Training School | YWAM Siem Reap" spacer={false}
-  description="A six-month Discipleship Training School in Siem Reap, Cambodia: three months of lecture phase, then three months to the nations on outreach. Discover your identity in Christ and know your purpose in the world.">
+  description="A six-month Discipleship Training School in Siem Reap, Cambodia: three months of lecture, then three months on outreach to the nations. Know God and make Him known.">
   <PageHead eyebrow="Discipleship Training School · DTS" km="អត្តសញ្ញាណ" title="Discover your identity. Know your purpose." highlight="Know your purpose."
-    lead="Discover your identity in Christ and know your purpose in the world. DTS is a six-month school focused on knowing God and making him known: three months of lecture phase in Siem Reap, then three months to the nations on outreach — in Cambodia and beyond."
+    lead="Six months to know God and make Him known: three months of lecture in Siem Reap, then three months on outreach to the nations."
     photo="/images/schools/dts.jpg"
     photoAlt="DTS students studying together around a table under a tree on the Siem Reap campus" />
 
   <section class="sec" style="padding-bottom:0;">
-    <div class="wrap">
-      <p class="eyebrow">Begin your journey</p>
-      <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Know God. Discover your calling.</h2>
+    <div class="wrap reveal">
+      <p class="eyebrow">Know God. Discover your calling.</p>
+      <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;max-width:20ch;">Find a purpose greater than your own desire.</h2>
     </div>
   </section>
-  <CardGrid items={PILLARS} />
+
+  <section class="sec">
+    <div class="wrap journey">
+      {JOURNEY.map((step, i) => (
+        <div class:list={['story', { 'story--flip': i % 2 === 1 }]}>
+          <div class="story-photo wipe">
+            <div class="parslow" style="height:112%;margin-top:-6%;">
+              <img src={step.photo} alt={step.alt} loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" />
+            </div>
+          </div>
+          <div class="story-copy linein">
+            <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">{'0' + (i + 1)}</p>
+            <h3 class="disp" style="margin:16px 0 0;font-size:clamp(24px,2.6vw,34px);font-weight:500;line-height:1.15;">{step.title}</h3>
+            <span class="rule growrule" style="margin:20px 0;transform-origin:left;"></span>
+            <p class="body" style="margin:0;max-width:46ch;">{step.body}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
 
   <section class="sec" style="padding-top:0;">
-    <div class="wrap" style="margin-bottom:34px;">
+    <div class="wrap reveal" style="margin-bottom:34px;">
       <p class="eyebrow">DTS breakdown</p>
       <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Three months here. Three months to the nations.</h2>
     </div>
-    <div class="wrap grid2 reveal">
-      <div class="card">
-        <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">Training phase · 3 months</p>
-        <h3 class="disp" style="margin:18px 0 0;font-size:26px;font-weight:500;">Lecture phase</h3>
-        <span class="rule" style="margin:18px 0;"></span>
-        <p class="body" style="margin:0;font-size:16px;">Leaders from around the world teaching to help you hear God's voice and find the calling He has for you.</p>
-        <p class="body" style="margin:14px 0 0;font-size:16px;">Twelve weeks of lecture, twelve topics — from speakers locally and internationally.</p>
+    <div class="wrap grid2 stag">
+      <div class="card phase">
+        <div class="phase-photo wipe">
+          <div class="parslow" style="height:112%;margin-top:-6%;">
+            <img src="/images/schools/dts.jpg" alt="DTS students in lecture phase studying together" loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" />
+          </div>
+        </div>
+        <div class="phase-body">
+          <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">Lecture phase · 3 months</p>
+          <h3 class="disp" style="margin:16px 0 0;font-size:26px;font-weight:500;">Training phase</h3>
+          <span class="rule" style="margin:18px 0;"></span>
+          <p class="body" style="margin:0;font-size:16px;">Leaders from around the world teaching to help you hear God's voice and find the calling He has for you.</p>
+          <p class="body" style="margin:14px 0 0;font-size:16px;">Twelve weeks of lecture, twelve topics — from speakers locally and internationally.</p>
+        </div>
       </div>
-      <div class="card">
-        <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">Outreach phase · 3 months</p>
-        <h3 class="disp" style="margin:18px 0 0;font-size:26px;font-weight:500;">To the nations</h3>
-        <span class="rule" style="margin:18px 0;"></span>
-        <p class="body" style="margin:0;font-size:16px;">Go to the nations, encounter Jesus in different cultures, and bring the love of Christ through the gospel to the unreached.</p>
-        <p class="body" style="margin:14px 0 0;font-size:16px;">Teams serve here in Cambodia — in villages around Siem Reap and across the country — and beyond its borders.</p>
+      <div class="card phase">
+        <div class="phase-photo wipe">
+          <div class="parslow" style="height:112%;margin-top:-6%;">
+            <PhotoSlot label="Drop a photo — an outreach team in a village" radius={0} />
+          </div>
+        </div>
+        <div class="phase-body">
+          <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">Outreach phase · 3 months</p>
+          <h3 class="disp" style="margin:16px 0 0;font-size:26px;font-weight:500;">To the nations</h3>
+          <span class="rule" style="margin:18px 0;"></span>
+          <p class="body" style="margin:0;font-size:16px;">Go to the nations, encounter Jesus in different cultures, and bring the love of Christ through the gospel to the unreached.</p>
+          <p class="body" style="margin:14px 0 0;font-size:16px;">Teams serve here in Cambodia — in villages around Siem Reap and across the country — and beyond its borders.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <section class="sec" style="padding-top:0;">
-    <div class="wrap card reveal" style="padding:40px 48px;">
-      <dl style="margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:28px 34px;">
-        {FACTS.map(([k, v]) => (
-          <div>
-            <dt class="eyebrow" style="margin:0;">{k}</dt>
-            <dd class="disp" style="margin:12px 0 0;font-size:20px;font-weight:500;line-height:1.3;">{v}</dd>
-          </div>
-        ))}
-      </dl>
+    <div class="wrap card reveal info" id="info">
+      <div class="info-grid">
+        <div>
+          <p class="eyebrow">DTS information</p>
+          <dl class="info-list">
+            {INFO.map(([k, v]) => (
+              <div>
+                <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">{k}</dt>
+                <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;">{v}</dd>
+              </div>
+            ))}
+            <div>
+              <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">Email</dt>
+              <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;"><a href="mailto:dts@ywamsiemreap.org" style="color:inherit;text-decoration:none;">dts@ywamsiemreap.org</a></dd>
+            </div>
+          </dl>
+        </div>
+        <div class="info-cost">
+          <p class="eyebrow">Cost of the school</p>
+          <p class="disp" style="margin:22px 0 0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#dcdcdc;">Lecture phase · 3 months</p>
+          <dl class="cost-list">
+            {LECTURE_COST.map(([k, v]) => (
+              <div><dt class="body" style="margin:0;font-size:16px;">{k}</dt><dd class="disp" style="margin:0;font-size:20px;font-weight:500;">{v}</dd></div>
+            ))}
+          </dl>
+          <p class="muted" style="margin:12px 0 0;font-size:13px;">Flights are not included.</p>
+          <p class="disp" style="margin:28px 0 0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#dcdcdc;">Outreach phase · 3 months</p>
+          <p class="disp" style="margin:12px 0 0;font-size:20px;font-weight:500;">$1,500 – $2,500 USD</p>
+          <p class="muted" style="margin:6px 0 0;font-size:13px;">Depending on outreach location.</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:36px;">
+        <a class="btn btn--solid" href="/apply">Apply for DTS</a>
+        <a class="btn" href="mailto:dts@ywamsiemreap.org">Email the DTS team</a>
+      </div>
     </div>
   </section>
 
-  <Cta
-    title="Begin your journey with YWAM."
-    body="Two intakes a year. Tell us a little about yourself and we will walk you through dates, cost and what to expect."
-    primary={['apply', 'Apply for DTS']}
-    secondary={['contact', 'Ask a question']}
-  />
+  <section class="sec" style="padding-top:0;">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">FAQ</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Questions about DTS</h2>
+      </div>
+      <div class="faq stag" style="margin-top:34px;">
+        {FAQ.map(([q, a]) => (
+          <details class="faq-item">
+            <summary class="disp">{q}<span class="faq-mark" aria-hidden="true"></span></summary>
+            <p class="body" style="margin:0;padding:0 0 24px;max-width:66ch;font-size:16px;">{a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
   <Footer />
 </SrLayout>

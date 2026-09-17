@@ -62,20 +62,36 @@
         ctx.beginPath();
         let anyVisible = false;
         for (const ring of poly) {
+          // Hidden runs collapse to a straight chord between the two points where
+          // the ring crosses the horizon, so a landmass around the back never
+          // traces the rim and floods the disc.
+          let started = false;
+          let pendingEntry: [number, number] | null = null;
           for (let i = 0; i < ring.length; i += 2) {
             const la = ring[i] * DEG - lon;
             const ph = ring[i + 1] * DEG;
             const cp = Math.cos(ph);
-            let x = cp * Math.sin(la);
+            const x = cp * Math.sin(la);
             const y = Math.sin(ph), z = cp * Math.cos(la);
-            let y2 = y * ct - z * st;
+            const y2 = y * ct - z * st;
             const z2 = y * st + z * ct;
-            if (z2 > 0) anyVisible = true;
-            else { const m = Math.hypot(x, y2) || 1; x /= m; y2 /= m; } // fold hidden points onto the horizon
-            const sx = c + x * R, sy = c - y2 * R;
-            if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+            if (z2 > 0) {
+              if (pendingEntry) {
+                if (started) ctx.lineTo(pendingEntry[0], pendingEntry[1]);
+                else { ctx.moveTo(pendingEntry[0], pendingEntry[1]); started = true; }
+                pendingEntry = null;
+              }
+              const sx = c + x * R, sy = c - y2 * R;
+              if (started) ctx.lineTo(sx, sy); else { ctx.moveTo(sx, sy); started = true; }
+              anyVisible = true;
+            } else {
+              const m = Math.hypot(x, y2) || 1;
+              const hx = c + (x / m) * R, hy = c - (y2 / m) * R;
+              if (started && !pendingEntry) ctx.lineTo(hx, hy);
+              pendingEntry = [hx, hy];
+            }
           }
-          ctx.closePath();
+          if (started) ctx.closePath();
         }
         if (anyVisible) ctx.fill('evenodd');
       }
