@@ -5,9 +5,16 @@ import PageHead from '../../components/sr/PageHead.astro';
 import CardGrid from '../../components/sr/CardGrid.astro';
 import Cta from '../../components/sr/Cta.astro';
 
+const PILLARS: [string, string][] = [
+  ['Apply for DTS', 'Join our community surrounded by leaders and friends who have a heart to serve God and the nations. We will help you find your identity in Christ and your purpose in the world.'],
+  ['Know God', "In the six months, you will study God's word and make it known to the nations. Learn to hear God's voice and to walk out in the calling He has for you."],
+  ['Discover your calling', 'Find your purpose in the world. God has a distinctive calling on each of our lives and has given you skills and passion for a purpose. Through DTS, you will be equipped and empowered to use the gifts God has given you to bring His love into your community.'],
+];
+
 const FACTS: [string, string][] = [
   ['Length', '6 months'],
-  ['Shape', '3 months lecture · 3 months outreach'],
+  ['Training phase', '3 months · 12 weeks of lecture, 12 topics'],
+  ['Outreach phase', '3 months · Cambodia and the nations'],
   ['Language', 'English — a Khmer DTS runs alongside'],
   ['Intakes', 'Two a year'],
   ['Where', 'Siem Reap, Cambodia'],
@@ -23,46 +30,47 @@ const TOPICS: [string, string][] = [
 ];
 ---
 <SrLayout title="Discipleship Training School | YWAM Siem Reap" spacer={false}
-  description="A six-month Discipleship Training School in Siem Reap, Cambodia: three months of lecture, three months of outreach. Find your identity in Christ and your purpose in the world.">
+  description="A six-month Discipleship Training School in Siem Reap, Cambodia: three months of lecture phase, then three months to the nations on outreach. Discover your identity in Christ and know your purpose in the world.">
   <PageHead eyebrow="Discipleship Training School · DTS" km="អត្តសញ្ញាណ" title="Discover your identity. Know your purpose." highlight="Know your purpose."
-    lead="Discover your identity in Christ and know your purpose in the world. DTS is a six-month school focused on knowing God and making him known — three months of lecture in Siem Reap, then three months of outreach."
+    lead="Discover your identity in Christ and know your purpose in the world. DTS is a six-month school focused on knowing God and making him known: three months of lecture phase in Siem Reap, then three months to the nations on outreach — in Cambodia and beyond."
     photo="/images/schools/dts.jpg"
     photoAlt="DTS students studying together around a table under a tree on the Siem Reap campus" />
 
-  <section class="sec">
-    <div class="wrap" style="display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:50px;align-items:start;">
-      <div>
-        <p class="eyebrow">Why identity comes first</p>
-        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">You are not what you do.</h2>
-      </div>
-      <div>
-        <p class="body" style="margin:0;max-width:58ch;">Most of us arrive carrying a name we were handed — by family, by failure, by what we have managed to achieve. DTS starts by putting that down. Before anyone talks about calling or nations or ministry, we spend real time on the one thing that holds everything else up: you are a child of God, and that is not something you earn.</p>
-        <p class="body" style="margin:16px 0 0;max-width:58ch;">Purpose grows out of that. Not the other way around.</p>
-      </div>
+  <section class="sec" style="padding-bottom:0;">
+    <div class="wrap">
+      <p class="eyebrow">Begin your journey</p>
+      <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Know God. Discover your calling.</h2>
     </div>
   </section>
+  <CardGrid items={PILLARS} />
 
   <section class="sec" style="padding-top:0;">
+    <div class="wrap" style="margin-bottom:34px;">
+      <p class="eyebrow">DTS breakdown</p>
+      <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Three months here. Three months to the nations.</h2>
+    </div>
     <div class="wrap grid2 reveal">
       <div class="card">
-        <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">Months 1–3</p>
+        <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">Training phase · 3 months</p>
         <h3 class="disp" style="margin:18px 0 0;font-size:26px;font-weight:500;">Lecture phase</h3>
         <span class="rule" style="margin:18px 0;"></span>
-        <p class="body" style="margin:0;font-size:16px;">Twelve weeks on campus in Siem Reap. A different speaker and theme each week, small groups that go deep, time in the Word, and a community that eats, worships and lives together. This is where identity gets worked out — not as an idea, but in the room, with people.</p>
+        <p class="body" style="margin:0;font-size:16px;">Leaders from around the world teaching to help you hear God's voice and find the calling He has for you.</p>
+        <p class="body" style="margin:14px 0 0;font-size:16px;">Twelve weeks of lecture, twelve topics — from speakers locally and internationally.</p>
       </div>
       <div class="card">
-        <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">Months 4–6</p>
-        <h3 class="disp" style="margin:18px 0 0;font-size:26px;font-weight:500;">Outreach phase</h3>
+        <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">Outreach phase · 3 months</p>
+        <h3 class="disp" style="margin:18px 0 0;font-size:26px;font-weight:500;">To the nations</h3>
         <span class="rule" style="margin:18px 0;"></span>
-        <p class="body" style="margin:0;font-size:16px;">Then you go. Your team serves in villages around Siem Reap or in another part of Cambodia and Southeast Asia — alongside local churches and leaders, on their invitation. Purpose stops being a question you ask and becomes something you do, one ordinary day at a time.</p>
+        <p class="body" style="margin:0;font-size:16px;">Go to the nations, encounter Jesus in different cultures, and bring the love of Christ through the gospel to the unreached.</p>
+        <p class="body" style="margin:14px 0 0;font-size:16px;">Teams serve here in Cambodia — in villages around Siem Reap and across the country — and beyond its borders.</p>
       </div>
     </div>
   </section>
 
   <section class="sec" style="padding-top:0;">
     <div class="wrap">
-      <p class="eyebrow">What you'll walk through</p>
-      <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;">Six months, one thread.</h2>
+      <p class="eyebrow">Twelve weeks, twelve topics</p>
+      <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;">Some of what you'll walk through.</h2>
     </div>
   </section>
   <div style="margin-top:-40px;">
@@ -83,7 +91,7 @@ const TOPICS: [string, string][] = [
   </section>
 
   <Cta
-    title="Ready to start with who you are?"
+    title="Begin your journey with YWAM."
     body="Two intakes a year. Tell us a little about yourself and we will walk you through dates, cost and what to expect."
     primary={['apply', 'Apply for DTS']}
     secondary={['contact', 'Ask a question']}
