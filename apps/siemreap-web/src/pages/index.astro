@@ -225,7 +225,7 @@ const SCHOOL_ROWS: [string, string, string, string, string?][] = [
                 if (s <= 0) {
                   // Still in the deck: fan back-right behind the top card, sliding forward as cards ahead leave.
                   const k = -s;
-                  card.style.transform = `translate(${k * 14}px, ${k * 16}px) rotate(${k * 4}deg) scale(${1 - k * 0.035})`;
+                  card.style.transform = `translate(${k * 14}px, ${k * 12}px) rotate(${k * 3.5}deg) scale(${1 - k * 0.035})`;
                   card.style.opacity = '1';
                 } else {
                   // Leaving: hold for the first quarter of the step, then swipe off left over the deck.
