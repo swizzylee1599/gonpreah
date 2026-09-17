@@ -119,6 +119,7 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
       <script>
         const video = document.querySelector('.scroll3d');
         const stack = document.querySelector('.gonpreah-stack');
+        const scrim = document.querySelector('.video3d-scrim');
         const cover = document.querySelector('.th-cover');
         const schoolsViewport = document.querySelector('.schools-viewport');
         const track = document.querySelector('.hscroll');
@@ -173,8 +174,9 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
 
           // The stack is one long pin: the video/text stay fixed in place
           // for the whole thing. Within that single scroll range: the video
-          // scrubs through its whole clip across the first 28% with the
-          // text staying put on top, then the "Train here" cover slides up
+          // scrubs through its whole clip across the first 28% while the
+          // dark scrim clears so the footage comes forward, with the text
+          // staying put on top, then the "Train here" cover slides up
           // over it (28-42%), then the school cards track scrolls sideways
           // through all the cards (42-70%), then "Bring a team" slides up
           // over Train Here the same way (70-100%) before the pin finally
@@ -192,10 +194,11 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
             const scrollable = rect.height - window.innerHeight;
             const progress = scrollable <= 0 ? 0 : Math.min(1, Math.max(0, -rect.top / scrollable));
 
+            const videoProgress = Math.min(1, progress / VIDEO_END);
             if (video.duration && !Number.isNaN(video.duration)) {
-              const videoProgress = Math.min(1, progress / VIDEO_END);
               seekTo(videoProgress * video.duration);
             }
+            if (scrim) scrim.style.opacity = String(1 - videoProgress);
 
             if (cover) {
               const coverProgress = Math.min(1, Math.max(0, (progress - COVER_START) / (COVER_END - COVER_START)));
