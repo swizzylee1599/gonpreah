@@ -87,8 +87,8 @@ const SCHOOL_ROWS: [string, string, string, string, string?][] = [
               </p>
             </div>
           </div>
-          <div class="schools-viewport" style="margin-top:40px;">
-            <div class="hscroll">
+          <div class="schools-deck" style="margin-top:40px;">
+            <div class="deck">
               {SCHOOL_ROWS.map(([name, abbr, body, when, photo]) => (
                 <SchoolCard name={name} abbr={abbr} body={body} when={when} photo={photo} />
               ))}
@@ -122,8 +122,7 @@ const SCHOOL_ROWS: [string, string, string, string, string?][] = [
         const scrim = document.querySelector('.video3d-scrim');
         const text = document.querySelector('.video3d-text');
         const cover = document.querySelector('.th-cover');
-        const schoolsViewport = document.querySelector('.schools-viewport');
-        const track = document.querySelector('.hscroll');
+        const deckCards = [...document.querySelectorAll('.deck .schoolcard')];
         const batCover = document.querySelector('.bat-cover');
         if (video instanceof HTMLVideoElement && stack) {
           // Many mobile browsers (iOS Safari especially) never actually
@@ -179,8 +178,8 @@ const SCHOOL_ROWS: [string, string, string, string, string?][] = [
           // dark scrim clears so the footage comes forward, with the text
           // holding on top until it dissipates over the last stretch of
           // the scrub (20-28%), then the "Train here" cover slides up
-          // over it (28-42%), then the school cards track scrolls sideways
-          // through all the cards (42-70%), then "Bring a team" slides up
+          // over it (28-42%), then the fanned deck of school cards deals
+          // through one school at a time (42-70%), then "Bring a team" slides up
           // over Train Here the same way (70-100%) before the pin finally
           // releases into the next section.
           const TEXT_FADE_START = 0.2;
@@ -216,12 +215,25 @@ const SCHOOL_ROWS: [string, string, string, string, string?][] = [
               cover.style.transform = `translateY(${(1 - coverProgress) * 100}%)`;
             }
 
-            if (track && schoolsViewport) {
-              const maxScroll = track.scrollWidth - schoolsViewport.clientWidth;
-              if (maxScroll > 0) {
-                const cardsProgress = Math.min(1, Math.max(0, (progress - CARDS_START) / (CARDS_END - CARDS_START)));
-                track.style.transform = `translateX(${-cardsProgress * maxScroll}px)`;
-              }
+            if (deckCards.length > 1) {
+              const cardsProgress = Math.min(1, Math.max(0, (progress - CARDS_START) / (CARDS_END - CARDS_START)));
+              // dealt = how many cards have been swiped away (fractional while one is mid-swipe)
+              const dealt = cardsProgress * (deckCards.length - 1);
+              deckCards.forEach((card, i) => {
+                const s = dealt - i;
+                card.style.zIndex = String(deckCards.length - i);
+                if (s <= 0) {
+                  // Still in the deck: fan back-right behind the top card, sliding forward as cards ahead leave.
+                  const k = -s;
+                  card.style.transform = `translate(${k * 14}px, ${k * 16}px) rotate(${k * 4}deg) scale(${1 - k * 0.035})`;
+                  card.style.opacity = '1';
+                } else {
+                  // Leaving: hold for the first quarter of the step, then swipe off left over the deck.
+                  const t = Math.min(1, Math.max(0, (s - 0.25) / 0.75));
+                  card.style.transform = `translate(${-t * 115}%, ${-t * 6}%) rotate(${-t * 14}deg)`;
+                  card.style.opacity = String(1 - Math.max(0, (t - 0.5) * 2));
+                }
+              });
             }
 
             if (batCover) {
