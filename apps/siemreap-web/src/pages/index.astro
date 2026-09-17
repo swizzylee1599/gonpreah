@@ -6,6 +6,7 @@ import PhotoSlot from '../components/sr/PhotoSlot.astro';
 import HeroLine from '../components/sr/HeroLine.astro';
 import HeroVideo from '../components/sr/HeroVideo.astro';
 import SchoolCard from '../components/sr/SchoolCard.astro';
+import GlobeO from '../components/sr/GlobeO.astro';
 
 // 3D camera-move video, scrubbed by scroll position through the whole
 // section instead of played back normally.
@@ -81,7 +82,9 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
         <div class="th-cover">
           <div class="wrap">
             <p class="eyebrow">Training</p>
-            <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,4.2vw,56px);font-weight:500;line-height:1.1;">Train here. Go anywhere.</h2>
+            <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,4.2vw,56px);font-weight:500;line-height:1.1;">
+              Train here. <span aria-hidden="true">G<GlobeO /></span><span class="vh">Go</span> anywhere.
+            </h2>
           </div>
           <div class="schools-deck" style="margin-top:40px;">
             <div class="deck">
