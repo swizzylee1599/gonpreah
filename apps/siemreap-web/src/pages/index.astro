@@ -9,7 +9,10 @@ import SchoolCard from '../components/sr/SchoolCard.astro';
 
 // 3D camera-move video, scrubbed by scroll position through the whole
 // section instead of played back normally.
-const GONPREAH_3D_VIDEO = '/video/gonpreah-community-3d.mp4';
+// iOS Safari/WebKit leaves a <video> blank until it has actually
+// painted a frame — the #t= fragment forces it to seek-and-paint
+// the first frame during preload instead of waiting for playback.
+const GONPREAH_3D_VIDEO = '/video/gonpreah-community-3d.mp4#t=0.001';
 
 const SCHOOL_ROWS: [string, string, string, string][] = [
   ['Discipleship Training School', 'DTS', 'The doorway into everything else. Lecture phase, then outreach phase.', 'Two intakes a year'],
@@ -48,7 +51,9 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
             class="scroll3d"
             src={GONPREAH_3D_VIDEO}
             muted
+            autoplay
             playsinline
+            webkit-playsinline
             preload="auto"
             aria-label="The GonPreah community, rotating in 3D"
           />
