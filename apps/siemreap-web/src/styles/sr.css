@@ -182,6 +182,28 @@ body.sr {
  * default, which already reads as seamless.
  */
 .sr .pt-word { display: inline-block; vertical-align: bottom; }
+
+.sr .pagehead--photo {
+  position: relative; overflow: hidden; min-height: 78vh;
+  display: flex; align-items: flex-end; padding: 180px 0 70px; box-sizing: border-box;
+}
+.sr .pagehead-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sr .pagehead-scrim {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(11,11,11,.97) 0%, rgba(11,11,11,.72) 45%, rgba(11,11,11,.35) 100%);
+}
+.sr .pagehead--photo .wrap { width: 100%; text-shadow: 0 2px 28px rgba(0,0,0,.7), 0 1px 3px rgba(0,0,0,.6); }
+/* School card photo morphs into the school page's header photo. */
+::view-transition-group(school-photo-dts), ::view-transition-group(school-photo-dbs),
+::view-transition-group(school-photo-bcs), ::view-transition-group(school-photo-sms) {
+  animation-duration: .7s; animation-timing-function: cubic-bezier(.16,1,.3,1); z-index: 2;
+}
+::view-transition-old(school-photo-dts), ::view-transition-new(school-photo-dts),
+::view-transition-old(school-photo-dbs), ::view-transition-new(school-photo-dbs),
+::view-transition-old(school-photo-bcs), ::view-transition-new(school-photo-bcs),
+::view-transition-old(school-photo-sms), ::view-transition-new(school-photo-sms) {
+  width: 100%; height: 100%; object-fit: cover; animation: none;
+}
 ::view-transition-group(page-title-w0), ::view-transition-group(page-title-w1),
 ::view-transition-group(page-title-w2), ::view-transition-group(page-title-w3),
 ::view-transition-group(page-title-w4), ::view-transition-group(page-title-w5) { animation: none; }

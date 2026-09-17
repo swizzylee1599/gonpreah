@@ -5,13 +5,22 @@ interface Props {
   lead?: string;
   title: string;
   highlight?: string;
+  photo?: string;
+  photoAlt?: string;
+  photoName?: string;
 }
-const { eyebrow, km, lead, title, highlight } = Astro.props;
+const { eyebrow, km, lead, title, highlight, photo, photoAlt = '', photoName } = Astro.props;
 const words = title.split(' ');
 const highlightCount = highlight ? highlight.split(' ').length : 0;
 ---
-<section style="padding:90px 0 0;">
-  <div class="wrap">
+<section class:list={['pagehead', { 'pagehead--photo': !!photo }]} style={photo ? undefined : 'padding:90px 0 0;'}>
+  {photo && (
+    <>
+      <img class="pagehead-photo" src={photo} alt={photoAlt} loading="eager" decoding="async" transition:name={photoName} />
+      <div class="pagehead-scrim"></div>
+    </>
+  )}
+  <div class="wrap" style="position:relative;">
     <p class="eyebrow">{eyebrow}</p>
     <h1 class="disp" style="margin:20px 0 0;font-size:clamp(40px,6vw,78px);font-weight:500;line-height:1.06;max-width:18ch;">
       {words.map((word, i) => (
