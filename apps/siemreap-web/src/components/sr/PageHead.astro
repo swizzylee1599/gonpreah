@@ -16,22 +16,23 @@ const highlightCount = highlight ? highlight.split(' ').length : 0;
 <section class:list={['pagehead', { 'pagehead--photo': !!photo }]} style={photo ? undefined : 'padding:90px 0 0;'}>
   {photo && (
     <>
-      <img class="pagehead-photo" src={photo} alt={photoAlt} loading="eager" decoding="async" transition:name={photoName} />
-      <div class="pagehead-scrim"></div>
+      <img class="pagehead-photo" src={photo} alt={photoAlt} loading="eager" decoding="async" style={photoName ? `view-transition-name:${photoName};` : undefined} />
+      <div class="pagehead-scrim" transition:name="pagehead-scrim"></div>
     </>
   )}
-  <div class="wrap" style="position:relative;">
+  <div class="wrap" style={photo ? 'position:relative;view-transition-name:pagehead-copy;' : 'position:relative;'}>
     <p class="eyebrow">{eyebrow}</p>
     <h1 class="disp" style="margin:20px 0 0;font-size:clamp(40px,6vw,78px);font-weight:500;line-height:1.06;max-width:18ch;">
-      {words.map((word, i) => (
-        <>
-          <span
-            class="pt-word"
-            transition:name={`page-title-w${i}`}
-            style={i >= words.length - highlightCount ? 'color:var(--sr-pink);' : undefined}
-          >{word}</span>{' '}
-        </>
-      ))}
+      {words.map((word, i) => {
+        const hl = i >= words.length - highlightCount ? 'color:var(--sr-pink);' : undefined;
+        return (
+          <>
+            {photo
+              ? <span class="pt-word" style={hl}>{word}</span>
+              : <span class="pt-word" transition:name={`page-title-w${i}`} style={hl}>{word}</span>}{' '}
+          </>
+        );
+      })}
     </h1>
     {km && <p class="km" style="font-size:28px;margin:18px 0 0;color:#dcdcdc;">{km}</p>}
     <span class="rule" style="margin:30px 0 0;"></span>
