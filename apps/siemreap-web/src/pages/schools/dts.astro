@@ -2,7 +2,7 @@
 import SrLayout from '../../layouts/SrLayout.astro';
 import Footer from '../../components/sr/Footer.astro';
 import PageHead from '../../components/sr/PageHead.astro';
-import PhotoStrip from '../../components/sr/PhotoStrip.astro';
+import PhotoSlot from '../../components/sr/PhotoSlot.astro';
 import Cta from '../../components/sr/Cta.astro';
 
 const JOURNEY: { title: string; body: string; photo: string; alt: string }[] = [
@@ -26,18 +26,44 @@ const JOURNEY: { title: string; body: string; photo: string; alt: string }[] = [
   },
 ];
 
-// Photo strips for each phase — swap `label` slots for `{ src, alt }` as photos arrive.
-const LECTURE_PHOTOS: { src?: string; alt?: string; label?: string }[] = [
-  { src: '/images/schools/dts.jpg', alt: 'DTS students studying together on campus' },
-  { label: 'Drop a photo — a speaker teaching' },
-  { label: 'Drop a photo — small groups' },
-  { label: 'Drop a photo — worship' },
+// Each phase gets a four-photo collage — swap `label` slots for `{ src, alt }` as photos arrive.
+type Photo = { src?: string; alt?: string; label?: string };
+const PHASES: { eyebrow: string; title: string; body: string[]; photos: Photo[] }[] = [
+  {
+    eyebrow: 'Lecture phase · 3 months',
+    title: 'Training phase',
+    body: [
+      "Leaders from around the world teaching to help you hear God's voice and find the calling He has for you.",
+      'Twelve weeks of lecture, twelve topics — from speakers locally and internationally.',
+    ],
+    photos: [
+      { src: '/images/schools/dts.jpg', alt: 'DTS students studying together on campus' },
+      { label: 'Drop a photo — a speaker teaching' },
+      { label: 'Drop a photo — small groups' },
+      { label: 'Drop a photo — worship' },
+    ],
+  },
+  {
+    eyebrow: 'Outreach phase · 3 months',
+    title: 'To the nations',
+    body: [
+      'Go to the nations, encounter Jesus in different cultures, and bring the love of Christ through the gospel to the unreached.',
+      'Teams serve here in Cambodia — in villages around Siem Reap and across the country — and beyond its borders.',
+    ],
+    photos: [
+      { label: 'Drop a photo — an outreach team in a village' },
+      { label: 'Drop a photo — serving with a local church' },
+      { label: 'Drop a photo — a kids programme' },
+      { label: 'Drop a photo — the team on the road' },
+    ],
+  },
 ];
-const OUTREACH_PHOTOS: { src?: string; alt?: string; label?: string }[] = [
-  { label: 'Drop a photo — an outreach team in a village' },
-  { label: 'Drop a photo — serving with a local church' },
-  { label: 'Drop a photo — a kids programme' },
-  { label: 'Drop a photo — the team on the road' },
+// Where each photo starts before it assembles into place (mirrored for flipped blocks).
+const SCATTER = [
+  { x: -42, y: -28, r: -11, s: 0.9, par: -4 },
+  { x: 46, y: 34, r: 8, s: 0.9, par: 6 },
+  { x: 58, y: -48, r: 15, s: 0.8, par: -8 },
+  { x: -56, y: 52, r: -13, s: 0.8, par: 5 },
 ];
 
 const INFO: [string, string][] = [
@@ -169,35 +195,39 @@ const FAQ: [string, string][] = [
   </script>
 
   <section class="sec breakdown">
-    <div class="wrap bd-head" style="margin-bottom:34px;">
+    <div class="wrap bd-head" style="margin-bottom:clamp(50px,7vw,90px);">
       <p class="eyebrow">DTS breakdown</p>
       <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Three months here. Three months to the nations.</h2>
     </div>
-    <div class="wrap grid2 stag">
-      <div class="card phase">
-        <div class="phase-photo wipe">
-          <PhotoStrip items={LECTURE_PHOTOS} label="Photos from lecture phase" duration={36} />
-        </div>
-        <div class="phase-body">
-          <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">Lecture phase · 3 months</p>
-          <h3 class="disp" style="margin:16px 0 0;font-size:26px;font-weight:500;">Training phase</h3>
-          <span class="rule" style="margin:18px 0;"></span>
-          <p class="body" style="margin:0;font-size:16px;">Leaders from around the world teaching to help you hear God's voice and find the calling He has for you.</p>
-          <p class="body" style="margin:14px 0 0;font-size:16px;">Twelve weeks of lecture, twelve topics — from speakers locally and internationally.</p>
-        </div>
-      </div>
-      <div class="card phase">
-        <div class="phase-photo wipe">
-          <PhotoStrip items={OUTREACH_PHOTOS} label="Photos from outreach phase" duration={42} reverse />
-        </div>
-        <div class="phase-body">
-          <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">Outreach phase · 3 months</p>
-          <h3 class="disp" style="margin:16px 0 0;font-size:26px;font-weight:500;">To the nations</h3>
-          <span class="rule" style="margin:18px 0;"></span>
-          <p class="body" style="margin:0;font-size:16px;">Go to the nations, encounter Jesus in different cultures, and bring the love of Christ through the gospel to the unreached.</p>
-          <p class="body" style="margin:14px 0 0;font-size:16px;">Teams serve here in Cambodia — in villages around Siem Reap and across the country — and beyond its borders.</p>
-        </div>
-      </div>
+    <div class="wrap phases">
+      {PHASES.map((phase, p) => {
+        const flip = p % 2 === 1;
+        return (
+          <div class:list={['phase-block', { 'phase-block--flip': flip }]}>
+            <div class="phase-copy linein">
+              <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">{phase.eyebrow}</p>
+              <h3 class="disp" style="margin:16px 0 0;font-size:clamp(26px,3vw,40px);font-weight:500;line-height:1.12;">{phase.title}</h3>
+              <span class="rule" style="margin:20px 0;"></span>
+              {phase.body.map((para, i) => <p class="body" style={`margin:${i ? '14px' : '0'} 0 0;max-width:44ch;`}>{para}</p>)}
+            </div>
+            <div class:list={['spread', { 'spread--flip': flip }]} aria-label={`Photos from ${phase.title.toLowerCase()}`}>
+              {phase.photos.map((photo, i) => {
+                const sc = SCATTER[i];
+                const x = flip ? -sc.x : sc.x;
+                return (
+                  <div class={`spread-item slot-${i}`} style={`--from:translate(${x}%,${sc.y}%) rotate(${flip ? -sc.r : sc.r}deg) scale(${sc.s});--par:${sc.par}%;`}>
+                    <div class="spread-par">
+                      {photo.src
+                        ? <img src={photo.src} alt={photo.alt ?? ''} loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" />
+                        : <PhotoSlot label={photo.label ?? 'Drop a photo'} radius={0} />}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
     </div>
   </section>
 
