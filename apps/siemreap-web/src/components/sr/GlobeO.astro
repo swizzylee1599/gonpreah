@@ -1,0 +1,126 @@
+---
+// The letter "O" drawn as a slowly turning Earth: land polygons are
+// projected orthographically onto a sphere each frame, so continents
+// curve around the horizon instead of sliding past flat.
+---
+<canvas class="globe-o" width="96" height="96" aria-hidden="true"></canvas>
+
+<script>
+  const DATA_URL = '/data/earth-land.json';
+  const DEG = Math.PI / 180;
+  const TILT = 20 * DEG;
+  const PERIOD_MS = 22000;
+  const START_LON = 105 * DEG; // Cambodia faces the viewer first
+
+  let land: number[][][] = [];
+  let loading: Promise<void> | null = null;
+  const loadLand = () => {
+    if (!loading) {
+      loading = fetch(DATA_URL).then((r) => r.json()).then((d) => { land = d; }).catch(() => {});
+    }
+    return loading;
+  };
+
+  const setup = (canvas: HTMLCanvasElement) => {
+    if (canvas.dataset.ready) return;
+    canvas.dataset.ready = '1';
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let lon = START_LON;
+    let last = performance.now();
+    let raf = 0;
+    let visible = true;
+
+    const fit = () => {
+      const css = canvas.getBoundingClientRect().width || 40;
+      const px = Math.round(css * (devicePixelRatio || 1));
+      if (canvas.width !== px) { canvas.width = px; canvas.height = px; }
+      return px;
+    };
+
+    const draw = (now: number) => {
+      raf = 0;
+      if (!canvas.isConnected) return;
+      const px = fit();
+      if (!reduce) lon -= ((now - last) / PERIOD_MS) * Math.PI * 2;
+      last = now;
+
+      const c = px / 2;
+      const rim = Math.max(1.5, px * 0.065);
+      const R = c - rim / 2 - 0.5;
+      const ct = Math.cos(TILT), st = Math.sin(TILT);
+
+      ctx.clearRect(0, 0, px, px);
+      ctx.beginPath(); ctx.arc(c, c, R, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,.07)'; ctx.fill();
+
+      ctx.save();
+      ctx.beginPath(); ctx.arc(c, c, R, 0, Math.PI * 2); ctx.clip();
+      ctx.fillStyle = '#fff';
+      for (const poly of land) {
+        ctx.beginPath();
+        let anyVisible = false;
+        for (const ring of poly) {
+          // Hidden runs collapse to a straight chord between the two points where
+          // the ring crosses the horizon, so a landmass around the back never
+          // traces the rim and floods the disc.
+          let started = false;
+          let pendingEntry: [number, number] | null = null;
+          for (let i = 0; i < ring.length; i += 2) {
+            const la = ring[i] * DEG - lon;
+            const ph = ring[i + 1] * DEG;
+            const cp = Math.cos(ph);
+            const x = cp * Math.sin(la);
+            const y = Math.sin(ph), z = cp * Math.cos(la);
+            const y2 = y * ct - z * st;
+            const z2 = y * st + z * ct;
+            if (z2 > 0) {
+              if (pendingEntry) {
+                if (started) ctx.lineTo(pendingEntry[0], pendingEntry[1]);
+                else { ctx.moveTo(pendingEntry[0], pendingEntry[1]); started = true; }
+                pendingEntry = null;
+              }
+              const sx = c + x * R, sy = c - y2 * R;
+              if (started) ctx.lineTo(sx, sy); else { ctx.moveTo(sx, sy); started = true; }
+              anyVisible = true;
+            } else {
+              const m = Math.hypot(x, y2) || 1;
+              const hx = c + (x / m) * R, hy = c - (y2 / m) * R;
+              if (started && !pendingEntry) ctx.lineTo(hx, hy);
+              pendingEntry = [hx, hy];
+            }
+          }
+          if (started) ctx.closePath();
+        }
+        if (anyVisible) ctx.fill('evenodd');
+      }
+      ctx.restore();
+
+      const shade = ctx.createRadialGradient(c - R * 0.3, c - R * 0.3, R * 0.15, c, c, R);
+      shade.addColorStop(0, 'rgba(11,11,11,0)');
+      shade.addColorStop(0.72, 'rgba(11,11,11,.18)');
+      shade.addColorStop(1, 'rgba(11,11,11,.72)');
+      ctx.beginPath(); ctx.arc(c, c, R, 0, Math.PI * 2);
+      ctx.fillStyle = shade; ctx.fill();
+
+      ctx.beginPath(); ctx.arc(c, c, R, 0, Math.PI * 2);
+      ctx.lineWidth = rim; ctx.strokeStyle = '#fff'; ctx.stroke();
+
+      if (!reduce && visible) raf = requestAnimationFrame(draw);
+    };
+
+    const start = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(draw); } };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => {
+        visible = e.isIntersecting;
+        if (visible) start(); else if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      }).observe(canvas);
+    }
+    loadLand().then(() => { if (reduce) draw(performance.now()); else start(); });
+  };
+
+  const init = () => document.querySelectorAll<HTMLCanvasElement>('canvas.globe-o').forEach(setup);
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

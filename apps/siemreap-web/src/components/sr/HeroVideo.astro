@@ -13,9 +13,17 @@
 ></video>
 
 <script>
-  const video = document.getElementById('sr-hero-video') as HTMLVideoElement | null;
-  if (video) {
-    video.addEventListener('canplay', () => { video.style.opacity = '1'; });
+  // Runs on first load and again after every client-side navigation,
+  // since the page's DOM is swapped but hoisted scripts only run once.
+  const init = () => {
+    const video = document.getElementById('sr-hero-video') as HTMLVideoElement | null;
+    if (!video || video.dataset.ready) return;
+    video.dataset.ready = '1';
+    const show = () => { video.style.opacity = '1'; };
+    if (video.readyState >= 3) show();
+    video.addEventListener('canplay', show);
     video.addEventListener('error', () => { video.remove(); });
-  }
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
 </script>

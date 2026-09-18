@@ -6,7 +6,7 @@ const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
 <nav class="sr-nav" id="sr-nav">
   <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:28px;padding:10px 40px;">
     <a href="/" aria-label="YWAM Siem Reap — home" style="display:flex;align-items:center;">
-      <img src="/images/sr-logo.png" alt="YWAM Siem Reap" class="srlogo" style="display:block;height:72px;width:auto;filter:invert(1);" />
+      <img src="/images/sr-logo.png" alt="YWAM Siem Reap" class="srlogo" style="display:block;height:88px;width:auto;filter:invert(1);" />
     </a>
     <div style="display:flex;align-items:center;gap:30px;">
       <div class="navbar" style="display:flex;gap:30px;">
@@ -47,13 +47,20 @@ const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
 </nav>
 
 <script>
-  const nav = document.getElementById('sr-nav');
-  const toggle = document.getElementById('sr-nav-toggle');
-  if (nav && toggle) {
+  // The nav is re-rendered on every client-side navigation, so bind to
+  // the current element each time and drop the previous page's listeners.
+  let ctrl: AbortController | null = null;
+  const init = () => {
+    ctrl?.abort();
+    ctrl = new AbortController();
+    const { signal } = ctrl;
+    const nav = document.getElementById('sr-nav');
+    const toggle = document.getElementById('sr-nav-toggle');
+    if (!nav || !toggle) return;
     toggle.addEventListener('click', () => {
       const open = nav.classList.toggle('is-mobile-open');
       toggle.setAttribute('aria-expanded', String(open));
-    });
+    }, { signal });
 
     let lastY = window.scrollY;
     window.addEventListener('scroll', () => {
@@ -62,6 +69,8 @@ const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
       const down = y > lastY;
       nav.classList.toggle('is-hidden', down && y > 140);
       lastY = y;
-    }, { passive: true });
-  }
+    }, { passive: true, signal });
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
 </script>

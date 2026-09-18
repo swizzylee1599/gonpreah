@@ -2,6 +2,7 @@ export const ROUTE_PATH: Record<string, string> = {
   home: '/',
   about: '/about',
   schools: '/schools',
+  dts: '/schools/dts',
   apply: '/apply',
   staff: '/staff',
   visit: '/visit',
@@ -11,7 +12,7 @@ export const ROUTE_PATH: Record<string, string> = {
 
 export const NAV: [string, [string, string, string][]][] = [
   ['Students', [
-    ['schools', 'What is DTS?', 'Start your journey in missions'],
+    ['dts', 'What is DTS?', 'Start your journey in missions'],
     ['schools', 'Schools & Courses', 'DTS and other UofN courses in Siem Reap'],
     ['visit', 'Campus Life', 'What living here is actually like'],
     ['apply', 'How to Apply', 'What you need to start your application'],
