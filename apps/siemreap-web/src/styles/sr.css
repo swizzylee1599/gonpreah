@@ -218,6 +218,15 @@ body.sr {
 .sr .jp-head { will-change: transform; }
 /* The breakdown rides up over the tail of the pinned journey stack. */
 .sr .breakdown { position: relative; z-index: 2; margin-top: -50vh; padding-top: 30px; background: var(--sr-ink); overflow-x: clip; }
+.sr .breakdown > .wrap { position: relative; z-index: 1; }
+/* Full-bleed temple photo behind the breakdown, drifting slowly, under a wash that fades into the page. */
+.sr .breakdown-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.sr .breakdown-bg .parslow { position: absolute; inset: -10% 0; }
+.sr .breakdown-bg img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.sr .breakdown-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to bottom, var(--sr-ink) 0%, rgba(11,11,11,.8) 16%, rgba(11,11,11,.8) 84%, var(--sr-ink) 100%);
+}
 .sr .jp-steps { display: grid; }
 .sr .jp-step { grid-area: 1 / 1; opacity: 0; will-change: opacity, transform; }
 .sr .jp-rail { display: flex; flex-wrap: wrap; gap: 8px 28px; position: relative; margin-top: 38px; padding-top: 16px; }
