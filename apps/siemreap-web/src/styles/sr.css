@@ -232,16 +232,16 @@ body.sr {
 .sr .spread { position: relative; aspect-ratio: 1; }
 .sr .spread-item { position: absolute; border-radius: 16px; overflow: hidden; background: var(--sr-raise); box-shadow: 0 24px 60px rgba(0,0,0,.5); transition: box-shadow .45s ease; }
 .sr .spread-par { position: absolute; inset: -8% 0; }
-/* --mx/--my (-1..1) follow the cursor across the collage; each slot drifts by its own depth. */
+/* --dx/--dy are set per photo from the cursor: each photo pushes away from the pointer by up to --amp. */
 .sr .spread-card {
   position: absolute; inset: 0;
-  transform: translate(calc(var(--mx, 0) * var(--depth, 8px)), calc(var(--my, 0) * var(--depth, 8px))) scale(var(--hs, 1));
-  transition: transform .6s cubic-bezier(.16,1,.3,1), filter .45s ease;
+  transform: translate(var(--dx, 0px), var(--dy, 0px)) scale(var(--hs, 1));
+  transition: transform .7s cubic-bezier(.16,1,.3,1), filter .45s ease;
 }
-.sr .slot-0 { left: 0; top: 0; width: 64%; aspect-ratio: 4 / 3; z-index: 1; --depth: 6px; }
-.sr .slot-1 { right: 0; bottom: 0; width: 58%; aspect-ratio: 4 / 3; z-index: 3; --depth: 9px; }
-.sr .slot-2 { right: 2%; top: 4%; width: 38%; aspect-ratio: 1; z-index: 2; --depth: 13px; }
-.sr .slot-3 { left: 4%; bottom: 2%; width: 40%; aspect-ratio: 1; z-index: 4; --depth: 11px; }
+.sr .slot-0 { left: 0; top: 0; width: 64%; aspect-ratio: 4 / 3; z-index: 1; --amp: 16; }
+.sr .slot-1 { right: 0; bottom: 0; width: 58%; aspect-ratio: 4 / 3; z-index: 3; --amp: 20; }
+.sr .slot-2 { right: 2%; top: 4%; width: 38%; aspect-ratio: 1; z-index: 2; --amp: 26; }
+.sr .slot-3 { left: 4%; bottom: 2%; width: 40%; aspect-ratio: 1; z-index: 4; --amp: 22; }
 .sr .spread--flip .slot-0 { left: auto; right: 0; }
 .sr .spread--flip .slot-1 { right: auto; left: 0; }
 .sr .spread--flip .slot-2 { right: auto; left: 2%; }

@@ -144,24 +144,35 @@ const FAQ: [string, string][] = [
       ctrl = new AbortController();
       const { signal } = ctrl;
 
-      // Cursor parallax on the phase collages: --mx/--my track the pointer
-      // across each collage (-1..1) and the CSS drifts every photo by its depth.
+      // Cursor interaction on the phase collages: each photo pushes away from
+      // the pointer (by up to its --amp), so the collage opens up around the
+      // cursor and settles back when it leaves.
       if (matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
         document.querySelectorAll('.spread').forEach((spread) => {
-          let mx = 0, my = 0, raf = 0;
+          const items = [...spread.querySelectorAll('.spread-item')].map((el) => ({
+            el, amp: parseFloat(getComputedStyle(el).getPropertyValue('--amp')) || 16,
+          }));
+          let px = null, py = null, raf = 0;
           const apply = () => {
             raf = 0;
-            spread.style.setProperty('--mx', mx.toFixed(3));
-            spread.style.setProperty('--my', my.toFixed(3));
+            const r = spread.getBoundingClientRect();
+            for (const { el, amp } of items) {
+              if (px === null) { el.style.setProperty('--dx', '0px'); el.style.setProperty('--dy', '0px'); continue; }
+              const b = el.getBoundingClientRect();
+              const cx = b.left + b.width / 2 - r.left, cy = b.top + b.height / 2 - r.top;
+              const vx = Math.max(-1, Math.min(1, (cx - px) / (r.width * 0.5)));
+              const vy = Math.max(-1, Math.min(1, (cy - py) / (r.height * 0.5)));
+              el.style.setProperty('--dx', `${(vx * amp).toFixed(1)}px`);
+              el.style.setProperty('--dy', `${(vy * amp).toFixed(1)}px`);
+            }
           };
           spread.addEventListener('pointermove', (e) => {
             const r = spread.getBoundingClientRect();
-            mx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width) * 2 - 1));
-            my = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height) * 2 - 1));
+            px = e.clientX - r.left; py = e.clientY - r.top;
             if (!raf) raf = requestAnimationFrame(apply);
           }, { passive: true, signal });
           spread.addEventListener('pointerleave', () => {
-            mx = 0; my = 0;
+            px = null; py = null;
             if (!raf) raf = requestAnimationFrame(apply);
           }, { signal });
         });
