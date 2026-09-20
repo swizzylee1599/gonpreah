@@ -182,7 +182,7 @@ body.sr {
   .sr .jp-photo:not(:first-child) { display: none; }
   .sr .breakdown { margin-top: 0; padding-top: 0; }
   .sr .spread-item, .sr .spread-par { animation: none !important; transform: none !important; opacity: 1 !important; }
-  .sr .spread-card { transition: none; }
+  .sr .spread-card { transition: none; transform: none !important; }
   .sr .jp-steps { display: flex; flex-direction: column; gap: 34px; }
   .sr .jp-step { opacity: 1 !important; transform: none !important; }
   .sr .jp-head { transform: none !important; }
@@ -232,11 +232,16 @@ body.sr {
 .sr .spread { position: relative; aspect-ratio: 1; }
 .sr .spread-item { position: absolute; border-radius: 16px; overflow: hidden; background: var(--sr-raise); box-shadow: 0 24px 60px rgba(0,0,0,.5); transition: box-shadow .45s ease; }
 .sr .spread-par { position: absolute; inset: -8% 0; }
-.sr .spread-card { position: absolute; inset: 0; transition: transform .55s cubic-bezier(.16,1,.3,1), filter .45s ease; }
-.sr .slot-0 { left: 0; top: 0; width: 64%; aspect-ratio: 4 / 3; z-index: 1; }
-.sr .slot-1 { right: 0; bottom: 0; width: 58%; aspect-ratio: 4 / 3; z-index: 3; }
-.sr .slot-2 { right: 2%; top: 4%; width: 38%; aspect-ratio: 1; z-index: 2; }
-.sr .slot-3 { left: 4%; bottom: 2%; width: 40%; aspect-ratio: 1; z-index: 4; }
+/* --mx/--my (-1..1) follow the cursor across the collage; each slot drifts by its own depth. */
+.sr .spread-card {
+  position: absolute; inset: 0;
+  transform: translate(calc(var(--mx, 0) * var(--depth, 8px)), calc(var(--my, 0) * var(--depth, 8px))) scale(var(--hs, 1));
+  transition: transform .6s cubic-bezier(.16,1,.3,1), filter .45s ease;
+}
+.sr .slot-0 { left: 0; top: 0; width: 64%; aspect-ratio: 4 / 3; z-index: 1; --depth: 6px; }
+.sr .slot-1 { right: 0; bottom: 0; width: 58%; aspect-ratio: 4 / 3; z-index: 3; --depth: 9px; }
+.sr .slot-2 { right: 2%; top: 4%; width: 38%; aspect-ratio: 1; z-index: 2; --depth: 13px; }
+.sr .slot-3 { left: 4%; bottom: 2%; width: 40%; aspect-ratio: 1; z-index: 4; --depth: 11px; }
 .sr .spread--flip .slot-0 { left: auto; right: 0; }
 .sr .spread--flip .slot-1 { right: auto; left: 0; }
 .sr .spread--flip .slot-2 { right: auto; left: 2%; }
@@ -244,7 +249,7 @@ body.sr {
 @media (hover: hover) {
   /* Lift and focus: the hovered photo comes forward and brightens while the rest of the collage dims. */
   .sr .spread-item:hover { z-index: 10; box-shadow: 0 34px 80px rgba(0,0,0,.65); }
-  .sr .spread-item:hover .spread-card { transform: scale(1.06); filter: brightness(1.06) saturate(1.08); }
+  .sr .spread-item:hover .spread-card { --hs: 1.06; filter: brightness(1.06) saturate(1.08); }
   .sr .spread:hover .spread-item:not(:hover) .spread-card { filter: brightness(.55) saturate(.7); }
 }
 @keyframes sr-assemble { from { transform: var(--from); opacity: 0; } to { transform: none; opacity: 1; } }
