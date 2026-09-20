@@ -217,9 +217,11 @@ const FAQ: [string, string][] = [
                 return (
                   <div class={`spread-item slot-${i}`} style={`--from:translate(${x}%,${sc.y}%) rotate(${flip ? -sc.r : sc.r}deg) scale(${sc.s});--par:${sc.par}%;`}>
                     <div class="spread-par">
-                      {photo.src
-                        ? <img src={photo.src} alt={photo.alt ?? ''} loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" />
-                        : <PhotoSlot label={photo.label ?? 'Drop a photo'} radius={0} />}
+                      <div class="spread-card">
+                        {photo.src
+                          ? <img src={photo.src} alt={photo.alt ?? ''} loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" />
+                          : <PhotoSlot label={photo.label ?? 'Drop a photo'} radius={0} />}
+                      </div>
                     </div>
                   </div>
                 );
