@@ -230,13 +230,15 @@ body.sr {
 .sr .phase-block { display: grid; grid-template-columns: minmax(0, .72fr) minmax(0, 1.28fr); gap: clamp(34px, 5vw, 70px); align-items: center; }
 .sr .phase-block--flip .phase-copy { order: 2; }
 .sr .spread { position: relative; aspect-ratio: 1; }
-.sr .spread-item { position: absolute; border-radius: 16px; overflow: hidden; background: var(--sr-raise); box-shadow: 0 24px 60px rgba(0,0,0,.5); transition: box-shadow .45s ease; }
-.sr .spread-par { position: absolute; inset: -8% 0; }
-/* --dx/--dy are set per photo from the cursor: each photo pushes away from the pointer by up to --amp. */
+.sr .spread-item { position: absolute; }
+.sr .spread-par { position: absolute; inset: 0; }
+/* The card is the whole visible photo (frame, shadow and all); --dx/--dy are set per photo
+   from the cursor so each one pushes away from the pointer by up to --amp. */
 .sr .spread-card {
-  position: absolute; inset: 0;
+  position: absolute; inset: 0; border-radius: 16px; overflow: hidden; background: var(--sr-raise);
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
   transform: translate(var(--dx, 0px), var(--dy, 0px)) scale(var(--hs, 1));
-  transition: transform .7s cubic-bezier(.16,1,.3,1), filter .45s ease;
+  transition: transform .7s cubic-bezier(.16,1,.3,1), filter .45s ease, box-shadow .45s ease;
 }
 .sr .slot-0 { left: 0; top: 0; width: 64%; aspect-ratio: 4 / 3; z-index: 1; --amp: 16; }
 .sr .slot-1 { right: 0; bottom: 0; width: 58%; aspect-ratio: 4 / 3; z-index: 3; --amp: 20; }
@@ -248,8 +250,8 @@ body.sr {
 .sr .spread--flip .slot-3 { left: auto; right: 4%; }
 @media (hover: hover) {
   /* Lift and focus: the hovered photo comes forward and brightens while the rest of the collage dims. */
-  .sr .spread-item:hover { z-index: 10; box-shadow: 0 34px 80px rgba(0,0,0,.65); }
-  .sr .spread-item:hover .spread-card { --hs: 1.06; filter: brightness(1.06) saturate(1.08); }
+  .sr .spread-item:hover { z-index: 10; }
+  .sr .spread-item:hover .spread-card { --hs: 1.06; filter: brightness(1.06) saturate(1.08); box-shadow: 0 34px 80px rgba(0,0,0,.65); }
   .sr .spread:hover .spread-item:not(:hover) .spread-card { filter: brightness(.55) saturate(.7); }
 }
 @keyframes sr-assemble { from { transform: var(--from); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -413,7 +415,7 @@ body.sr {
   .sr .jp-rail-label { font-size: 11px; }
   .sr .phase-block { grid-template-columns: minmax(0, 1fr); gap: 26px; }
   .sr .phase-block--flip .phase-copy { order: 0; }
-  .sr .spread-item { border-radius: 12px; box-shadow: 0 14px 34px rgba(0,0,0,.5); }
+  .sr .spread-card { border-radius: 12px; box-shadow: 0 14px 34px rgba(0,0,0,.5); }
   .sr .info { padding: 30px 22px; }
   .sr .info-grid { grid-template-columns: minmax(0, 1fr); gap: 34px; }
   .sr .faq-item summary { font-size: 17px; padding: 18px 0; }
