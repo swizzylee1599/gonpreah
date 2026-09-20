@@ -144,37 +144,27 @@ const FAQ: [string, string][] = [
       ctrl = new AbortController();
       const { signal } = ctrl;
 
-      // Cursor interaction on the phase collages: each photo pushes away from
-      // the pointer (by up to its --amp), so the collage opens up around the
-      // cursor and settles back when it leaves.
+      // Hovering a collage photo eases the other photos slightly away from
+      // it; they settle back when the pointer leaves the collage.
       if (matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const SEPARATE_PX = 18;
         document.querySelectorAll('.spread').forEach((spread) => {
-          const items = [...spread.querySelectorAll('.spread-item')].map((el) => ({
-            el, amp: parseFloat(getComputedStyle(el).getPropertyValue('--amp')) || 16,
-          }));
-          let px = null, py = null, raf = 0;
-          const apply = () => {
-            raf = 0;
-            const r = spread.getBoundingClientRect();
-            for (const { el, amp } of items) {
-              if (px === null) { el.style.setProperty('--dx', '0px'); el.style.setProperty('--dy', '0px'); continue; }
-              const b = el.getBoundingClientRect();
-              const cx = b.left + b.width / 2 - r.left, cy = b.top + b.height / 2 - r.top;
-              const vx = Math.max(-1, Math.min(1, (cx - px) / (r.width * 0.5)));
-              const vy = Math.max(-1, Math.min(1, (cy - py) / (r.height * 0.5)));
-              el.style.setProperty('--dx', `${(vx * amp).toFixed(1)}px`);
-              el.style.setProperty('--dy', `${(vy * amp).toFixed(1)}px`);
-            }
-          };
-          spread.addEventListener('pointermove', (e) => {
-            const r = spread.getBoundingClientRect();
-            px = e.clientX - r.left; py = e.clientY - r.top;
-            if (!raf) raf = requestAnimationFrame(apply);
-          }, { passive: true, signal });
-          spread.addEventListener('pointerleave', () => {
-            px = null; py = null;
-            if (!raf) raf = requestAnimationFrame(apply);
-          }, { signal });
+          const items = [...spread.querySelectorAll('.spread-item')];
+          const set = (el, dx, dy) => { el.style.setProperty('--dx', `${dx.toFixed(1)}px`); el.style.setProperty('--dy', `${dy.toFixed(1)}px`); };
+          const centre = (el) => { const b = el.getBoundingClientRect(); return [b.left + b.width / 2, b.top + b.height / 2]; };
+          items.forEach((hovered) => {
+            hovered.addEventListener('pointerenter', () => {
+              const [hx, hy] = centre(hovered);
+              items.forEach((el) => {
+                if (el === hovered) { set(el, 0, 0); return; }
+                const [cx, cy] = centre(el);
+                const vx = cx - hx, vy = cy - hy;
+                const len = Math.hypot(vx, vy) || 1;
+                set(el, (vx / len) * SEPARATE_PX, (vy / len) * SEPARATE_PX);
+              });
+            }, { signal });
+          });
+          spread.addEventListener('pointerleave', () => items.forEach((el) => set(el, 0, 0)), { signal });
         });
       }
 
