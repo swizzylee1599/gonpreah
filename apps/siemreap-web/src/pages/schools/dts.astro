@@ -60,7 +60,7 @@ const PHASES: { eyebrow: string; title: string; body: string[]; photos: Photo[] 
 ];
 // Higgsfield dolly shot down the corridor, scrubbed by scroll. Until the clip
 // is uploaded to public/video the still photo zooms in as a stand-in.
-const HALL_VIDEO: string | null = null; // e.g. '/video/dts-hallway.mp4#t=0.001'
+const HALL_VIDEO: string | null = '/video/dts-hallway.mp4#t=0.001';
 
 const INFO: [string, string][] = [
   ['Next school', 'January DTS'],
@@ -161,8 +161,14 @@ const FAQ: [string, string][] = [
         if ('fastSeek' in video) video.fastSeek(t); else video.currentTime = t;
       };
       if (video) {
-        const prime = () => { const p = video.play(); if (p && p.then) p.then(() => video.pause()).catch(() => {}); };
+        // The still stays underneath until the clip has decoded a frame, and takes over again if the clip fails.
+        const prime = () => {
+          const p = video.play();
+          if (p && p.then) p.then(() => video.pause()).catch(() => {});
+          if (still) still.style.opacity = '0';
+        };
         if (video.readyState >= 2) prime(); else video.addEventListener('loadeddata', prime, { once: true, signal });
+        video.addEventListener('error', () => { video.remove(); if (still) still.style.opacity = '1'; }, { once: true, signal });
         video.addEventListener('seeked', () => { seeking = false; if (dirty) seekTo(latest); }, { signal });
       }
 

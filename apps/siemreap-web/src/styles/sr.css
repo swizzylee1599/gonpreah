@@ -222,7 +222,7 @@ body.sr {
 .sr .hall-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 .sr .hall-bg { position: absolute; inset: 0; }
 .sr .hall-bg img, .sr .hall-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 56%; transform-origin: 50% 58%; will-change: transform; display: block; }
-.sr .hall-video + .hall-still, .sr .hall-bg video ~ img { display: none; }
+.sr .hall-still { transition: opacity .6s ease; }
 .sr .hall-scrim { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 58%, rgba(11,11,11,.3) 0%, rgba(11,11,11,.7) 55%, rgba(11,11,11,.92) 100%); }
 .sr .hall-gallery { position: absolute; inset: 0; perspective: 1100px; perspective-origin: 50% 56%; pointer-events: none; }
 .sr .hall-frame {
