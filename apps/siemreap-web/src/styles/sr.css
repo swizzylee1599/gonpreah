@@ -181,8 +181,9 @@ body.sr {
   .sr .hall-pin { position: relative; height: auto; padding: 90px 0 60px; }
   .sr .hall-bg img { transform: none !important; }
   .sr .hall-intro, .sr .hall-copy { position: relative; left: auto; top: auto; transform: none !important; opacity: 1 !important; filter: none !important; margin: 0 auto 48px; }
-  .sr .hall-gallery { position: relative; perspective: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; width: min(88vw, 1100px); margin: 0 auto 56px; pointer-events: auto; }
-  .sr .hall-frame { position: static; width: auto; transform: none !important; opacity: 1 !important; }
+  .sr .hall-photos { position: relative; left: auto; top: auto; transform: none; flex-wrap: wrap; margin: 0 auto 56px; pointer-events: auto; }
+  .sr .hall-photo { transform: none !important; opacity: 1 !important; filter: none !important; }
+  .sr .info-cover { margin-top: 0; border-radius: 0; box-shadow: none; }
   .sr .jp-steps { display: flex; flex-direction: column; gap: 34px; }
   .sr .jp-step { opacity: 1 !important; transform: none !important; }
   .sr .jp-head { transform: none !important; }
@@ -224,20 +225,27 @@ body.sr {
 .sr .hall-bg img, .sr .hall-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 56%; transform-origin: 50% 58%; will-change: transform; display: block; }
 .sr .hall-still { transition: opacity .6s ease; }
 .sr .hall-scrim { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 58%, rgba(11,11,11,.3) 0%, rgba(11,11,11,.7) 55%, rgba(11,11,11,.92) 100%); }
-.sr .hall-gallery { position: absolute; inset: 0; perspective: 1100px; perspective-origin: 50% 56%; pointer-events: none; }
-.sr .hall-frame {
-  position: absolute; left: 50%; top: 56%; margin: 0; width: clamp(240px, 30vw, 440px); aspect-ratio: 4 / 3;
-  padding: 6px; box-sizing: border-box; background: #ece6d8; border-radius: 3px; opacity: 0;
-  box-shadow: 0 30px 70px rgba(0,0,0,.6), inset 0 0 0 1px rgba(0,0,0,.25);
-  backface-visibility: hidden; will-change: transform, opacity;
+.sr .hall-photos {
+  position: absolute; left: 50%; top: 64%; transform: translateX(-50%); width: min(92vw, 1080px);
+  display: flex; justify-content: center; gap: 14px; pointer-events: none;
 }
-.sr .hall-frame img, .sr .hall-frame .photo-slot { display: block; width: 100%; height: 100%; object-fit: cover; }
-.sr .hall-frame .photo-slot { min-height: 0; font-size: 12px; }
+.sr .hall-photo {
+  margin: 0; flex: 0 1 clamp(150px, 19vw, 255px); aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden;
+  background: var(--sr-raise); box-shadow: 0 22px 50px rgba(0,0,0,.55); opacity: 0; will-change: transform, opacity;
+}
+.sr .hall-photo img, .sr .hall-photo .photo-slot { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sr .hall-photo .photo-slot { min-height: 0; font-size: 12px; }
 .sr .hall-intro, .sr .hall-copy {
   position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%); width: min(88vw, 780px);
   text-align: center; will-change: transform, opacity; text-shadow: 0 2px 28px rgba(0,0,0,.7), 0 1px 3px rgba(0,0,0,.6);
 }
 .sr .hall-copy { opacity: 0; }
+/* The information section rides up over the pinned hallway like a card. */
+.sr .info-cover {
+  position: relative; z-index: 3; margin-top: -76vh; padding-top: 70px;
+  background: linear-gradient(#131313, var(--sr-ink) 42%); border-radius: 30px 30px 0 0;
+  box-shadow: 0 -34px 70px rgba(0,0,0,.65);
+}
 .sr .jp-steps { display: grid; }
 .sr .jp-step { grid-area: 1 / 1; opacity: 0; will-change: opacity, transform; }
 .sr .jp-rail { display: flex; flex-wrap: wrap; gap: 8px 28px; position: relative; margin-top: 38px; padding-top: 16px; }
@@ -402,8 +410,9 @@ body.sr {
   .sr .jp-step .body { font-size: 15px; }
   .sr .jp-rail { margin-top: 22px; gap: 6px 16px; }
   .sr .jp-rail-label { font-size: 11px; }
-  .sr .hall-frame { width: 54vw; padding: 4px; }
-  .sr .hall-intro, .sr .hall-copy { width: 88vw; top: 40%; }
+  .sr .hall-photos { top: 60%; width: 88vw; flex-wrap: wrap; gap: 10px; }
+  .sr .hall-photo { flex: 0 0 calc(50% - 5px); border-radius: 10px; }
+  .sr .hall-intro, .sr .hall-copy { width: 88vw; top: 38%; }
   .sr .hall-copy .body { font-size: 15px; }
   .sr .info { padding: 30px 22px; }
   .sr .info-grid { grid-template-columns: minmax(0, 1fr); gap: 34px; }

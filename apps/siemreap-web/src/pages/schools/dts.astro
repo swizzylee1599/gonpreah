@@ -139,7 +139,8 @@ const FAQ: [string, string][] = [
     // corridor. Progress 0-.1 is the intro heading; each phase then gets a
     // window in which its copy grows toward you and passes, while its
     // photos hang on the walls and slide by in perspective.
-    const HALL_PHASES = [[0.2, 0.58], [0.58, 0.95]];
+    // Phases end at .86 so the corridor is clear while the info card slides up over it (.86-1).
+    const HALL_PHASES = [[0.2, 0.55], [0.55, 0.86]];
     const INTRO_HOLD = 0.08, INTRO_FADE = 0.12;
     const clamp01 = (v) => Math.min(1, Math.max(0, v));
     const smooth = (t) => t * t * (3 - 2 * t);
@@ -150,8 +151,8 @@ const FAQ: [string, string][] = [
       const video = hall.querySelector('.hall-video');
       const intro = hall.querySelector('.hall-intro');
       const copies = [...hall.querySelectorAll('.hall-copy')];
-      const frames = [...hall.querySelectorAll('.hall-frame')].map((el) => ({
-        el, phase: +el.dataset.phase, k: +el.dataset.k, side: el.dataset.side === 'left' ? -1 : 1,
+      const rows = [...hall.querySelectorAll('.hall-photos')].map((el) => ({
+        el, phase: +el.dataset.phase, items: [...el.querySelectorAll('.hall-photo')],
       }));
 
       let seeking = false, latest = 0, dirty = false;
@@ -205,18 +206,23 @@ const FAQ: [string, string][] = [
           el.style.pointerEvents = op > 0.5 ? '' : 'none';
         });
 
-        frames.forEach(({ el, phase, k, side }) => {
+        // Photos: a plain row under the copy that rises in just behind it, holds, then passes with it.
+        rows.forEach(({ el, phase, items }) => {
           const [a, b] = HALL_PHASES[phase];
           const t = clamp01((p - a) / (b - a));
-          const u = (t - (0.02 + k * 0.12)) / 0.62; // each frame hangs further down the hall; all pass before the phase ends
-          if (u <= 0 || u >= 1.05) { el.style.opacity = '0'; return; }
-          const z = -1400 + u * 1900;               // mid-hall (already readable) → just past you
-          const narrow = window.innerWidth < 760;
-          const x = side * ((narrow ? 46 : 26) + u * (narrow ? 18 : 14)); // on the walls, beside the copy
-          const y = (narrow ? 26 : 16) + u * 4;     // hung below the copy, which sits above centre
-          const op = u < 0.15 ? u / 0.15 : u > 0.85 ? clamp01((1.05 - u) / 0.2) : 1;
-          el.style.opacity = String(op);
-          el.style.transform = `translate(-50%,-50%) translate3d(${x.toFixed(2)}vw, ${y.toFixed(2)}vh, ${z.toFixed(0)}px) rotateY(${-side * 52}deg)`;
+          el.style.pointerEvents = t > 0.2 && t < 0.9 ? 'auto' : 'none';
+          items.forEach((item, k) => {
+            const tk = clamp01((t - 0.06 - k * 0.035) / 0.835); // trails the copy slightly, each a beat after the last; the last one finishes exactly at the phase end
+            let scale = 0.8, op = 0, y = 44, blur = 0;
+            if (tk > 0 && tk < 1) {
+              if (tk < 0.5) { const e = smooth(tk / 0.5); scale = 0.8 + 0.2 * e; op = clamp01(tk / 0.2); y = 44 * (1 - e); }
+              else if (tk < 0.82) { scale = 1; op = 1; y = 0; }
+              else { const v = (tk - 0.82) / 0.18; scale = 1 + 0.3 * v; op = 1 - smooth(v); y = -24 * v; blur = v * 6; }
+            }
+            item.style.opacity = String(op);
+            item.style.transform = `translateY(${y.toFixed(1)}px) scale(${scale.toFixed(3)})`;
+            item.style.filter = blur ? `blur(${blur.toFixed(1)}px)` : '';
+          });
         });
       };
       const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
@@ -291,15 +297,17 @@ const FAQ: [string, string][] = [
         {HALL_VIDEO && <video class="hall-video" src={HALL_VIDEO} muted autoplay playsinline webkit-playsinline preload="auto"></video>}
       </div>
       <div class="hall-scrim" aria-hidden="true"></div>
-      <div class="hall-gallery">
-        {PHASES.map((phase, p) => phase.photos.map((photo, i) => (
-          <figure class="hall-frame" data-phase={p} data-k={i} data-side={i % 2 === 0 ? 'left' : 'right'}>
-            {photo.src
-              ? <img src={photo.src} alt={photo.alt ?? ''} loading="lazy" decoding="async" />
-              : <PhotoSlot label={photo.label ?? 'Drop a photo'} radius={0} />}
-          </figure>
-        )))}
-      </div>
+      {PHASES.map((phase, p) => (
+        <div class="hall-photos" data-phase={p}>
+          {phase.photos.map((photo) => (
+            <figure class="hall-photo">
+              {photo.src
+                ? <img src={photo.src} alt={photo.alt ?? ''} loading="lazy" decoding="async" />
+                : <PhotoSlot label={photo.label ?? 'Drop a photo'} radius={0} />}
+            </figure>
+          ))}
+        </div>
+      ))}
       <div class="hall-intro">
         <p class="eyebrow">DTS breakdown</p>
         <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.6vw,48px);font-weight:500;line-height:1.1;">Three months here. Three months to the nations.</h2>
@@ -316,8 +324,8 @@ const FAQ: [string, string][] = [
     </div>
   </section>
 
-  <section class="sec" style="padding-top:0;">
-    <div class="wrap card reveal info" id="info">
+  <section class="sec info-cover">
+    <div class="wrap card info" id="info">
       <div class="info-grid">
         <div>
           <p class="eyebrow">DTS information</p>
