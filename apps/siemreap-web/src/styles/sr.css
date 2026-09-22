@@ -113,22 +113,7 @@ body.sr {
   .sr .scaleup { animation: sr-scaleup linear both; animation-timeline: view(); animation-range: entry 0% cover 45%; }
   .sr .linein { animation: sr-linein linear both; animation-timeline: view(); animation-range: entry 5% entry 65%; }
   .sr .riseup { animation: sr-riseup linear both; animation-timeline: view(); animation-range: entry 0% entry 55%; }
-  .sr .bd-head { animation: sr-enter-left linear both; animation-timeline: view(); animation-range: entry 0% cover 38%; }
-  .sr .spread-item { animation: sr-assemble linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
-  .sr .spread-par { animation: sr-spread-par linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
-  /* Journey line and markers run off each phase block's own timeline. */
-  .sr .phase-block { view-timeline-name: --phase; }
-  .sr .phase-dot { animation: sr-dot linear both; animation-timeline: --phase; animation-range: entry 10% entry 45%; }
-  .sr .phase-line { animation: sr-draw linear both; animation-timeline: --phase; animation-range: entry 30% exit 60%; }
-  /* Phase copy reveals in sequence off the copy block's timeline: eyebrow, heading, rule, paragraphs. */
-  .sr .phase-copy { view-timeline-name: --copy; }
-  .sr .phase-copy > * { animation: sr-linein linear both; animation-timeline: --copy; animation-range: entry 0% entry 55%; }
-  .sr .phase-copy > :nth-child(2) { animation-range: entry 8% entry 63%; }
-  .sr .phase-copy > :nth-child(3) { animation-name: sr-grow; transform-origin: left; animation-range: entry 16% entry 66%; }
-  .sr .phase-copy > :nth-child(4) { animation-range: entry 24% entry 79%; }
-  .sr .phase-copy > :nth-child(5) { animation-range: entry 32% entry 87%; }
 }
-@keyframes sr-enter-left { from { transform: translateX(-60vw); opacity: 0; } to { transform: none; opacity: 1; } }
 
 @keyframes sr-prog { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes sr-par { from { transform: translateY(-14%); } to { transform: translateY(14%); } }
@@ -191,16 +176,18 @@ body.sr {
   .sr .journey-pin { position: relative; height: auto; padding: 84px 0 40px; }
   .sr .jp-photo { transform: none !important; box-shadow: none; }
   .sr .jp-photo:not(:first-child) { display: none; }
-  .sr .breakdown { margin-top: 0; padding-top: 0; }
-  .sr .spread-item, .sr .spread-par { animation: none !important; transform: none !important; opacity: 1 !important; }
-  .sr .spread-card { transition: none; transform: none !important; }
-  .sr .phase-dot, .sr .phase-line, .sr .phase-copy > * { animation: none !important; transform: none !important; opacity: 1 !important; }
+  .sr .breakdown { margin-top: 0; }
+  .sr .hall-stack { height: auto; }
+  .sr .hall-pin { position: relative; height: auto; padding: 90px 0 60px; }
+  .sr .hall-bg img { transform: none !important; }
+  .sr .hall-intro, .sr .hall-copy { position: relative; left: auto; top: auto; transform: none !important; opacity: 1 !important; filter: none !important; margin: 0 auto 48px; }
+  .sr .hall-gallery { position: relative; perspective: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; width: min(88vw, 1100px); margin: 0 auto 56px; pointer-events: auto; }
+  .sr .hall-frame { position: static; width: auto; transform: none !important; opacity: 1 !important; }
   .sr .jp-steps { display: flex; flex-direction: column; gap: 34px; }
   .sr .jp-step { opacity: 1 !important; transform: none !important; }
   .sr .jp-head { transform: none !important; }
   .sr .jp-grid { opacity: 1 !important; }
   .sr .jp-rail { display: none; }
-  .sr .bd-head { animation: none !important; opacity: 1; transform: none; }
 }
 
 /*
@@ -228,17 +215,29 @@ body.sr {
   box-shadow: -18px 0 40px rgba(0,0,0,.45);
 }
 .sr .jp-head { will-change: transform; }
-/* The breakdown rides up over the tail of the pinned journey stack. */
-.sr .breakdown { position: relative; z-index: 2; margin-top: -50vh; padding-top: 30px; background: var(--sr-ink); overflow-x: clip; }
-.sr .breakdown > .wrap { position: relative; z-index: 1; }
-/* Full-bleed temple photo behind the breakdown, drifting slowly, under a wash that fades into the page. */
-.sr .breakdown-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-.sr .breakdown-bg .parslow { position: absolute; inset: -10% 0; }
-.sr .breakdown-bg img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
-.sr .breakdown-bg::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(to bottom, var(--sr-ink) 0%, rgba(11,11,11,.8) 16%, rgba(11,11,11,.8) 84%, var(--sr-ink) 100%);
+/* The hallway: the breakdown rides up over the tail of the journey stack, then pins
+   while scrolling walks you down the corridor. */
+.sr .breakdown { position: relative; z-index: 2; margin-top: -50vh; background: var(--sr-ink); overflow-x: clip; }
+.sr .hall-stack { height: 520vh; }
+.sr .hall-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+.sr .hall-bg { position: absolute; inset: 0; }
+.sr .hall-bg img, .sr .hall-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 56%; transform-origin: 50% 58%; will-change: transform; display: block; }
+.sr .hall-video + .hall-still, .sr .hall-bg video ~ img { display: none; }
+.sr .hall-scrim { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 58%, rgba(11,11,11,.3) 0%, rgba(11,11,11,.7) 55%, rgba(11,11,11,.92) 100%); }
+.sr .hall-gallery { position: absolute; inset: 0; perspective: 1100px; perspective-origin: 50% 56%; pointer-events: none; }
+.sr .hall-frame {
+  position: absolute; left: 50%; top: 56%; margin: 0; width: clamp(180px, 24vw, 340px); aspect-ratio: 4 / 3;
+  padding: 6px; box-sizing: border-box; background: #ece6d8; border-radius: 3px; opacity: 0;
+  box-shadow: 0 30px 70px rgba(0,0,0,.6), inset 0 0 0 1px rgba(0,0,0,.25);
+  backface-visibility: hidden; will-change: transform, opacity;
 }
+.sr .hall-frame img, .sr .hall-frame .photo-slot { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sr .hall-frame .photo-slot { min-height: 0; font-size: 12px; }
+.sr .hall-intro, .sr .hall-copy {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(88vw, 780px);
+  text-align: center; will-change: transform, opacity; text-shadow: 0 2px 28px rgba(0,0,0,.7), 0 1px 3px rgba(0,0,0,.6);
+}
+.sr .hall-copy { opacity: 0; }
 .sr .jp-steps { display: grid; }
 .sr .jp-step { grid-area: 1 / 1; opacity: 0; will-change: opacity, transform; }
 .sr .jp-rail { display: flex; flex-wrap: wrap; gap: 8px 28px; position: relative; margin-top: 38px; padding-top: 16px; }
@@ -246,42 +245,6 @@ body.sr {
 .sr .jp-rail-label b { font-weight: 500; color: var(--sr-pink); margin-right: 6px; }
 .sr .jp-rail-bar { position: absolute; left: 0; right: 0; top: 0; height: 1px; background: #232323; }
 .sr .jp-rail-bar i { display: block; height: 100%; width: 100%; background: #fff; transform: scaleX(0); transform-origin: left; }
-/* Phase blocks: copy beside a four-photo collage that assembles on scroll. */
-.sr .phases { --phase-gap: clamp(80px, 11vw, 150px); display: flex; flex-direction: column; gap: var(--phase-gap); padding-left: 44px; }
-.sr .phase-block { position: relative; display: grid; grid-template-columns: minmax(0, .72fr) minmax(0, 1.28fr); gap: clamp(34px, 5vw, 70px); align-items: center; }
-/* Journey line: draws from the lecture marker down to the outreach marker as you scroll. */
-.sr .phase-dot { position: absolute; left: -49px; top: 8px; width: 12px; height: 12px; box-sizing: border-box; border-radius: 50%; border: 2px solid #fff; background: #fff; box-shadow: 0 0 0 6px rgba(255,255,255,.12); }
-.sr .phase-line { position: absolute; left: -44px; top: 22px; width: 2px; height: calc(100% + var(--phase-gap) - 16px); background: rgba(255,255,255,.85); transform-origin: top; }
-@keyframes sr-draw { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-@keyframes sr-dot { from { background: var(--sr-ink); box-shadow: 0 0 0 0 rgba(255,255,255,0); } to { background: #fff; box-shadow: 0 0 0 6px rgba(255,255,255,.12); } }
-.sr .phase-block--flip .phase-copy { order: 2; }
-.sr .spread { position: relative; aspect-ratio: 1; }
-.sr .spread-item { position: absolute; }
-.sr .spread-par { position: absolute; inset: 0; }
-/* The card is the whole visible photo (frame, shadow and all); --dx/--dy nudge the
-   other photos away from whichever one is hovered. */
-.sr .spread-card {
-  position: absolute; inset: 0; border-radius: 16px; overflow: hidden; background: var(--sr-raise);
-  box-shadow: 0 24px 60px rgba(0,0,0,.5);
-  transform: translate(var(--dx, 0px), var(--dy, 0px)) scale(var(--hs, 1));
-  transition: transform .7s cubic-bezier(.16,1,.3,1), filter .45s ease, box-shadow .45s ease;
-}
-.sr .slot-0 { left: 0; top: 0; width: 64%; aspect-ratio: 4 / 3; z-index: 1; }
-.sr .slot-1 { right: 0; bottom: 0; width: 58%; aspect-ratio: 4 / 3; z-index: 3; }
-.sr .slot-2 { right: 2%; top: 4%; width: 38%; aspect-ratio: 1; z-index: 2; }
-.sr .slot-3 { left: 4%; bottom: 2%; width: 40%; aspect-ratio: 1; z-index: 4; }
-.sr .spread--flip .slot-0 { left: auto; right: 0; }
-.sr .spread--flip .slot-1 { right: auto; left: 0; }
-.sr .spread--flip .slot-2 { right: auto; left: 2%; }
-.sr .spread--flip .slot-3 { left: auto; right: 4%; }
-@media (hover: hover) {
-  /* Lift and focus: the hovered photo comes forward and brightens while the rest of the collage dims. */
-  .sr .spread-item:hover { z-index: 10; }
-  .sr .spread-item:hover .spread-card { --hs: 1.06; filter: brightness(1.06) saturate(1.08); box-shadow: 0 34px 80px rgba(0,0,0,.65); }
-  .sr .spread:hover .spread-item:not(:hover) .spread-card { filter: brightness(.55) saturate(.7); }
-}
-@keyframes sr-assemble { from { transform: var(--from); opacity: 0; } to { transform: none; opacity: 1; } }
-@keyframes sr-spread-par { from { transform: translateY(calc(-1 * var(--par))); } to { transform: translateY(var(--par)); } }
 .sr .info { padding: 44px 48px; }
 .sr .info-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px 60px; }
 .sr .info-list { margin: 26px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 28px; }
@@ -439,12 +402,9 @@ body.sr {
   .sr .jp-step .body { font-size: 15px; }
   .sr .jp-rail { margin-top: 22px; gap: 6px 16px; }
   .sr .jp-rail-label { font-size: 11px; }
-  .sr .phases { padding-left: 24px; }
-  .sr .phase-block { grid-template-columns: minmax(0, 1fr); gap: 26px; }
-  .sr .phase-block--flip .phase-copy { order: 0; }
-  .sr .phase-dot { left: -29px; top: 4px; width: 10px; height: 10px; }
-  .sr .phase-line { left: -25px; top: 16px; height: calc(100% + var(--phase-gap) - 12px); }
-  .sr .spread-card { border-radius: 12px; box-shadow: 0 14px 34px rgba(0,0,0,.5); }
+  .sr .hall-frame { width: 44vw; padding: 4px; }
+  .sr .hall-intro, .sr .hall-copy { width: 88vw; top: 40%; }
+  .sr .hall-copy .body { font-size: 15px; }
   .sr .info { padding: 30px 22px; }
   .sr .info-grid { grid-template-columns: minmax(0, 1fr); gap: 34px; }
   .sr .faq-item summary { font-size: 17px; padding: 18px 0; }

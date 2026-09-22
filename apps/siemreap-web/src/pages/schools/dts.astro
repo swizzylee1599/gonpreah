@@ -58,13 +58,9 @@ const PHASES: { eyebrow: string; title: string; body: string[]; photos: Photo[] 
     ],
   },
 ];
-// Where each photo starts before it assembles into place (mirrored for flipped blocks).
-const SCATTER = [
-  { x: -42, y: -28, r: -11, s: 0.9, par: -4 },
-  { x: 46, y: 34, r: 8, s: 0.9, par: 6 },
-  { x: 58, y: -48, r: 15, s: 0.8, par: -8 },
-  { x: -56, y: 52, r: -13, s: 0.8, par: 5 },
-];
+// Higgsfield dolly shot down the corridor, scrubbed by scroll. Until the clip
+// is uploaded to public/video the still photo zooms in as a stand-in.
+const HALL_VIDEO: string | null = null; // e.g. '/video/dts-hallway.mp4#t=0.001'
 
 const INFO: [string, string][] = [
   ['Next school', 'January DTS'],
@@ -138,35 +134,95 @@ const FAQ: [string, string][] = [
     // swaps the step copy; the last 22% slides the heading off to the
     // right and fades the rest while the breakdown section rides up over it.
     const STEPS_END = 0.78;
+
+    // The hallway: the breakdown pins and scrolling walks you down the
+    // corridor. Progress 0-.1 is the intro heading; each phase then gets a
+    // window in which its copy grows toward you and passes, while its
+    // photos hang on the walls and slide by in perspective.
+    const HALL_PHASES = [[0.1, 0.52], [0.52, 0.94]];
+    const clamp01 = (v) => Math.min(1, Math.max(0, v));
+    const smooth = (t) => t * t * (3 - 2 * t);
+    const initHall = (signal) => {
+      const hall = document.querySelector('.hall-stack');
+      if (!hall || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const still = hall.querySelector('.hall-still');
+      const video = hall.querySelector('.hall-video');
+      const intro = hall.querySelector('.hall-intro');
+      const copies = [...hall.querySelectorAll('.hall-copy')];
+      const frames = [...hall.querySelectorAll('.hall-frame')].map((el) => ({
+        el, phase: +el.dataset.phase, k: +el.dataset.k, side: el.dataset.side === 'left' ? -1 : 1,
+      }));
+
+      let seeking = false, latest = 0, dirty = false;
+      const seekTo = (t) => {
+        latest = t; dirty = true;
+        if (seeking || !video) return;
+        seeking = true; dirty = false;
+        if ('fastSeek' in video) video.fastSeek(t); else video.currentTime = t;
+      };
+      if (video) {
+        const prime = () => { const p = video.play(); if (p && p.then) p.then(() => video.pause()).catch(() => {}); };
+        if (video.readyState >= 2) prime(); else video.addEventListener('loadeddata', prime, { once: true, signal });
+        video.addEventListener('seeked', () => { seeking = false; if (dirty) seekTo(latest); }, { signal });
+      }
+
+      let ticking = false;
+      const update = () => {
+        ticking = false;
+        const rect = hall.getBoundingClientRect();
+        const scrollable = rect.height - window.innerHeight;
+        const p = scrollable <= 0 ? 0 : clamp01(-rect.top / scrollable);
+
+        if (video && video.duration && !Number.isNaN(video.duration)) seekTo(p * video.duration * 0.985);
+        else if (still) still.style.transform = `scale(${(1 + p * 0.9).toFixed(3)}) translateY(${(-p * 4).toFixed(2)}%)`;
+
+        const io = clamp01(p / HALL_PHASES[0][0]);
+        intro.style.opacity = String(1 - io);
+        intro.style.transform = `translate(-50%,-50%) scale(${(1 + io * 0.25).toFixed(3)})`;
+        intro.style.filter = io ? `blur(${(io * 6).toFixed(1)}px)` : '';
+        intro.style.pointerEvents = io > 0.5 ? 'none' : '';
+
+        copies.forEach((el, i) => {
+          const [a, b] = HALL_PHASES[i];
+          const t = clamp01((p - a) / (b - a));
+          let scale = 0.5, op = 0, blur = 0;
+          if (t > 0 && t < 1) {
+            if (t < 0.78) { const u = t / 0.78; scale = 0.5 + 0.5 * smooth(u); op = clamp01(u / 0.4); }
+            else { const v = (t - 0.78) / 0.22; scale = 1 + 0.7 * v; op = 1 - smooth(v); blur = v * 8; }
+          }
+          el.style.opacity = String(op);
+          el.style.transform = `translate(-50%,-50%) scale(${scale.toFixed(3)})`;
+          el.style.filter = blur ? `blur(${blur.toFixed(1)}px)` : '';
+          el.style.pointerEvents = op > 0.5 ? '' : 'none';
+        });
+
+        frames.forEach(({ el, phase, k, side }) => {
+          const [a, b] = HALL_PHASES[phase];
+          const t = clamp01((p - a) / (b - a));
+          const u = (t - (0.04 + k * 0.11)) / 0.62; // each frame hangs further down the hall; all pass before the phase ends
+          if (u <= 0 || u >= 1.05) { el.style.opacity = '0'; return; }
+          const z = -2400 + u * 2900;               // far end of the hall → just past you
+          const narrow = window.innerWidth < 760;
+          const x = side * ((narrow ? 50 : 40) + u * 22); // hug the walls so frames pass beside the copy, not through it
+          const y = (narrow ? 24 : 10) + u * 6;           // hung below eye level; lower still on phones, where the copy sits higher
+          const op = u < 0.25 ? Math.pow(u / 0.25, 1.6) : u > 0.85 ? clamp01((1.05 - u) / 0.2) : 1;
+          el.style.opacity = String(op);
+          el.style.transform = `translate(-50%,-50%) translate3d(${x.toFixed(2)}vw, ${y.toFixed(2)}vh, ${z.toFixed(0)}px) rotateY(${-side * 52}deg)`;
+        });
+      };
+      const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+      update();
+      window.addEventListener('scroll', onScroll, { passive: true, signal });
+      window.addEventListener('resize', onScroll, { signal });
+    };
+
     let ctrl = null;
     const init = () => {
       if (ctrl) ctrl.abort();
       ctrl = new AbortController();
       const { signal } = ctrl;
 
-      // Hovering a collage photo eases the other photos slightly away from
-      // it; they settle back when the pointer leaves the collage.
-      if (matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const SEPARATE_PX = 18;
-        document.querySelectorAll('.spread').forEach((spread) => {
-          const items = [...spread.querySelectorAll('.spread-item')];
-          const set = (el, dx, dy) => { el.style.setProperty('--dx', `${dx.toFixed(1)}px`); el.style.setProperty('--dy', `${dy.toFixed(1)}px`); };
-          const centre = (el) => { const b = el.getBoundingClientRect(); return [b.left + b.width / 2, b.top + b.height / 2]; };
-          items.forEach((hovered) => {
-            hovered.addEventListener('pointerenter', () => {
-              const [hx, hy] = centre(hovered);
-              items.forEach((el) => {
-                if (el === hovered) { set(el, 0, 0); return; }
-                const [cx, cy] = centre(el);
-                const vx = cx - hx, vy = cy - hy;
-                const len = Math.hypot(vx, vy) || 1;
-                set(el, (vx / len) * SEPARATE_PX, (vy / len) * SEPARATE_PX);
-              });
-            }, { signal });
-          });
-          spread.addEventListener('pointerleave', () => items.forEach((el) => set(el, 0, 0)), { signal });
-        });
-      }
+      initHall(signal);
 
       const stack = document.querySelector('.journey-stack');
       if (!stack) return;
@@ -219,50 +275,36 @@ const FAQ: [string, string][] = [
     document.addEventListener('astro:page-load', init);
   </script>
 
-  <section class="sec breakdown">
-    <div class="breakdown-bg" aria-hidden="true">
-      <div class="parslow">
-        <img src="/images/schools/dts-temple.jpg" alt="" loading="lazy" decoding="async" />
+  <section class="breakdown hall-stack" aria-label="DTS breakdown">
+    <div class="hall-pin">
+      <div class="hall-bg" aria-hidden="true">
+        <img class="hall-still" src="/images/schools/dts-temple.jpg" alt="" decoding="async" />
+        {HALL_VIDEO && <video class="hall-video" src={HALL_VIDEO} muted autoplay playsinline webkit-playsinline preload="auto"></video>}
       </div>
+      <div class="hall-scrim" aria-hidden="true"></div>
+      <div class="hall-gallery">
+        {PHASES.map((phase, p) => phase.photos.map((photo, i) => (
+          <figure class="hall-frame" data-phase={p} data-k={i} data-side={i % 2 === 0 ? 'left' : 'right'}>
+            {photo.src
+              ? <img src={photo.src} alt={photo.alt ?? ''} loading="lazy" decoding="async" />
+              : <PhotoSlot label={photo.label ?? 'Drop a photo'} radius={0} />}
+          </figure>
+        )))}
+      </div>
+      <div class="hall-intro">
+        <p class="eyebrow">DTS breakdown</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.6vw,48px);font-weight:500;line-height:1.1;">Three months here. Three months to the nations.</h2>
+        <p class="muted" style="margin:26px 0 0;font-size:12px;letter-spacing:.2em;text-transform:uppercase;">Scroll to walk the hall ↓</p>
+      </div>
+      {PHASES.map((phase, p) => (
+        <div class="hall-copy" data-phase={p}>
+          <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);letter-spacing:.14em;text-transform:uppercase;">{phase.eyebrow}</p>
+          <h3 class="disp" style="margin:16px 0 0;font-size:clamp(30px,4.2vw,58px);font-weight:500;line-height:1.08;">{phase.title}</h3>
+          <span class="rule" style="margin:22px auto;"></span>
+          {phase.body.map((para, i) => <p class="body" style={`margin:${i ? '14px' : '0'} auto 0;max-width:48ch;`}>{para}</p>)}
+        </div>
+      ))}
     </div>
-    <div class="wrap bd-head" style="margin-bottom:clamp(50px,7vw,90px);">
-      <p class="eyebrow">DTS breakdown</p>
-      <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Three months here. Three months to the nations.</h2>
-    </div>
-    <div class="wrap"><div class="phases">
-      {PHASES.map((phase, p) => {
-        const flip = p % 2 === 1;
-        return (
-          <div class:list={['phase-block', { 'phase-block--flip': flip }]}>
-            <span class="phase-dot" aria-hidden="true"></span>
-            {p === 0 && <span class="phase-line" aria-hidden="true"></span>}
-            <div class="phase-copy">
-              <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">{phase.eyebrow}</p>
-              <h3 class="disp" style="margin:16px 0 0;font-size:clamp(26px,3vw,40px);font-weight:500;line-height:1.12;">{phase.title}</h3>
-              <span class="rule" style="margin:20px 0;"></span>
-              {phase.body.map((para, i) => <p class="body" style={`margin:${i ? '14px' : '0'} 0 0;max-width:44ch;`}>{para}</p>)}
-            </div>
-            <div class:list={['spread', { 'spread--flip': flip }]} aria-label={`Photos from ${phase.title.toLowerCase()}`}>
-              {phase.photos.map((photo, i) => {
-                const sc = SCATTER[i];
-                const x = flip ? -sc.x : sc.x;
-                return (
-                  <div class={`spread-item slot-${i}`} style={`--from:translate(${x}%,${sc.y}%) rotate(${flip ? -sc.r : sc.r}deg) scale(${sc.s});--par:${sc.par}%;`}>
-                    <div class="spread-par">
-                      <div class="spread-card">
-                        {photo.src
-                          ? <img src={photo.src} alt={photo.alt ?? ''} loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" />
-                          : <PhotoSlot label={photo.label ?? 'Drop a photo'} radius={0} />}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })}
-    </div></div>
   </section>
 
   <section class="sec" style="padding-top:0;">
