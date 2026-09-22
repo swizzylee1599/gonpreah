@@ -139,7 +139,8 @@ const FAQ: [string, string][] = [
     // corridor. Progress 0-.1 is the intro heading; each phase then gets a
     // window in which its copy grows toward you and passes, while its
     // photos hang on the walls and slide by in perspective.
-    const HALL_PHASES = [[0.1, 0.52], [0.52, 0.94]];
+    const HALL_PHASES = [[0.2, 0.58], [0.58, 0.95]];
+    const INTRO_HOLD = 0.08, INTRO_FADE = 0.12;
     const clamp01 = (v) => Math.min(1, Math.max(0, v));
     const smooth = (t) => t * t * (3 - 2 * t);
     const initHall = (signal) => {
@@ -182,7 +183,7 @@ const FAQ: [string, string][] = [
         if (video && video.duration && !Number.isNaN(video.duration)) seekTo(p * video.duration * 0.985);
         else if (still) still.style.transform = `scale(${(1 + p * 0.9).toFixed(3)}) translateY(${(-p * 4).toFixed(2)}%)`;
 
-        const io = clamp01(p / HALL_PHASES[0][0]);
+        const io = clamp01((p - INTRO_HOLD) / INTRO_FADE);
         intro.style.opacity = String(1 - io);
         intro.style.transform = `translate(-50%,-50%) scale(${(1 + io * 0.25).toFixed(3)})`;
         intro.style.filter = io ? `blur(${(io * 6).toFixed(1)}px)` : '';
@@ -191,10 +192,12 @@ const FAQ: [string, string][] = [
         copies.forEach((el, i) => {
           const [a, b] = HALL_PHASES[i];
           const t = clamp01((p - a) / (b - a));
+          // approach (0-.55): grows toward you; hold (.55-.82): full size, barely drifting; pass (.82-1): through and gone
           let scale = 0.5, op = 0, blur = 0;
           if (t > 0 && t < 1) {
-            if (t < 0.78) { const u = t / 0.78; scale = 0.5 + 0.5 * smooth(u); op = clamp01(u / 0.4); }
-            else { const v = (t - 0.78) / 0.22; scale = 1 + 0.7 * v; op = 1 - smooth(v); blur = v * 8; }
+            if (t < 0.55) { const u = t / 0.55; scale = 0.5 + 0.5 * smooth(u); op = clamp01(u / 0.35); }
+            else if (t < 0.82) { scale = 1 + ((t - 0.55) / 0.27) * 0.04; op = 1; }
+            else { const v = (t - 0.82) / 0.18; scale = 1.04 + 0.7 * v; op = 1 - smooth(v); blur = v * 8; }
           }
           el.style.opacity = String(op);
           el.style.transform = `translate(-50%,-50%) scale(${scale.toFixed(3)})`;
@@ -205,13 +208,13 @@ const FAQ: [string, string][] = [
         frames.forEach(({ el, phase, k, side }) => {
           const [a, b] = HALL_PHASES[phase];
           const t = clamp01((p - a) / (b - a));
-          const u = (t - (0.04 + k * 0.11)) / 0.62; // each frame hangs further down the hall; all pass before the phase ends
+          const u = (t - (0.02 + k * 0.12)) / 0.62; // each frame hangs further down the hall; all pass before the phase ends
           if (u <= 0 || u >= 1.05) { el.style.opacity = '0'; return; }
-          const z = -2400 + u * 2900;               // far end of the hall → just past you
+          const z = -1400 + u * 1900;               // mid-hall (already readable) → just past you
           const narrow = window.innerWidth < 760;
-          const x = side * ((narrow ? 50 : 40) + u * 22); // hug the walls so frames pass beside the copy, not through it
-          const y = (narrow ? 24 : 10) + u * 6;           // hung below eye level; lower still on phones, where the copy sits higher
-          const op = u < 0.25 ? Math.pow(u / 0.25, 1.6) : u > 0.85 ? clamp01((1.05 - u) / 0.2) : 1;
+          const x = side * ((narrow ? 46 : 26) + u * (narrow ? 18 : 14)); // on the walls, beside the copy
+          const y = (narrow ? 26 : 16) + u * 4;     // hung below the copy, which sits above centre
+          const op = u < 0.15 ? u / 0.15 : u > 0.85 ? clamp01((1.05 - u) / 0.2) : 1;
           el.style.opacity = String(op);
           el.style.transform = `translate(-50%,-50%) translate3d(${x.toFixed(2)}vw, ${y.toFixed(2)}vh, ${z.toFixed(0)}px) rotateY(${-side * 52}deg)`;
         });
