@@ -30,7 +30,7 @@ const JOURNEY: { title: string; body: string; photo: string; alt: string }[] = [
 type Photo = { src?: string; alt?: string; label?: string };
 const PHASES: { eyebrow: string; title: string; body: string[]; photos: Photo[] }[] = [
   {
-    eyebrow: 'Lecture phase · 3 months',
+    eyebrow: 'Lecture phase · 3 months here',
     title: 'Training phase',
     body: [
       "Leaders from around the world teaching to help you hear God's voice and find the calling He has for you.",
@@ -44,7 +44,7 @@ const PHASES: { eyebrow: string; title: string; body: string[]; photos: Photo[] 
     ],
   },
   {
-    eyebrow: 'Outreach phase · 3 months',
+    eyebrow: 'Outreach phase · 3 months to the nations',
     title: 'To the nations',
     body: [
       'Go to the nations, encounter Jesus in different cultures, and bring the love of Christ through the gospel to the unreached.',
@@ -229,12 +229,14 @@ const FAQ: [string, string][] = [
       <p class="eyebrow">DTS breakdown</p>
       <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Three months here. Three months to the nations.</h2>
     </div>
-    <div class="wrap phases">
+    <div class="wrap"><div class="phases">
       {PHASES.map((phase, p) => {
         const flip = p % 2 === 1;
         return (
           <div class:list={['phase-block', { 'phase-block--flip': flip }]}>
-            <div class="phase-copy linein">
+            <span class="phase-dot" aria-hidden="true"></span>
+            {p === 0 && <span class="phase-line" aria-hidden="true"></span>}
+            <div class="phase-copy">
               <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">{phase.eyebrow}</p>
               <h3 class="disp" style="margin:16px 0 0;font-size:clamp(26px,3vw,40px);font-weight:500;line-height:1.12;">{phase.title}</h3>
               <span class="rule" style="margin:20px 0;"></span>
@@ -260,7 +262,7 @@ const FAQ: [string, string][] = [
           </div>
         );
       })}
-    </div>
+    </div></div>
   </section>
 
   <section class="sec" style="padding-top:0;">
