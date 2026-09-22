@@ -183,7 +183,7 @@ body.sr {
   .sr .hall-intro, .sr .hall-copy { position: relative; left: auto; top: auto; transform: none !important; opacity: 1 !important; filter: none !important; margin: 0 auto 48px; }
   .sr .hall-photos { position: relative; left: auto; top: auto; transform: none; flex-wrap: wrap; margin: 0 auto 56px; pointer-events: auto; }
   .sr .hall-photo { transform: none !important; opacity: 1 !important; filter: none !important; }
-  .sr .info-cover { margin-top: 0; border-radius: 0; box-shadow: none; }
+  .sr .hall-card { position: relative; left: auto; top: auto; transform: none !important; opacity: 1 !important; max-height: none; margin: 0 auto; pointer-events: auto; }
   .sr .jp-steps { display: flex; flex-direction: column; gap: 34px; }
   .sr .jp-step { opacity: 1 !important; transform: none !important; }
   .sr .jp-head { transform: none !important; }
@@ -240,12 +240,13 @@ body.sr {
   text-align: center; will-change: transform, opacity; text-shadow: 0 2px 28px rgba(0,0,0,.7), 0 1px 3px rgba(0,0,0,.6);
 }
 .sr .hall-copy { opacity: 0; }
-/* The information section rides up over the pinned hallway like a card. */
-.sr .info-cover {
-  position: relative; z-index: 3; margin-top: -76vh; padding-top: 70px;
-  background: linear-gradient(#131313, var(--sr-ink) 42%); border-radius: 30px 30px 0 0;
-  box-shadow: 0 -34px 70px rgba(0,0,0,.65);
+/* The information card rises into the hallway at the end of the walk. */
+.sr .hall-card {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(92vw, 1100px);
+  max-height: calc(100vh - 32px); overflow-y: auto; opacity: 0; will-change: transform, opacity; pointer-events: none;
+  border-radius: 20px; box-shadow: 0 40px 90px rgba(0,0,0,.6);
 }
+.sr .hall-card .info { background: rgba(20,20,20,.94); backdrop-filter: blur(6px); }
 .sr .jp-steps { display: grid; }
 .sr .jp-step { grid-area: 1 / 1; opacity: 0; will-change: opacity, transform; }
 .sr .jp-rail { display: flex; flex-wrap: wrap; gap: 8px 28px; position: relative; margin-top: 38px; padding-top: 16px; }
@@ -253,6 +254,20 @@ body.sr {
 .sr .jp-rail-label b { font-weight: 500; color: var(--sr-pink); margin-right: 6px; }
 .sr .jp-rail-bar { position: absolute; left: 0; right: 0; top: 0; height: 1px; background: #232323; }
 .sr .jp-rail-bar i { display: block; height: 100%; width: 100%; background: #fff; transform: scaleX(0); transform-origin: left; }
+/* Apply page: school chooser and steps */
+.sr .apply-chooser { padding: 40px 48px 44px; }
+.sr .select-wrap { position: relative; margin-top: 18px; max-width: 560px; }
+.sr .select-wrap::after { content: ''; position: absolute; right: 22px; top: 50%; width: 10px; height: 10px; border-right: 2px solid #fff; border-bottom: 2px solid #fff; transform: translateY(-70%) rotate(45deg); pointer-events: none; }
+.sr .school-select {
+  appearance: none; -webkit-appearance: none; width: 100%; box-sizing: border-box; padding: 16px 54px 16px 20px;
+  background: var(--sr-ink); color: #fff; border: 1px solid #333; border-radius: 12px; font: 500 17px/1.3 var(--gp-font-display); letter-spacing: .02em; cursor: pointer;
+}
+.sr .school-select:focus { outline: none; border-color: #fff; }
+.sr .apply-panel { margin-top: 34px; padding-top: 30px; border-top: 1px solid #232323; }
+.sr .apply-panel-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+.sr .apply-form { display: block; width: 100%; height: 1400px; margin-top: 22px; border: 0; border-radius: 12px; background: #fff; }
+.sr .apply-steps { display: flex; flex-direction: column; border-bottom: 1px solid #232323; }
+.sr .apply-step { display: grid; grid-template-columns: 90px 1fr; gap: 26px; padding: 30px 0; border-top: 1px solid #232323; }
 .sr .info { padding: 44px 48px; }
 .sr .info-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px 60px; }
 .sr .info-list { margin: 26px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 28px; }
@@ -415,6 +430,10 @@ body.sr {
   .sr .hall-intro, .sr .hall-copy { width: 88vw; top: 38%; }
   .sr .hall-copy .body { font-size: 15px; }
   .sr .info { padding: 30px 22px; }
+  .sr .apply-chooser { padding: 26px 22px 30px; }
+  .sr .apply-step { grid-template-columns: 56px 1fr; gap: 16px; padding: 24px 0; }
+  .sr .apply-step > .disp:first-child { font-size: 24px !important; }
+  .sr .apply-form { height: 1200px; }
   .sr .info-grid { grid-template-columns: minmax(0, 1fr); gap: 34px; }
   .sr .faq-item summary { font-size: 17px; padding: 18px 0; }
 }
