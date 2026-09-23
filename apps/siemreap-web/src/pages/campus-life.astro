@@ -12,7 +12,7 @@ const CAMPUS_PHOTO = existsSync('public/images/campus/campus.jpg') ? '/images/ca
 
 const STATS: { n: number; suffix: string; label: string }[] = [
   { n: 40, suffix: '', label: 'full-time staff' },
-  { n: 2, suffix: '', label: 'languages at every table' },
+  { n: 4, suffix: '', label: 'schools on campus' },
   { n: 1, suffix: '', label: 'campus, one family' },
   { n: 20, suffix: ' min', label: 'to Angkor Wat' },
 ];
@@ -59,7 +59,7 @@ const CITY: Panel[] = [
       { name: 'Kandal Village', note: 'Small streets of cafés and shops a short walk from the river.' },
       { name: 'Night markets & Pub Street', note: 'Loud, bright, cheap, and a good place to take a visiting team for one evening.' },
     ],
-    label: 'Drop a photo — a market or café', photo: '/images/campus/team-market.jpg', alt: 'A visiting team in Khmer skirts at a market of thatched stalls', pos: '50% 40%',
+    label: 'Drop a photo — a market or café', photo: '/images/campus/fruit-table.jpg', alt: 'Trays of watermelon, grapes and longan being served at a shared meal', pos: '50% 50%',
   },
   {
     title: 'Nature & day trips', km: 'ធម្មជាតិ',
@@ -70,7 +70,7 @@ const CITY: Panel[] = [
       { name: 'Countryside by bicycle', note: 'Rice fields, water buffalo and villages on the road out of town.' },
       { name: 'Sunset from Pre Rup', note: 'Or Phnom Bakheng — both inside the Angkor park.' },
     ],
-    label: 'Drop a photo — Tonlé Sap or Kulen',
+    label: 'Drop a photo — Tonlé Sap or Kulen', photo: '/images/campus/tonle-sap-boat.jpg', alt: 'A blue two-deck tour boat full of passengers crossing the Tonlé Sap under a wide sky', pos: '50% 55%',
   },
   {
     title: 'Culture & evenings', km: 'វប្បធម៌',
@@ -98,7 +98,7 @@ const PRACTICAL: [string, string][] = [
   description="What living at YWAM Siem Reap is like — Khmer and international, students, volunteers, staff and teams in one community — and what to do in Siem Reap when the day is done.">
   <PageHead eyebrow="Campus life" km="ជីវិតសហគមន៍" title="Live in community. Love the city." highlight="Love the city."
     lead="Students, volunteers, new staff and teams all share one campus, one table and one city. Here is what that is like."
-    photo={CAMPUS_PHOTO} full photoAlt="The YWAM Siem Reap campus from the air — a white four-storey building with orange tiled roofs and rooftop terraces, surrounded by trees" />
+    photo={CAMPUS_PHOTO} full center photoAlt="The YWAM Siem Reap campus from the air — a white four-storey building with orange tiled roofs and rooftop terraces, surrounded by trees" />
 
   <section class="cl-stats" aria-label="Campus in numbers">
     <div class="wrap cl-stats-grid">
@@ -150,7 +150,7 @@ const PRACTICAL: [string, string][] = [
       <div class="cl-food-grid">
         <figure class="cl-food-photo wipe">
           <div class="parslow" style="height:116%;margin-top:-8%;">
-            <img src="/images/campus/fruit-table.jpg" alt="Hands reaching over trays of watermelon, grapes, longan and pineapple at a shared meal" loading="lazy" decoding="async" />
+            <img src="/images/campus/food-prep.jpg" alt="Khmer women in blue preparing sticky rice in bamboo and palm-leaf wrapped food at a market table" loading="lazy" decoding="async" style="object-position:50% 60%;" />
           </div>
         </figure>
         <div class="cl-food-copy linein">
@@ -288,7 +288,12 @@ const PRACTICAL: [string, string][] = [
       const pickItem = () => {
         const mid = window.innerHeight * 0.5;
         let n = 0;
-        items.forEach((it, i) => { if (it.getBoundingClientRect().top <= mid) n = i; });
+        let best = Infinity;
+        items.forEach((it, i) => {
+          const r = it.getBoundingClientRect();
+          const d = Math.abs((r.top + Math.min(r.height, 320) / 2) - mid);
+          if (d < best) { best = d; n = i; }
+        });
         if (n === cur) return;
         cur = n;
         items.forEach((it, i) => it.classList.toggle('is-on', i === n));

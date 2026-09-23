@@ -4,6 +4,7 @@ export const ROUTE_PATH: Record<string, string> = {
   schools: '/schools',
   dts: '/schools/dts',
   dbs: '/schools/dbs',
+  sms: '/schools/sms',
   apply: '/apply',
   staff: '/staff',
   team: '/team',

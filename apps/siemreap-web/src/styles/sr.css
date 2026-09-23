@@ -513,6 +513,19 @@ body.sr {
 .sr .campus-teaser:hover .campus-teaser-thumbs img:nth-child(2) { transform: translateY(-22px); }
 .sr .campus-teaser:hover .campus-teaser-thumbs img:nth-child(3) { transform: translateY(-6px) rotate(3deg); }
 
+
+/* Centred hero, DBS photo strip, visit photos */
+.sr .pagehead--center .wrap { text-align: center; display: flex; flex-direction: column; align-items: center; }
+.sr .pagehead--center h1 { max-width: 22ch; }
+.sr .pagehead--center .rule { margin-left: auto; margin-right: auto; }
+.sr .pagehead--center .pagehead-cue { right: auto; left: 50%; transform: translateX(-50%); }
+.sr .dbs-strip-photos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
+.sr .dbs-strip-photos figure { margin: 0; aspect-ratio: 4 / 3; border-radius: 16px; overflow: hidden; background: var(--sr-raise); }
+.sr .dbs-strip-photos img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sr .visit-photos { position: relative; height: 440px; }
+.sr .visit-photo-main { position: absolute; inset: 0 60px 0 0; border-radius: 20px; overflow: hidden; }
+.sr .visit-photo-small { position: absolute; right: 0; bottom: -30px; width: 42%; aspect-ratio: 4 / 5; border-radius: 16px; overflow: hidden; border: 4px solid var(--sr-ink); box-shadow: 0 24px 60px rgba(0,0,0,.6); }
+
 @media (max-width: 1000px) {
   .sr .dbs-cur-grid { grid-template-columns: 240px minmax(0, 1fr); }
   .sr .dbs-books { grid-template-columns: repeat(10, minmax(0, 1fr)); }
@@ -589,7 +602,7 @@ body.sr {
 .sr .cl-items { list-style: none; margin: 0; padding: 0; }
 .sr .cl-item { padding: 22vh 0; border-top: 1px solid #1a1a1a; opacity: .35; transition: opacity .5s ease; }
 .sr .cl-item:first-child { border-top: 0; padding-top: 6vh; }
-.sr .cl-item:last-child { padding-bottom: 12vh; }
+.sr .cl-item:last-child { padding-bottom: 28vh; }
 .sr .cl-item.is-on { opacity: 1; }
 .sr .cl-item-n { margin: 0; font-size: 13px; letter-spacing: .14em; color: var(--sr-pink); }
 .sr .cl-item-title { margin: 12px 0 0; font-size: clamp(24px, 2.8vw, 38px); font-weight: 500; line-height: 1.1; }
@@ -723,6 +736,9 @@ body.sr {
   .sr .cl-item-photo { display: block; margin: 20px 0 0; height: 240px; border-radius: 16px; overflow: hidden; background: var(--sr-raise); }
   .sr .cl-item-photo img, .sr .cl-item-photo .photo-slot { display: block; width: 100%; height: 100%; object-fit: cover; }
   .sr .cl-who { grid-template-columns: minmax(0, 1fr); }
+  .sr .dbs-strip-photos { grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 28px; }
+  .sr .visit-photos { height: 300px; margin-bottom: 30px; }
+  .sr .visit-photo-main { inset: 0 40px 0 0; }
   .sr .campus-teaser { grid-template-columns: minmax(0, 1fr); min-height: 0; padding: 28px 22px; gap: 22px; }
   .sr .campus-teaser-thumbs { justify-content: flex-start; }
   .sr .campus-teaser-thumbs img { width: 72px; }

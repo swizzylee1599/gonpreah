@@ -9,12 +9,13 @@ interface Props {
   photoAlt?: string;
   full?: boolean;
   photoPos?: string;
+  center?: boolean;
 }
-const { eyebrow, km, lead, title, highlight, photo, photoAlt = '', full = false, photoPos } = Astro.props;
+const { eyebrow, km, lead, title, highlight, photo, photoAlt = '', full = false, photoPos, center = false } = Astro.props;
 const words = title.split(' ');
 const highlightCount = highlight ? highlight.split(' ').length : 0;
 ---
-<section class:list={['pagehead', { 'pagehead--photo': !!photo, 'pagehead--full': full }]} style={photo ? undefined : 'padding:90px 0 0;'}>
+<section class:list={['pagehead', { 'pagehead--photo': !!photo, 'pagehead--full': full, 'pagehead--center': center }]} style={photo ? undefined : 'padding:90px 0 0;'}>
   {photo && (
     <>
       <img class="pagehead-photo" src={photo} alt={photoAlt} loading="eager" decoding="async" style={photoPos ? `object-position:${photoPos}` : undefined} />

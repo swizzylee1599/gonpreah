@@ -19,7 +19,7 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { title: 'DBS week by week', desc: 'The thirteen-week curriculum', href: '/schools/dbs#week-1', group: 'Schools', keywords: 'dbs curriculum weeks genesis exodus pentateuch tribal david kings prophets exile jesus church paul john revelation teaching week' },
   { title: 'DBS dates and information', desc: 'April 26 to July 21 · completed DTS required', href: '/schools/dbs#info', group: 'Schools', keywords: 'dbs dates cost arrival departure april july prerequisites' },
   { title: 'Bible Counseling School (BCS)', desc: 'Caring for people who carry trauma', href: '/schools', group: 'Schools', keywords: 'bcs bible counseling counselling school trauma care' },
-  { title: 'Social Media School (SMS)', desc: 'Storytelling and digital ministry', href: '/schools', group: 'Schools', keywords: 'sms social media school storytelling digital content video' },
+  { title: 'Social Media School (SMS)', desc: 'Storytelling and digital ministry', href: '/schools/sms', group: 'Schools', keywords: 'sms social media school storytelling digital content video' },
   { title: 'Schools & Courses', desc: 'Every school in Siem Reap', href: '/schools', group: 'Schools', keywords: 'schools courses training uofn university of the nations short-term outreach' },
 
   { title: 'How to apply', desc: 'Choose a school, staff or volunteering', href: '/apply', group: 'Apply', keywords: 'apply application form process steps reference interview acceptance visa fees packing list', quick: true },
