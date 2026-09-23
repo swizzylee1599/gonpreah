@@ -19,11 +19,10 @@ const STATS: { n: number; suffix: string; label: string }[] = [
 
 // Living on the base. Draft copy for the team to correct — rhythms, rooms
 // and rules are placeholders until staff confirm them.
-const COMMUNITY: { km: string; title: string; body: string; photo?: string; alt?: string; label: string }[] = [
-  { km: 'គ្រួសារ', title: 'Khmer and international, together', body: 'Forty staff and a changing family of students, volunteers and teams share this campus. Khmer is the first language and English is everywhere. You will learn a few words in your first week and be laughed at kindly for the rest.', label: 'Drop a photo — Khmer and international staff together' },
-  { km: 'បាយ', title: 'We eat together', body: 'Meals are shared. Rice is the centre of every one of them. Expect fish, greens you cannot name yet, and a lot of chilli you can leave on the side.', label: 'Drop a photo — a shared meal' },
+const COMMUNITY: { km: string; title: string; body: string; photo?: string; alt?: string; label: string; pos?: string }[] = [
+  { km: 'គ្រួសារ', title: 'Khmer and international, together', body: 'Forty staff and a changing family of students, volunteers and teams share this campus. Khmer is the first language and English is everywhere. You will learn a few words in your first week and be laughed at kindly for the rest.', photo: '/images/campus/friends-temple.jpg', alt: 'Two friends, one international and one Khmer, sitting and talking among the stones of a temple', label: '', pos: '50% 35%' },
   { km: 'ថ្វាយបង្គំ', title: 'We worship together', body: 'Worship and prayer are part of the rhythm of the week — as a whole community, in schools, and in small groups. Some of it in Khmer, some in English, most of it both.', photo: '/images/gonpreah-worship-1.jpg', alt: 'Students worshipping together on the Siem Reap campus', label: '' },
-  { km: 'បម្រើ', title: 'We work together', body: 'Everyone carries part of the load: cleaning, cooking, setting up, driving. Serving the community starts with serving each other.', label: 'Drop a photo — work duties on campus' },
+  { km: 'បម្រើ', title: 'We work together', body: 'Everyone carries part of the load: cleaning, cooking, setting up, driving, building. Serving the community starts with serving each other.', photo: '/images/campus/work-bamboo.jpg', alt: 'A young man grinning as he carries bamboo poles over his shoulder along a campus path', label: '', pos: '50% 30%' },
 ];
 
 const WHO: [string, string][] = [
@@ -36,7 +35,7 @@ const WHO: [string, string][] = [
 // Siem Reap for people who are coming to live here for a while, not just
 // pass through. One panel per kind of day off, plus the practical one.
 type Place = { name: string; note: string };
-type Panel = { title: string; km: string; intro: string; places: Place[]; label: string };
+type Panel = { title: string; km: string; intro: string; places: Place[]; label: string; photo?: string; alt?: string; pos?: string };
 const CITY: Panel[] = [
   {
     title: 'Temples & history', km: 'អង្គរ',
@@ -48,7 +47,7 @@ const CITY: Panel[] = [
       { name: 'Banteay Srei', note: 'Smaller, further out, and the finest carving in Angkor.' },
       { name: 'Angkor National Museum', note: 'Worth an afternoon before or after the temples themselves.' },
     ],
-    label: 'Drop a photo — Angkor Wat',
+    label: 'Drop a photo — Angkor Wat', photo: '/images/campus/angkor-backpack.jpg', alt: 'A student with a backpack looking up at the towers of Angkor Wat', pos: '60% 50%',
   },
   {
     title: 'Food & cafés', km: 'ម្ហូប',
@@ -60,7 +59,7 @@ const CITY: Panel[] = [
       { name: 'Kandal Village', note: 'Small streets of cafés and shops a short walk from the river.' },
       { name: 'Night markets & Pub Street', note: 'Loud, bright, cheap, and a good place to take a visiting team for one evening.' },
     ],
-    label: 'Drop a photo — a market or café',
+    label: 'Drop a photo — a market or café', photo: '/images/campus/team-market.jpg', alt: 'A visiting team in Khmer skirts at a market of thatched stalls', pos: '50% 40%',
   },
   {
     title: 'Nature & day trips', km: 'ធម្មជាតិ',
@@ -82,7 +81,7 @@ const CITY: Panel[] = [
       { name: 'Made in Cambodia market', note: 'Local makers, fair prices, good gifts to send home.' },
       { name: 'Local churches', note: 'Khmer and international congregations — ask staff where they worship on Sundays.' },
     ],
-    label: 'Drop a photo — Phare or an evening out',
+    label: 'Drop a photo — Phare or an evening out', photo: '/images/campus/apsara.jpg', alt: 'An Apsara dancer in gold costume performing on stage', pos: '50% 30%',
   },
 ];
 
@@ -127,7 +126,7 @@ const PRACTICAL: [string, string][] = [
           <div class="wrap cl-row-grid">
             <figure class="cl-photo wipe">
               <div class="parslow" style="height:116%;margin-top:-8%;">
-                {c.photo ? <img src={c.photo} alt={c.alt ?? ''} loading="lazy" decoding="async" /> : <PhotoSlot label={c.label} radius={0} />}
+                {c.photo ? <img src={c.photo} alt={c.alt ?? ''} loading="lazy" decoding="async" style={c.pos ? `object-position:${c.pos}` : undefined} /> : <PhotoSlot label={c.label} radius={0} />}
               </div>
             </figure>
             <div class="cl-copy linein">
@@ -142,7 +141,40 @@ const PRACTICAL: [string, string][] = [
     </div>
   </section>
 
-  <section class="sec">
+  <section class="sec cl-food" id="food">
+    <div class="wrap">
+      <div class="cl-food-grid">
+        <figure class="cl-food-photo wipe">
+          <div class="parslow" style="height:116%;margin-top:-8%;">
+            <img src="/images/campus/fruit-table.jpg" alt="Hands reaching over trays of watermelon, grapes, longan and pineapple at a shared meal" loading="lazy" decoding="async" />
+          </div>
+        </figure>
+        <div class="cl-food-copy linein">
+          <p class="eyebrow">Food</p>
+          <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,3.8vw,50px);font-weight:500;line-height:1.08;">Khmer culture happens around food.</h2>
+          <p class="body" style="margin:18px 0 0;max-width:50ch;">Nobody here eats alone. The first question you will be asked every day is whether you have eaten yet — and it is a real question. Meals are shared, rice is the centre of every one of them, and fruit appears whenever people gather.</p>
+          <p class="body" style="margin:14px 0 0;max-width:50ch;">Expect fish amok, sour soups, grilled everything, greens you cannot name yet, and a lot of chilli you are allowed to leave on the side.</p>
+        </div>
+      </div>
+
+      <div class="card cl-cafe reveal">
+        <figure class="cl-cafe-photo">
+          <img src="/images/campus/gp-cafe-sign.jpg" alt="The YWAM sign and the GP Cafe sign hanging among green leaves, with an iced green drink held up in front" loading="lazy" decoding="async" />
+        </figure>
+        <div class="cl-cafe-copy">
+          <p class="eyebrow">On campus</p>
+          <h3 class="disp" style="margin:12px 0 0;font-size:clamp(26px,3vw,40px);font-weight:500;line-height:1.1;">GP Cafe</h3>
+          <p class="body" style="margin:16px 0 0;max-width:46ch;">Our own café, right on campus. Khmer coffee, iced drinks and something sweet, made by our community for our community and the neighbourhood around us. It is where conversations that start in class carry on.</p>
+          <p class="muted" style="margin:14px 0 0;font-size:14px;">Open to students, staff, teams and neighbours.</p>
+        </div>
+        <figure class="cl-cafe-barista">
+          <img src="/images/campus/gp-cafe-barista.jpg" alt="A smiling barista in an apron behind the GP Cafe counter, flashing a peace sign" loading="lazy" decoding="async" />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0;">
     <div class="wrap">
       <p class="eyebrow reveal">Who lives here</p>
       <div class="cl-who stag" style="margin-top:22px;">
@@ -172,7 +204,7 @@ const PRACTICAL: [string, string][] = [
         {CITY.map((g, i) => (
           <article class="city-panel" data-i={i}>
             <p class="km city-panel-km" aria-hidden="true">{g.km}</p>
-            <figure class="city-photo"><PhotoSlot label={g.label} radius={0} /></figure>
+            <figure class="city-photo">{g.photo ? <img src={g.photo} alt={g.alt ?? ''} loading="lazy" decoding="async" style={`display:block;width:100%;height:100%;object-fit:cover;object-position:${g.pos ?? '50% 50%'}`} /> : <PhotoSlot label={g.label} radius={0} />}</figure>
             <div class="city-copy">
               <p class="disp" style="margin:0;font-size:13px;letter-spacing:.14em;color:var(--sr-pink);">{'0' + (i + 1)} · {CITY.length + 1}</p>
               <h3 class="disp" style="margin:10px 0 0;font-size:clamp(24px,2.4vw,32px);font-weight:500;line-height:1.12;">{g.title}</h3>

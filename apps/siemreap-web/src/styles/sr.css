@@ -576,6 +576,15 @@ body.sr {
 .sr .cl-row--flip .cl-photo { order: 2; }
 .sr .cl-photo { margin: 0; height: clamp(260px, 34vw, 440px); border-radius: 22px; overflow: hidden; background: var(--sr-raise); box-shadow: 0 30px 80px rgba(0,0,0,.55); }
 .sr .cl-photo img, .sr .cl-photo .photo-slot { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sr .cl-food { padding-top: 40px; }
+.sr .cl-food-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 5vw, 80px); align-items: center; }
+.sr .cl-food-photo { margin: 0; height: clamp(280px, 36vw, 480px); border-radius: 22px; overflow: hidden; background: var(--sr-raise); box-shadow: 0 30px 80px rgba(0,0,0,.55); }
+.sr .cl-food-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sr .cl-cafe { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.2fr) 180px; gap: 30px; align-items: center; margin-top: 40px; padding: 28px; overflow: hidden; }
+.sr .cl-cafe-photo, .sr .cl-cafe-barista { margin: 0; border-radius: 16px; overflow: hidden; background: #1a1a1a; }
+.sr .cl-cafe-photo { height: 340px; }
+.sr .cl-cafe-barista { width: 180px; height: 180px; border-radius: 50%; border: 3px solid #262626; justify-self: end; }
+.sr .cl-cafe img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .sr .cl-who { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
 .sr .cl-who-card { padding: 26px 24px; }
 .sr .city-stack { position: relative; height: calc(100vh + 5 * 60vh); background: #0e0e0e; border-top: 1px solid #1e1e1e; }
@@ -686,6 +695,11 @@ body.sr {
   .sr .cl-row-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .sr .cl-photo { height: 230px; }
   .sr .cl-who { grid-template-columns: minmax(0, 1fr); }
+  .sr .cl-food-grid { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .sr .cl-food-photo { height: 240px; }
+  .sr .cl-cafe { grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 20px; margin-top: 28px; }
+  .sr .cl-cafe-photo { height: 240px; }
+  .sr .cl-cafe-barista { width: 110px; height: 110px; justify-self: start; }
   .sr .city-track { padding: 0 20px; }
   .sr .city-panel { grid-template-columns: minmax(0, 1fr); padding: 20px; }
   .sr .city-panel-km { font-size: 120px; }
