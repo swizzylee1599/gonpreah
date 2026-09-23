@@ -1,0 +1,32 @@
+---
+// A photo banner that sends school pages on to Campus Life.
+interface Props {
+  title?: string;
+  body?: string;
+}
+const {
+  title = 'Where you will live while you train.',
+  body = 'One campus, Khmer and international, shared meals, our own café, and Angkor twenty minutes down the road. Here is what living here is actually like.',
+} = Astro.props;
+---
+<section class="sec campus-teaser-sec" style="padding-top:48px;">
+  <div class="wrap">
+    <a class="campus-teaser wipe" href="/campus-life">
+      <div class="campus-teaser-bg parslow">
+        <img src="/images/campus/campus.jpg" alt="" loading="lazy" decoding="async" />
+      </div>
+      <div class="campus-teaser-scrim"></div>
+      <div class="campus-teaser-copy">
+        <p class="eyebrow">Campus life</p>
+        <h2 class="disp" style="margin:12px 0 0;font-size:clamp(26px,3.2vw,44px);font-weight:500;line-height:1.1;max-width:20ch;">{title}</h2>
+        <p class="body" style="margin:14px 0 0;max-width:52ch;font-size:16px;">{body}</p>
+        <span class="btn btn--solid" style="margin-top:24px;">See campus life</span>
+      </div>
+      <div class="campus-teaser-thumbs" aria-hidden="true">
+        <img src="/images/campus/friends-temple.jpg" alt="" loading="lazy" decoding="async" />
+        <img src="/images/campus/fruit-table.jpg" alt="" loading="lazy" decoding="async" />
+        <img src="/images/campus/gp-cafe-sign.jpg" alt="" loading="lazy" decoding="async" />
+      </div>
+    </a>
+  </div>
+</section>
