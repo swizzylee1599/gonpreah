@@ -151,7 +151,12 @@ const FAQ: [string, string][] = [
       const hall = document.querySelector('.hall-stack');
       if (!hall || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const still = hall.querySelector('.hall-still');
-      const video = hall.querySelector('.hall-video');
+      // Phones: scrubbing a video frame by frame on scroll stutters, and blur
+      // filters are costly, so use the still with a smooth zoom and no blur.
+      const lite = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+      let video = hall.querySelector('.hall-video');
+      if (lite && video) { video.remove(); video = null; if (still) still.style.opacity = '1'; }
+      const pin = hall.querySelector('.hall-pin');
       const intro = hall.querySelector('.hall-intro');
       const card = hall.querySelector('.hall-card');
       const copies = [...hall.querySelectorAll('.hall-copy')];
@@ -182,7 +187,7 @@ const FAQ: [string, string][] = [
       const update = () => {
         ticking = false;
         const rect = hall.getBoundingClientRect();
-        const scrollable = rect.height - window.innerHeight;
+        const scrollable = rect.height - (pin ? pin.offsetHeight : window.innerHeight);
         const p = scrollable <= 0 ? 0 : clamp01(-rect.top / scrollable);
 
         if (video && video.duration && !Number.isNaN(video.duration)) seekTo(p * video.duration * 0.985);
@@ -191,7 +196,7 @@ const FAQ: [string, string][] = [
         const io = clamp01((p - INTRO_HOLD) / INTRO_FADE);
         intro.style.opacity = String(1 - io);
         intro.style.transform = `translate(-50%,-50%) scale(${(1 + io * 0.25).toFixed(3)})`;
-        intro.style.filter = io ? `blur(${(io * 6).toFixed(1)}px)` : '';
+        intro.style.filter = (!lite && io) ? `blur(${(io * 6).toFixed(1)}px)` : '';
         intro.style.pointerEvents = io > 0.5 ? 'none' : '';
 
         copies.forEach((el, i) => {
@@ -206,7 +211,7 @@ const FAQ: [string, string][] = [
           }
           el.style.opacity = String(op);
           el.style.transform = `translate(-50%,-50%) scale(${scale.toFixed(3)})`;
-          el.style.filter = blur ? `blur(${blur.toFixed(1)}px)` : '';
+          el.style.filter = (!lite && blur) ? `blur(${blur.toFixed(1)}px)` : '';
           el.style.pointerEvents = op > 0.5 ? '' : 'none';
         });
 
@@ -233,7 +238,7 @@ const FAQ: [string, string][] = [
             }
             item.style.opacity = String(op);
             item.style.transform = `translateY(${y.toFixed(1)}px) scale(${scale.toFixed(3)})`;
-            item.style.filter = blur ? `blur(${blur.toFixed(1)}px)` : '';
+            item.style.filter = (!lite && blur) ? `blur(${blur.toFixed(1)}px)` : '';
           });
         });
       };
@@ -266,7 +271,8 @@ const FAQ: [string, string][] = [
       const update = () => {
         ticking = false;
         const rect = stack.getBoundingClientRect();
-        const scrollable = rect.height - window.innerHeight;
+        const jpin = stack.querySelector('.journey-pin');
+        const scrollable = rect.height - (jpin ? jpin.offsetHeight : window.innerHeight);
         const p = scrollable <= 0 ? 0 : Math.min(1, Math.max(0, -rect.top / scrollable));
         const d = Math.min(1, p / STEPS_END) * (n - 1);
         const exit = Math.min(1, Math.max(0, (p - STEPS_END) / (1 - STEPS_END)));

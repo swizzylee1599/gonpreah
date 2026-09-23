@@ -368,7 +368,8 @@ const FAQ: [string, string][] = [
         return;
       }
       const rect = stack.getBoundingClientRect();
-      const scrollable = rect.height - window.innerHeight;
+      const dpin = stack.querySelector('.dbs-pin');
+      const scrollable = rect.height - (dpin ? dpin.offsetHeight : window.innerHeight);
       const p = scrollable <= 0 ? 0 : clamp01(-rect.top / scrollable);
       // A short hold at the start and end so the first and last cards rest.
       const dealt = clamp01((p - 0.04) / 0.92) * (cards.length - 1);

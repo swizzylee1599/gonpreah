@@ -330,7 +330,8 @@ const PRACTICAL: [string, string][] = [
         return;
       }
       const rect = stack.getBoundingClientRect();
-      const scrollable = rect.height - window.innerHeight;
+      const cpin = stack.querySelector('.city-pin');
+      const scrollable = rect.height - (cpin ? cpin.offsetHeight : window.innerHeight);
       const p = scrollable <= 0 ? 0 : Math.min(1, Math.max(0, -rect.top / scrollable));
       const max = track.scrollWidth - track.parentElement.clientWidth;
       const eased = Math.min(1, Math.max(0, (p - 0.03) / 0.94));
