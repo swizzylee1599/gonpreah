@@ -119,25 +119,29 @@ const PRACTICAL: [string, string][] = [
         <p class="body" style="margin:18px 0 0;">Community is not a programme here; it is the way the base works. You will live closer to more people than you are used to, and most people say it is the part they miss most when they leave.</p>
       </div>
     </div>
-    <div class="cl-rows">
-      {COMMUNITY.map((c, i) => (
-        <div class={`cl-row${i % 2 ? ' cl-row--flip' : ''}`}>
-          <p class={`km cl-row-km ${i % 2 ? 'driftback' : 'drift'}`} aria-hidden="true">{c.km}</p>
-          <div class="wrap cl-row-grid">
-            <figure class="cl-photo wipe">
-              <div class="parslow" style="height:116%;margin-top:-8%;">
-                {c.photo ? <img src={c.photo} alt={c.alt ?? ''} loading="lazy" decoding="async" style={c.pos ? `object-position:${c.pos}` : undefined} /> : <PhotoSlot label={c.label} radius={0} />}
-              </div>
+    <div class="wrap cl-sticky">
+      <ol class="cl-items">
+        {COMMUNITY.map((c, i) => (
+          <li class={`cl-item${i === 0 ? ' is-on' : ''}`} data-i={i}>
+            <p class="disp cl-item-n">{'0' + (i + 1)}</p>
+            <h3 class="disp cl-item-title">{c.title}</h3>
+            <span class="rule cl-item-rule"></span>
+            <p class="body cl-item-body">{c.body}</p>
+            <figure class="cl-item-photo">
+              {c.photo ? <img src={c.photo} alt={c.alt ?? ''} loading="lazy" decoding="async" style={c.pos ? `object-position:${c.pos}` : undefined} /> : <PhotoSlot label={c.label} radius={0} />}
             </figure>
-            <div class="cl-copy linein">
-              <p class="disp" style="margin:0;font-size:13px;letter-spacing:.14em;color:var(--sr-pink);">{'0' + (i + 1)}</p>
-              <h3 class="disp" style="margin:12px 0 0;font-size:clamp(24px,2.8vw,38px);font-weight:500;line-height:1.1;">{c.title}</h3>
-              <span class="rule growrule" style="margin:18px 0 0;transform-origin:left;"></span>
-              <p class="body" style="margin:18px 0 0;max-width:46ch;">{c.body}</p>
-            </div>
-          </div>
+          </li>
+        ))}
+      </ol>
+      <div class="cl-stage" aria-hidden="true">
+        <div class="cl-stage-inner">
+          {COMMUNITY.map((c, i) => (
+            <figure class={`cl-stage-photo${i === 0 ? ' is-on' : ''}`} data-i={i}>
+              {c.photo ? <img src={c.photo} alt="" loading="lazy" decoding="async" style={c.pos ? `object-position:${c.pos}` : undefined} /> : <PhotoSlot label={c.label} radius={0} />}
+            </figure>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   </section>
 
@@ -203,7 +207,6 @@ const PRACTICAL: [string, string][] = [
       <div class="city-track">
         {CITY.map((g, i) => (
           <article class="city-panel" data-i={i}>
-            <p class="km city-panel-km" aria-hidden="true">{g.km}</p>
             <figure class="city-photo">{g.photo ? <img src={g.photo} alt={g.alt ?? ''} loading="lazy" decoding="async" style={`display:block;width:100%;height:100%;object-fit:cover;object-position:${g.pos ?? '50% 50%'}`} /> : <PhotoSlot label={g.label} radius={0} />}</figure>
             <div class="city-copy">
               <p class="disp" style="margin:0;font-size:13px;letter-spacing:.14em;color:var(--sr-pink);">{'0' + (i + 1)} · {CITY.length + 1}</p>
@@ -216,7 +219,6 @@ const PRACTICAL: [string, string][] = [
           </article>
         ))}
         <article class="city-panel city-panel--practical" data-i={CITY.length}>
-          <p class="km city-panel-km" aria-hidden="true">ផ្លូវ</p>
           <figure class="city-photo"><img src="/images/campus/tuktuk.jpg" alt="Riding through Siem Reap in the back of a tuk-tuk, the driver in a white helmet ahead on a tree-lined road" loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" /></figure>
           <div class="city-copy">
             <p class="disp" style="margin:0;font-size:13px;letter-spacing:.14em;color:var(--sr-pink);">{'0' + (CITY.length + 1)} · {CITY.length + 1}</p>
@@ -275,6 +277,29 @@ const PRACTICAL: [string, string][] = [
       }, { threshold: 0.6 });
       counters.forEach((c) => io.observe(c));
       signal.addEventListener('abort', () => io.disconnect());
+    }
+
+    const items = [...document.querySelectorAll('.cl-item')];
+    const stagePhotos = [...document.querySelectorAll('.cl-stage-photo')];
+    const stageKm = document.querySelector('[data-stage-km]');
+    const kms = ["គ្រួសារ", "ថ្វាយបង្គំ", "បម្រើ"];
+    if (items.length && stagePhotos.length) {
+      let cur = -1;
+      const pickItem = () => {
+        const mid = window.innerHeight * 0.5;
+        let n = 0;
+        items.forEach((it, i) => { if (it.getBoundingClientRect().top <= mid) n = i; });
+        if (n === cur) return;
+        cur = n;
+        items.forEach((it, i) => it.classList.toggle('is-on', i === n));
+        stagePhotos.forEach((ph, i) => ph.classList.toggle('is-on', i === n));
+        if (stageKm) stageKm.textContent = kms[n] || '';
+      };
+      let raf2 = 0;
+      const onScroll2 = () => { if (!raf2) raf2 = requestAnimationFrame(() => { raf2 = 0; pickItem(); }); };
+      window.addEventListener('scroll', onScroll2, { passive: true, signal });
+      window.addEventListener('resize', onScroll2, { signal });
+      pickItem();
     }
 
     const stack = document.querySelector('.city-stack');
