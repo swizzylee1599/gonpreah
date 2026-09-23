@@ -406,8 +406,8 @@ body.sr {
 @keyframes sr-panel-in { from { opacity: 0; transform: translateY(-8px) scale(.97); } to { opacity: 1; transform: none; } }
 .sr nav.sr-nav.is-mobile-open .navpanel { display: block; }
 .sr nav.sr-nav.is-mobile-open .navscrim { display: block; }
-.sr .navpanel-apply { display: flex; justify-content: center; width: 100%; box-sizing: border-box; padding: 13px 20px; font-size: 15px; }
-.sr .navpanel-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 16px; margin-top: 20px; }
+.sr .navpanel-apply { display: flex; justify-content: space-between; width: 100%; box-sizing: border-box; margin-top: 18px; padding: 11px 18px; font-size: 14px; border-color: #3a3a3a; }
+.sr .navpanel-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 16px; margin-top: 4px; }
 .sr .navpanel-group .eyebrow { font-size: 11px; letter-spacing: .16em; }
 .sr .navpanel-row { box-sizing: border-box; background: none; border: 0; cursor: pointer; text-align: left; padding: 7px 0; min-height: 36px; color: #fff; font-size: 15px; line-height: 1.25; font-family: inherit; display: flex; align-items: center; width: 100%; text-decoration: none; }
 .sr .navpanel-row:hover { color: #dcdcdc; }
@@ -531,6 +531,35 @@ body.sr {
 .sr .visit-photo-main { position: absolute; inset: 0 60px 0 0; border-radius: 20px; overflow: hidden; }
 .sr .visit-photo-small { position: absolute; right: 0; bottom: -30px; width: 42%; aspect-ratio: 4 / 5; border-radius: 16px; overflow: hidden; border: 4px solid var(--sr-ink); box-shadow: 0 24px 60px rgba(0,0,0,.6); }
 
+
+/* Reveal fallback (no scroll-driven animations, e.g. iOS Safari): initial
+   states here, transitions to .is-in. Reduced motion shows everything. */
+@media (prefers-reduced-motion: no-preference) {
+  .sr-io .reveal, .sr-io .linein, .sr-io .riseup, .sr-io .io-in { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+  .sr-io .reveal.is-in, .sr-io .linein.is-in, .sr-io .riseup.is-in, .sr-io .io-in.is-in { opacity: 1; transform: none; }
+  .sr-io .scaleup { opacity: 0; transform: scale(.86); transition: opacity .7s ease, transform .9s cubic-bezier(.16,1,.3,1); }
+  .sr-io .scaleup.is-in { opacity: 1; transform: none; }
+  .sr-io .wipe { clip-path: inset(0 100% 0 0); transition: clip-path 1s cubic-bezier(.16,1,.3,1); }
+  .sr-io .wipe.is-in { clip-path: inset(0 0 0 0); }
+  .sr-io .growrule { transform: scaleX(0); transition: transform .8s cubic-bezier(.16,1,.3,1); }
+  .sr-io .growrule.is-in { transform: scaleX(1); }
+  .sr-io .stag > * { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .7s cubic-bezier(.16,1,.3,1); }
+  .sr-io .stag.is-in > * { opacity: 1; transform: none; }
+  .sr-io .stag.is-in > *:nth-child(2) { transition-delay: .08s; }
+  .sr-io .stag.is-in > *:nth-child(3) { transition-delay: .16s; }
+  .sr-io .stag.is-in > *:nth-child(4) { transition-delay: .24s; }
+  .sr-io .stag.is-in > *:nth-child(5) { transition-delay: .32s; }
+  .sr-io .stag.is-in > *:nth-child(6) { transition-delay: .4s; }
+  .sr-io .cl-stats-grid .cl-stat:nth-child(2) { transition-delay: .08s; }
+  .sr-io .cl-stats-grid .cl-stat:nth-child(3) { transition-delay: .16s; }
+  .sr-io .cl-stats-grid .cl-stat:nth-child(4) { transition-delay: .24s; }
+  .sr-io .cl-item-photo { transform: scale(1.04); opacity: .6; transition: transform 1s cubic-bezier(.16,1,.3,1) .1s, opacity .8s ease .1s; }
+  .sr-io .cl-item.is-in .cl-item-photo { transform: none; opacity: 1; }
+  .sr-io .cl-item-rule { transform: scaleX(0); transition: transform .8s cubic-bezier(.16,1,.3,1) .25s; }
+  .sr-io .cl-item.is-in .cl-item-rule { transform: scaleX(1); }
+}
+/* Where the CSS timeline exists, .io-in elements need no fallback styling. */
+
 @media (max-width: 1000px) {
   .sr .dbs-cur-grid { grid-template-columns: 240px minmax(0, 1fr); }
   .sr .dbs-books { grid-template-columns: repeat(10, minmax(0, 1fr)); }
@@ -609,6 +638,8 @@ body.sr {
 .sr .cl-item:first-child { border-top: 0; padding-top: 6vh; }
 .sr .cl-item:last-child { padding-bottom: 28vh; }
 .sr .cl-item.is-on { opacity: 1; }
+.sr-io .cl-item.is-in:not(.is-on) { opacity: .35; }
+@media (max-width: 760px) { .sr-io .cl-item.is-in { opacity: 1 !important; } }
 .sr .cl-item-n { margin: 0; font-size: 13px; letter-spacing: .14em; color: var(--sr-pink); }
 .sr .cl-item-title { margin: 12px 0 0; font-size: clamp(24px, 2.8vw, 38px); font-weight: 500; line-height: 1.1; }
 .sr .cl-item-rule { margin: 18px 0 0; transform-origin: left; transform: scaleX(.3); transition: transform .6s cubic-bezier(.16,1,.3,1); }
@@ -655,9 +686,12 @@ body.sr {
 @media (max-width: 1000px), (prefers-reduced-motion: reduce) {
   .sr .city-stack { height: auto; }
   .sr .city-pin { position: relative; height: auto; overflow: visible; padding: 80px 0 60px; }
-  .sr .city-progress { display: none; }
-  .sr .city-track { flex-direction: column; gap: 18px; padding: 0 24px; transform: none !important; }
-  .sr .city-panel { flex: none; min-height: 0; }
+  .sr .city-head { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .sr .city-track { gap: 14px; padding: 0 24px; transform: none !important; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 24px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .sr .city-track::-webkit-scrollbar { display: none; }
+  .sr .city-panel { flex: 0 0 calc(100vw - 48px); scroll-snap-align: start; min-height: 0; align-content: start; }
+  .sr .city-cue { font-size: 0; }
+  .sr .city-cue::after { content: 'Swipe →'; font-size: 12px; letter-spacing: .16em; }
 }
 
 @media (max-width: 1000px) {
@@ -757,8 +791,8 @@ body.sr {
   .sr .cl-cafe { grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 20px; margin-top: 28px; }
   .sr .cl-cafe-photo { height: 240px; }
   .sr .cl-cafe-barista { width: 110px; height: 110px; justify-self: start; }
-  .sr .city-track { padding: 0 20px; }
-  .sr .city-panel { grid-template-columns: minmax(0, 1fr); padding: 20px; }
+  .sr .city-track { padding: 0 20px; scroll-padding: 0 20px; }
+  .sr .city-panel { flex-basis: calc(100vw - 40px); grid-template-columns: minmax(0, 1fr); padding: 20px; }
   .sr .city-photo { min-height: 0; height: 190px; }
   .sr .city-list li { grid-template-columns: minmax(0, 1fr); }
   .sr .practical { grid-template-columns: minmax(0, 1fr); gap: 16px; }

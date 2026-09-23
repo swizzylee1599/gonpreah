@@ -103,7 +103,7 @@ const PRACTICAL: [string, string][] = [
   <section class="cl-stats" aria-label="Campus in numbers">
     <div class="wrap cl-stats-grid">
       {STATS.map((s) => (
-        <div class="cl-stat">
+        <div class="cl-stat io-in">
           <p class="disp cl-stat-n"><span data-count={s.n}>0</span>{s.suffix}</p>
           <p class="muted cl-stat-l">{s.label}</p>
         </div>
@@ -122,7 +122,7 @@ const PRACTICAL: [string, string][] = [
     <div class="wrap cl-sticky">
       <ol class="cl-items">
         {COMMUNITY.map((c, i) => (
-          <li class={`cl-item${i === 0 ? ' is-on' : ''}`} data-i={i}>
+          <li class={`cl-item io-in${i === 0 ? ' is-on' : ''}`} data-i={i}>
             <p class="disp cl-item-n">{'0' + (i + 1)}</p>
             <h3 class="disp cl-item-title">{c.title}</h3>
             <span class="rule cl-item-rule"></span>
@@ -161,7 +161,7 @@ const PRACTICAL: [string, string][] = [
         </div>
       </div>
 
-      <div class="card cl-cafe reveal">
+      <div class="card cl-cafe reveal io-in">
         <figure class="cl-cafe-photo">
           <img src="/images/campus/gp-cafe-sign.jpg" alt="The YWAM sign and the GP Cafe sign hanging among green leaves, with an iced green drink held up in front" loading="lazy" decoding="async" />
         </figure>
@@ -206,7 +206,7 @@ const PRACTICAL: [string, string][] = [
       </div>
       <div class="city-track">
         {CITY.map((g, i) => (
-          <article class="city-panel" data-i={i}>
+          <article class="city-panel io-in" data-i={i}>
             <figure class="city-photo">{g.photo ? <img src={g.photo} alt={g.alt ?? ''} loading="lazy" decoding="async" style={`display:block;width:100%;height:100%;object-fit:cover;object-position:${g.pos ?? '50% 50%'}`} /> : <PhotoSlot label={g.label} radius={0} />}</figure>
             <div class="city-copy">
               <p class="disp" style="margin:0;font-size:13px;letter-spacing:.14em;color:var(--sr-pink);">{'0' + (i + 1)} · {CITY.length + 1}</p>
@@ -218,7 +218,7 @@ const PRACTICAL: [string, string][] = [
             </div>
           </article>
         ))}
-        <article class="city-panel city-panel--practical" data-i={CITY.length}>
+        <article class="city-panel city-panel--practical io-in" data-i={CITY.length}>
           <figure class="city-photo"><img src="/images/campus/tuktuk.jpg" alt="Riding through Siem Reap in the back of a tuk-tuk, the driver in a white helmet ahead on a tree-lined road" loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" /></figure>
           <div class="city-copy">
             <p class="disp" style="margin:0;font-size:13px;letter-spacing:.14em;color:var(--sr-pink);">{'0' + (CITY.length + 1)} · {CITY.length + 1}</p>
@@ -313,10 +313,20 @@ const PRACTICAL: [string, string][] = [
     const panels = [...document.querySelectorAll('.city-panel')];
     if (!stack || !track || !panels.length) return;
     const pinned = () => window.matchMedia('(min-width: 1001px) and (prefers-reduced-motion: no-preference)').matches;
+    // Phones: the track is a swipeable snap carousel; keep the dots in step.
+    const onTrackScroll = () => {
+      if (pinned()) return;
+      const w = panels[0]?.offsetWidth || 1;
+      const gap = 14;
+      const idx = Math.min(panels.length - 1, Math.round(track.scrollLeft / (w + gap)));
+      dots.forEach((d, i) => d.classList.toggle('is-on', i <= idx));
+      panels.forEach((pn, i) => pn.classList.toggle('is-on', i === idx));
+    };
+    track.addEventListener('scroll', onTrackScroll, { passive: true, signal });
     const update = () => {
       if (!pinned()) {
         track.style.transform = '';
-        dots.forEach((d) => d.classList.remove('is-on'));
+        onTrackScroll();
         return;
       }
       const rect = stack.getBoundingClientRect();

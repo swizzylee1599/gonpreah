@@ -37,5 +37,24 @@ const {
       {spacer && <div style="height:109px;"></div>}
       <slot />
     </div>
+    <script>
+      // Scroll reveals: the site uses CSS scroll-driven animations where the
+      // browser supports them. Elsewhere (iOS Safari, Firefox) this marks
+      // elements as they enter the viewport and CSS transitions take over.
+      const supportsTimeline = CSS.supports('animation-timeline: view()');
+      let io = null;
+      const init = () => {
+        if (io) io.disconnect();
+        document.documentElement.classList.toggle('sr-io', !supportsTimeline);
+        if (supportsTimeline) return;
+        const els = document.querySelectorAll('.reveal, .stag, .linein, .wipe, .riseup, .scaleup, .growrule, .io-in');
+        io = new IntersectionObserver((entries) => {
+          entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
+        }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+        els.forEach((el) => io.observe(el));
+      };
+      init();
+      document.addEventListener('astro:page-load', init);
+    </script>
   </body>
 </html>

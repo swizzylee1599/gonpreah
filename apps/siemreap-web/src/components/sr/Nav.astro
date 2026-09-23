@@ -37,7 +37,6 @@ const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
 
   <div class="navscrim" id="sr-nav-scrim"></div>
   <div class="navpanel" id="sr-nav-panel">
-    <a class="btn btn--solid navpanel-apply" href="/apply">Apply</a>
     <div class="navpanel-grid">
       {NAV.map(([label, items]) => (
         <div class="navpanel-group">
@@ -50,6 +49,7 @@ const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
         </div>
       ))}
     </div>
+    <a class="btn navpanel-apply" href="/apply">Apply <span aria-hidden="true">→</span></a>
     <div class="navpanel-foot">
       <a href="https://wa.me/85569911705" target="_blank" rel="noopener">WhatsApp</a>
       <a href="mailto:info@ywamsiemreap.org">Email</a>
