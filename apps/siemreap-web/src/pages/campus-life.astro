@@ -1,0 +1,179 @@
+---
+import SrLayout from '../layouts/SrLayout.astro';
+import Footer from '../components/sr/Footer.astro';
+import PageHead from '../components/sr/PageHead.astro';
+import Cta from '../components/sr/Cta.astro';
+import PhotoSlot from '../components/sr/PhotoSlot.astro';
+
+// Living on the base. Draft copy for the team to correct — rhythms, rooms
+// and rules are placeholders until staff confirm them.
+const COMMUNITY: { title: string; body: string; photo?: string; alt?: string; label: string }[] = [
+  { title: 'Khmer and international, together', body: 'Almost forty staff and a changing family of students, volunteers and teams share this campus. Khmer is the first language and English is everywhere. You will learn a few words in your first week and be laughed at kindly for the rest.', label: 'Drop a photo — Khmer and international staff together' },
+  { title: 'We eat together', body: 'Meals are shared. Rice is the centre of every one of them. Expect fish, greens you cannot name yet, and a lot of chilli you can leave on the side.', label: 'Drop a photo — a shared meal' },
+  { title: 'We worship together', body: 'Worship and prayer are part of the rhythm of the week — as a whole community, in schools, and in small groups. Some of it in Khmer, some in English, most of it both.', photo: '/images/gonpreah-worship-1.jpg', alt: 'Students worshipping together on the Siem Reap campus', label: '' },
+  { title: 'We work together', body: 'Everyone carries part of the load: cleaning, cooking, setting up, driving. Serving the community starts with serving each other.', label: 'Drop a photo — work duties on campus' },
+];
+
+const WHO: [string, string][] = [
+  ['Students', 'DTS and DBS students live on campus for the length of their school, in shared rooms with classmates.'],
+  ['Volunteers', 'Short or long term, volunteers live and eat with the community and join its rhythms while they serve.'],
+  ['New staff', 'Staff joining us find their feet here first: language, community, city — before the work takes over.'],
+  ['Teams', 'Visiting teams stay on or near the base, eat with us, and see what living here is actually like.'],
+];
+
+// Siem Reap for people who are coming to live here for a while, not just
+// pass through. Grouped by the kind of day off you want to have.
+type Place = { name: string; note: string };
+const CITY: { title: string; intro: string; places: Place[]; label: string }[] = [
+  {
+    title: 'Temples & history',
+    intro: 'Siem Reap is the gateway to Angkor. The temples are twenty minutes from the base and you will want more than one visit.',
+    places: [
+      { name: 'Angkor Wat at sunrise', note: 'The one everyone comes for. Go early, stay for the quiet after the crowds leave.' },
+      { name: 'Angkor Thom & the Bayon', note: 'The walled city and its temple of two hundred stone faces.' },
+      { name: 'Ta Prohm', note: 'The temple the jungle took back — roots over stone.' },
+      { name: 'Banteay Srei', note: 'Smaller, further out, and the finest carving in Angkor.' },
+      { name: 'Angkor National Museum', note: 'Worth an afternoon before or after the temples themselves.' },
+    ],
+    label: 'Drop a photo — Angkor Wat',
+  },
+  {
+    title: 'Food & cafés',
+    intro: 'Khmer food is gentler than Thai — sour, herby, coconut-sweet. Learn three dishes and you will eat well anywhere.',
+    places: [
+      { name: 'Fish amok', note: 'Steamed fish curry in banana leaf. Order it your first week.' },
+      { name: 'Num banh chok', note: 'Khmer noodles for breakfast, from a lady with a basket, before 9am.' },
+      { name: 'Old Market (Psar Chas)', note: 'Fruit, fabric, coffee, everything. Bargain gently.' },
+      { name: 'Kandal Village', note: 'Small streets of cafés and shops a short walk from the river.' },
+      { name: 'Night markets & Pub Street', note: 'Loud, bright, cheap, and a good place to take a visiting team for one evening.' },
+    ],
+    label: 'Drop a photo — a market or café',
+  },
+  {
+    title: 'Nature & day trips',
+    intro: 'When you need space, the countryside starts ten minutes out of town.',
+    places: [
+      { name: 'Tonlé Sap floating villages', note: 'Kampong Phluk or Kampong Khleang — stilt houses and flooded forest, best in the wet season.' },
+      { name: 'Phnom Kulen', note: 'Waterfalls, a reclining Buddha, and the river of a thousand lingas. A full day.' },
+      { name: 'Countryside by bicycle', note: 'Rice fields, water buffalo and villages on the road out of town.' },
+      { name: 'Sunset from Pre Rup or Phnom Bakheng', note: 'Both inside the Angkor park.' },
+    ],
+    label: 'Drop a photo — Tonlé Sap or Kulen',
+  },
+  {
+    title: 'Culture & evenings',
+    intro: 'Siem Reap has more going on after dark than any city its size in Cambodia.',
+    places: [
+      { name: 'Phare, the Cambodian Circus', note: 'Acrobatics and storytelling by young Khmer performers. Take everyone.' },
+      { name: 'Apsara dance', note: 'Classical Khmer dance, usually with dinner.' },
+      { name: 'Made in Cambodia market', note: 'Local makers, fair prices, good gifts to send home.' },
+      { name: 'Local churches', note: 'Khmer and international congregations — ask staff where they worship on Sundays.' },
+    ],
+    label: 'Drop a photo — Phare or an evening out',
+  },
+];
+
+const PRACTICAL: [string, string][] = [
+  ['Getting around', 'Tuk-tuks are everywhere; use the PassApp or Grab apps for a fair fixed price. Bicycles work well in town. Traffic is calmer than Phnom Penh, but still look twice.'],
+  ['Money', 'US dollars and Khmer riel are both used. Small change comes back in riel (roughly 4,000 to the dollar). ATMs are common; most give dollars.'],
+  ['Phone & internet', 'Buy a local SIM on arrival — Smart, Cellcard and Metfone all work. Data is cheap and the campus has wifi.'],
+  ['Weather', 'Cool and dry from November to February, hot from March to May, wet from June to October. The rain comes hard and leaves fast. Pack light, breathable clothes and one good rain jacket.'],
+  ['Dress', 'Cover shoulders and knees at temples and in villages. Light and modest is right almost everywhere.'],
+  ['Health', 'Drink bottled or filtered water. Pharmacies and international clinics are in town; staff will point you to the ones we use.'],
+];
+---
+<SrLayout title="Campus Life | YWAM Siem Reap"
+  description="What living at YWAM Siem Reap is like — Khmer and international, students, volunteers, staff and teams in one community — and what to do in Siem Reap when the day is done.">
+  <PageHead eyebrow="Campus life" km="ជីវិតសហគមន៍" title="Live in community. Love the city." highlight="Love the city."
+    lead="Students, volunteers, new staff and teams all share one campus, one table and one city. Here is what that is like." />
+
+  <section class="sec" style="padding-bottom:0;">
+    <div class="wrap">
+      <div class="reveal" style="max-width:62ch;">
+        <p class="eyebrow">Living in community</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,3.8vw,50px);font-weight:500;line-height:1.08;">One family, two languages.</h2>
+        <p class="body" style="margin:18px 0 0;">Community is not a programme here; it is the way the base works. You will live closer to more people than you are used to, and most people say it is the part they miss most when they leave.</p>
+      </div>
+      <div class="cl-rows">
+        {COMMUNITY.map((c, i) => (
+          <div class={`cl-row reveal${i % 2 ? ' cl-row--flip' : ''}`}>
+            <figure class="cl-photo">
+              {c.photo ? <img src={c.photo} alt={c.alt ?? ''} loading="lazy" decoding="async" /> : <PhotoSlot label={c.label} radius={0} />}
+            </figure>
+            <div class="cl-copy">
+              <h3 class="disp" style="margin:0;font-size:clamp(22px,2.4vw,30px);font-weight:500;line-height:1.15;">{c.title}</h3>
+              <p class="body" style="margin:14px 0 0;max-width:48ch;">{c.body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <p class="eyebrow reveal">Who lives here</p>
+      <div class="grid2 reveal" style="margin-top:22px;">
+        {WHO.map(([t, d]) => (
+          <div class="card">
+            <h3 class="disp" style="margin:0;font-size:21px;font-weight:500;">{t}</h3>
+            <p class="body" style="margin:12px 0 0;font-size:16px;">{d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec city" id="siem-reap">
+    <div class="wrap">
+      <div class="reveal" style="max-width:62ch;">
+        <p class="eyebrow">Siem Reap</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,3.8vw,50px);font-weight:500;line-height:1.08;">The city is part of the training.</h2>
+        <p class="body" style="margin:18px 0 0;">Siem Reap is small enough to know and big enough to keep surprising you. This is what we point students, volunteers, new staff and teams to when they ask what to do with a day off.</p>
+      </div>
+
+      <div class="city-groups">
+        {CITY.map((g, i) => (
+          <div class="city-group reveal" id={`city-${i + 1}`}>
+            <figure class="city-photo"><PhotoSlot label={g.label} radius={0} /></figure>
+            <div class="city-copy">
+              <p class="disp" style="margin:0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--sr-pink);">{'0' + (i + 1)}</p>
+              <h3 class="disp" style="margin:10px 0 0;font-size:clamp(24px,2.6vw,34px);font-weight:500;line-height:1.12;">{g.title}</h3>
+              <p class="body" style="margin:14px 0 0;max-width:52ch;font-size:16px;">{g.intro}</p>
+              <ul class="city-list">
+                {g.places.map((p) => (
+                  <li><b>{p.name}</b><span>{p.note}</span></li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0;">
+    <div class="wrap">
+      <div class="card reveal" style="padding:40px 44px;">
+        <p class="eyebrow">Good to know</p>
+        <h2 class="disp" style="margin:12px 0 0;font-size:clamp(24px,2.8vw,36px);font-weight:500;line-height:1.12;">The practical bits.</h2>
+        <dl class="practical">
+          {PRACTICAL.map(([k, v]) => (
+            <div>
+              <dt class="disp" style="font-size:16px;font-weight:500;">{k}</dt>
+              <dd class="body" style="margin:8px 0 0;font-size:15px;">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <Cta
+    title="Come and live it."
+    body="Whether you are coming for a school, to volunteer, to join staff or with a team, this is the community you are walking into."
+    primary={['apply', 'Apply']}
+    secondary={['visit', 'Bring a team']}
+  />
+  <Footer />
+</SrLayout>

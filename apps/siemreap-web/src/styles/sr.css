@@ -480,6 +480,84 @@ body.sr {
 .sr .dbs-week-books { margin: 10px 0 0; font-size: 13px; letter-spacing: .06em; color: #9a9a9a; }
 .sr .dbs-week-body { margin-top: 20px; padding-left: 90px; }
 .sr .dbs-week-body p:last-child { margin-bottom: 0 !important; }
+
+/* Values page */
+.sr .values-grid { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: clamp(36px, 6vw, 96px); align-items: start; }
+.sr .values-side { position: sticky; top: 110px; }
+.sr .values-side-inner { padding: 26px 24px; border: 1px solid #232323; border-radius: 20px; background: var(--sr-raise); }
+.sr .values-toc { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; gap: 2px; counter-reset: toc; }
+.sr .values-toc li { counter-increment: toc; }
+.sr .values-toc a { display: flex; gap: 12px; padding: 9px 0; font-size: 15px; color: #dcdcdc; border-bottom: 1px solid #1e1e1e; }
+.sr .values-toc a::before { content: counter(toc, decimal-leading-zero); color: var(--sr-pink); font-size: 12px; letter-spacing: .1em; padding-top: 3px; }
+.sr .values-toc a:hover { color: #fff; }
+.sr .values-intro .body { margin: 0 0 18px; }
+.sr .values-section { margin-top: 64px; padding-top: 44px; border-top: 1px solid #232323; }
+.sr .values-h2 { margin: 14px 0 22px; font-size: clamp(28px, 3.4vw, 44px); font-weight: 500; line-height: 1.1; }
+.sr .values-section > .body { margin: 0 0 18px; }
+.sr .values-beliefs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 8px; }
+.sr .values-belief { padding: 26px 26px 24px; }
+.sr .values-refs { margin: 14px 0 0; font-size: 12.5px; line-height: 1.6; color: #8a8a8a; letter-spacing: .01em; }
+.sr .values-list { list-style: none; margin: 0; padding: 0; }
+.sr .values-item { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 18px; padding: 28px 0; border-top: 1px solid #1e1e1e; }
+.sr .values-item:first-child { border-top: 0; padding-top: 8px; }
+.sr .values-n { font-size: 40px; font-weight: 500; line-height: 1; color: var(--sr-pink); }
+.sr .values-h3 { margin: 6px 0 0; font-size: clamp(20px, 2.2vw, 26px); font-weight: 500; line-height: 1.2; }
+
+/* About page */
+.sr .about-welcome { margin: 22px 0 0; font-size: clamp(52px, 9vw, 120px); line-height: 1.15; font-weight: 400; color: #fff; }
+.sr .about-translit { margin: 8px 0 0; font-size: clamp(18px, 2vw, 24px); color: #dcdcdc; }
+.sr .about-translit .disp { font-weight: 500; text-transform: none; letter-spacing: .02em; }
+.sr .about-uofn-grid, .sr .about-poipet-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(30px, 5vw, 80px); align-items: start; }
+.sr .about-figure { margin: 0; }
+.sr .about-figure img { display: block; width: 100%; height: auto; border-radius: 16px; }
+.sr .about-figure figcaption { margin-top: 10px; font-size: 13px; }
+.sr .about-road { padding-top: 0; }
+.sr .road { list-style: none; margin: 48px 0 0; padding: 0; position: relative; }
+.sr .road-line { position: absolute; left: 139px; top: 8px; bottom: 8px; width: 2px; background: #232323; }
+.sr .road-line i { display: block; width: 100%; height: 100%; background: linear-gradient(var(--sr-pink), var(--sr-pink)); transform-origin: top; transform: scaleY(0); }
+.sr .road-stop { position: relative; display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 40px; padding: 0 0 56px; }
+.sr .road-stop:last-child { padding-bottom: 0; }
+.sr .road-dot { position: absolute; left: 133px; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--sr-ink); border: 2px solid var(--sr-pink); box-sizing: border-box; z-index: 1; }
+.sr .road-stop--now .road-dot { background: var(--sr-pink); box-shadow: 0 0 0 8px rgba(255,255,255,.08); }
+.sr .road-stop--next .road-dot { border-style: dashed; border-color: #6f6f6f; }
+.sr .road-meta { display: flex; flex-direction: column; text-align: right; padding-top: 2px; }
+.sr .road-year { font-size: clamp(22px, 2.2vw, 28px); font-weight: 500; line-height: 1; }
+.sr .road-place { margin-top: 8px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #8a8a8a; }
+.sr .road-stop--next .road-year { color: #9a9a9a; }
+.sr .road-title { margin: 0; font-size: clamp(22px, 2.4vw, 30px); font-weight: 500; line-height: 1.15; }
+.sr .road-badge { display: inline-block; margin: 14px 0 0; padding: 6px 12px; border-radius: 999px; background: var(--sr-pink); color: #000; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
+.sr .road-badge--next { background: none; border: 1px dashed #6f6f6f; color: #dcdcdc; }
+.sr .road-photos { display: grid; gap: 12px; margin-top: 22px; max-width: 720px; }
+.sr .road-photos--1 { grid-template-columns: minmax(0, 420px); }
+.sr .road-photos--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.sr .road-photo { margin: 0; aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden; background: var(--sr-raise); }
+.sr .road-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sr .about-poipet-photos { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; margin-top: 26px; }
+.sr .about-poipet-photos img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; }
+.sr .about-here { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 40px; align-items: center; padding: 44px 48px; }
+.sr .about-here-photo { height: 320px; }
+@supports (animation-timeline: view()) {
+  .sr .road-line i { animation: sr-road-draw linear both; animation-timeline: view(); animation-range: entry 20% exit 60%; }
+}
+@keyframes sr-road-draw { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+/* Campus life page */
+.sr .cl-rows { display: flex; flex-direction: column; gap: 22px; margin-top: 44px; }
+.sr .cl-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 60px); align-items: center; }
+.sr .cl-row--flip .cl-photo { order: 2; }
+.sr .cl-photo { margin: 0; height: clamp(240px, 32vw, 400px); border-radius: 20px; overflow: hidden; background: var(--sr-raise); }
+.sr .cl-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sr .city-groups { display: flex; flex-direction: column; gap: 28px; margin-top: 48px; }
+.sr .city-group { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(24px, 4vw, 60px); align-items: start; padding-top: 28px; border-top: 1px solid #232323; }
+.sr .city-photo { margin: 0; height: clamp(220px, 26vw, 340px); border-radius: 20px; overflow: hidden; background: var(--sr-raise); position: sticky; top: 110px; }
+.sr .city-list { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 12px; }
+.sr .city-list li { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 4px 18px; padding: 12px 0; border-top: 1px solid #1e1e1e; font-size: 15px; line-height: 1.55; }
+.sr .city-list li:first-child { border-top: 0; padding-top: 0; }
+.sr .city-list b { font-weight: 500; color: #fff; }
+.sr .city-list span { color: #b9b9b9; }
+.sr .practical { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 40px; margin: 28px 0 0; }
+.sr .practical dt, .sr .practical dd { margin: 0; }
+
 @media (max-width: 1000px) {
   .sr .dbs-cur-grid { grid-template-columns: 240px minmax(0, 1fr); }
   .sr .dbs-books { grid-template-columns: repeat(10, minmax(0, 1fr)); }
@@ -495,6 +573,12 @@ body.sr {
   .sr .sec { padding: 64px 0; }
   .sr .grid3, .sr .grid2 { grid-template-columns: 1fr; }
   .sr .contact-details { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sr .values-grid { grid-template-columns: minmax(0, 1fr); }
+  .sr .values-side { position: static; }
+  .sr .values-side-inner { padding: 18px 20px; }
+  .sr .values-toc { flex-direction: row; flex-wrap: wrap; gap: 6px 22px; }
+  .sr .values-toc a { border-bottom: 0; padding: 4px 0; }
+  .sr .practical { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
   .sr html, .sr body { overflow-x: hidden; }
@@ -526,6 +610,30 @@ body.sr {
   .sr .apply-chooser { padding: 26px 22px 30px; }
   .sr .contact-channels { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .sr .contact-channel { padding: 28px 22px 26px; }
+  .sr .about-uofn-grid, .sr .about-poipet-grid, .sr .about-here, .sr .cl-row, .sr .city-group, .sr .dbs-intro-grid, .sr .values-grid, .sr .contact-channels { grid-template-columns: minmax(0, 1fr); }
+  .sr .bat-grid { gap: 26px !important; }
+  .sr .bat-text { order: -1; }
+  .sr .bat-photo { height: clamp(180px, 32vh, 320px) !important; }
+  .sr .values-beliefs { grid-template-columns: minmax(0, 1fr); }
+  .sr .values-item { grid-template-columns: 44px minmax(0, 1fr); gap: 12px; padding: 22px 0; }
+  .sr .values-n { font-size: 28px; }
+  .sr .about-uofn-grid, .sr .about-poipet-grid { gap: 26px; }
+  .sr .road { margin-top: 34px; }
+  .sr .road-line { left: 6px; }
+  .sr .road-dot { left: 0; }
+  .sr .road-stop { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 0 0 40px 28px; }
+  .sr .road-meta { flex-direction: row; align-items: baseline; gap: 12px; text-align: left; }
+  .sr .road-place { margin-top: 0; }
+  .sr .road-photos--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sr .road-photos--3 .road-photo:first-child { grid-column: 1 / -1; }
+  .sr .about-here { padding: 28px 22px; gap: 22px; }
+  .sr .about-here-photo { height: 220px; order: -1; }
+  .sr .cl-row--flip .cl-photo { order: 0; }
+  .sr .cl-photo { height: 220px; }
+  .sr .city-photo { position: static; height: 200px; }
+  .sr .city-list li { grid-template-columns: minmax(0, 1fr); }
+  .sr .practical { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+
   .sr .navpanel { right: 16px; width: calc(100vw - 32px); max-height: calc(100vh - 110px); padding: 16px 16px 12px; }
   .sr .navpanel-grid { gap: 16px 14px; }
   .sr .navpanel-row { font-size: 14px; }

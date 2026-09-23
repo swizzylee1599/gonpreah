@@ -7,6 +7,8 @@ export const ROUTE_PATH: Record<string, string> = {
   apply: '/apply',
   staff: '/staff',
   visit: '/visit',
+  campus: '/campus-life',
+  values: '/values',
   give: '/give',
   contact: '/contact',
 };
@@ -14,9 +16,8 @@ export const ROUTE_PATH: Record<string, string> = {
 export const NAV: [string, [string, string, string][]][] = [
   ['Students', [
     ['dts', 'What is DTS?', 'Start your journey in missions'],
-    ['dbs', 'What is DBS?', 'The whole Bible in thirteen weeks'],
     ['schools', 'Schools & Courses', 'DTS, DBS and the other schools in Siem Reap'],
-    ['visit', 'Campus Life', 'What living here is actually like'],
+    ['campus', 'Campus Life', 'Living in community, and the city around us'],
     ['apply', 'How to Apply', 'What you need to start your application'],
   ]],
   ['Get Involved', [
@@ -26,7 +27,7 @@ export const NAV: [string, [string, string, string][]][] = [
   ]],
   ['About', [
     ['about', 'About Us', 'Who we are and how we started'],
-    ['about', 'Values', 'What we believe and how we work'],
+    ['values', 'Values', 'What we believe and how we work'],
     ['staff', 'Our Team', 'Khmer and international staff'],
     ['contact', 'Contact', 'Get in touch with the base'],
   ]],

@@ -35,9 +35,12 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { title: 'Instagram @ywamsiemreap', desc: 'Follow along', href: 'https://www.instagram.com/ywamsiemreap', group: 'Contact', keywords: 'instagram social media follow photos', external: true },
 
   { title: 'Join staff', desc: 'Serve long term with us', href: '/staff', group: 'Get involved', keywords: 'staff join team serve long term mission builders our team', quick: true },
-  { title: 'Campus life & short-term teams', desc: 'Visit, bring a team, where we serve', href: '/visit', group: 'Get involved', keywords: 'visit campus life short-term teams outreach ministries villages siem reap trip' },
+  { title: 'Bring a team', desc: 'Short-term teams and where we serve', href: '/visit', group: 'Get involved', keywords: 'visit bring a team short-term teams outreach ministries villages trip mission trip' },
+  { title: 'Campus life', desc: 'Living in community, Khmer and international', href: '/campus-life', group: 'Students', keywords: 'campus life community living dorm rooms meals worship family khmer international students volunteers new staff', quick: true },
+  { title: 'Things to do in Siem Reap', desc: 'Temples, food, markets, nature, getting around', href: '/campus-life#siem-reap', group: 'Students', keywords: 'siem reap city things to do angkor wat temples food cafe market pub street tonle sap kulen circus tuk tuk weather sim card money riel' },
   { title: 'Give', desc: 'Partner with the work in Cambodia', href: '/give', group: 'Get involved', keywords: 'give donate giving support partner missionary staff member money', quick: true },
 
-  { title: 'About YWAM Siem Reap', desc: 'Who we are and how we started', href: '/about', group: 'About', keywords: 'about us story history values believe gonpreah youth with a mission cambodia base' },
+  { title: 'About YWAM Siem Reap', desc: 'Welcome, our story and the road to pioneering', href: '/about', group: 'About', keywords: 'about us welcome story history gonpreah youth with a mission cambodia base poipet phnom penh pioneering university of the nations uofn 2002 2016 2025 2027' },
+  { title: 'Values', desc: 'YWAM statement of purpose, core beliefs and foundational values', href: '/values', group: 'About', keywords: 'values believe statement of purpose core beliefs foundational values worship holiness witness prayer fellowship service know god make god known hear gods voice' },
   { title: 'Home', desc: 'YWAM Siem Reap', href: '/', group: 'About', keywords: 'home start ywam siem reap cambodia' },
 ];

@@ -136,7 +136,14 @@ const INFO: [string, string][] = [
   ['Departure day', 'July 21'],
   ['Length', '13 weeks'],
   ['Location', 'Siem Reap, Cambodia'],
-  ['Prerequisites', 'Completed DTS'],
+  ['School leader', 'To be announced'],
+  ['Prerequisites', 'Must have completed a DTS'],
+];
+
+const LECTURE_COST: [string, string][] = [
+  ['Country A', '$2,000 USD'],
+  ['Country B', '$1,200 USD'],
+  ['Country C', '$600 USD'],
 ];
 
 const FAQ: [string, string][] = [
@@ -145,10 +152,10 @@ const FAQ: [string, string][] = [
   ['What does "inductive" study mean?', 'Instead of starting with what others say about a passage, you start with the text itself: observe what it says, interpret what it meant to its first readers, then apply it. You learn a method you can use for the rest of your life.'],
   ['What does a week look like?', 'Each week centres on a set of books. There is teaching on their history and context, a lot of personal reading, small-group discussion, and students take turns leading inductive studies.'],
   ['What happens in the final week?', 'Teaching Week. Each student presents the whole Bible, beginning to end, to the school — the proof that the story has become their own.'],
-  ['What does it cost?', `Fees for the April school are being confirmed. Email ${CONTACT.email} and we will send you the current cost and what it covers.`],
+  ['What does it cost?', 'The school fee depends on your passport country: $2,000 USD for Country A, $1,200 USD for Country B and $600 USD for Country C. Flights and additional transportation are not included. Email us and we will tell you which country band applies to you.'],
 ];
 ---
-<SrLayout title="Discipleship Bible School | YWAM Siem Reap"
+<SrLayout title="Discipleship Bible School | YWAM Siem Reap" spacer={false}
   description="A three-month Discipleship Bible School in Siem Reap, Cambodia. Read the whole Bible in thirteen weeks, study all sixty-six books inductively, and learn to live out your faith with purpose.">
   <PageHead eyebrow="Discipleship Bible School · DBS" km="ព្រះគម្ពីរ" title="Study the Word. Live it out." highlight="Live it out."
     lead="Discipleship Bible School empowers those who have a heart to study the word of God."
@@ -232,14 +239,20 @@ const FAQ: [string, string][] = [
           </div>
           <div class="info-cost">
             <p class="eyebrow">Cost of the school</p>
-            <p class="disp" style="margin:22px 0 0;font-size:20px;font-weight:500;">To be confirmed</p>
-            <p class="body" style="margin:12px 0 0;max-width:40ch;font-size:15px;">Fees for the April school are being finalised. Email us and we will send you the current cost and what it covers.</p>
-            <p class="muted" style="margin:12px 0 0;font-size:13px;">Flights are not included.</p>
+            <p class="disp" style="margin:22px 0 0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#dcdcdc;">Lecture phase · 13 weeks</p>
+            <dl class="cost-list">
+              {LECTURE_COST.map(([k, v]) => (
+                <div><dt class="body" style="margin:0;font-size:16px;">{k}</dt><dd class="disp" style="margin:0;font-size:20px;font-weight:500;">{v}</dd></div>
+              ))}
+            </dl>
+            <p class="muted" style="margin:12px 0 0;font-size:13px;">Flights and additional transportation are not included.</p>
+            <p class="body" style="margin:22px 0 0;max-width:40ch;font-size:15px;">Not sure which country band you fall under? Email us and we will tell you.</p>
           </div>
         </div>
         <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:36px;">
           <a class="btn btn--solid" href="/apply?school=dbs">Apply for DBS</a>
-          <a class="btn" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('DBS enquiry')}`}>Email us about DBS</a>
+          <a class="btn" href="/apply?school=dts">Haven't done a DTS? Apply for DTS</a>
+          <a class="btn btn--plain" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('DBS enquiry')}`}>Email us about DBS</a>
         </div>
       </div>
     </div>
