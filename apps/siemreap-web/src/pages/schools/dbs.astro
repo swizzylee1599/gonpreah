@@ -314,19 +314,47 @@ const FAQ: [string, string][] = [
     if (!stack || !cards.length || !no) return;
     const deckMode = () => window.matchMedia('(min-width: 1001px) and (prefers-reduced-motion: no-preference)').matches;
     let current = 0;
+    let shownCount = 0;
+    let countRaf = 0;
+    const tickCount = (to) => {
+      cancelAnimationFrame(countRaf);
+      const from = shownCount;
+      const t0 = performance.now();
+      const step = (now) => {
+        const t = Math.min(1, (now - t0) / 450);
+        const e = 1 - Math.pow(1 - t, 3);
+        shownCount = Math.round(from + (to - from) * e);
+        count.textContent = String(shownCount);
+        if (t < 1) countRaf = requestAnimationFrame(step);
+      };
+      countRaf = requestAnimationFrame(step);
+    };
     const setWeek = (n) => {
       if (n === current) return;
+      const forward = n > current;
       current = n;
       no.textContent = String(n);
       const w = cards[n - 1];
       title.textContent = w ? w.querySelector('.dbs-card-title').textContent : '';
       let read = 0;
+      let fresh = 0;
+      books.forEach((b) => b.classList.remove('is-fresh'));
       books.forEach((b) => {
-        const on = Number(b.dataset.week) <= n;
-        b.classList.toggle('is-read', on);
+        const wk = Number(b.dataset.week);
+        const on = wk <= n;
+        const was = b.classList.contains('is-read');
         if (on) read++;
+        if (on && !was && forward) {
+          // Newly read this week: pop in one after another, in canonical order.
+          b.style.setProperty('--d', `${fresh * 55}ms`);
+          b.classList.add('is-fresh');
+          fresh++;
+        } else {
+          b.style.removeProperty('--d');
+        }
+        b.classList.toggle('is-read', on);
       });
-      count.textContent = String(read);
+      tickCount(read);
       cards.forEach((el, i) => el.classList.toggle('is-active', i + 1 === n));
     };
     const clamp01 = (v) => Math.min(1, Math.max(0, v));
@@ -348,18 +376,19 @@ const FAQ: [string, string][] = [
         const s = dealt - i;
         card.style.zIndex = String(cards.length - i);
         if (s <= 0) {
-          // Waiting in the deck behind the current card: an opaque blank card
-          // whose content only appears as it reaches the front.
+          // Waiting in the deck: fanned back-right behind the top card like
+          // the school cards on the home page, blank until it reaches the front.
           const k = -s;
-          card.style.transform = `translateY(${(k * 18).toFixed(1)}px) scale(${(1 - k * 0.045).toFixed(3)})`;
-          card.style.opacity = String(clamp01(1 - (k - 1) * 0.5));
+          card.style.transform = `translate(${(k * 16).toFixed(1)}px, ${(k * 14).toFixed(1)}px) rotate(${(k * 3).toFixed(2)}deg) scale(${(1 - k * 0.035).toFixed(3)})`;
+          card.style.opacity = String(clamp01(1 - (k - 1.5) * 0.6));
           card.style.setProperty('--c', String(clamp01(1 - k * 2.5)));
           card.style.visibility = k > 3 ? 'hidden' : '';
         } else {
-          // Dealt: lift up and away, fading only once it has cleared the deck.
-          const t = clamp01(s);
-          card.style.transform = `translateY(${(-t * 110).toFixed(1)}%) rotate(${(-t * 2).toFixed(2)}deg)`;
-          card.style.opacity = String(clamp01(1 - (t - 0.55) * 2.2));
+          // Dealt: hold for the first quarter of the step, then swipe off to
+          // the left over the deck and fade.
+          const t = clamp01((s - 0.25) / 0.75);
+          card.style.transform = `translate(${(t * 115).toFixed(1)}%, ${(-t * 6).toFixed(1)}%) rotate(${(t * 10).toFixed(2)}deg)`;
+          card.style.opacity = String(clamp01(1 - Math.max(0, (t - 0.35) * 1.8)));
           card.style.setProperty('--c', '1');
           card.style.visibility = t >= 1 ? 'hidden' : '';
         }
