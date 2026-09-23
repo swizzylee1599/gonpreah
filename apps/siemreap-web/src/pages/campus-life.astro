@@ -25,6 +25,51 @@ const COMMUNITY: { km: string; title: string; body: string; photo?: string; alt?
   { km: 'បម្រើ', title: 'We work together', body: 'Everyone carries part of the load: cleaning, cooking, setting up, driving, building. Serving the community starts with serving each other.', photo: '/images/campus/work-bamboo.jpg', alt: 'A young man grinning as he carries bamboo poles over his shoulder along a campus path', label: '', pos: '50% 30%' },
 ];
 
+// The base week. Every weekday shares the same frame; the 8:30 slot changes.
+type Slot = { time: string; title: string; note?: string; hi?: boolean };
+const WEEK: { day: string; full: string; slots: Slot[] }[] = [
+  { day: 'Mon', full: 'Monday', slots: [
+    { time: '7:30 – 8:00', title: 'Breakfast' }, { time: '8:00', title: 'Morning chores' },
+    { time: '8:30 – 9:30', title: 'Base worship', note: 'The whole base, one room, in Khmer and English.', hi: true },
+    { time: '12:30 – 1:30', title: 'Lunch' }, { time: '6:30 – 7:30', title: 'Dinner' },
+  ] },
+  { day: 'Tue', full: 'Tuesday', slots: [
+    { time: '7:30 – 8:00', title: 'Breakfast' }, { time: '8:00', title: 'Morning chores' },
+    { time: '8:30 – 9:30', title: 'Staff meeting', note: 'Where the week gets planned and prayed over.', hi: true },
+    { time: '12:30 – 1:30', title: 'Lunch' }, { time: '6:30 – 7:30', title: 'Dinner' },
+  ] },
+  { day: 'Wed', full: 'Wednesday', slots: [
+    { time: '7:30 – 8:00', title: 'Breakfast' }, { time: '8:00', title: 'Morning chores' },
+    { time: '8:30 – 9:30', title: 'Intercession', note: 'Praying for Cambodia, the nations, and each other.', hi: true },
+    { time: '12:30 – 1:30', title: 'Lunch' }, { time: '6:30 – 7:30', title: 'Dinner' },
+  ] },
+  { day: 'Thu', full: 'Thursday', slots: [
+    { time: '7:30 – 8:00', title: 'Breakfast' }, { time: '8:00', title: 'Morning chores' },
+    { time: '8:30 – 9:30', title: 'Small groups', note: 'A few people, honest conversation, prayer.', hi: true },
+    { time: '12:30 – 1:30', title: 'Lunch' },
+    { time: '6:15 – 7:30', title: 'Community night', note: 'Everyone together — worship, stories, food after.', hi: true },
+    { time: '7:30 – 8:30', title: 'Dinner', note: 'Later on Thursdays, after community night.' },
+  ] },
+  { day: 'Fri', full: 'Friday', slots: [
+    { time: '7:30 – 8:00', title: 'Breakfast' }, { time: '8:00', title: 'Morning chores' },
+    { time: '8:30 – 9:30', title: 'Staff development', note: 'Training and growth for the staff team.', hi: true },
+    { time: '12:30 – 1:30', title: 'Lunch' }, { time: '6:30 – 7:30', title: 'Dinner' },
+  ] },
+  { day: 'Sat – Sun', full: 'Weekend', slots: [
+    { time: 'All day', title: 'No set schedule', note: 'Rest, the city, and church on Sunday with a local congregation.' },
+  ] },
+];
+
+// Around campus. Draft captions — swap photos and wording as staff confirm.
+const FACILITIES: { title: string; note: string; photo?: string; alt?: string; label?: string; pos?: string }[] = [
+  { title: 'The campus', note: 'Four storeys of classrooms, rooms and rooftop terraces, twenty minutes from Angkor.', photo: '/images/campus/campus.jpg', alt: 'The campus from the air', pos: '50% 50%' },
+  { title: 'GP Cafe', note: 'Our café on campus. Coffee, iced drinks and the conversations that carry on after class.', photo: '/images/campus/gp-cafe-sign.jpg', alt: 'The GP Cafe sign among green leaves', pos: '50% 40%' },
+  { title: 'Worship hall', note: 'Where the base gathers on Monday mornings and Thursday nights.', photo: '/images/gonpreah-worship-2.jpg', alt: 'Worship on campus' },
+  { title: 'Classrooms', note: 'Where DTS and DBS meet for lectures, in Khmer and English.', photo: '/images/schools/dbs-class.jpg', alt: 'Students in a classroom', pos: '50% 40%' },
+  { title: 'The lounge', note: 'Bean bags, books and shade — the place between classes.', photo: '/images/schools/dbs-small-groups.jpg', alt: 'Students reading on bean bags', pos: '50% 60%' },
+  { title: 'Rooms', note: 'Shared rooms for students, with fans, wifi and a bed that is yours for the school.', label: 'Drop a photo — a student room' },
+];
+
 const WHO: [string, string][] = [
   ['Students', 'DTS and DBS students live on campus for the length of their school, in shared rooms with classmates.'],
   ['Volunteers', 'Short or long term, volunteers live and eat with the community and join its rhythms while they serve.'],
@@ -111,6 +156,19 @@ const PRACTICAL: [string, string][] = [
     </div>
   </section>
 
+  <section class="sec cl-statement-sec">
+    <div class="wrap">
+      <p class="eyebrow reveal" style="text-align:center;">Campus life</p>
+      <h2 class="disp cl-statement stag" aria-label="Live together. Eat together. Worship together. Go together.">
+        <span class="cl-phrase">Live <img src="/images/campus/friends-temple.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 35%;" /> together.</span>
+        <span class="cl-phrase">Eat <img src="/images/campus/food-prep.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 60%;" /> together.</span>
+        <span class="cl-phrase">Worship <img src="/images/gonpreah-worship-1.jpg" alt="" loading="lazy" decoding="async" /> together.</span>
+        <span class="cl-phrase">Go <img src="/images/schools/outreach-team.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 40%;" /> together.</span>
+      </h2>
+      <p class="body reveal" style="text-align:center;margin:26px auto 0;max-width:56ch;">YWAM Siem Reap is a community of Khmer and international young people living for Jesus, and this campus is where that life happens.</p>
+    </div>
+  </section>
+
   <section class="sec cl-community" style="padding-bottom:0;">
     <div class="wrap">
       <div class="reveal" style="max-width:62ch;">
@@ -142,6 +200,68 @@ const PRACTICAL: [string, string][] = [
           ))}
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="sec cl-sched-sec" id="schedule">
+    <div class="wrap cl-hs-head">
+      <div class="reveal">
+        <p class="eyebrow">Base schedule</p>
+        <h2 class="disp" style="margin:12px 0 0;font-size:clamp(28px,3.4vw,46px);font-weight:500;line-height:1.08;">The shape of a week.</h2>
+        <p class="body" style="margin:14px 0 0;max-width:52ch;">Every weekday starts with breakfast and chores together. What comes next at 8:30 depends on the day.</p>
+      </div>
+      <div class="cl-hs-nav" aria-hidden="true">
+        <button type="button" class="cl-hs-btn" data-hs-prev="sched">←</button>
+        <button type="button" class="cl-hs-btn" data-hs-next="sched">→</button>
+      </div>
+    </div>
+    <div class="cl-hs" data-hs="sched">
+      <p class="disp cl-hs-label" aria-hidden="true">Base<br />schedule</p>
+      <ol class="cl-hs-track sched-track">
+        {WEEK.map((d) => (
+          <li class="sched-day io-in">
+            <p class="disp sched-day-n">{d.day}</p>
+            <p class="muted sched-day-f">{d.full}</p>
+            <ul class="sched-slots">
+              {d.slots.map((sl) => (
+                <li class={`sched-slot${sl.hi ? ' is-hi' : ''}`}>
+                  <span class="sched-time">{sl.time}</span>
+                  <b class="sched-title">{sl.title}</b>
+                  {sl.note && <span class="sched-note">{sl.note}</span>}
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="wrap"><p class="muted" style="margin:22px 0 0;font-size:13px;">Times are the base rhythm; schools add their own lectures, work duties and outreach prep around it.</p></div>
+  </section>
+
+  <section class="sec cl-fac-sec" id="campus" style="padding-top:0;">
+    <div class="wrap cl-hs-head">
+      <div class="reveal">
+        <p class="eyebrow">Around campus</p>
+        <h2 class="disp" style="margin:12px 0 0;font-size:clamp(28px,3.4vw,46px);font-weight:500;line-height:1.08;">Where the days happen.</h2>
+      </div>
+      <div class="cl-hs-nav" aria-hidden="true">
+        <button type="button" class="cl-hs-btn" data-hs-prev="fac">←</button>
+        <button type="button" class="cl-hs-btn" data-hs-next="fac">→</button>
+      </div>
+    </div>
+    <div class="cl-hs" data-hs="fac">
+      <p class="disp cl-hs-label" aria-hidden="true">Campus<br />facilities</p>
+      <ul class="cl-hs-track fac-track">
+        {FACILITIES.map((f) => (
+          <li class="fac-card io-in">
+            <figure class="fac-photo">
+              {f.photo ? <img src={f.photo} alt={f.alt ?? ''} loading="lazy" decoding="async" style={f.pos ? `object-position:${f.pos}` : undefined} /> : <PhotoSlot label={f.label ?? ''} radius={0} />}
+            </figure>
+            <h3 class="disp fac-title">{f.title}</h3>
+            <p class="body fac-note">{f.note}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
@@ -306,6 +426,15 @@ const PRACTICAL: [string, string][] = [
       window.addEventListener('resize', onScroll2, { signal });
       pickItem();
     }
+
+    // Arrow buttons for the horizontal strips (schedule, facilities).
+    document.querySelectorAll('[data-hs]').forEach((hs) => {
+      const key = hs.dataset.hs;
+      const track = hs.querySelector('.cl-hs-track');
+      const step = () => { const first = track.firstElementChild; return first ? first.getBoundingClientRect().width + 18 : 320; };
+      document.querySelectorAll(`[data-hs-prev="${key}"]`).forEach((b) => b.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }), { signal }));
+      document.querySelectorAll(`[data-hs-next="${key}"]`).forEach((b) => b.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }), { signal }));
+    });
 
     const stack = document.querySelector('.city-stack');
     const track = document.querySelector('.city-track');
