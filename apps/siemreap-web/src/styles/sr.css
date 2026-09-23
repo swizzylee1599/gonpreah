@@ -597,8 +597,8 @@ body.sr {
 .sr .city-list li:first-child { border-top: 0; }
 .sr .city-list b { font-weight: 500; color: #fff; }
 .sr .city-list span { color: #b3b3b3; }
-.sr .city-panel--practical { grid-template-columns: minmax(0, 1fr); }
-.sr .practical { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 28px; margin: 22px 0 0; }
+.sr .city-panel--practical { flex-basis: min(80vw, 920px); grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); }
+.sr .practical { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; margin: 22px 0 0; }
 .sr .practical dt, .sr .practical dd { margin: 0; }
 @media (max-width: 1000px), (prefers-reduced-motion: reduce) {
   .sr .city-stack { height: auto; }
