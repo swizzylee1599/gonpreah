@@ -1,14 +1,15 @@
 ---
 import { NAV, ROUTE_PATH } from '../../lib/sr-routes';
+import { SEARCH_INDEX } from '../../lib/sr-search';
 const currentPath = Astro.url.pathname;
 const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
 ---
 <nav class="sr-nav" id="sr-nav">
-  <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:28px;padding:10px 40px;">
+  <div class="wrap navbar-row" style="display:flex;align-items:center;justify-content:space-between;gap:28px;padding:10px 40px;">
     <a href="/" aria-label="YWAM Siem Reap — home" style="display:flex;align-items:center;">
       <img src="/images/sr-logo.png" alt="YWAM Siem Reap" class="srlogo" style="display:block;height:88px;width:auto;filter:invert(1);" />
     </a>
-    <div style="display:flex;align-items:center;gap:30px;">
+    <div class="navright" style="display:flex;align-items:center;gap:30px;">
       <div class="navbar" style="display:flex;gap:30px;">
         {NAV.map(([label, items]) => (
           <div class={'navgroup' + (items.some(([id]) => isCurrent(id)) ? ' is-current' : '')}>
@@ -24,18 +25,24 @@ const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
           </div>
         ))}
       </div>
+      <button class="navsearch" id="sr-search-toggle" type="button" aria-label="Search the site" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+      </button>
       <a class="btn btn--solid navapply" style="padding:12px 26px;font-size:14px;" href="/apply">Apply</a>
-      <button class="navtoggle" id="sr-nav-toggle" aria-label="Menu" aria-expanded="false">
+      <button class="navtoggle" id="sr-nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sr-nav-panel">
         <span><i></i><i></i><i></i></span>
       </button>
     </div>
   </div>
-  <div class="navpanel">
-    <div class="wrap" style="display:flex;flex-direction:column;gap:22px;">
+
+  <div class="navscrim" id="sr-nav-scrim"></div>
+  <div class="navpanel" id="sr-nav-panel">
+    <a class="btn btn--solid navpanel-apply" href="/apply">Apply</a>
+    <div class="navpanel-grid">
       {NAV.map(([label, items]) => (
-        <div>
+        <div class="navpanel-group">
           <p class="eyebrow" style="color:var(--gp-grey);">{label}</p>
-          <div style="display:flex;flex-direction:column;gap:4px;margin-top:10px;">
+          <div style="display:flex;flex-direction:column;margin-top:6px;">
             {items.map(([id, t]) => (
               <a class={'navpanel-row' + (isCurrent(id) ? ' is-current' : '')} href={ROUTE_PATH[id]}>{t}</a>
             ))}
@@ -43,8 +50,27 @@ const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
         </div>
       ))}
     </div>
+    <div class="navpanel-foot">
+      <a href="https://wa.me/85569911705" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="mailto:info@ywamsiemreap.org">Email</a>
+      <a href="https://www.instagram.com/ywamsiemreap" target="_blank" rel="noopener">Instagram</a>
+    </div>
   </div>
 </nav>
+
+<div class="srsearch" id="sr-search" role="dialog" aria-modal="true" aria-label="Search" hidden>
+  <div class="srsearch-scrim" data-close></div>
+  <div class="srsearch-box">
+    <div class="srsearch-field">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+      <input id="sr-search-input" type="search" placeholder="Search — DTS, dates, apply, WhatsApp…" autocomplete="off" spellcheck="false" aria-label="Search the site" aria-controls="sr-search-results" />
+      <button type="button" class="srsearch-close" data-close aria-label="Close search">Esc</button>
+    </div>
+    <ul class="srsearch-results" id="sr-search-results" role="listbox"></ul>
+    <p class="srsearch-empty muted" hidden>Nothing matched. Try “DTS”, “dates”, “apply” or “WhatsApp”.</p>
+  </div>
+</div>
+<script type="application/json" id="sr-search-data" set:html={JSON.stringify(SEARCH_INDEX)}></script>
 
 <script>
   // The nav is re-rendered on every client-side navigation, so bind to
@@ -56,11 +82,15 @@ const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
     const { signal } = ctrl;
     const nav = document.getElementById('sr-nav');
     const toggle = document.getElementById('sr-nav-toggle');
+    const scrim = document.getElementById('sr-nav-scrim');
     if (!nav || !toggle) return;
-    toggle.addEventListener('click', () => {
-      const open = nav.classList.toggle('is-mobile-open');
+
+    const setMenu = (open: boolean) => {
+      nav.classList.toggle('is-mobile-open', open);
       toggle.setAttribute('aria-expanded', String(open));
-    }, { signal });
+    };
+    toggle.addEventListener('click', () => setMenu(!nav.classList.contains('is-mobile-open')), { signal });
+    scrim?.addEventListener('click', () => setMenu(false), { signal });
 
     let lastY = window.scrollY;
     window.addEventListener('scroll', () => {
@@ -70,6 +100,104 @@ const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
       nav.classList.toggle('is-hidden', down && y > 140);
       lastY = y;
     }, { passive: true, signal });
+
+    // ---- Quick search
+    const dialog = document.getElementById('sr-search');
+    const input = document.getElementById('sr-search-input') as HTMLInputElement | null;
+    const list = document.getElementById('sr-search-results');
+    const empty = dialog?.querySelector('.srsearch-empty') as HTMLElement | null;
+    const dataEl = document.getElementById('sr-search-data');
+    const searchBtn = document.getElementById('sr-search-toggle');
+    if (!dialog || !input || !list || !dataEl || !searchBtn) return;
+    type Entry = { title: string; desc: string; href: string; group: string; keywords: string; quick?: boolean; external?: boolean };
+    const INDEX: Entry[] = JSON.parse(dataEl.textContent || '[]');
+    let active = 0;
+    let shown: Entry[] = [];
+
+    const score = (e: Entry, terms: string[]) => {
+      const title = e.title.toLowerCase();
+      const kw = e.keywords.toLowerCase();
+      const desc = e.desc.toLowerCase();
+      let total = 0;
+      for (const t of terms) {
+        let s = 0;
+        if (title.startsWith(t)) s = 5;
+        else if (title.includes(t)) s = 4;
+        else if (kw.split(' ').some((w) => w.startsWith(t))) s = 3;
+        else if (kw.includes(t)) s = 2;
+        else if (desc.includes(t)) s = 1;
+        if (!s) return 0; // every term must hit something
+        total += s;
+      }
+      return total + (e.quick ? 1.5 : 0);
+    };
+
+    const render = () => {
+      const q = input.value.trim().toLowerCase();
+      const terms = q.split(/\s+/).filter(Boolean);
+      shown = terms.length
+        ? INDEX.map((e) => [score(e, terms), e] as [number, Entry]).filter(([s]) => s > 0).sort((a, b) => b[0] - a[0]).slice(0, 8).map(([, e]) => e)
+        : INDEX.filter((e) => e.quick);
+      active = 0;
+      list.innerHTML = '';
+      if (empty) empty.hidden = shown.length > 0;
+      shown.forEach((e, i) => {
+        const li = document.createElement('li');
+        li.setAttribute('role', 'option');
+        const a = document.createElement('a');
+        a.href = e.href;
+        a.className = 'srsearch-row' + (i === 0 ? ' is-active' : '');
+        if (e.external) { a.target = '_blank'; a.rel = 'noopener'; }
+        a.innerHTML = `<span class="srsearch-group">${e.group}</span><span class="srsearch-title"></span><span class="srsearch-desc"></span>`;
+        (a.querySelector('.srsearch-title') as HTMLElement).textContent = e.title;
+        (a.querySelector('.srsearch-desc') as HTMLElement).textContent = e.desc;
+        a.addEventListener('mousemove', () => setActive(i), { signal });
+        a.addEventListener('click', () => close(), { signal });
+        li.appendChild(a);
+        list.appendChild(li);
+      });
+      if (!terms.length && shown.length) {
+        const h = document.createElement('li');
+        h.className = 'srsearch-hint muted';
+        h.textContent = 'Quick links';
+        list.prepend(h);
+      }
+    };
+    const setActive = (i: number) => {
+      active = Math.max(0, Math.min(shown.length - 1, i));
+      list.querySelectorAll('.srsearch-row').forEach((el, k) => el.classList.toggle('is-active', k === active));
+    };
+    const open = () => {
+      setMenu(false);
+      dialog.hidden = false;
+      document.documentElement.classList.add('sr-search-open');
+      input.value = '';
+      render();
+      requestAnimationFrame(() => input.focus());
+    };
+    const close = () => {
+      dialog.hidden = true;
+      document.documentElement.classList.remove('sr-search-open');
+    };
+    searchBtn.addEventListener('click', open, { signal });
+    dialog.querySelectorAll('[data-close]').forEach((el) => el.addEventListener('click', close, { signal }));
+    input.addEventListener('input', render, { signal });
+    input.addEventListener('keydown', (ev) => {
+      if (ev.key === 'ArrowDown') { ev.preventDefault(); setActive(active + 1); }
+      else if (ev.key === 'ArrowUp') { ev.preventDefault(); setActive(active - 1); }
+      else if (ev.key === 'Enter') {
+        const row = list.querySelectorAll<HTMLAnchorElement>('.srsearch-row')[active];
+        if (row) { ev.preventDefault(); row.click(); }
+      }
+    }, { signal });
+    document.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape' && !dialog.hidden) { close(); return; }
+      const inField = (ev.target as HTMLElement | null)?.closest('input, textarea, select, [contenteditable]');
+      if (((ev.metaKey || ev.ctrlKey) && ev.key.toLowerCase() === 'k') || (ev.key === '/' && !inField)) {
+        ev.preventDefault();
+        dialog.hidden ? open() : close();
+      }
+    }, { signal });
   };
   init();
   document.addEventListener('astro:page-load', init);
