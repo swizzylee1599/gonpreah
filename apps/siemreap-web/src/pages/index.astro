@@ -188,13 +188,15 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
           // through one school at a time (42-70%), then "Bring a team" slides up
           // over Train Here the same way (70-100%) before the pin finally
           // releases into the next section.
-          const TEXT_FADE_START = 0.2;
-          const VIDEO_END = 0.28;
-          const COVER_START = 0.28;
+          // Stack is 900vh: video scrub ~270vh, cover slide ~110vh, one
+          // school card per ~110vh, team cover slide ~200vh.
+          const TEXT_FADE_START = 0.22;
+          const VIDEO_END = 0.3;
+          const COVER_START = 0.3;
           const COVER_END = 0.42;
           const CARDS_START = 0.42;
-          const CARDS_END = 0.7;
-          const BAT_START = 0.7;
+          const CARDS_END = 0.78;
+          const BAT_START = 0.78;
           let ticking = false;
           const update = () => {
             ticking = false;
