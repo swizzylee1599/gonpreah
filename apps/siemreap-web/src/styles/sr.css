@@ -654,6 +654,7 @@ body.sr {
   .sr .jp-rail-label { font-size: 11px; }
   .sr .hall-photos { top: 66%; width: 88vw; flex-wrap: wrap; gap: 10px; }
   .sr .hall-photo { flex: 0 0 calc(50% - 5px); border-radius: 10px; }
+  .sr .hall-photo:nth-child(n + 5) { display: none; }
   .sr .hall-intro, .sr .hall-copy { width: 88vw; top: 42%; }
   .sr .hall-copy .body { font-size: 15px; }
   .sr .info { padding: 30px 22px; }

@@ -27,7 +27,7 @@ const JOURNEY: { title: string; body: string; photo: string; alt: string }[] = [
 ];
 
 // Each phase gets a four-photo collage — swap `label` slots for `{ src, alt }` as photos arrive.
-type Photo = { src?: string; alt?: string; label?: string };
+type Photo = { src?: string; alt?: string; label?: string; pos?: string };
 const PHASES: { eyebrow: string; title: string; body: string[]; photos: Photo[] }[] = [
   {
     eyebrow: 'Lecture phase · 3 months here',
@@ -51,10 +51,11 @@ const PHASES: { eyebrow: string; title: string; body: string[]; photos: Photo[] 
       'Teams serve here in Cambodia — in villages around Siem Reap and across the country — and beyond its borders.',
     ],
     photos: [
-      { label: 'Drop a photo — an outreach team in a village' },
-      { label: 'Drop a photo — serving with a local church' },
-      { label: 'Drop a photo — a kids programme' },
-      { label: 'Drop a photo — the team on the road' },
+      { src: '/images/schools/outreach-team.jpg', alt: 'A DTS outreach team in bright traditional dresses and shirts, standing on a hillside above a town', pos: '50% 40%' },
+      { src: '/images/schools/outreach-kids-courtyard.jpg', alt: 'DTS students sitting among dozens of children in a school courtyard on outreach', pos: '50% 60%' },
+      { src: '/images/schools/outreach-kids-friends.jpg', alt: 'A DTS student laughing with a group of children on outreach', pos: '50% 30%' },
+      { src: '/images/schools/outreach-lakeside.jpg', alt: 'Four DTS students talking on a bench beside a lake on outreach', pos: '50% 55%' },
+      { src: '/images/schools/outreach-mountain-house.jpg', alt: 'A blue house beneath a snow-capped mountain at sunrise, an outreach location', pos: '50% 60%' },
     ],
   },
 ];
@@ -312,7 +313,7 @@ const FAQ: [string, string][] = [
           {phase.photos.map((photo) => (
             <figure class="hall-photo">
               {photo.src
-                ? <img src={photo.src} alt={photo.alt ?? ''} loading="lazy" decoding="async" />
+                ? <img src={photo.src} alt={photo.alt ?? ''} loading="lazy" decoding="async" style={photo.pos ? `object-position:${photo.pos}` : undefined} />
                 : <PhotoSlot label={photo.label ?? 'Drop a photo'} radius={0} />}
             </figure>
           ))}
