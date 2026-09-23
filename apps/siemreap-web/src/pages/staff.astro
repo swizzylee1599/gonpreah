@@ -6,9 +6,9 @@ import CardGrid from '../components/sr/CardGrid.astro';
 import Cta from '../components/sr/Cta.astro';
 import PhotoSlot from '../components/sr/PhotoSlot.astro';
 ---
-<SrLayout title="Staff &amp; Teams | YWAM Siem Reap">
-  <PageHead eyebrow="Staff & teams" km="ក្រុមការងារ" title="Serve long term" highlight="long term"
-    lead="Staff here are Khmer and international, some for two years, some for twenty. All of them raise their own support." />
+<SrLayout title="Join Staff or Volunteer | YWAM Siem Reap">
+  <PageHead eyebrow="Join staff or volunteer" km="ក្រុមការងារ" title="Serve long term. Or come short term." highlight="short term."
+    lead="Staff here are Khmer and international, some for two years, some for twenty. Volunteers come for a few weeks or a few months. All of them raise their own support, and all of them live in the community." />
   <section class="sec">
     <div class="wrap grid3 reveal">
       {[0, 1, 2, 3, 4, 5].map(() => (
@@ -24,8 +24,15 @@ import PhotoSlot from '../components/sr/PhotoSlot.astro';
   </section>
   <CardGrid cols={2} items={[
     ['Joining staff', 'Staff complete a DTS first, then apply to a role on the base. We will talk you through visas, support raising and housing.'],
-    ['Mission builders', 'Trades, admin and practical skills for a few months at a time — often the most useful people on site.'],
+    ['Volunteering short term', 'A few weeks to a few months. Trades, admin, teaching, media and practical skills — often the most useful people on site. No DTS required.'],
   ]} />
+  <section class="sec" style="padding-top:0;">
+    <div class="wrap" style="display:flex;gap:14px;flex-wrap:wrap;">
+      <a class="btn btn--solid" href="/apply?school=staff">Staff application</a>
+      <a class="btn" href="/apply?school=volunteer">Volunteer application</a>
+      <a class="btn btn--plain" href="/campus-life">Campus life</a>
+    </div>
+  </section>
   <Cta
     title="Think you might belong here?"
     body="Tell us what you do and when you are free. We would rather hear from you early than late."

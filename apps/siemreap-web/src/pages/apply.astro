@@ -54,7 +54,10 @@ const STEPS: [string, string][] = [
                 <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);letter-spacing:.14em;text-transform:uppercase;">{s.abbr} · {s.when}</p>
                 <h2 class="disp" style="margin:10px 0 0;font-size:clamp(24px,2.8vw,36px);font-weight:500;line-height:1.12;">{s.name}</h2>
               </div>
-              {s.page && <a class="btn" href={s.page}>{s.group === 'Schools' ? 'About the school' : 'About serving here'}</a>}
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                {s.page && <a class="btn" href={s.page}>{s.group === 'Schools' ? 'About the school' : 'About serving here'}</a>}
+                <a class="btn btn--plain" href="/campus-life">Campus life</a>
+              </div>
             </div>
             {s.form ? (
               <>

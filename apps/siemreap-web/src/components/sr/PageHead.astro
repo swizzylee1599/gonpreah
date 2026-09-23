@@ -7,12 +7,13 @@ interface Props {
   highlight?: string;
   photo?: string;
   photoAlt?: string;
+  full?: boolean;
 }
-const { eyebrow, km, lead, title, highlight, photo, photoAlt = '' } = Astro.props;
+const { eyebrow, km, lead, title, highlight, photo, photoAlt = '', full = false } = Astro.props;
 const words = title.split(' ');
 const highlightCount = highlight ? highlight.split(' ').length : 0;
 ---
-<section class:list={['pagehead', { 'pagehead--photo': !!photo }]} style={photo ? undefined : 'padding:90px 0 0;'}>
+<section class:list={['pagehead', { 'pagehead--photo': !!photo, 'pagehead--full': full }]} style={photo ? undefined : 'padding:90px 0 0;'}>
   {photo && (
     <>
       <img class="pagehead-photo" src={photo} alt={photoAlt} loading="eager" decoding="async" />
@@ -35,5 +36,6 @@ const highlightCount = highlight ? highlight.split(' ').length : 0;
     {km && <p class="km" style="font-size:28px;margin:18px 0 0;color:#dcdcdc;">{km}</p>}
     <span class="rule" style="margin:30px 0 0;"></span>
     {lead && <p class="body" style="margin:28px 0 0;max-width:58ch;font-size:19px;">{lead}</p>}
+    {full && <p class="pagehead-cue muted" aria-hidden="true">Scroll ↓</p>}
   </div>
 </section>

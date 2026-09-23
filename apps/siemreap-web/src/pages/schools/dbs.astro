@@ -132,9 +132,9 @@ if (missing.length) throw new Error(`DBS: books not assigned to a week: ${missin
 
 const INFO: [string, string][] = [
   ['Next school', 'April DBS'],
+  ['Length', '13 weeks'],
   ['Arrival day', 'April 26'],
   ['Departure day', 'July 21'],
-  ['Length', '13 weeks'],
   ['Location', 'Siem Reap, Cambodia'],
   ['School leader', 'To be announced'],
   ['Prerequisites', 'Must have completed a DTS'],
@@ -159,7 +159,7 @@ const FAQ: [string, string][] = [
   description="A three-month Discipleship Bible School in Siem Reap, Cambodia. Read the whole Bible in thirteen weeks, study all sixty-six books inductively, and learn to live out your faith with purpose.">
   <PageHead eyebrow="Discipleship Bible School · DBS" km="ព្រះគម្ពីរ" title="Study the Word. Live it out." highlight="Live it out."
     lead="Discipleship Bible School empowers those who have a heart to study the word of God."
-    photo="/images/schools/dbs.jpg"
+    photo="/images/schools/dbs.jpg" full
     photoAlt="Four students sitting cross-legged on the floor with open Bibles, laughing together in front of louvred windows" />
 
   <section class="sec dbs-intro">
@@ -176,45 +176,47 @@ const FAQ: [string, string][] = [
     </div>
   </section>
 
-  <section class="sec dbs-cur" aria-label="Thirteen-week curriculum">
-    <div class="wrap dbs-cur-grid">
-      <aside class="dbs-side">
-        <div class="dbs-side-inner">
-          <p class="eyebrow">Week by week</p>
-          <p class="disp dbs-weekno"><span class="dbs-weekno-n" data-weekno>1</span><span class="dbs-weekno-of"> / 13</span></p>
-          <p class="disp dbs-weektitle" data-weektitle>{WEEKS[0].title}</p>
-          <div class="dbs-strip" role="img" aria-label="The sixty-six books of the Bible, filled in as each week is read">
-            <p class="dbs-strip-label">Old Testament</p>
-            <div class="dbs-books">
-              {OT.map((b) => <span class="dbs-book" data-week={weekOf.get(b)} title={b}></span>)}
-            </div>
-            <p class="dbs-strip-label" style="margin-top:14px;">New Testament</p>
-            <div class="dbs-books">
-              {NT.map((b) => <span class="dbs-book" data-week={weekOf.get(b)} title={b}></span>)}
-            </div>
-            <p class="muted dbs-count" style="margin:16px 0 0;font-size:13px;"><b data-bookcount>0</b> of 66 books read</p>
-          </div>
-        </div>
-      </aside>
-
-      <ol class="dbs-weeks">
-        {WEEKS.map((w, i) => (
-          <li class="dbs-week" data-week={i + 1} id={`week-${i + 1}`}>
-            <div class="dbs-week-head">
-              <span class="disp dbs-week-n">{String(i + 1).padStart(2, '0')}</span>
-              <div>
-                <h3 class="disp dbs-week-title">{w.title}</h3>
-                {w.books.length
-                  ? <p class="dbs-week-books">{w.books.join(' · ')}</p>
-                  : <p class="dbs-week-books">Final presentation</p>}
+  <section class="dbs-cur dbs-stack" aria-label="Thirteen-week curriculum">
+    <div class="dbs-pin">
+      <div class="wrap dbs-cur-grid">
+        <aside class="dbs-side">
+          <div class="dbs-side-inner">
+            <p class="eyebrow">Week by week</p>
+            <p class="disp dbs-weekno"><span class="dbs-weekno-n" data-weekno>1</span><span class="dbs-weekno-of"> / 13</span></p>
+            <p class="disp dbs-weektitle" data-weektitle>{WEEKS[0].title}</p>
+            <div class="dbs-strip" role="img" aria-label="The sixty-six books of the Bible, filled in as each week is read">
+              <p class="dbs-strip-label">Old Testament</p>
+              <div class="dbs-books">
+                {OT.map((b) => <span class="dbs-book" data-week={weekOf.get(b)} title={b}></span>)}
               </div>
+              <p class="dbs-strip-label" style="margin-top:14px;">New Testament</p>
+              <div class="dbs-books">
+                {NT.map((b) => <span class="dbs-book" data-week={weekOf.get(b)} title={b}></span>)}
+              </div>
+              <p class="muted dbs-count" style="margin:16px 0 0;font-size:13px;"><b data-bookcount>0</b> of 66 books read</p>
             </div>
-            <div class="dbs-week-body">
-              {w.body.map((para) => <p class="body" style="margin:0 0 14px;max-width:62ch;font-size:16px;">{para}</p>)}
-            </div>
-          </li>
-        ))}
-      </ol>
+            <p class="muted dbs-hint" style="margin:18px 0 0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;">Scroll to turn the cards</p>
+          </div>
+        </aside>
+
+        <ol class="dbs-deck">
+          {WEEKS.map((w, i) => (
+            <li class="dbs-card" data-week={i + 1} id={`week-${i + 1}`}>
+              <div class="dbs-card-head">
+                <span class="disp dbs-card-n">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <p class="eyebrow">Week {i + 1}</p>
+                  <h3 class="disp dbs-card-title">{w.title}</h3>
+                  <p class="dbs-card-books">{w.books.length ? w.books.join(' · ') : 'Final presentation'}</p>
+                </div>
+              </div>
+              <div class="dbs-card-body">
+                {w.body.map((para) => <p class="body" style="margin:0 0 14px;max-width:62ch;font-size:16px;">{para}</p>)}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
   </section>
 
@@ -253,6 +255,7 @@ const FAQ: [string, string][] = [
           <a class="btn btn--solid" href="/apply?school=dbs">Apply for DBS</a>
           <a class="btn" href="/apply?school=dts">Haven't done a DTS? Apply for DTS</a>
           <a class="btn btn--plain" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('DBS enquiry')}`}>Email us about DBS</a>
+          <a class="btn btn--plain" href="/campus-life">Campus life</a>
         </div>
       </div>
     </div>
@@ -285,25 +288,30 @@ const FAQ: [string, string][] = [
 </SrLayout>
 
 <script>
-  // As each week's block crosses the middle of the viewport, the sticky
-  // sidebar names it and colours in the books read so far.
+  // Desktop: the curriculum is pinned and the week cards deal through a
+  // deck as you scroll while the sidebar fills in the books. Phones and
+  // reduced-motion: the cards are a plain list and the sidebar follows
+  // whichever card is nearest the middle of the screen.
   let ctrl = null;
   const init = () => {
     if (ctrl) ctrl.abort();
     ctrl = new AbortController();
-    const weeks = [...document.querySelectorAll('.dbs-week')];
+    const { signal } = ctrl;
+    const stack = document.querySelector('.dbs-stack');
+    const cards = [...document.querySelectorAll('.dbs-card')];
     const books = [...document.querySelectorAll('.dbs-book')];
     const no = document.querySelector('[data-weekno]');
     const title = document.querySelector('[data-weektitle]');
     const count = document.querySelector('[data-bookcount]');
-    if (!weeks.length || !no) return;
+    if (!stack || !cards.length || !no) return;
+    const deckMode = () => window.matchMedia('(min-width: 1001px) and (prefers-reduced-motion: no-preference)').matches;
     let current = 0;
     const setWeek = (n) => {
       if (n === current) return;
       current = n;
       no.textContent = String(n);
-      const w = weeks[n - 1];
-      title.textContent = w ? w.querySelector('.dbs-week-title').textContent : '';
+      const w = cards[n - 1];
+      title.textContent = w ? w.querySelector('.dbs-card-title').textContent : '';
       let read = 0;
       books.forEach((b) => {
         const on = Number(b.dataset.week) <= n;
@@ -311,21 +319,50 @@ const FAQ: [string, string][] = [
         if (on) read++;
       });
       count.textContent = String(read);
-      weeks.forEach((el, i) => el.classList.toggle('is-active', i + 1 === n));
+      cards.forEach((el, i) => el.classList.toggle('is-active', i + 1 === n));
     };
-    const pick = () => {
-      const mid = window.innerHeight * 0.45;
-      let n = 1;
-      for (const w of weeks) {
-        if (w.getBoundingClientRect().top <= mid) n = Number(w.dataset.week);
+    const clamp01 = (v) => Math.min(1, Math.max(0, v));
+    const update = () => {
+      if (!deckMode()) {
+        cards.forEach((c) => { c.style.transform = ''; c.style.opacity = ''; c.style.zIndex = ''; c.style.visibility = ''; c.style.removeProperty('--c'); });
+        const mid = window.innerHeight * 0.45;
+        let n = 1;
+        for (const c of cards) if (c.getBoundingClientRect().top <= mid) n = Number(c.dataset.week);
+        setWeek(n);
+        return;
       }
-      setWeek(n);
+      const rect = stack.getBoundingClientRect();
+      const scrollable = rect.height - window.innerHeight;
+      const p = scrollable <= 0 ? 0 : clamp01(-rect.top / scrollable);
+      // A short hold at the start and end so the first and last cards rest.
+      const dealt = clamp01((p - 0.04) / 0.92) * (cards.length - 1);
+      cards.forEach((card, i) => {
+        const s = dealt - i;
+        card.style.zIndex = String(cards.length - i);
+        if (s <= 0) {
+          // Waiting in the deck behind the current card: an opaque blank card
+          // whose content only appears as it reaches the front.
+          const k = -s;
+          card.style.transform = `translateY(${(k * 18).toFixed(1)}px) scale(${(1 - k * 0.045).toFixed(3)})`;
+          card.style.opacity = String(clamp01(1 - (k - 1) * 0.5));
+          card.style.setProperty('--c', String(clamp01(1 - k * 2.5)));
+          card.style.visibility = k > 3 ? 'hidden' : '';
+        } else {
+          // Dealt: lift up and away, fading only once it has cleared the deck.
+          const t = clamp01(s);
+          card.style.transform = `translateY(${(-t * 110).toFixed(1)}%) rotate(${(-t * 2).toFixed(2)}deg)`;
+          card.style.opacity = String(clamp01(1 - (t - 0.55) * 2.2));
+          card.style.setProperty('--c', '1');
+          card.style.visibility = t >= 1 ? 'hidden' : '';
+        }
+      });
+      setWeek(Math.min(cards.length, Math.max(1, Math.round(dealt) + 1)));
     };
     let raf = 0;
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; pick(); }); };
-    window.addEventListener('scroll', onScroll, { passive: true, signal: ctrl.signal });
-    window.addEventListener('resize', onScroll, { signal: ctrl.signal });
-    pick();
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); };
+    window.addEventListener('scroll', onScroll, { passive: true, signal });
+    window.addEventListener('resize', onScroll, { signal });
+    update();
   };
   init();
   document.addEventListener('astro:page-load', init);
