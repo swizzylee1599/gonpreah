@@ -21,6 +21,7 @@
 html.sr,
 body.sr {
   margin: 0;
+  font-variant-emoji: text;
   background: var(--sr-ink);
   color: #fff;
   font-family: var(--gp-font-body);
