@@ -10,7 +10,7 @@ import Cta from '../components/sr/Cta.astro';
 type Option = { id: string; name: string; abbr: string; when: string; form: string | null; page?: string; email: string; group: 'Schools' | 'Staff & volunteers' };
 const OPTIONS: Option[] = [
   { group: 'Schools', id: 'dts', name: 'Discipleship Training School', abbr: 'DTS', when: 'Every January', form: 'https://docs.google.com/forms/d/e/1FAIpQLSd2m0j9ODOVe1D_IHC3O-lT50mTrtgKp09fY7bYqX0fdwJo7g/viewform', page: '/schools/dts', email: 'dts@ywamsiemreap.org' },
-  { group: 'Schools', id: 'dbs', name: 'Discipleship Bible School', abbr: 'DBS', when: 'Annual', form: null, email: 'info@ywamsiemreap.org' },
+  { group: 'Schools', id: 'dbs', name: 'Discipleship Bible School', abbr: 'DBS', when: 'Every April', form: null, page: '/schools/dbs', email: 'info@ywamsiemreap.org' },
   { group: 'Schools', id: 'bcs', name: 'Bible Counseling School', abbr: 'BCS', when: 'New', form: null, email: 'info@ywamsiemreap.org' },
   { group: 'Schools', id: 'sms', name: 'Social Media School', abbr: 'SMS', when: 'New', form: null, email: 'info@ywamsiemreap.org' },
   { group: 'Staff & volunteers', id: 'staff', name: 'Staff application', abbr: 'Staff', when: 'After a DTS', form: 'https://docs.google.com/forms/d/e/1FAIpQLSdGfsiMjFHq5VZXUU5_WPtfAQqD3JvOn6g6cdIiryjIAShsaw/viewform', page: '/staff', email: 'info@ywamsiemreap.org' },

@@ -1,0 +1,319 @@
+---
+import SrLayout from '../../layouts/SrLayout.astro';
+import Footer from '../../components/sr/Footer.astro';
+import PageHead from '../../components/sr/PageHead.astro';
+import Cta from '../../components/sr/Cta.astro';
+import { CONTACT } from '../../lib/sr-contact';
+
+// The 13-week curriculum. `books` are the books read that week, spelled the
+// way they appear in the strip of 66 below.
+type Week = { title: string; books: string[]; body: string[] };
+const WEEKS: Week[] = [
+  {
+    title: 'Worldview & Origins',
+    books: ['Genesis', 'Exodus', 'Job'],
+    body: [
+      'Follow the journey of the Israelites from Egypt to Mt. Sinai. Students place themselves in the narratives of Scripture.',
+      "We focus on the creation account in Genesis, compare the Biblical story with other ancient creation accounts, and study it in light of recent scientific discoveries and modern theories. The focus is on learning to ask relevant questions of the text, understanding the influence of worldviews, and discerning God's character and redemptive plan for humanity.",
+    ],
+  },
+  {
+    title: 'Pentateuch',
+    books: ['Leviticus', 'Numbers', 'Deuteronomy'],
+    body: [
+      "Students explore Israel's journey from Mt. Sinai to the borders of the Promised Land, focusing on the tabernacle, the Mosaic covenant, and the significance of God's covenant throughout the Bible.",
+      'Emphasis is placed on personal commitment to Jesus and living a holy life, with discussions on the fear of the Lord and the concept of holiness from the book of Leviticus.',
+      'Students also learn the fulfilment of the law as outlined in Hebrews, and learn to discern the underlying Biblical principles in Old Testament laws. In Numbers they address the importance of faith and the danger of rebellion and unbelief.',
+    ],
+  },
+  {
+    title: 'Tribal',
+    books: ['Joshua', 'Judges', 'Ruth', 'Psalms'],
+    body: [
+      'In Tribal Week, students journey alongside Israel as they conquer and settle in the Promised Land.',
+      "The focus shifts to personal victory, as students are encouraged to overcome their private battles and advance the Kingdom of God. Lessons from Israel's physical warfare translate to insights about spiritual warfare and victorious living. The contrast between societal disobedience in Judges and individual faithfulness in Ruth underscores the importance of personal commitment.",
+      "An introduction to Hebrew poetry and the Psalms deepens students' understanding of God's plan for their lives, encouraging them to embrace their destiny and find their role within the community. Students also begin meditating on God's Word as a foundation for their spiritual growth.",
+    ],
+  },
+  {
+    title: 'David',
+    books: ['1 Samuel', '2 Samuel', '1 Chronicles', 'Proverbs', 'Ecclesiastes', 'Song of Songs'],
+    body: [
+      'Week 4 shifts focus to Samuel, a pivotal figure who led Israel from a tribal federation to a monarchy under King Saul and King David. Special emphasis is placed on the life of David — his character, experiences, sins, achievements, and his relationship with God and others.',
+      'The study also delves into the Wisdom literature of Proverbs, Ecclesiastes and Song of Songs, teaching students how to read and apply godly wisdom in their lives. Students learn how to lead inductive Bible studies and are encouraged to reflect godly leadership principles in their small groups and their personal lifestyle.',
+    ],
+  },
+  {
+    title: 'Kings',
+    books: ['1 Kings', '2 Kings', '2 Chronicles'],
+    body: [
+      'We continue the theme of leadership, beginning with the life of King Solomon and the division of the kingdom into Israel in the north and Judah in the south. Background is given on the Assyrian, Babylonian and Persian empires, with archaeological insights and an overview of the kings of Israel and Judah.',
+      "Emphasis is placed on key kings, both good and bad, and the political, religious and social contexts of their reigns. The lives of Elijah and Elisha introduce the prophetic ministry and its significance in Israel's history. We explain the differing emphasis between Chronicles and Kings, and discuss the reformations in Israel's history and their relevance to revival in the present generation. Reflecting on the legacies of these leaders, students consider whether their personal values align with biblical principles and what their life choices imply.",
+    ],
+  },
+  {
+    title: 'Early Prophets',
+    books: ['Amos', 'Hosea', 'Micah', 'Joel', 'Isaiah', 'Jonah', 'Nahum'],
+    body: [
+      'The book of Kings provides the historical backdrop for the Prophetic Books. With an understanding of the political, religious and social conditions in Israel, students can now dive into the messages of the prophets.',
+      "The goal is for students to be able to interpret prophetic literature and find assurance in God's faithfulness, His engagement in history, the fulfilment of prophecy, and His sovereignty over future events.",
+      "While the prophets often warn of judgment based on past covenants, students also discover messages of restoration and hope, some pointing to the coming of the Messiah. Through Amos and Hosea, students encounter themes of social justice, God's compassion, calls to mercy, the coming of the Spirit, missions to the Gentiles, and the anticipation of Jesus' ministry.",
+    ],
+  },
+  {
+    title: 'Late Prophets',
+    books: ['Zephaniah', 'Habakkuk', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Obadiah'],
+    body: [
+      "The study of the prophets continues, set within the historical framework of Israel's history from the book of Kings.",
+      "We cover the Day of the Lord in Zephaniah, Habakkuk's intercession, and Israel's pre-deportation and exile periods. We look at the consequences of God removing His protection in Ezekiel and the promise of the New Covenant in Jeremiah.",
+      "Students reflect on the prophets' commitment to God's call and on their own callings. Despite adversity, the example of Daniel shows God's sovereignty and the ability to remain faithful in any environment.",
+    ],
+  },
+  {
+    title: 'Post-Exilic & Inter-Testament',
+    books: ['Esther', 'Ezra', 'Nehemiah', 'Haggai', 'Malachi', 'Zechariah'],
+    body: [
+      'This week concludes the Old Testament with the return from exile and the rebuilding of Jerusalem.',
+      "We also explore the historical transitions between the Old and New Testaments, from Persian to Greek to Roman rule, providing the context for Jesus' birth. Themes include God's restoration in Ezra, leadership principles in Nehemiah, realignment with God's will in Haggai, and practices like fasting and tithing in Zechariah and Malachi.",
+    ],
+  },
+  {
+    title: 'Jesus',
+    books: ['Matthew', 'Mark', 'Luke'],
+    body: [
+      'After eight weeks, we dive into the life and ministry of Jesus — the pivotal moment in history, His death and resurrection.',
+      "The arrival of the New Covenant fulfils Old Testament prophecy, activating God's redemptive plan and ushering in the Kingdom of God. We explore how these prophecies are fulfilled in Jesus through the Gospel of Matthew, compare the synoptic accounts, and learn to interpret the parables.",
+      "Students are challenged by Jesus' teachings, including the Sermon on the Mount and His predictions about the destruction of the Temple and His second coming.",
+    ],
+  },
+  {
+    title: 'Church',
+    books: ['Acts', 'James', '1 Peter', '2 Peter', 'Jude', 'Hebrews'],
+    body: [
+      "Jesus sends out His disciples, launching the birth of the Church and the Holy Spirit's role in its growth.",
+      "Students learn the key events of the early Church — Pentecost, Paul's conversion, the Jerusalem Council and Paul's journeys. An introduction to the epistles as a new literary form helps students understand their historical context from Acts.",
+      'Hebrews emphasises the superiority of the New Covenant and encourages perseverance. James teaches practical faith, 1 Peter endurance in adversity, and 2 Peter and Jude discernment against false teachers.',
+    ],
+  },
+  {
+    title: 'Paul',
+    books: ['Philippians', '1 Corinthians', '2 Corinthians', 'Romans', 'Galatians', 'Ephesians', 'Colossians', 'Philemon', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus'],
+    body: [
+      "Having followed Paul's conversion and missionary journeys in Acts, students turn to his epistles and gain an appreciation of his influence on the early Church. They revisit his journeys and read his letters to the churches in the order he planted them.",
+      "Each letter's themes, main ideas, reasons for writing and specific church problems are explored. Discipleship topics include justification and grace (Galatians), humility and joy (Philippians), godly living and awaiting the Lord's return (1 & 2 Thessalonians), unconditional love, the Holy Spirit and God's power (1 & 2 Corinthians), condemnation, salvation, sanctification and relationships (Romans), unity, identity and spiritual warfare (Ephesians), and pastoral care (1 Timothy, Titus).",
+    ],
+  },
+  {
+    title: 'John',
+    books: ['John', '1 John', '2 John', '3 John', 'Revelation'],
+    body: [
+      'In the final week of reading, we explore the life of John and his writings, focusing on his perspective, style and key themes.',
+      "We look at the prevalent themes of the Johannine writings, particularly the role of the Holy Spirit, to deepen students' awareness of the Spirit's presence in their lives. We discuss early Gnosticism and its influence on John's Gospel, connecting it to modern thinking.",
+      'Students are introduced to apocalyptic literature, gaining insight into the Book of Revelation and the various schools of interpretation. Discussions on the Second Coming conclude the reading.',
+    ],
+  },
+  {
+    title: 'Teaching Week',
+    books: [],
+    body: [
+      'Students apply what they have learned over the twelve weeks by giving a final presentation of the Bible — from beginning to end.',
+    ],
+  },
+];
+
+// All 66 books in canonical order, split for the strip. Each is coloured in
+// as the week that reads it scrolls past.
+const OT = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel', '1 Kings', '2 Kings', '1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalms', 'Proverbs', 'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi'];
+const NT = ['Matthew', 'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians', 'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James', '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation'];
+const weekOf = new Map<string, number>();
+WEEKS.forEach((w, i) => w.books.forEach((b) => weekOf.set(b, i + 1)));
+const missing = [...OT, ...NT].filter((b) => !weekOf.has(b));
+if (missing.length) throw new Error(`DBS: books not assigned to a week: ${missing.join(', ')}`);
+
+const INFO: [string, string][] = [
+  ['Next school', 'April DBS'],
+  ['Arrival day', 'April 26'],
+  ['Departure day', 'July 21'],
+  ['Length', '13 weeks'],
+  ['Location', 'Siem Reap, Cambodia'],
+  ['Prerequisites', 'Completed DTS'],
+];
+
+const FAQ: [string, string][] = [
+  ['Who is DBS for?', 'Anyone who has completed a DTS and has a heart to study the Word of God. You do not need to be a teacher or a scholar — you need hunger and thirteen weeks.'],
+  ['Do we really read the whole Bible?', 'Yes. Over thirteen weeks students read all sixty-six books, following the chronology of biblical events so the story holds together from Genesis to Revelation.'],
+  ['What does "inductive" study mean?', 'Instead of starting with what others say about a passage, you start with the text itself: observe what it says, interpret what it meant to its first readers, then apply it. You learn a method you can use for the rest of your life.'],
+  ['What does a week look like?', 'Each week centres on a set of books. There is teaching on their history and context, a lot of personal reading, small-group discussion, and students take turns leading inductive studies.'],
+  ['What happens in the final week?', 'Teaching Week. Each student presents the whole Bible, beginning to end, to the school — the proof that the story has become their own.'],
+  ['What does it cost?', `Fees for the April school are being confirmed. Email ${CONTACT.email} and we will send you the current cost and what it covers.`],
+];
+---
+<SrLayout title="Discipleship Bible School | YWAM Siem Reap"
+  description="A three-month Discipleship Bible School in Siem Reap, Cambodia. Read the whole Bible in thirteen weeks, study all sixty-six books inductively, and learn to live out your faith with purpose.">
+  <PageHead eyebrow="Discipleship Bible School · DBS" km="ព្រះគម្ពីរ" title="Study the Word. Live it out." highlight="Live it out."
+    lead="Discipleship Bible School empowers those who have a heart to study the word of God."
+    photo="/images/schools/dbs.jpg"
+    photoAlt="Four students sitting cross-legged on the floor with open Bibles, laughing together in front of louvred windows" />
+
+  <section class="sec dbs-intro">
+    <div class="wrap dbs-intro-grid">
+      <div class="reveal">
+        <p class="eyebrow">Three months · sixty-six books</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,3.8vw,50px);font-weight:500;line-height:1.08;">The whole Bible, one story.</h2>
+      </div>
+      <div class="reveal">
+        <p class="body" style="margin:0;font-size:18px;">Discipleship Bible School is a three-month secondary school designed to deepen your understanding of the Gospel and empower you to live out your faith with purpose.</p>
+        <p class="body" style="margin:18px 0 0;">In this thirteen-week introduction to the Bible, students read through the entire Bible, observe the chronology of biblical events, understand the historical context, and see how each book harmonises with the others.</p>
+        <p class="body" style="margin:18px 0 0;">You will inductively study all sixty-six books of the Bible during the three-month school.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec dbs-cur" aria-label="Thirteen-week curriculum">
+    <div class="wrap dbs-cur-grid">
+      <aside class="dbs-side">
+        <div class="dbs-side-inner">
+          <p class="eyebrow">Week by week</p>
+          <p class="disp dbs-weekno"><span class="dbs-weekno-n" data-weekno>1</span><span class="dbs-weekno-of"> / 13</span></p>
+          <p class="disp dbs-weektitle" data-weektitle>{WEEKS[0].title}</p>
+          <div class="dbs-strip" role="img" aria-label="The sixty-six books of the Bible, filled in as each week is read">
+            <p class="dbs-strip-label">Old Testament</p>
+            <div class="dbs-books">
+              {OT.map((b) => <span class="dbs-book" data-week={weekOf.get(b)} title={b}></span>)}
+            </div>
+            <p class="dbs-strip-label" style="margin-top:14px;">New Testament</p>
+            <div class="dbs-books">
+              {NT.map((b) => <span class="dbs-book" data-week={weekOf.get(b)} title={b}></span>)}
+            </div>
+            <p class="muted dbs-count" style="margin:16px 0 0;font-size:13px;"><b data-bookcount>0</b> of 66 books read</p>
+          </div>
+        </div>
+      </aside>
+
+      <ol class="dbs-weeks">
+        {WEEKS.map((w, i) => (
+          <li class="dbs-week" data-week={i + 1} id={`week-${i + 1}`}>
+            <div class="dbs-week-head">
+              <span class="disp dbs-week-n">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3 class="disp dbs-week-title">{w.title}</h3>
+                {w.books.length
+                  ? <p class="dbs-week-books">{w.books.join(' · ')}</p>
+                  : <p class="dbs-week-books">Final presentation</p>}
+              </div>
+            </div>
+            <div class="dbs-week-body">
+              {w.body.map((para) => <p class="body" style="margin:0 0 14px;max-width:62ch;font-size:16px;">{para}</p>)}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0;" id="info">
+    <div class="wrap">
+      <div class="card info reveal">
+        <div class="info-grid">
+          <div>
+            <p class="eyebrow">DBS information</p>
+            <dl class="info-list">
+              {INFO.map(([k, v]) => (
+                <div>
+                  <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">{k}</dt>
+                  <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;">{v}</dd>
+                </div>
+              ))}
+              <div>
+                <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">Email</dt>
+                <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;text-transform:none;letter-spacing:0;"><a href={`mailto:${CONTACT.email}`} style="color:inherit;text-decoration:none;">{CONTACT.email}</a></dd>
+              </div>
+            </dl>
+          </div>
+          <div class="info-cost">
+            <p class="eyebrow">Cost of the school</p>
+            <p class="disp" style="margin:22px 0 0;font-size:20px;font-weight:500;">To be confirmed</p>
+            <p class="body" style="margin:12px 0 0;max-width:40ch;font-size:15px;">Fees for the April school are being finalised. Email us and we will send you the current cost and what it covers.</p>
+            <p class="muted" style="margin:12px 0 0;font-size:13px;">Flights are not included.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:36px;">
+          <a class="btn btn--solid" href="/apply?school=dbs">Apply for DBS</a>
+          <a class="btn" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('DBS enquiry')}`}>Email us about DBS</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec faq-sec">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">FAQ</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Questions about DBS</h2>
+      </div>
+      <div class="faq stag" style="margin-top:34px;">
+        {FAQ.map(([q, a]) => (
+          <details class="faq-item">
+            <summary class="disp">{q}<span class="faq-mark" aria-hidden="true"></span></summary>
+            <p class="body" style="margin:0;padding:0 0 24px;max-width:66ch;font-size:16px;">{a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Cta
+    title="Know the whole story."
+    body="DBS runs every year from April 26 to July 21 in Siem Reap. Tell us a little about yourself and we will walk you through the dates, the cost and what to expect."
+    primary={['apply', 'Apply for DBS']}
+    secondary={['contact', 'Ask a question']}
+  />
+  <Footer />
+</SrLayout>
+
+<script>
+  // As each week's block crosses the middle of the viewport, the sticky
+  // sidebar names it and colours in the books read so far.
+  let ctrl = null;
+  const init = () => {
+    if (ctrl) ctrl.abort();
+    ctrl = new AbortController();
+    const weeks = [...document.querySelectorAll('.dbs-week')];
+    const books = [...document.querySelectorAll('.dbs-book')];
+    const no = document.querySelector('[data-weekno]');
+    const title = document.querySelector('[data-weektitle]');
+    const count = document.querySelector('[data-bookcount]');
+    if (!weeks.length || !no) return;
+    let current = 0;
+    const setWeek = (n) => {
+      if (n === current) return;
+      current = n;
+      no.textContent = String(n);
+      const w = weeks[n - 1];
+      title.textContent = w ? w.querySelector('.dbs-week-title').textContent : '';
+      let read = 0;
+      books.forEach((b) => {
+        const on = Number(b.dataset.week) <= n;
+        b.classList.toggle('is-read', on);
+        if (on) read++;
+      });
+      count.textContent = String(read);
+      weeks.forEach((el, i) => el.classList.toggle('is-active', i + 1 === n));
+    };
+    const pick = () => {
+      const mid = window.innerHeight * 0.45;
+      let n = 1;
+      for (const w of weeks) {
+        if (w.getBoundingClientRect().top <= mid) n = Number(w.dataset.week);
+      }
+      setWeek(n);
+    };
+    let raf = 0;
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; pick(); }); };
+    window.addEventListener('scroll', onScroll, { passive: true, signal: ctrl.signal });
+    window.addEventListener('resize', onScroll, { signal: ctrl.signal });
+    pick();
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

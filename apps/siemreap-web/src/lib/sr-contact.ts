@@ -4,4 +4,6 @@ export const CONTACT = {
   // wa.me links take the number with no +, spaces or dashes.
   whatsapp: 'https://wa.me/85569911705',
   email: 'info@ywamsiemreap.org',
+  instagram: 'https://www.instagram.com/ywamsiemreap',
+  instagramHandle: '@ywamsiemreap',
 };

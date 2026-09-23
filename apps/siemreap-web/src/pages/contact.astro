@@ -8,7 +8,7 @@ const details: [string, string, string?][] = [
   ['WhatsApp / phone', CONTACT.phoneDisplay, CONTACT.whatsapp],
   ['Email', CONTACT.email, `mailto:${CONTACT.email}`],
   ['Base address', 'Siem Reap, Cambodia'],
-  ['Social', 'Pending'],
+  ['Instagram', CONTACT.instagramHandle, CONTACT.instagram],
 ];
 ---
 <SrLayout title="Contact | YWAM Siem Reap"
@@ -43,7 +43,7 @@ const details: [string, string, string?][] = [
           <div class="contact-detail">
             <p class="eyebrow" style="color:var(--gp-grey);">{k}</p>
             {href
-              ? <a href={href} style="display:inline-block;margin:8px 0 0;font-size:17px;color:#fff;">{v}</a>
+              ? <a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener' : undefined} style="display:inline-block;margin:8px 0 0;font-size:17px;color:#fff;">{v}</a>
               : <p style="margin:8px 0 0;font-size:17px;">{v}</p>}
           </div>
         ))}

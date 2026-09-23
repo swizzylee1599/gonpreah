@@ -411,6 +411,37 @@ body.sr {
 .sr .contact-detail { padding: 20px 0 0; border-top: 1px solid #232323; }
 .sr .contact-detail a:hover { color: var(--sr-pink); }
 
+
+/* DBS page */
+.sr .dbs-intro-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(30px, 5vw, 80px); align-items: start; }
+.sr .dbs-cur { padding-top: 0; }
+.sr .dbs-cur-grid { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: clamp(36px, 6vw, 96px); align-items: start; }
+.sr .dbs-side { position: sticky; top: 110px; }
+.sr .dbs-side-inner { padding: 28px 26px 26px; border: 1px solid #232323; border-radius: 20px; background: var(--sr-raise, #111); }
+.sr .dbs-weekno { margin: 18px 0 0; font-size: 54px; font-weight: 500; line-height: 1; letter-spacing: -.02em; }
+.sr .dbs-weekno-of { font-size: 20px; color: #6f6f6f; letter-spacing: 0; }
+.sr .dbs-weektitle { margin: 8px 0 0; font-size: 18px; font-weight: 500; color: var(--sr-pink); min-height: 1.3em; }
+.sr .dbs-strip { margin-top: 26px; padding-top: 22px; border-top: 1px solid #232323; }
+.sr .dbs-strip-label { margin: 0 0 8px; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #8a8a8a; }
+.sr .dbs-books { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 4px; }
+.sr .dbs-book { display: block; aspect-ratio: 1; border-radius: 3px; background: #262626; transition: background .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1); }
+.sr .dbs-book.is-read { background: var(--sr-pink); }
+.sr .dbs-count b { color: #fff; font-weight: 500; }
+.sr .dbs-weeks { list-style: none; margin: 0; padding: 0; }
+.sr .dbs-week { padding: 34px 0 28px; border-top: 1px solid #232323; transition: opacity .5s ease; }
+.sr .dbs-week:first-child { border-top: 0; padding-top: 0; }
+.sr .dbs-week-head { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 18px; align-items: start; }
+.sr .dbs-week-n { font-size: 44px; font-weight: 500; line-height: 1; color: #3a3a3a; transition: color .5s ease; }
+.sr .dbs-week.is-active .dbs-week-n { color: var(--sr-pink); }
+.sr .dbs-week-title { margin: 4px 0 0; font-size: clamp(22px, 2.4vw, 30px); font-weight: 500; line-height: 1.15; }
+.sr .dbs-week-books { margin: 10px 0 0; font-size: 13px; letter-spacing: .06em; color: #9a9a9a; }
+.sr .dbs-week-body { margin-top: 20px; padding-left: 90px; }
+.sr .dbs-week-body p:last-child { margin-bottom: 0 !important; }
+@media (max-width: 1000px) {
+  .sr .dbs-cur-grid { grid-template-columns: 240px minmax(0, 1fr); }
+  .sr .dbs-books { grid-template-columns: repeat(10, minmax(0, 1fr)); }
+}
+
 @media (max-width: 1000px) {
   .sr .wrap { padding: 0 24px; }
   .sr .navbar { display: none !important; }
@@ -450,6 +481,24 @@ body.sr {
   .sr .apply-chooser { padding: 26px 22px 30px; }
   .sr .contact-channels { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .sr .contact-channel { padding: 28px 22px 26px; }
+  .sr .dbs-intro-grid { gap: 22px; }
+  .sr .dbs-cur-grid { grid-template-columns: minmax(0, 1fr) !important; gap: 24px; }
+  .sr .dbs-side { top: 68px; z-index: 3; }
+  .sr .dbs-side-inner { padding: 14px 16px; border-radius: 14px; background: rgba(11,11,11,.92); backdrop-filter: blur(10px); display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 16px; align-items: center; }
+  .sr .dbs-side-inner .eyebrow { display: none; }
+  .sr .dbs-weekno { margin: 0; font-size: 30px; grid-row: 1 / 3; }
+  .sr .dbs-weekno-of { font-size: 14px; }
+  .sr .dbs-weektitle { margin: 0; font-size: 15px; min-height: 0; }
+  .sr .dbs-strip { margin: 0; padding: 0; border: 0; grid-column: 2; }
+  .sr .dbs-strip-label, .sr .dbs-count { display: none; }
+  .sr .dbs-books { grid-template-columns: repeat(39, minmax(0, 1fr)); gap: 2px; }
+  .sr .dbs-books + .dbs-strip-label + .dbs-books { grid-template-columns: repeat(27, minmax(0, 1fr)); margin-top: 3px; }
+  .sr .dbs-book { aspect-ratio: auto; height: 5px; border-radius: 1px; }
+  .sr .dbs-week { padding: 26px 0 22px; }
+  .sr .dbs-week-head { grid-template-columns: 48px minmax(0, 1fr); gap: 14px; }
+  .sr .dbs-week-n { font-size: 30px; }
+  .sr .dbs-week-body { padding-left: 0; margin-top: 16px; }
+
   .sr .contact-value { font-size: 24px; }
   .sr .contact-details { grid-template-columns: minmax(0, 1fr) !important; margin-top: 36px; }
   .sr .apply-step { grid-template-columns: 56px 1fr; gap: 16px; padding: 24px 0; }
