@@ -36,7 +36,6 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { title: 'Instagram @ywamsiemreap', desc: 'Follow along', href: 'https://www.instagram.com/ywamsiemreap', group: 'Contact', keywords: 'instagram social media follow photos', external: true },
 
   { title: 'Join staff or volunteer', desc: 'Serve long term, or come short term', href: '/staff', group: 'Get involved', keywords: 'staff join serve long term short term volunteer volunteering mission builders', quick: true },
-  { title: 'Our team', desc: 'The Khmer and international staff', href: '/team', group: 'About', keywords: 'our team staff people who leaders portraits meet the team' },
   { title: 'Bring a team', desc: 'Short-term teams and where we serve', href: '/visit', group: 'Get involved', keywords: 'visit bring a team short-term teams outreach ministries villages trip mission trip' },
   { title: 'Campus life', desc: 'Living in community, Khmer and international', href: '/campus-life', group: 'Students', keywords: 'campus life community living dorm rooms meals worship family khmer international students volunteers new staff', quick: true },
   { title: 'Things to do in Siem Reap', desc: 'Temples, food, markets, nature, getting around', href: '/campus-life#siem-reap', group: 'Students', keywords: 'siem reap city things to do angkor wat temples food cafe market pub street tonle sap kulen circus tuk tuk weather sim card money riel' },

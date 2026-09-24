@@ -8,7 +8,7 @@ import PhotoSlot from '../components/sr/PhotoSlot.astro';
 // Staff portraits: swap each entry for { name, role, photo } as they come in.
 const TEAM: { name: string; role: string; photo?: string }[] = Array.from({ length: 6 }, () => ({ name: 'Name pending', role: 'Role pending' }));
 ---
-<SrLayout title="Our Team | YWAM Siem Reap"
+<SrLayout title="Our Team | YWAM Siem Reap" noindex
   description="The Khmer and international staff of YWAM Siem Reap.">
   <PageHead eyebrow="Our team" km="ក្រុមការងារ" title="Khmer and international, one team." highlight="one team."
     lead="Forty full-time staff — some here for two years, some for twenty. Every one of them raises their own support and lives in the community." />
