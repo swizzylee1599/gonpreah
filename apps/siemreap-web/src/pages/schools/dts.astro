@@ -80,13 +80,13 @@ const LECTURE_COST: [string, string][] = [
 
 // Tracks: a skill each student chooses to develop through the school.
 // Culinary and Hospitality lines are drafts to be confirmed.
-const TRACKS: { name: string; km: string; body: string; photo: string; alt: string; pos?: string }[] = [
-  { name: 'Media', km: 'មេឌា', body: 'Social media is one of the most effective ways to reach the youth. Develop your skills in content creating, video editing and photography, and see how you can use media for the Kingdom.', photo: '/images/schools/sms-filming.jpg', alt: 'A film crew on a Siem Reap street', pos: '50% 45%' },
-  { name: 'Music', km: 'តន្ត្រី', body: 'Worship is our weapon. Live out Psalm 96, bringing newness as we merge music with the arts. Join us as we continue to foster the heart of worship.', photo: '/images/gonpreah-worship-2.jpg', alt: 'Worship on campus' },
-  { name: 'Cafe', km: 'កាហ្វេ', body: 'Develop barista skills, learn business management, and see how you can serve Jesus in the business world.', photo: '/images/campus/gp-cafe-barista.jpg', alt: 'A barista behind the GP Cafe counter' },
-  { name: 'Culinary', km: 'ម្ហូប', body: 'Develop skills in food and the kitchen — Khmer and international cooking, planning and preparing meals for a community — and see how a table can serve the Kingdom.', photo: '/images/campus/food-prep.jpg', alt: 'Khmer women preparing food at a market table', pos: '50% 60%' },
-  { name: 'Hospitality', km: 'បដិសណ្ឋារកិច្ច', body: 'Learn skills in hotel management — welcoming guests, running rooms and events, hosting teams — and see how hospitality opens doors for the gospel in Siem Reap.', photo: '/images/campus/campus-front.jpg', alt: 'A dinner set on the lit rooftop terrace', pos: '50% 45%' },
-  { name: 'Technical', km: 'បច្ចេកទេស', body: 'Develop technical skills, from AC repair to building furniture, to serve Jesus in the business world.', photo: '/images/campus/work-bamboo.jpg', alt: 'A young man carrying bamboo poles', pos: '50% 30%' },
+const TRACKS: { name: string; km: string; body: string; photo?: string; alt?: string; pos?: string; label: string }[] = [
+  { name: 'Media', km: 'មេឌា', body: 'Social media is one of the most effective ways to reach the youth. Develop your skills in content creating, video editing and photography, and see how you can use media for the Kingdom.', label: 'Drop a photo — media track' },
+  { name: 'Music', km: 'តន្ត្រី', body: 'Worship is our weapon. Live out Psalm 96, bringing newness as we merge music with the arts. Join us as we continue to foster the heart of worship.', label: 'Drop a photo — music track' },
+  { name: 'Cafe', km: 'កាហ្វេ', body: 'Develop barista skills, learn business management, and see how you can serve Jesus in the business world.', label: 'Drop a photo — cafe track' },
+  { name: 'Culinary', km: 'ម្ហូប', body: 'Develop skills in food and the kitchen — Khmer and international cooking, planning and preparing meals for a community — and see how a table can serve the Kingdom.', label: 'Drop a photo — culinary track' },
+  { name: 'Hospitality', km: 'បដិសណ្ឋារកិច្ច', body: 'Learn skills in hotel management — welcoming guests, running rooms and events, hosting teams — and see how hospitality opens doors for the gospel in Siem Reap.', label: 'Drop a photo — hospitality track' },
+  { name: 'Technical', km: 'បច្ចេកទេស', body: 'Develop technical skills, from AC repair to building furniture, to serve Jesus in the business world.', label: 'Drop a photo — technical track' },
 ];
 
 const FAQ: [string, string][] = [
@@ -405,7 +405,7 @@ const FAQ: [string, string][] = [
       <ul class="tracks stag">
         {TRACKS.map((t, i) => (
           <li class="track">
-            <figure class="track-photo"><img src={t.photo} alt={t.alt} loading="lazy" decoding="async" style={t.pos ? `object-position:${t.pos}` : undefined} /></figure>
+            <figure class="track-photo">{t.photo ? <img src={t.photo} alt={t.alt ?? ''} loading="lazy" decoding="async" style={t.pos ? `object-position:${t.pos}` : undefined} /> : <PhotoSlot label={t.label} radius={0} />}</figure>
             <div class="track-copy">
               <p class="disp track-n">{'0' + (i + 1)}</p>
               <h3 class="disp track-title">{t.name} <span class="km track-km" lang="km">{t.km}</span></h3>
