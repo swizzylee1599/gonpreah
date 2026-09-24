@@ -51,10 +51,10 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
 ];
 
 const WHO: [string, string][] = [
-  ['Students', 'DTS and DBS students live on campus for the length of their school, in shared rooms with classmates.'],
-  ['Volunteers', 'Short or long term, volunteers live and eat with the community and join its rhythms while they serve.'],
-  ['New staff', 'Staff joining us find their feet here first: language, community, city — before the work takes over.'],
-  ['Teams', 'Visiting teams stay on or near the base, eat with us, and see what living here is actually like.'],
+  ['Students', 'Live on campus for the length of their school.'],
+  ['Volunteers', 'Short or long term, living and eating with us.'],
+  ['New staff', 'Find their feet here before the work takes over.'],
+  ['Teams', 'Stay on or near the base and share our meals.'],
 ];
 
 // Siem Reap for people who are coming to live here for a while, not just
@@ -354,9 +354,15 @@ const PRACTICAL: [string, string][] = [
     const N = stops.length;             // places + good to know
     const INTRO = 0.14;                 // share of the pin spent on the intro
     const L = (1 - INTRO) / N;
+    let shownTop = null;
     const update = () => {
       const vh = rpin.offsetHeight;
-      const rect = ride.getBoundingClientRect();
+      const real = ride.getBoundingClientRect();
+      // Touch screens: ease toward the real position so the ride glides.
+      shownTop = (shownTop === null || !lite) ? real.top : shownTop + (real.top - shownTop) * 0.16;
+      if (Math.abs(real.top - shownTop) < 0.5) shownTop = real.top;
+      if (shownTop !== real.top && !raf) raf = requestAnimationFrame(() => { raf = 0; update(); });
+      const rect = { top: shownTop, height: real.height };
       // Entry: the section's top travels from the bottom of the screen to the top.
       const entry = ease(clamp01(1 - rect.top / vh));
       card.style.transform = `rotateX(${((1 - entry) * 38).toFixed(2)}deg) scale(${(0.9 + 0.1 * entry).toFixed(3)})`;

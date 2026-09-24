@@ -919,8 +919,11 @@ body.sr {
   .sr .cl-item-rule { transform: none; }
   .sr .cl-item-photo { display: block; margin: 20px 0 0; height: 240px; border-radius: 16px; overflow: hidden; background: var(--sr-raise); }
   .sr .cl-item-photo img, .sr .cl-item-photo .photo-slot { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .sr .cl-who { grid-template-columns: minmax(0, 1fr); }
-  .sr .ride-stack { height: 700vh; }
+  .sr .cl-who { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .sr .cl-who-card { padding: 16px 14px; }
+  .sr .cl-who-card h3 { font-size: 16px !important; }
+  .sr .cl-who-card p { font-size: 13px !important; line-height: 1.5; margin-top: 6px !important; }
+  .sr .ride-stack { height: 520vh; }
   .sr .ride-frame { object-position: 50% 50%; }
   .sr .ride-title { font-size: clamp(42px, 13vw, 60px); }
   .sr .ride-lead { font-size: 15px; padding: 0 8px; }
@@ -949,7 +952,7 @@ body.sr {
   .sr .track-copy { padding: 22px 20px; }
   .sr .values-vision-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .sr .values-vision { padding: 60px 0 20px; }
-  .sr .dive-stack { height: 600vh; }
+  .sr .dive-stack { height: 400vh; }
   .sr .dive-h1 { font-size: clamp(44px, 15vw, 64px); }
   .sr .dive-cue { right: 20px; }
   .sr .dive-title { font-size: 34px; }

@@ -96,12 +96,22 @@ const hasVideo = existsSync('public' + video);
 
     // Stages: title holds 0–.12 and fades by .3; the turn runs .1–.6; welcome
     // .55–.78; the front dims from .68; statement .76–.9 over the building.
+    // Touch screens scroll in coarse steps; ease the shown progress toward
+    // the real one so the sequence glides instead of jumping.
+    const measure = () => {
+      const rect = stack.getBoundingClientRect();
+      const scrollable = rect.height - pin.offsetHeight;
+      return scrollable <= 0 ? 0 : clamp01(-rect.top / scrollable);
+    };
+    let shown: number | null = null;
     let ticking = false;
     const update = () => {
       ticking = false;
-      const rect = stack.getBoundingClientRect();
-      const scrollable = rect.height - pin.offsetHeight;
-      const p = scrollable <= 0 ? 0 : clamp01(-rect.top / scrollable);
+      const target = measure();
+      shown = (shown === null || !lite) ? target : shown + (target - shown) * 0.16;
+      if (Math.abs(target - shown) < 0.0004) shown = target;
+      if (shown !== target) { ticking = true; requestAnimationFrame(update); }
+      const p = shown;
 
       const turn = clamp01((p - 0.08) / 0.44);
       if (video) {
@@ -110,10 +120,12 @@ const hasVideo = existsSync('public' + video);
         front.style.opacity = '0';
         if (video.duration && !Number.isNaN(video.duration)) seekTo(turn * video.duration * 0.985);
       } else {
-        aerial.style.opacity = String(1 - ease(turn));
-        aerial.style.transform = `scale(${1 + turn * 0.12})`;
-        front.style.opacity = String(ease(turn));
-        front.style.transform = `scale(${1.15 - 0.15 * ease(turn)})`;
+        // Stills: push in on the aerial, a short crossfade, then the front settles.
+        const x = ease(clamp01((turn - 0.5) / 0.22));
+        aerial.style.opacity = String(1 - x);
+        aerial.style.transform = `translate3d(0,0,0) scale(${(1 + ease(clamp01(turn / 0.72)) * 0.22).toFixed(4)})`;
+        front.style.opacity = String(x);
+        front.style.transform = `translate3d(0,0,0) scale(${(1.12 - 0.12 * ease(clamp01((turn - 0.5) / 0.5))).toFixed(4)})`;
       }
       scrim.style.opacity = String(0.55 - 0.2 * turn);
 
