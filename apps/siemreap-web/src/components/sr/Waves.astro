@@ -1,0 +1,79 @@
+---
+// Slow black-and-white waves: Loren Cunningham's 1956 vision of waves of
+// young people breaking over the continents. Layered sine curves drawn on a
+// canvas, drifting on their own and shifting with scroll; a still frame when
+// motion is reduced.
+interface Props {
+  class?: string;
+  layers?: number;
+}
+const { class: cls = '', layers = 6 } = Astro.props;
+---
+<canvas class={`waves ${cls}`} data-layers={layers} aria-hidden="true"></canvas>
+
+<script>
+  let ctrl: AbortController | null = null;
+  const init = () => {
+    ctrl?.abort();
+    ctrl = new AbortController();
+    const { signal } = ctrl;
+    const canvases = [...document.querySelectorAll<HTMLCanvasElement>('canvas.waves')];
+    if (!canvases.length) return;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const lite = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+    canvases.forEach((canvas) => {
+      const ctx = canvas.getContext('2d')!;
+      const L = Number(canvas.dataset.layers || 6);
+      let W = 0, H = 0, dpr = 1, visible = true, raf = 0;
+      const size = () => {
+        dpr = Math.min(lite ? 1.5 : 2, window.devicePixelRatio || 1);
+        W = canvas.clientWidth; H = canvas.clientHeight;
+        canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      };
+      size();
+      const draw = (t: number) => {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, W, H);
+        const scroll = window.scrollY * 0.12;
+        for (let i = 0; i < L; i++) {
+          const f = i / (L - 1);
+          const baseY = H * (0.42 + f * 0.62);
+          const amp = H * (0.035 + f * 0.05);
+          const freq = (1.2 + f * 1.1) / Math.max(W, 700);
+          const speed = 0.00018 + i * 0.00006;
+          const phase = t * speed + scroll * (0.004 + f * 0.006) + i * 1.7;
+          ctx.beginPath();
+          ctx.moveTo(0, H);
+          for (let x = 0; x <= W; x += 6) {
+            const y = baseY
+              + Math.sin(x * freq * Math.PI * 2 + phase) * amp
+              + Math.sin(x * freq * Math.PI * 4.3 - phase * 1.6) * amp * 0.35;
+            ctx.lineTo(x, y);
+          }
+          ctx.lineTo(W, H);
+          ctx.closePath();
+          const shade = 16 + f * 46;
+          ctx.fillStyle = `rgba(${shade},${shade},${shade},0.95)`;
+          ctx.fill();
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = `rgba(255,255,255,${0.14 + f * 0.5})`;
+          ctx.stroke();
+        }
+      };
+      const loop = (now: number) => {
+        if (visible) draw(now);
+        raf = requestAnimationFrame(loop);
+      };
+      if (reduce) { draw(0); }
+      else {
+        raf = requestAnimationFrame(loop);
+        const io = new IntersectionObserver((en) => { visible = en[0].isIntersecting; }, { threshold: 0 });
+        io.observe(canvas);
+        signal.addEventListener('abort', () => { cancelAnimationFrame(raf); io.disconnect(); });
+      }
+      window.addEventListener('resize', () => { size(); if (reduce) draw(0); }, { signal });
+    });
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>
