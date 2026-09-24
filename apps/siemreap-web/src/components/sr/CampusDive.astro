@@ -103,7 +103,7 @@ const hasVideo = existsSync('public' + video);
       const scrollable = rect.height - pin.offsetHeight;
       const p = scrollable <= 0 ? 0 : clamp01(-rect.top / scrollable);
 
-      const turn = clamp01((p - 0.1) / 0.5);
+      const turn = clamp01((p - 0.08) / 0.44);
       if (video) {
         video.style.opacity = '1';
         aerial.style.opacity = String(1 - clamp01(turn * 8));
@@ -117,24 +117,24 @@ const hasVideo = existsSync('public' + video);
       }
       scrim.style.opacity = String(0.55 - 0.2 * turn);
 
-      const headOut = clamp01((p - 0.12) / 0.18);
+      const headOut = clamp01((p - 0.1) / 0.14);
       head.style.opacity = String(1 - headOut);
       head.style.transform = `translateY(calc(-50% - ${(headOut * 40).toFixed(1)}px))`;
       head.style.pointerEvents = headOut > 0.9 ? 'none' : '';
 
-      const wIn = clamp01((p - 0.55) / 0.12);
-      const wOut = clamp01((p - 0.7) / 0.08);
+      const wIn = clamp01((p - 0.46) / 0.1);
+      const wOut = clamp01((p - 0.58) / 0.07);
       welcome.style.opacity = String(ease(wIn) * (1 - wOut));
       welcome.style.transform = `translateY(${((1 - ease(wIn)) * 24).toFixed(1)}px)`;
 
       // Dim the front of the campus under the statement rather than going to black.
-      const dim = clamp01((p - 0.68) / 0.14);
+      const dim = clamp01((p - 0.56) / 0.12);
       black.style.opacity = String(0.62 * ease(dim));
 
-      const sIn = clamp01((p - 0.76) / 0.14);
+      const sIn = clamp01((p - 0.62) / 0.1);
       statement.style.opacity = String(ease(sIn));
       statement.style.transform = `translateY(calc(-50% + ${((1 - ease(sIn)) * 30).toFixed(1)}px)) scale(${(0.96 + 0.04 * ease(sIn)).toFixed(3)})`;
-      const pIn = clamp01((p - 0.86) / 0.12);
+      const pIn = clamp01((p - 0.68) / 0.1);
       statement.querySelectorAll<HTMLElement>('.dive-photos img').forEach((img, i) => {
         const k = clamp01((pIn - i * 0.12) / 0.6);
         img.style.opacity = String(ease(k));
