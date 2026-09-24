@@ -1,15 +1,9 @@
 ---
-import { existsSync } from 'node:fs';
 import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
-import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
 import PhotoSlot from '../components/sr/PhotoSlot.astro';
 import CampusDive from '../components/sr/CampusDive.astro';
-
-// The campus photo goes at public/images/campus/campus.jpg; until it lands
-// the hero falls back to the GonPreah community photo.
-const CAMPUS_PHOTO = existsSync('public/images/campus/campus.jpg') ? '/images/campus/campus.jpg' : '/images/gonpreah-community.jpg';
 
 const STATS: { n: number; suffix: string; label: string }[] = [
   { n: 40, suffix: '', label: 'full-time staff' },
@@ -145,12 +139,8 @@ const PRACTICAL: [string, string][] = [
 ---
 <SrLayout title="Campus Life | YWAM Siem Reap" spacer={false}
   description="What living at YWAM Siem Reap is like — Khmer and international, students, volunteers, staff and teams in one community — and what to do in Siem Reap when the day is done.">
-  <PageHead eyebrow="YWAM Siem Reap" km="ជីវិតសហគមន៍" title="Campus Life" highlight="Life"
-    lead="Live in a cross-cultural community centred on Jesus. Make His name known in Cambodia and beyond."
-    photo={CAMPUS_PHOTO} full center photoAlt="The YWAM Siem Reap campus from the air — a white four-storey building with orange tiled roofs and rooftop terraces, surrounded by trees" />
-
-
-  <CampusDive aerial="/images/campus/campus-aerial-wide.jpg" front="/images/campus/campus-front.jpg" />
+  <CampusDive aerial="/images/campus/campus-aerial-wide.jpg" front="/images/campus/campus-front.jpg"
+    statement="Live in a cross‑cultural community centred on Jesus. Make His name known in Cambodia and beyond." />
 
   <section class="sec cl-community" style="padding-bottom:0;">
     <div class="wrap">
