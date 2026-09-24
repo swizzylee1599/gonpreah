@@ -10,6 +10,7 @@ export const ROUTE_PATH: Record<string, string> = {
   team: '/team',
   visit: '/visit',
   campus: '/campus-life',
+  siemreap: '/siem-reap',
   values: '/values',
   give: '/give',
   contact: '/contact',

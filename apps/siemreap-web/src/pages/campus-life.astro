@@ -4,6 +4,15 @@ import Footer from '../components/sr/Footer.astro';
 import Cta from '../components/sr/Cta.astro';
 import PhotoSlot from '../components/sr/PhotoSlot.astro';
 import CampusDive from '../components/sr/CampusDive.astro';
+import { existsSync } from 'node:fs';
+
+// Still shots of town life that loop behind the tuk-tuk. Files live in
+// public/images/explore; any that are missing are skipped.
+const EXPLORE = [
+  ['sr-01', 'Old Market'], ['sr-02', 'Pub Street'], ['sr-03', 'Street food'],
+  ['sr-04', 'Near the temples'], ['sr-05', 'The river'], ['sr-06', 'Night market'],
+  ['sr-07', 'The countryside'], ['sr-08', 'Around town'], ['sr-09', 'Coffee'],
+].filter(([f]) => existsSync(`public/images/explore/${f}.jpg`)).map(([f, label]) => ({ src: `/images/explore/${f}.jpg`, label }));
 
 const STATS: { n: number; suffix: string; label: string }[] = [
   { n: 40, suffix: '', label: 'full-time staff' },
@@ -57,67 +66,7 @@ const WHO: [string, string][] = [
   ['Teams', 'Stay on or near the base and share our meals.'],
 ];
 
-// Siem Reap for people who are coming to live here for a while, not just
-// pass through. One panel per kind of day off, plus the practical one.
-type Place = { name: string; note: string };
-type Panel = { title: string; km: string; intro: string; places: Place[]; label: string; photo?: string; alt?: string; pos?: string };
-const CITY: Panel[] = [
-  {
-    title: 'Temples & history', km: 'អង្គរ',
-    intro: 'Siem Reap is the gateway to Angkor. The temples are twenty minutes from the base and you will want more than one visit.',
-    places: [
-      { name: 'Angkor Wat at sunrise', note: 'The one everyone comes for. Go early, stay for the quiet after the crowds leave.' },
-      { name: 'Angkor Thom & the Bayon', note: 'The walled city and its temple of two hundred stone faces.' },
-      { name: 'Ta Prohm', note: 'The temple the jungle took back — roots over stone.' },
-      { name: 'Banteay Srei', note: 'Smaller, further out, and the finest carving in Angkor.' },
-      { name: 'Angkor National Museum', note: 'Worth an afternoon before or after the temples themselves.' },
-    ],
-    label: 'Drop a photo — Angkor Wat', photo: '/images/campus/angkor-backpack.jpg', alt: 'A student with a backpack looking up at the towers of Angkor Wat', pos: '60% 50%',
-  },
-  {
-    title: 'Food & cafés', km: 'ម្ហូប',
-    intro: 'Khmer food is gentler than Thai — sour, herby, coconut-sweet. Learn three dishes and you will eat well anywhere.',
-    places: [
-      { name: 'Fish amok', note: 'Steamed fish curry in banana leaf. Order it your first week.' },
-      { name: 'Num banh chok', note: 'Khmer noodles for breakfast, from a lady with a basket, before 9am.' },
-      { name: 'Old Market (Psar Chas)', note: 'Fruit, fabric, coffee, everything. Bargain gently.' },
-      { name: 'Kandal Village', note: 'Small streets of cafés and shops a short walk from the river.' },
-      { name: 'Night markets & Pub Street', note: 'Loud, bright, cheap, and a good place to take a visiting team for one evening.' },
-    ],
-    label: 'Drop a photo — a market or café', photo: '/images/campus/fruit-table.jpg', alt: 'Trays of watermelon, grapes and longan being served at a shared meal', pos: '50% 50%',
-  },
-  {
-    title: 'Nature & day trips', km: 'ធម្មជាតិ',
-    intro: 'When you need space, the countryside starts ten minutes out of town.',
-    places: [
-      { name: 'Tonlé Sap floating villages', note: 'Kampong Phluk or Kampong Khleang — stilt houses and flooded forest, best in the wet season.' },
-      { name: 'Phnom Kulen', note: 'Waterfalls, a reclining Buddha, and the river of a thousand lingas. A full day.' },
-      { name: 'Countryside by bicycle', note: 'Rice fields, water buffalo and villages on the road out of town.' },
-      { name: 'Sunset from Pre Rup', note: 'Or Phnom Bakheng — both inside the Angkor park.' },
-    ],
-    label: 'Drop a photo — Tonlé Sap or Kulen', photo: '/images/campus/tonle-sap-boat.jpg', alt: 'A blue two-deck tour boat full of passengers crossing the Tonlé Sap under a wide sky', pos: '50% 55%',
-  },
-  {
-    title: 'Culture & evenings', km: 'វប្បធម៌',
-    intro: 'Siem Reap has more going on after dark than any city its size in Cambodia.',
-    places: [
-      { name: 'Phare, the Cambodian Circus', note: 'Acrobatics and storytelling by young Khmer performers. Take everyone.' },
-      { name: 'Apsara dance', note: 'Classical Khmer dance, usually with dinner.' },
-      { name: 'Made in Cambodia market', note: 'Local makers, fair prices, good gifts to send home.' },
-      { name: 'Local churches', note: 'Khmer and international congregations — ask staff where they worship on Sundays.' },
-    ],
-    label: 'Drop a photo — Phare or an evening out', photo: '/images/campus/apsara.jpg', alt: 'An Apsara dancer in gold costume performing on stage', pos: '50% 30%',
-  },
-];
 
-const PRACTICAL: [string, string][] = [
-  ['Getting around', 'Tuk-tuks everywhere. Use PassApp or Grab for a fair price.'],
-  ['Money', 'US dollars and Khmer riel. Change comes back in riel.'],
-  ['Phone', 'Get a local SIM on arrival. Campus has wifi.'],
-  ['Weather', 'Cool Nov–Feb, hot Mar–May, rainy Jun–Oct.'],
-  ['Dress', 'Cover shoulders and knees at temples.'],
-  ['Health', 'Drink filtered water. Clinics in town.'],
-];
 ---
 <SrLayout title="Campus Life | YWAM Siem Reap" spacer={false}
   description="What living at YWAM Siem Reap is like — Khmer and international, students, volunteers, staff and teams in one community — and what to do in Siem Reap when the day is done.">
@@ -131,54 +80,22 @@ const PRACTICAL: [string, string][] = [
       { src: '/images/campus/work-bamboo.jpg', alt: 'A young man carrying bamboo poles along a campus path', pos: '50% 30%' },
     ]} />
 
-  <section class="ride-stack" id="siem-reap" aria-label="Explore Siem Reap">
-    <div class="ride-pin">
-      <div class="ride-card">
-        <div class="ride-plate is-first" role="img" aria-label="The road ahead from the back of a tuk-tuk in Siem Reap" style="background-image:url(/images/campus/tuktuk.jpg)"></div>
-        {CITY.map((g) => g.photo
-          ? <div class="ride-plate" role="img" aria-label={g.alt ?? ''} style={`background-image:url(${g.photo});background-position:${g.pos ?? '50% 50%'}`}></div>
-          : <div class="ride-plate"><PhotoSlot label={g.label} radius={0} /></div>)}
-        <img class="ride-frame" src="/images/campus/tuktuk-frame.webp" alt="" aria-hidden="true" decoding="async" />
-        <div class="ride-shade" aria-hidden="true"></div>
-
-        <div class="wrap ride-intro">
-          <p class="eyebrow">Siem Reap</p>
-          <h2 class="disp ride-title">Explore<br />Siem Reap.</h2>
-          <p class="body ride-lead">Hop in. This is where we take students, volunteers, staff and teams on a day off.</p>
-          <p class="muted ride-cue" aria-hidden="true">Scroll ↓</p>
-        </div>
-
-        <ol class="ride-marks" aria-hidden="true">
-          <li class="ride-mark is-on"><span>Explore</span></li>
-          {CITY.map((g) => <li class="ride-mark"><span>{g.title}</span></li>)}
-          <li class="ride-mark"><span>Good to know</span></li>
-        </ol>
-
-        <div class="ride-info">
-          {CITY.map((g, i) => (
-            <article class="ride-stop">
-              <p class="disp ride-stop-n">{'0' + (i + 1)} · {'0' + (CITY.length + 1)}</p>
-              <h3 class="disp ride-stop-title">{g.title}</h3>
-              <p class="body ride-stop-intro">{g.intro}</p>
-              <ul class="ride-list">
-                {g.places.map((pl) => <li><b>{pl.name}</b><span>{pl.note}</span></li>)}
-              </ul>
-            </article>
-          ))}
-          <article class="ride-stop ride-stop--practical">
-            <p class="disp ride-stop-n">{'0' + (CITY.length + 1)} · {'0' + (CITY.length + 1)}</p>
-            <h3 class="disp ride-stop-title">Good to know</h3>
-            <dl class="practical">
-              {PRACTICAL.map(([k, v]) => (
-                <div>
-                  <dt class="disp">{k}</dt>
-                  <dd class="body">{v}</dd>
-                </div>
-              ))}
-            </dl>
-          </article>
-        </div>
+  <section class="explore" id="siem-reap" aria-label="Explore Siem Reap">
+    <div class="explore-card">
+      <div class="explore-plates" aria-hidden="true">
+        {EXPLORE.length
+          ? EXPLORE.map((sh, i) => <div class={`explore-plate${i === 0 ? ' is-on' : ''}`} data-label={sh.label} style={`background-image:url(${sh.src})`}></div>)
+          : <div class="explore-plate is-on" style="background-image:url(/images/campus/tuktuk.jpg)"></div>}
       </div>
+      <img class="explore-frame" src="/images/campus/tuktuk-frame.webp" alt="" aria-hidden="true" decoding="async" />
+      <div class="explore-shade" aria-hidden="true"></div>
+      <div class="wrap explore-copy">
+        <p class="eyebrow">Siem Reap</p>
+        <h2 class="disp explore-title">Explore<br />Siem Reap.</h2>
+        <p class="body explore-lead">Temples, markets, street food and the river. This is where we spend our days off.</p>
+        <a class="btn btn--solid explore-btn" href="/siem-reap">Things to do in Siem Reap →</a>
+      </div>
+      <p class="explore-caption" aria-hidden="true"><span data-explore-caption>{EXPLORE[0]?.label ?? ''}</span></p>
     </div>
   </section>
 
@@ -294,8 +211,8 @@ const PRACTICAL: [string, string][] = [
 </SrLayout>
 
 <script>
-  // Counters tick up when the stats strip comes into view, the schedule and
-  // facilities strips get arrow buttons, and the Explore Siem Reap ride runs.
+  // Counters tick up when the stats strip comes into view, the schedule strip
+  // gets arrow buttons, and the Explore Siem Reap loop runs.
   let ctrl = null;
   const init = () => {
     if (ctrl) ctrl.abort();
@@ -334,77 +251,44 @@ const PRACTICAL: [string, string][] = [
       document.querySelectorAll(`[data-hs-next="${key}"]`).forEach((b) => b.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }), { signal }));
     });
 
-    // Explore Siem Reap: the card flips up over the statement as the section
-    // enters, then the view through the tuk-tuk swaps between places while
-    // the frame stays put. Plate 0 is the real road; plates 1..n are places.
-    const ride = document.querySelector('.ride-stack');
-    if (!ride) return;
-    const rpin = ride.querySelector('.ride-pin');
-    const card = ride.querySelector('.ride-card');
-    const plates = [...ride.querySelectorAll('.ride-plate')];
-    const frame = ride.querySelector('.ride-frame');
-    const intro = ride.querySelector('.ride-intro');
-    const stops = [...ride.querySelectorAll('.ride-stop')];
-    const marks = [...ride.querySelectorAll('.ride-mark')];
-    if (reduce) { ride.classList.add('is-static'); return; }
-    const lite = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
-    const clamp01 = (v) => Math.min(1, Math.max(0, v));
-    const ease = (t) => t * t * (3 - 2 * t);
-    const ramp = (t, a, b) => clamp01((t - a) / (b - a));
-    const N = stops.length;             // places + good to know
-    const INTRO = 0.14;                 // share of the pin spent on the intro
-    const L = (1 - INTRO) / N;
-    let shownTop = null;
-    const update = () => {
-      const vh = rpin.offsetHeight;
-      const real = ride.getBoundingClientRect();
-      // Touch screens: ease toward the real position so the ride glides.
-      shownTop = (shownTop === null || !lite) ? real.top : shownTop + (real.top - shownTop) * 0.16;
-      if (Math.abs(real.top - shownTop) < 0.5) shownTop = real.top;
-      if (shownTop !== real.top && !raf) raf = requestAnimationFrame(() => { raf = 0; update(); });
-      const rect = { top: shownTop, height: real.height };
-      // Entry: the section's top travels from the bottom of the screen to the top.
-      const entry = ease(clamp01(1 - rect.top / vh));
-      card.style.transform = `rotateX(${((1 - entry) * 38).toFixed(2)}deg) scale(${(0.9 + 0.1 * entry).toFixed(3)})`;
-      card.style.borderRadius = `${Math.round((1 - entry) * 28)}px`;
-      const scrollable = rect.height - vh;
-      const p = scrollable <= 0 ? 0 : clamp01(-rect.top / scrollable);
-      const t = (p - INTRO) / L;        // < 0 during the intro, then 0..N across the stops
-
-      plates.forEach((pl, k) => {
-        let o;
-        if (k === 0) o = Math.max(1 - ramp(t, -0.15, 0.05), ramp(t, N - 1 - 0.15, N - 1 + 0.05));
-        else { const j = k - 1; o = Math.min(ramp(t, j - 0.15, j + 0.05), 1 - ramp(t, j + 0.85, j + 1.05)); }
-        const j = k === 0 ? (t < 0 ? -1 : N - 1) : k - 1;
-        const drive = clamp01((t - j + 0.15) / 1.2);
-        pl.style.opacity = o.toFixed(3);
-        pl.style.transform = `scale(${(1.03 + 0.1 * drive).toFixed(3)})`;
-        if (!lite) pl.style.filter = o > 0 && o < 1 ? `blur(${((1 - o) * 5).toFixed(1)}px)` : '';
-      });
-
-      intro.style.opacity = String(1 - ramp(t, -0.45, -0.1));
-      intro.style.transform = `translateY(calc(-50% - ${(ramp(t, -0.45, -0.1) * 30).toFixed(1)}px))`;
-
-      stops.forEach((st, j) => {
-        const inn = ramp(t, j + 0.04, j + 0.2);
-        const out = j === N - 1 ? 0 : ramp(t, j + 0.8, j + 0.94);
-        const o = ease(inn) * (1 - out);
-        st.style.opacity = o.toFixed(3);
-        st.style.transform = `translateY(${((1 - ease(inn)) * 26 - out * 18).toFixed(1)}px)`;
-        st.style.pointerEvents = o > 0.5 ? 'auto' : 'none';
-      });
-
-      const active = t < 0 ? 0 : Math.min(marks.length - 1, Math.floor(t) + 1);
-      marks.forEach((mk, i) => { mk.classList.toggle('is-on', i === active); mk.classList.toggle('is-past', i < active); });
-
-      // A gentle bob, as if on the road.
-      frame.style.transform = `translateY(${(Math.sin(p * 90) * 2.2).toFixed(2)}px)`;
+    // Explore Siem Reap: the card tilts up into place as it scrolls in, then
+    // the view behind the tuk-tuk cuts from still to still on a loop.
+    const ex = document.querySelector('.explore');
+    if (!ex) return;
+    const card = ex.querySelector('.explore-card');
+    const plates = [...ex.querySelectorAll('.explore-plate')];
+    const caption = ex.querySelector('[data-explore-caption]');
+    const flip = () => {
+      const r = ex.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const t = Math.min(1, Math.max(0, 1 - r.top / vh));
+      const e = t * t * (3 - 2 * t);
+      card.style.transform = `perspective(1600px) rotateX(${((1 - e) * 24).toFixed(2)}deg) scale(${(0.92 + 0.08 * e).toFixed(3)})`;
+      card.style.borderRadius = `${Math.round((1 - e) * 26)}px`;
     };
-    let raf = 0;
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); };
-    window.addEventListener('scroll', onScroll, { passive: true, signal });
-    window.addEventListener('resize', onScroll, { signal });
-    update();
+    if (!reduce) {
+      let fr = 0;
+      const onFlip = () => { if (!fr) fr = requestAnimationFrame(() => { fr = 0; flip(); }); };
+      window.addEventListener('scroll', onFlip, { passive: true, signal });
+      window.addEventListener('resize', onFlip, { signal });
+      flip();
+    }
+    if (plates.length > 1 && !reduce) {
+      let i = 0, timer = 0, visible = false;
+      const show = (n) => {
+        plates[i].classList.remove('is-on');
+        i = n;
+        plates[i].classList.add('is-on');
+        if (caption) caption.textContent = plates[i].dataset.label || '';
+      };
+      const run = () => { clearInterval(timer); timer = setInterval(() => show((i + 1) % plates.length), 1600); };
+      const io = new IntersectionObserver((en) => {
+        visible = en[0].isIntersecting;
+        if (visible) run(); else clearInterval(timer);
+      }, { threshold: 0.25 });
+      io.observe(ex);
+      signal.addEventListener('abort', () => { clearInterval(timer); io.disconnect(); });
+    }
   };
   init();
   document.addEventListener('astro:page-load', init);
