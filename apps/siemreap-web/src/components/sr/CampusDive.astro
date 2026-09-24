@@ -1,0 +1,175 @@
+---
+// A pinned scroll sequence: a map of Cambodia dives into Siem Reap, hands
+// over to the aerial photo of the campus, swings round to the front of the
+// building (a scrubbed clip when present, a crossfade otherwise), then fades
+// to black into whatever follows.
+import { existsSync } from 'node:fs';
+interface Props {
+  aerial: string;
+  front: string;
+  video?: string;
+}
+const { aerial, front, video = '/video/campus-orbit.mp4' } = Astro.props;
+const hasVideo = existsSync('public' + video);
+---
+<section class="dive-stack" aria-label="From Cambodia to the campus">
+  <div class="dive-pin">
+    <canvas class="dive-map" aria-hidden="true"></canvas>
+    <div class="dive-photo dive-aerial" style={`background-image:url(${aerial})`}></div>
+    {hasVideo
+      ? <video class="dive-video" src={`${video}#t=0.001`} muted autoplay playsinline webkit-playsinline preload="auto" aria-label="The campus, turning from above to its front"></video>
+      : <div class="dive-photo dive-front" style={`background-image:url(${front})`}></div>}
+    <div class="dive-scrim" aria-hidden="true"></div>
+    <div class="dive-labels wrap" aria-hidden="true">
+      <p class="eyebrow dive-label" data-stage="0">Cambodia</p>
+      <p class="eyebrow dive-label" data-stage="1">Siem Reap</p>
+      <p class="eyebrow dive-label" data-stage="2">The campus</p>
+      <p class="disp dive-title" data-stage="2">Welcome home.</p>
+    </div>
+    <div class="dive-black" aria-hidden="true"></div>
+  </div>
+</section>
+
+<script>
+  let ctrl: AbortController | null = null;
+  const init = async () => {
+    ctrl?.abort();
+    ctrl = new AbortController();
+    const { signal } = ctrl;
+    const stack = document.querySelector<HTMLElement>('.dive-stack');
+    if (!stack) return;
+    const pin = stack.querySelector<HTMLElement>('.dive-pin')!;
+    const canvas = stack.querySelector<HTMLCanvasElement>('.dive-map')!;
+    const aerial = stack.querySelector<HTMLElement>('.dive-aerial')!;
+    const front = stack.querySelector<HTMLElement>('.dive-front');
+    const video = stack.querySelector<HTMLVideoElement>('.dive-video');
+    const black = stack.querySelector<HTMLElement>('.dive-black')!;
+    const scrim = stack.querySelector<HTMLElement>('.dive-scrim')!;
+    const labels = [...stack.querySelectorAll<HTMLElement>('[data-stage]')];
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const lite = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+    if (reduce) { stack.classList.add('is-static'); return; }
+    if (lite && video) { video.remove(); }
+    const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+    const ease = (t: number) => t * t * (3 - 2 * t);
+
+    // ---- map data
+    let countries: Record<string, number[][][]> | null = null;
+    try { countries = await (await fetch('/data/indochina.json')).json(); } catch { countries = null; }
+    if (signal.aborted) return;
+    const ctx = canvas.getContext('2d')!;
+    const SIEM_REAP = { lon: 103.8564, lat: 13.3633 };
+    const CAMBODIA = { lon: 104.9, lat: 12.55 };
+    let W = 0, H = 0, dpr = 1;
+    const size = () => {
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = pin.clientWidth; H = pin.clientHeight;
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    };
+    size();
+    window.addEventListener('resize', () => { size(); onScroll(); }, { signal });
+
+    const drawMap = (t: number) => {
+      // t: 0 = whole of Cambodia in view, 1 = tight on Siem Reap
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      if (!countries) return;
+      const e = ease(t);
+      const cx = CAMBODIA.lon + (SIEM_REAP.lon - CAMBODIA.lon) * e;
+      const cy = CAMBODIA.lat + (SIEM_REAP.lat - CAMBODIA.lat) * e;
+      const base = Math.min(W, H) / 6.2; // px per degree when the whole country fits
+      const k = base * Math.pow(9, e); // zoom to ~9x, so the coastline stays in view
+      const cosL = Math.cos((cy * Math.PI) / 180);
+      const px = (lon: number, lat: number) => [W / 2 + (lon - cx) * k * cosL, H / 2 - (lat - cy) * k];
+      const draw = (polys: number[][][], fill: string, stroke: string, lw: number) => {
+        ctx.beginPath();
+        for (const poly of polys) {
+          poly.forEach(([lon, lat], i) => { const [x, y] = px(lon, lat); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+          ctx.closePath();
+        }
+        ctx.fillStyle = fill; ctx.fill();
+        ctx.lineWidth = lw; ctx.strokeStyle = stroke; ctx.stroke();
+      };
+      const fadeN = 1 - clamp01((t - 0.3) / 0.5);
+      for (const n of ['Thailand', 'Laos', 'Vietnam']) if (countries[n]) draw(countries[n], `rgba(22,22,22,${fadeN})`, `rgba(58,58,58,${fadeN})`, 1);
+      draw(countries['Cambodia'], 'rgba(30,30,30,1)', 'rgba(255,255,255,.85)', 1.2);
+      // graticule-ish dots to give the zoom a sense of ground
+      const dotsA = clamp01((t - 0.5) / 0.4) * 0.3;
+      if (dotsA > 0) {
+        ctx.fillStyle = `rgba(255,255,255,${dotsA})`;
+        const step = 0.12;
+        for (let lon = SIEM_REAP.lon - 1; lon <= SIEM_REAP.lon + 1; lon += step) for (let lat = SIEM_REAP.lat - 1; lat <= SIEM_REAP.lat + 1; lat += step) {
+          const [x, y] = px(lon, lat); if (x < -4 || y < -4 || x > W + 4 || y > H + 4) continue; ctx.fillRect(x, y, 1.2, 1.2);
+        }
+      }
+      // pin at Siem Reap: ring that tightens as we approach
+      const [sx, sy] = px(SIEM_REAP.lon, SIEM_REAP.lat);
+      const r = 10 + 40 * e;
+      for (let i = 0; i < 3; i++) {
+        ctx.beginPath(); ctx.arc(sx, sy, r * (0.45 + i * 0.35), 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(255,255,255,${0.55 - i * 0.16})`; ctx.lineWidth = 1.2; ctx.stroke();
+      }
+      ctx.beginPath(); ctx.arc(sx, sy, 4, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
+    };
+
+    // ---- video scrub (desktop only)
+    let seeking = false, latest = 0, dirty = false;
+    const seekTo = (t: number) => {
+      latest = t; dirty = true;
+      if (seeking || !video) return;
+      seeking = true; dirty = false;
+      if ('fastSeek' in video) video.fastSeek(t); else video.currentTime = t;
+    };
+    if (video) {
+      const prime = () => { const p = video.play(); if (p && p.then) p.then(() => video.pause()).catch(() => {}); };
+      if (video.readyState >= 2) prime(); else video.addEventListener('loadeddata', prime, { once: true, signal });
+      video.addEventListener('seeked', () => { seeking = false; if (dirty) seekTo(latest); }, { signal });
+      video.addEventListener('error', () => { video.style.display = 'none'; }, { once: true, signal });
+    }
+
+    // Stages of the pin (0..1): map dive 0–.42, hand-off to aerial .38–.5,
+    // orbit/crossfade .5–.86, fade to black .86–1.
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const rect = stack.getBoundingClientRect();
+      const scrollable = rect.height - pin.offsetHeight;
+      const p = scrollable <= 0 ? 0 : clamp01(-rect.top / scrollable);
+
+      const mapT = clamp01(p / 0.42);
+      drawMap(mapT);
+      const hand = clamp01((p - 0.38) / 0.12);
+      canvas.style.opacity = String(1 - hand);
+      canvas.style.transform = `scale(${1 + hand * 0.3})`;
+
+      const orbit = clamp01((p - 0.5) / 0.36);
+      aerial.style.opacity = String(hand * (video ? (1 - clamp01(orbit * 6)) : (1 - ease(orbit))));
+      aerial.style.transform = `scale(${1.45 - 0.45 * ease(hand) - 0.08 * orbit})`;
+      if (video) {
+        video.style.opacity = String(clamp01(orbit * 6));
+        if (video.duration && !Number.isNaN(video.duration)) seekTo(orbit * video.duration * 0.985);
+      } else if (front) {
+        front.style.opacity = String(ease(orbit));
+        front.style.transform = `scale(${1.18 - 0.18 * ease(orbit)})`;
+      }
+      scrim.style.opacity = String(0.25 + 0.35 * hand);
+
+      const fade = clamp01((p - 0.86) / 0.14);
+      black.style.opacity = String(ease(fade));
+
+      const stage = p < 0.2 ? 0 : p < 0.42 ? 1 : 2;
+      labels.forEach((l) => {
+        const s = Number(l.dataset.stage);
+        const on = s === stage && fade < 0.6;
+        l.style.opacity = on ? '1' : '0';
+        l.style.transform = on ? 'none' : 'translateY(10px)';
+      });
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+    window.addEventListener('scroll', onScroll, { passive: true, signal });
+    update();
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

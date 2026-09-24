@@ -5,6 +5,7 @@ import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
 import PhotoSlot from '../components/sr/PhotoSlot.astro';
+import CampusDive from '../components/sr/CampusDive.astro';
 
 // The campus photo goes at public/images/campus/campus.jpg; until it lands
 // the hero falls back to the GonPreah community photo.
@@ -144,20 +145,12 @@ const PRACTICAL: [string, string][] = [
 ---
 <SrLayout title="Campus Life | YWAM Siem Reap" spacer={false}
   description="What living at YWAM Siem Reap is like — Khmer and international, students, volunteers, staff and teams in one community — and what to do in Siem Reap when the day is done.">
-  <PageHead eyebrow="Campus life" km="ជីវិតសហគមន៍" title="Live in a cross-cultural community centred on Jesus. Make His name known in Cambodia and beyond." highlight="in Cambodia and beyond." long
-    lead="Khmer and international, students and staff, one campus in the heart of Siem Reap. Here is what living here is like."
+  <PageHead eyebrow="YWAM Siem Reap" km="ជីវិតសហគមន៍" title="Campus Life" highlight="Life"
+    lead="Live in a cross-cultural community centred on Jesus. Make His name known in Cambodia and beyond."
     photo={CAMPUS_PHOTO} full center photoAlt="The YWAM Siem Reap campus from the air — a white four-storey building with orange tiled roofs and rooftop terraces, surrounded by trees" />
 
-  <section class="cl-stats" aria-label="Campus in numbers">
-    <div class="wrap cl-stats-grid">
-      {STATS.map((s) => (
-        <div class="cl-stat io-in">
-          <p class="disp cl-stat-n"><span data-count={s.n}>0</span>{s.suffix}</p>
-          <p class="muted cl-stat-l">{s.label}</p>
-        </div>
-      ))}
-    </div>
-  </section>
+
+  <CampusDive aerial="/images/campus/campus-aerial-wide.jpg" front="/images/campus/campus-front.jpg" />
 
   <section class="sec cl-community" style="padding-bottom:0;">
     <div class="wrap">
@@ -190,6 +183,17 @@ const PRACTICAL: [string, string][] = [
           ))}
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="cl-stats" aria-label="Campus in numbers">
+    <div class="wrap cl-stats-grid">
+      {STATS.map((s) => (
+        <div class="cl-stat io-in">
+          <p class="disp cl-stat-n"><span data-count={s.n}>0</span>{s.suffix}</p>
+          <p class="muted cl-stat-l">{s.label}</p>
+        </div>
+      ))}
     </div>
   </section>
 
