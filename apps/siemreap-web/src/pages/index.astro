@@ -16,10 +16,10 @@ import GlobeO from '../components/sr/GlobeO.astro';
 const GONPREAH_3D_VIDEO = '/video/gonpreah-community-3d.mp4#t=0.001';
 
 const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; photo?: string; href?: string }[] = [
-  { name: 'Discipleship Training School', abbr: 'DTS', body: 'Discover your calling. Find a purpose greater than your own desire.', when: 'Every January', photo: '/images/schools/dts.jpg', href: '/schools/dts' },
-  { name: 'Discipleship Bible School', abbr: 'DBS', body: 'The whole Bible in thirteen weeks. Study the Word, then live it out.', when: 'Every April', photo: '/images/schools/dbs.jpg', href: '/schools/dbs' },
+  { name: 'Discipleship Training School', abbr: 'DTS', body: 'Discover your calling. Find a purpose greater than your own desire.', when: 'Every January', href: '/schools/dts' },
+  { name: 'Discipleship Bible School', abbr: 'DBS', body: 'The whole Bible in thirteen weeks. Study the Word, then live it out.', when: 'Every April', href: '/schools/dbs' },
   { name: 'Bible Counseling School', abbr: 'BCS', body: 'Training for those caring for people who carry trauma — a growing need across Cambodia.', when: 'New' },
-  { name: 'Social Media School', abbr: 'SMS', body: 'Storytelling and digital ministry, for the generation already living there.', when: 'New', photo: '/images/schools/sms-filming.jpg', href: '/schools/sms' },
+  { name: 'Social Media School', abbr: 'SMS', body: 'Storytelling and digital ministry, for the generation already living there.', when: 'New', href: '/schools/sms' },
 ];
 ---
 <SrLayout title="YWAM Siem Reap | Heart for Cambodia, vision for the world" spacer={false}>
@@ -99,7 +99,7 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
           <div class="wrap bat-grid" style="display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:50px;align-items:center;width:100%;">
             <div class="wipe bat-photo" style="height:420px;overflow:hidden;border-radius:20px;">
               <div class="parslow" style="height:112%;margin-top:-6%;">
-                <img src="/images/campus/team-market.jpg" alt="A visiting team in Khmer skirts laughing together at a market of thatched stalls" loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" />
+                <PhotoSlot label="Drop a photo — a visiting team working with the community" />
               </div>
             </div>
             <div class="bat-text">

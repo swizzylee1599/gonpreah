@@ -10,8 +10,8 @@ const JOURNEY: { title: string; body: string; photo: string; alt: string }[] = [
   {
     title: 'Apply for DTS',
     body: 'Join our community surrounded by leaders and friends who have a heart to serve God and the nations. We will help you find your identity in Christ and your purpose in the world.',
-    photo: '/images/gonpreah-worship-1.jpg',
-    alt: 'Students worshipping together on the Siem Reap campus',
+    photo: '',
+    alt: '',
   },
   {
     title: 'Know God',
@@ -38,7 +38,7 @@ const PHASES: { eyebrow: string; title: string; body: string[]; photos: Photo[] 
       'Twelve weeks of lecture, twelve topics — from speakers locally and internationally.',
     ],
     photos: [
-      { src: '/images/schools/dts.jpg', alt: 'DTS students studying together on campus' },
+      { label: 'Drop a photo — students studying together' },
       { label: 'Drop a photo — a speaker teaching' },
       { label: 'Drop a photo — small groups' },
       { label: 'Drop a photo — worship' },
@@ -116,9 +116,9 @@ const FAQ: [string, string][] = [
         </div>
         <div class="jp-grid">
           <div class="jp-photos">
-            {JOURNEY.map((step, i) => (
-              <img class="jp-photo" src={step.photo} alt={step.alt} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
-            ))}
+            {JOURNEY.map((step, i) => step.photo
+              ? <img class="jp-photo" src={step.photo} alt={step.alt} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+              : <div class="jp-photo jp-photo--slot"><PhotoSlot label={`Drop a photo — ${step.title}`} radius={0} /></div>)}
           </div>
           <div class="jp-steps">
             {JOURNEY.map((step, i) => (

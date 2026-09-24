@@ -216,6 +216,7 @@ body.sr {
   transform: translateX(108%); transform-origin: 50% 100%; will-change: transform;
   box-shadow: -18px 0 40px rgba(0,0,0,.45);
 }
+.sr .jp-photo--slot .photo-slot { min-height: 100%; }
 .sr .jp-head { will-change: transform; }
 /* The hallway: the breakdown rides up over the tail of the journey stack, then pins
    while scrolling walks you down the corridor. */
@@ -606,6 +607,9 @@ body.sr {
 .sr .dive-black { position: absolute; inset: 0; background: var(--sr-ink); opacity: 0; pointer-events: none; }
 .sr .dive-statement { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); opacity: 0; will-change: transform, opacity; text-shadow: 0 2px 28px rgba(0,0,0,.8), 0 1px 3px rgba(0,0,0,.7); }
 .sr .dive-statement-text { margin: 0 auto; max-width: 22ch; text-align: center; font-size: clamp(30px, 4.6vw, 66px); font-weight: 500; line-height: 1.08; }
+.sr .dive-photos { display: flex; justify-content: center; gap: 12px; margin: 34px auto 0; }
+.sr .dive-photos img { width: clamp(90px, 10vw, 150px); aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255,255,255,.18); box-shadow: 0 16px 40px rgba(0,0,0,.5); opacity: 0; will-change: transform, opacity; }
+.sr .dive-photos img:nth-child(even) { margin-top: -14px; }
 .sr .dive-statement-sub { margin: 26px auto 0; max-width: 54ch; text-align: center; font-size: 18px; color: #e6e6e6; }
 .sr .dive-stack.is-static { height: auto; }
 .sr .dive-stack.is-static .dive-pin { position: relative; height: auto; min-height: 90vh; display: grid; }
@@ -614,6 +618,7 @@ body.sr {
 .sr .dive-stack.is-static .dive-head { position: relative; transform: none; padding: 160px 0 60px; }
 .sr .dive-stack.is-static .dive-welcome { display: none; }
 .sr .dive-stack.is-static .dive-statement { position: relative; transform: none; opacity: 1; padding: 0 0 80px; }
+.sr .dive-stack.is-static .dive-photos img { opacity: 1; }
 
 /* Campus life page */
 .sr .cl-stats { padding: 26px 0; border-top: 1px solid #1e1e1e; border-bottom: 1px solid #1e1e1e; background: #0e0e0e; }
@@ -787,6 +792,8 @@ body.sr {
   .sr .dive-title { font-size: 34px; }
   .sr .dive-statement-text { font-size: clamp(26px, 7.6vw, 34px); max-width: 16ch; }
   .sr .dive-statement-sub { font-size: 15px; margin-top: 18px; }
+  .sr .dive-photos { gap: 8px; margin-top: 24px; }
+  .sr .dive-photos img { width: 20vw; }
           .sr .cl-hs-head { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 22px; }
   .sr .cl-hs { grid-template-columns: minmax(0, 1fr); padding-left: 20px; }
   .sr .cl-hs-label { display: none; }

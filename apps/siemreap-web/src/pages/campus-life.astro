@@ -12,14 +12,6 @@ const STATS: { n: number; suffix: string; label: string }[] = [
   { n: 20, suffix: ' min', label: 'to Angkor Wat' },
 ];
 
-// Living on the base. Draft copy for the team to correct — rhythms, rooms
-// and rules are placeholders until staff confirm them.
-const COMMUNITY: { km: string; title: string; body: string; photo?: string; alt?: string; label: string; pos?: string }[] = [
-  { km: 'គ្រួសារ', title: 'Khmer and international, together', body: 'Forty staff and a changing family of students, volunteers and teams share this campus. Khmer is the first language and English is everywhere. You will learn a few words in your first week and be laughed at kindly for the rest.', photo: '/images/campus/friends-temple.jpg', alt: 'Two friends, one international and one Khmer, sitting and talking among the stones of a temple', label: '', pos: '50% 35%' },
-  { km: 'ថ្វាយបង្គំ', title: 'We worship together', body: 'Worship and prayer are part of the rhythm of the week — as a whole community, in schools, and in small groups. Some of it in Khmer, some in English, most of it both.', photo: '/images/gonpreah-worship-1.jpg', alt: 'Students worshipping together on the Siem Reap campus', label: '' },
-  { km: 'បម្រើ', title: 'We work together', body: 'Everyone carries part of the load: cleaning, cooking, setting up, driving, building. Serving the community starts with serving each other.', photo: '/images/campus/work-bamboo.jpg', alt: 'A young man grinning as he carries bamboo poles over his shoulder along a campus path', label: '', pos: '50% 30%' },
-];
-
 // The base week. Every weekday shares the same frame; the 8:30 slot changes.
 type Slot = { time: string; title: string; note?: string; hi?: boolean };
 const WEEK: { day: string; full: string; slots: Slot[] }[] = [
@@ -56,16 +48,6 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
   { day: 'Sun', full: 'Sunday', slots: [
     { time: 'Morning', title: 'Church', note: 'Everyone joins a local congregation — Khmer and international churches around Siem Reap.', hi: true },
   ] },
-];
-
-// Around campus. Draft captions — swap photos and wording as staff confirm.
-const FACILITIES: { title: string; note: string; photo?: string; alt?: string; label?: string; pos?: string }[] = [
-  { title: 'The campus', note: 'Four storeys of classrooms, rooms and rooftop terraces, twenty minutes from Angkor.', photo: '/images/campus/campus.jpg', alt: 'The campus from the air', pos: '50% 50%' },
-  { title: 'GP Cafe', note: 'Our café on campus. Coffee, iced drinks and the conversations that carry on after class.', photo: '/images/campus/gp-cafe-sign.jpg', alt: 'The GP Cafe sign among green leaves', pos: '50% 40%' },
-  { title: 'Worship hall', note: 'Where the base gathers on Monday mornings and Thursday nights.', photo: '/images/gonpreah-worship-2.jpg', alt: 'Worship on campus' },
-  { title: 'Classrooms', note: 'Where DTS and DBS meet for lectures, in Khmer and English.', photo: '/images/schools/dbs-class.jpg', alt: 'Students in a classroom', pos: '50% 40%' },
-  { title: 'The lounge', note: 'Bean bags, books and shade — the place between classes.', photo: '/images/schools/dbs-small-groups.jpg', alt: 'Students reading on bean bags', pos: '50% 60%' },
-  { title: 'Rooms', note: 'Shared rooms for students, with fans, wifi and a bed that is yours for the school.', label: 'Drop a photo — a student room' },
 ];
 
 const WHO: [string, string][] = [
@@ -141,41 +123,14 @@ const PRACTICAL: [string, string][] = [
   description="What living at YWAM Siem Reap is like — Khmer and international, students, volunteers, staff and teams in one community — and what to do in Siem Reap when the day is done.">
   <CampusDive aerial="/images/campus/campus-aerial-wide.jpg" front="/images/campus/campus-front.jpg"
     statement="Live in a cross‑cultural community centered around Jesus."
-    sub="YWAM Siem Reap is a community of young people on fire for Jesus and making His name known." />
+    sub="YWAM Siem Reap is a community of young people on fire for Jesus and making His name known."
+    photos={[
+      { src: '/images/campus/friends-temple.jpg', alt: 'Two friends, one international and one Khmer, talking among temple stones', pos: '50% 35%' },
+      { src: '/images/gonpreah-worship-1.jpg', alt: 'Students worshipping together on campus' },
+      { src: '/images/campus/high-five.jpg', alt: 'A visiting student high-fiving a laughing girl in a village', pos: '50% 40%' },
+      { src: '/images/campus/work-bamboo.jpg', alt: 'A young man carrying bamboo poles along a campus path', pos: '50% 30%' },
+    ]} />
 
-  <section class="sec cl-community" style="padding-bottom:0;">
-    <div class="wrap">
-      <div class="reveal" style="max-width:62ch;">
-        <p class="eyebrow">Living in community</p>
-        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,3.8vw,50px);font-weight:500;line-height:1.08;">One family, two languages.</h2>
-        <p class="body" style="margin:18px 0 0;">Community is not a programme here; it is the way the base works. You will live closer to more people than you are used to, and most people say it is the part they miss most when they leave.</p>
-      </div>
-    </div>
-    <div class="wrap cl-sticky">
-      <ol class="cl-items">
-        {COMMUNITY.map((c, i) => (
-          <li class={`cl-item io-in${i === 0 ? ' is-on' : ''}`} data-i={i}>
-            <p class="disp cl-item-n">{'0' + (i + 1)}</p>
-            <h3 class="disp cl-item-title">{c.title}</h3>
-            <span class="rule cl-item-rule"></span>
-            <p class="body cl-item-body">{c.body}</p>
-            <figure class="cl-item-photo">
-              {c.photo ? <img src={c.photo} alt={c.alt ?? ''} loading="lazy" decoding="async" style={c.pos ? `object-position:${c.pos}` : undefined} /> : <PhotoSlot label={c.label} radius={0} />}
-            </figure>
-          </li>
-        ))}
-      </ol>
-      <div class="cl-stage" aria-hidden="true">
-        <div class="cl-stage-inner">
-          {COMMUNITY.map((c, i) => (
-            <figure class={`cl-stage-photo${i === 0 ? ' is-on' : ''}`} data-i={i}>
-              {c.photo ? <img src={c.photo} alt="" loading="lazy" decoding="async" style={c.pos ? `object-position:${c.pos}` : undefined} /> : <PhotoSlot label={c.label} radius={0} />}
-            </figure>
-          ))}
-        </div>
-      </div>
-    </div>
-  </section>
 
   <section class="cl-stats" aria-label="Campus in numbers">
     <div class="wrap cl-stats-grid">
@@ -223,32 +178,6 @@ const PRACTICAL: [string, string][] = [
     <div class="wrap"><p class="muted" style="margin:22px 0 0;font-size:13px;">Times are the base rhythm; schools add their own lectures, work duties and outreach prep around it.</p></div>
   </section>
 
-  <section class="sec cl-fac-sec" id="campus" style="padding-top:0;">
-    <div class="wrap cl-hs-head">
-      <div class="reveal">
-        <p class="eyebrow">Around campus</p>
-        <h2 class="disp" style="margin:12px 0 0;font-size:clamp(28px,3.4vw,46px);font-weight:500;line-height:1.08;">Where the days happen.</h2>
-      </div>
-      <div class="cl-hs-nav" aria-hidden="true">
-        <button type="button" class="cl-hs-btn" data-hs-prev="fac">←</button>
-        <button type="button" class="cl-hs-btn" data-hs-next="fac">→</button>
-      </div>
-    </div>
-    <div class="cl-hs" data-hs="fac">
-      <p class="disp cl-hs-label" aria-hidden="true">Campus<br />facilities</p>
-      <ul class="cl-hs-track fac-track">
-        {FACILITIES.map((f) => (
-          <li class="fac-card io-in">
-            <figure class="fac-photo">
-              {f.photo ? <img src={f.photo} alt={f.alt ?? ''} loading="lazy" decoding="async" style={f.pos ? `object-position:${f.pos}` : undefined} /> : <PhotoSlot label={f.label ?? ''} radius={0} />}
-            </figure>
-            <h3 class="disp fac-title">{f.title}</h3>
-            <p class="body fac-note">{f.note}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
 
   <section class="sec cl-food" id="food">
     <div class="wrap">
@@ -382,34 +311,6 @@ const PRACTICAL: [string, string][] = [
       }, { threshold: 0.6 });
       counters.forEach((c) => io.observe(c));
       signal.addEventListener('abort', () => io.disconnect());
-    }
-
-    const items = [...document.querySelectorAll('.cl-item')];
-    const stagePhotos = [...document.querySelectorAll('.cl-stage-photo')];
-    const stageKm = document.querySelector('[data-stage-km]');
-    const kms = ["គ្រួសារ", "ថ្វាយបង្គំ", "បម្រើ"];
-    if (items.length && stagePhotos.length) {
-      let cur = -1;
-      const pickItem = () => {
-        const mid = window.innerHeight * 0.5;
-        let n = 0;
-        let best = Infinity;
-        items.forEach((it, i) => {
-          const r = it.getBoundingClientRect();
-          const d = Math.abs((r.top + Math.min(r.height, 320) / 2) - mid);
-          if (d < best) { best = d; n = i; }
-        });
-        if (n === cur) return;
-        cur = n;
-        items.forEach((it, i) => it.classList.toggle('is-on', i === n));
-        stagePhotos.forEach((ph, i) => ph.classList.toggle('is-on', i === n));
-        if (stageKm) stageKm.textContent = kms[n] || '';
-      };
-      let raf2 = 0;
-      const onScroll2 = () => { if (!raf2) raf2 = requestAnimationFrame(() => { raf2 = 0; pickItem(); }); };
-      window.addEventListener('scroll', onScroll2, { passive: true, signal });
-      window.addEventListener('resize', onScroll2, { signal });
-      pickItem();
     }
 
     // Arrow buttons for the horizontal strips (schedule, facilities).
