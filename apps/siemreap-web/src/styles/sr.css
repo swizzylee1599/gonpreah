@@ -606,6 +606,7 @@ body.sr {
 .sr .dive-black { position: absolute; inset: 0; background: var(--sr-ink); opacity: 0; pointer-events: none; }
 .sr .dive-statement { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); opacity: 0; will-change: transform, opacity; }
 .sr .dive-statement-text { margin: 0 auto; max-width: 22ch; text-align: center; font-size: clamp(30px, 4.6vw, 66px); font-weight: 500; line-height: 1.08; }
+.sr .dive-statement-sub { margin: 26px auto 0; max-width: 54ch; text-align: center; font-size: 18px; color: #bdbdbd; }
 .sr .dive-stack.is-static { height: auto; }
 .sr .dive-stack.is-static .dive-pin { position: relative; height: auto; min-height: 90vh; display: grid; }
 .sr .dive-stack.is-static .dive-video, .sr .dive-stack.is-static .dive-black, .sr .dive-stack.is-static .dive-cue { display: none; }
@@ -785,6 +786,7 @@ body.sr {
   .sr .dive-cue { right: 20px; }
   .sr .dive-title { font-size: 34px; }
   .sr .dive-statement-text { font-size: clamp(26px, 7.6vw, 34px); max-width: 16ch; }
+  .sr .dive-statement-sub { font-size: 15px; margin-top: 18px; }
           .sr .cl-hs-head { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 22px; }
   .sr .cl-hs { grid-template-columns: minmax(0, 1fr); padding-left: 20px; }
   .sr .cl-hs-label { display: none; }

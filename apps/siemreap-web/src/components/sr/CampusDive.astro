@@ -14,10 +14,11 @@ interface Props {
   km?: string;
   welcome?: string;
   statement: string;
+  sub?: string;
 }
 const {
   aerial, front, video = '/video/campus-orbit.mp4',
-  eyebrow = 'YWAM Siem Reap', title = 'Campus Life', km = 'ជីវិតសហគមន៍', welcome = 'Welcome home.', statement,
+  eyebrow = 'YWAM Siem Reap', title = 'Campus Life', km = 'ជីវិតសហគមន៍', welcome = 'Welcome home.', statement, sub,
 } = Astro.props;
 const hasVideo = existsSync('public' + video);
 ---
@@ -44,6 +45,7 @@ const hasVideo = existsSync('public' + video);
 
     <div class="wrap dive-statement" data-stage="2">
       <p class="disp dive-statement-text">{statement}</p>
+      {sub && <p class="body dive-statement-sub">{sub}</p>}
     </div>
   </div>
 </section>
@@ -115,14 +117,14 @@ const hasVideo = existsSync('public' + video);
       head.style.pointerEvents = headOut > 0.9 ? 'none' : '';
 
       const wIn = clamp01((p - 0.55) / 0.12);
-      const wOut = clamp01((p - 0.72) / 0.08);
+      const wOut = clamp01((p - 0.7) / 0.08);
       welcome.style.opacity = String(ease(wIn) * (1 - wOut));
       welcome.style.transform = `translateY(${((1 - ease(wIn)) * 24).toFixed(1)}px)`;
 
-      const fade = clamp01((p - 0.7) / 0.12);
+      const fade = clamp01((p - 0.68) / 0.12);
       black.style.opacity = String(ease(fade));
 
-      const sIn = clamp01((p - 0.8) / 0.16);
+      const sIn = clamp01((p - 0.84) / 0.14);
       statement.style.opacity = String(ease(sIn));
       statement.style.transform = `translateY(calc(-50% + ${((1 - ease(sIn)) * 30).toFixed(1)}px)) scale(${(0.96 + 0.04 * ease(sIn)).toFixed(3)})`;
     };
