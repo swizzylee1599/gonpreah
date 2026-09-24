@@ -3,7 +3,6 @@ import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
-import Waves from '../components/sr/Waves.astro';
 
 // YWAM's Statement of Purpose, Core Beliefs and Foundational Values, reproduced
 // as written. Do not paraphrase this text — the document asks to be shared in
@@ -56,19 +55,10 @@ const TOC: [string, string][] = [
   ['#values', 'Foundational Values'],
 ];
 ---
-<SrLayout title="Values | YWAM Siem Reap" spacer={false}
+<SrLayout title="Values | YWAM Siem Reap"
   description="The Statement of Purpose, Core Beliefs and Foundational Values of Youth With A Mission, as held by YWAM Siem Reap.">
-  <section class="values-hero">
-    <Waves class="values-hero-waves" layers={7} />
-    <div class="values-hero-scrim" aria-hidden="true"></div>
-    <div class="wrap values-hero-copy">
-      <p class="eyebrow">Values</p>
-      <h1 class="disp values-hero-title">What we believe<br />and how we work.</h1>
-      <p class="km" style="font-size:28px;margin:18px 0 0;color:#dcdcdc;">គុណតម្លៃ</p>
-      <span class="rule" style="margin:30px 0 0;"></span>
-      <p class="body" style="margin:28px 0 0;max-width:58ch;font-size:19px;">The Statement of Purpose, Core Beliefs, and Foundational Values of YWAM.</p>
-    </div>
-  </section>
+  <PageHead eyebrow="Values" km="គុណតម្លៃ" title="What we believe and how we work." highlight="how we work."
+    lead="The Statement of Purpose, Core Beliefs, and Foundational Values of YWAM." />
 
   <section class="values-vision">
     <div class="wrap values-vision-grid">
@@ -106,7 +96,6 @@ const TOC: [string, string][] = [
           {PURPOSE.map((p) => <p class="body">{p}</p>)}
         </article>
 
-        <div class="values-divider" aria-hidden="true"><Waves layers={4} /></div>
         <article id="beliefs" class="values-section">
           <p class="eyebrow">YWAM's Core beliefs</p>
           <h2 class="disp values-h2">Core Beliefs</h2>
@@ -122,7 +111,6 @@ const TOC: [string, string][] = [
           </div>
         </article>
 
-        <div class="values-divider" aria-hidden="true"><Waves layers={4} /></div>
         <article id="values" class="values-section">
           <p class="eyebrow">YWAM's foundational values</p>
           <h2 class="disp values-h2">Foundational Values</h2>

@@ -80,13 +80,13 @@ const LECTURE_COST: [string, string][] = [
 
 // Tracks: a skill each student chooses to develop through the school.
 // Culinary and Hospitality lines are drafts to be confirmed.
-const TRACKS: { name: string; km: string; body: string; photo?: string; alt?: string; pos?: string; label: string }[] = [
-  { name: 'Media', km: 'មេឌា', body: 'Social media is one of the most effective ways to reach the youth. Develop your skills in content creating, video editing and photography, and see how you can use media for the Kingdom.', label: 'Drop a photo — media track' },
-  { name: 'Music', km: 'តន្ត្រី', body: 'Worship is our weapon. Live out Psalm 96, bringing newness as we merge music with the arts. Join us as we continue to foster the heart of worship.', label: 'Drop a photo — music track' },
-  { name: 'Cafe', km: 'កាហ្វេ', body: 'Develop barista skills, learn business management, and see how you can serve Jesus in the business world.', label: 'Drop a photo — cafe track' },
-  { name: 'Culinary', km: 'ម្ហូប', body: 'Develop skills in food and the kitchen — Khmer and international cooking, planning and preparing meals for a community — and see how a table can serve the Kingdom.', label: 'Drop a photo — culinary track' },
-  { name: 'Hospitality', km: 'បដិសណ្ឋារកិច្ច', body: 'Learn skills in hotel management — welcoming guests, running rooms and events, hosting teams — and see how hospitality opens doors for the gospel in Siem Reap.', label: 'Drop a photo — hospitality track' },
-  { name: 'Technical', km: 'បច្ចេកទេស', body: 'Develop technical skills, from AC repair to building furniture, to serve Jesus in the business world.', label: 'Drop a photo — technical track' },
+const TRACKS: { name: string; km: string; tag: string; body: string; photo?: string; alt?: string; pos?: string; label: string }[] = [
+  { name: 'Media', km: 'មេឌា', body: 'Social media is one of the most effective ways to reach the youth. Develop your skills in content creating, video editing and photography, and see how you can use media for the Kingdom.', tag: 'Create, film and edit for the Kingdom.', photo: '/images/schools/sms-filming.jpg', alt: 'A film crew on a Siem Reap street', pos: '50% 45%', label: 'Drop a photo — media track' },
+  { name: 'Music', km: 'តន្ត្រី', body: 'Worship is our weapon. Live out Psalm 96, bringing newness as we merge music with the arts. Join us as we continue to foster the heart of worship.', tag: 'Worship is our weapon.', photo: '/images/gonpreah-worship-2.jpg', alt: 'Worship on campus', label: 'Drop a photo — music track' },
+  { name: 'Cafe', km: 'កាហ្វេ', body: 'Develop barista skills, learn business management, and see how you can serve Jesus in the business world.', tag: 'Barista skills and business.', photo: '/images/campus/gp-cafe-barista.jpg', alt: 'A barista behind the GP Cafe counter', label: 'Drop a photo — cafe track' },
+  { name: 'Culinary', km: 'ម្ហូប', body: 'Develop skills in food and the kitchen — Khmer and international cooking, planning and preparing meals for a community — and see how a table can serve the Kingdom.', tag: 'Cook for a community.', photo: '/images/campus/food-prep.jpg', alt: 'Preparing food at a market table', pos: '50% 60%', label: 'Drop a photo — culinary track' },
+  { name: 'Hospitality', km: 'បដិសណ្ឋារកិច្ច', body: 'Learn skills in hotel management — welcoming guests, running rooms and events, hosting teams — and see how hospitality opens doors for the gospel in Siem Reap.', tag: 'Welcome guests, run a house.', photo: '/images/campus/campus-front.jpg', alt: 'The rooftop terrace set for guests', pos: '50% 45%', label: 'Drop a photo — hospitality track' },
+  { name: 'Technical', km: 'បច្ចេកទេស', body: 'Develop technical skills, from AC repair to building furniture, to serve Jesus in the business world.', tag: 'Fix, build and serve.', photo: '/images/campus/work-bamboo.jpg', alt: 'A young man carrying bamboo poles', pos: '50% 30%', label: 'Drop a photo — technical track' },
 ];
 
 const FAQ: [string, string][] = [
@@ -169,7 +169,22 @@ const FAQ: [string, string][] = [
       if (lite && video) { video.remove(); video = null; if (still) still.style.opacity = '1'; }
       const pin = hall.querySelector('.hall-pin');
       const intro = hall.querySelector('.hall-intro');
-      const card = hall.querySelector('.hall-card');
+      let card = hall.querySelector('.hall-card');
+      // Phones: a tall card inside a pinned screen scrolls awkwardly, so it
+      // moves out below the hallway and the walk ends where the phases end.
+      let pEnd = 1;
+      if (lite && card) {
+        const sec = document.createElement('section');
+        sec.className = 'sec hall-card-sec';
+        const wrap = document.createElement('div');
+        wrap.className = 'wrap';
+        sec.appendChild(wrap);
+        wrap.appendChild(card);
+        hall.after(sec);
+        hall.classList.add('is-card-out');
+        card = null;
+        pEnd = HALL_PHASES[HALL_PHASES.length - 1][1] + 0.02;
+      }
       const copies = [...hall.querySelectorAll('.hall-copy')];
       const rows = [...hall.querySelectorAll('.hall-photos')].map((el) => ({
         el, phase: +el.dataset.phase, items: [...el.querySelectorAll('.hall-photo')],
@@ -194,15 +209,26 @@ const FAQ: [string, string][] = [
         video.addEventListener('seeked', () => { seeking = false; if (dirty) seekTo(latest); }, { signal });
       }
 
-      let ticking = false;
-      const update = () => {
-        ticking = false;
+      // Phones and touch screens report scroll in coarse jumps, which made the
+      // walk shudder; there the displayed progress eases toward the real one.
+      const measure = () => {
         const rect = hall.getBoundingClientRect();
         const scrollable = rect.height - (pin ? pin.offsetHeight : window.innerHeight);
-        const p = scrollable <= 0 ? 0 : clamp01(-rect.top / scrollable);
-
+        return scrollable <= 0 ? 0 : clamp01((-rect.top / scrollable) * pEnd);
+      };
+      let shown = null;
+      let raf = 0;
+      const frame = () => {
+        raf = 0;
+        const target = measure();
+        shown = (shown === null || !lite) ? target : shown + (target - shown) * 0.16;
+        if (Math.abs(target - shown) < 0.0004) shown = target;
+        render(shown);
+        if (shown !== target) raf = requestAnimationFrame(frame);
+      };
+      const render = (p) => {
         if (video && video.duration && !Number.isNaN(video.duration)) seekTo(p * video.duration * 0.985);
-        else if (still) still.style.transform = `scale(${(1 + p * 0.9).toFixed(3)}) translateY(${(-p * 4).toFixed(2)}%)`;
+        else if (still) still.style.transform = `translate3d(0, ${(-p * (lite ? 2 : 4)).toFixed(2)}%, 0) scale(${(1 + p * (lite ? 0.45 : 0.9)).toFixed(4)})`;
 
         const io = clamp01((p - INTRO_HOLD) / INTRO_FADE);
         intro.style.opacity = String(1 - io);
@@ -234,27 +260,29 @@ const FAQ: [string, string][] = [
           card.style.pointerEvents = c > 0.6 ? 'auto' : 'none';
         }
 
-        // Photos: a plain row under the copy that rises in just behind it, holds, then passes with it.
+        // Photos: a collage of different sizes that lands one piece at a
+        // time just behind the copy, holds for most of the phase, then drifts
+        // past. Each keeps its own tilt (--r) from the stylesheet.
         rows.forEach(({ el, phase, items }) => {
           const [a, b] = HALL_PHASES[phase];
           const t = clamp01((p - a) / (b - a));
-          el.style.pointerEvents = t > 0.2 && t < 0.9 ? 'auto' : 'none';
+          el.style.pointerEvents = t > 0.15 && t < 0.92 ? 'auto' : 'none';
           items.forEach((item, k) => {
-            const tk = clamp01((t - 0.06 - k * 0.035) / 0.835); // trails the copy slightly, each a beat after the last; the last one finishes exactly at the phase end
-            let scale = 0.8, op = 0, y = 44, blur = 0;
+            const tk = clamp01((t - 0.04 - k * 0.04) / 0.8);
+            let scale = 0.86, op = 0, y = 40, blur = 0;
             if (tk > 0 && tk < 1) {
-              if (tk < 0.5) { const e = smooth(tk / 0.5); scale = 0.8 + 0.2 * e; op = clamp01(tk / 0.2); y = 44 * (1 - e); }
-              else if (tk < 0.82) { scale = 1; op = 1; y = 0; }
-              else { const v = (tk - 0.82) / 0.18; scale = 1 + 0.3 * v; op = 1 - smooth(v); y = -24 * v; blur = v * 6; }
+              if (tk < 0.34) { const e = smooth(tk / 0.34); scale = 0.86 + 0.14 * e; op = clamp01(tk / 0.16); y = 40 * (1 - e); }
+              else if (tk < 0.86) { scale = 1; op = 1; y = 0; }
+              else { const v = (tk - 0.86) / 0.14; scale = 1 + 0.18 * v; op = 1 - smooth(v); y = -20 * v; blur = v * 5; }
             }
-            item.style.opacity = String(op);
-            item.style.transform = `translateY(${y.toFixed(1)}px) scale(${scale.toFixed(3)})`;
+            item.style.opacity = op.toFixed(3);
+            item.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0) rotate(var(--r, 0deg)) scale(${scale.toFixed(3)})`;
             item.style.filter = (!lite && blur) ? `blur(${blur.toFixed(1)}px)` : '';
           });
         });
       };
-      const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
-      update();
+      const onScroll = () => { if (!raf) raf = requestAnimationFrame(frame); };
+      frame();
       window.addEventListener('scroll', onScroll, { passive: true, signal });
       window.addEventListener('resize', onScroll, { signal });
     };
@@ -278,13 +306,22 @@ const FAQ: [string, string][] = [
       const bar = stack.querySelector('.jp-rail-bar i');
       const n = steps.length;
       if (n < 2) return;
+      const jlite = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+      const jpin = stack.querySelector('.journey-pin');
+      const jmeasure = () => {
+        const rect = stack.getBoundingClientRect();
+        const scrollable = rect.height - (jpin ? jpin.offsetHeight : window.innerHeight);
+        return scrollable <= 0 ? 0 : Math.min(1, Math.max(0, -rect.top / scrollable));
+      };
+      let jshown = null;
       let ticking = false;
       const update = () => {
         ticking = false;
-        const rect = stack.getBoundingClientRect();
-        const jpin = stack.querySelector('.journey-pin');
-        const scrollable = rect.height - (jpin ? jpin.offsetHeight : window.innerHeight);
-        const p = scrollable <= 0 ? 0 : Math.min(1, Math.max(0, -rect.top / scrollable));
+        const target = jmeasure();
+        jshown = (jshown === null || !jlite) ? target : jshown + (target - jshown) * 0.18;
+        if (Math.abs(target - jshown) < 0.0004) jshown = target;
+        if (jshown !== target) { ticking = true; requestAnimationFrame(update); }
+        const p = jshown;
         const d = Math.min(1, p / STEPS_END) * (n - 1);
         const exit = Math.min(1, Math.max(0, (p - STEPS_END) / (1 - STEPS_END)));
         steps.forEach((step, i) => {
@@ -347,7 +384,7 @@ const FAQ: [string, string][] = [
           <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);letter-spacing:.14em;text-transform:uppercase;">{phase.eyebrow}</p>
           <h3 class="disp" style="margin:16px 0 0;font-size:clamp(30px,4.2vw,58px);font-weight:500;line-height:1.08;">{phase.title}</h3>
           <span class="rule" style="margin:22px auto;"></span>
-          {phase.body.map((para, i) => <p class="body" style={`margin:${i ? '14px' : '0'} auto 0;max-width:48ch;`}>{para}</p>)}
+          {phase.body.map((para, i) => <p class={`body${i ? ' hall-more' : ''}`} style={`margin:${i ? '14px' : '0'} auto 0;max-width:48ch;`}>{para}</p>)}
         </div>
       ))}
       <div class="hall-card" id="info">
@@ -409,6 +446,7 @@ const FAQ: [string, string][] = [
             <div class="track-copy">
               <p class="disp track-n">{'0' + (i + 1)}</p>
               <h3 class="disp track-title">{t.name} <span class="km track-km" lang="km">{t.km}</span></h3>
+              <p class="body track-tag">{t.tag}</p>
               <p class="body track-body">{t.body}</p>
             </div>
           </li>
