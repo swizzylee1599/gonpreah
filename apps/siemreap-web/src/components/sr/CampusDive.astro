@@ -16,9 +16,8 @@ const hasVideo = existsSync('public' + video);
   <div class="dive-pin">
     <canvas class="dive-map" aria-hidden="true"></canvas>
     <div class="dive-photo dive-aerial" style={`background-image:url(${aerial})`}></div>
-    {hasVideo
-      ? <video class="dive-video" src={`${video}#t=0.001`} muted autoplay playsinline webkit-playsinline preload="auto" aria-label="The campus, turning from above to its front"></video>
-      : <div class="dive-photo dive-front" style={`background-image:url(${front})`}></div>}
+    <div class="dive-photo dive-front" style={`background-image:url(${front})`}></div>
+    {hasVideo && <video class="dive-video" src={`${video}#t=0.001`} muted autoplay playsinline webkit-playsinline preload="auto" aria-label="The campus, turning from above to its front"></video>}
     <div class="dive-scrim" aria-hidden="true"></div>
     <div class="dive-labels wrap" aria-hidden="true">
       <p class="eyebrow dive-label" data-stage="0">Cambodia</p>
@@ -42,14 +41,14 @@ const hasVideo = existsSync('public' + video);
     const canvas = stack.querySelector<HTMLCanvasElement>('.dive-map')!;
     const aerial = stack.querySelector<HTMLElement>('.dive-aerial')!;
     const front = stack.querySelector<HTMLElement>('.dive-front');
-    const video = stack.querySelector<HTMLVideoElement>('.dive-video');
+    let video = stack.querySelector<HTMLVideoElement>('.dive-video');
     const black = stack.querySelector<HTMLElement>('.dive-black')!;
     const scrim = stack.querySelector<HTMLElement>('.dive-scrim')!;
     const labels = [...stack.querySelectorAll<HTMLElement>('[data-stage]')];
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const lite = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
     if (reduce) { stack.classList.add('is-static'); return; }
-    if (lite && video) { video.remove(); }
+    if (lite && video) { video.remove(); video = null; }
     const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
     const ease = (t: number) => t * t * (3 - 2 * t);
 
@@ -125,7 +124,7 @@ const hasVideo = existsSync('public' + video);
       const prime = () => { const p = video.play(); if (p && p.then) p.then(() => video.pause()).catch(() => {}); };
       if (video.readyState >= 2) prime(); else video.addEventListener('loadeddata', prime, { once: true, signal });
       video.addEventListener('seeked', () => { seeking = false; if (dirty) seekTo(latest); }, { signal });
-      video.addEventListener('error', () => { video.style.display = 'none'; }, { once: true, signal });
+      video.addEventListener('error', () => { video?.remove(); video = null; onScroll(); }, { once: true, signal });
     }
 
     // Stages of the pin (0..1): map dive 0–.42, hand-off to aerial .38–.5,
@@ -149,8 +148,9 @@ const hasVideo = existsSync('public' + video);
       if (video) {
         video.style.opacity = String(clamp01(orbit * 6));
         if (video.duration && !Number.isNaN(video.duration)) seekTo(orbit * video.duration * 0.985);
-      } else if (front) {
-        front.style.opacity = String(ease(orbit));
+      }
+      if (front) {
+        front.style.opacity = video ? '0' : String(ease(orbit));
         front.style.transform = `scale(${1.18 - 0.18 * ease(orbit)})`;
       }
       scrim.style.opacity = String(0.25 + 0.35 * hand);
