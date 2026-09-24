@@ -14,6 +14,7 @@ export type SearchEntry = {
 export const SEARCH_INDEX: SearchEntry[] = [
   { title: 'Discipleship Training School (DTS)', desc: 'Six months · every January', href: '/schools/dts', group: 'Schools', keywords: 'dts discipleship training school january identity purpose know god outreach lecture phase nations bilingual khmer english', quick: true },
   { title: 'DTS cost and dates', desc: 'Fees, arrival and departure, prerequisites', href: '/schools/dts#info', group: 'Schools', keywords: 'dts cost price fees dates arrival departure 2000 1500 620 usd outreach cost prerequisites 18' },
+  { title: 'DTS tracks', desc: 'Media, music, cafe, culinary, hospitality, technical', href: '/schools/dts#tracks', group: 'Schools', keywords: 'dts tracks skills media music worship cafe barista culinary cooking hospitality hotel technical repair furniture' },
   { title: 'DTS questions (FAQ)', desc: 'Language, cost, outreach, who can apply', href: '/schools/dts#faq', group: 'Schools', keywords: 'dts faq questions language khmer english' },
   { title: 'Discipleship Bible School (DBS)', desc: 'Thirteen weeks · April 26 to July 21', href: '/schools/dbs', group: 'Schools', keywords: 'dbs discipleship bible school 3 months secondary word of god inductive 66 books april july', quick: true },
   { title: 'DBS week by week', desc: 'The thirteen-week curriculum', href: '/schools/dbs#week-1', group: 'Schools', keywords: 'dbs curriculum weeks genesis exodus pentateuch tribal david kings prophets exile jesus church paul john revelation teaching week' },
