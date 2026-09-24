@@ -89,7 +89,7 @@ const hasVideo = existsSync('public' + video);
     }
 
     // Stages: title holds 0–.12 and fades by .3; the turn runs .1–.6; welcome
-    // .55–.72; black .7–.82; statement .8–1.
+    // .55–.78; the front dims from .68; statement .76–.9 over the building.
     let ticking = false;
     const update = () => {
       ticking = false;
@@ -121,10 +121,11 @@ const hasVideo = existsSync('public' + video);
       welcome.style.opacity = String(ease(wIn) * (1 - wOut));
       welcome.style.transform = `translateY(${((1 - ease(wIn)) * 24).toFixed(1)}px)`;
 
-      const fade = clamp01((p - 0.68) / 0.12);
-      black.style.opacity = String(ease(fade));
+      // Dim the front of the campus under the statement rather than going to black.
+      const dim = clamp01((p - 0.68) / 0.14);
+      black.style.opacity = String(0.62 * ease(dim));
 
-      const sIn = clamp01((p - 0.84) / 0.14);
+      const sIn = clamp01((p - 0.76) / 0.14);
       statement.style.opacity = String(ease(sIn));
       statement.style.transform = `translateY(calc(-50% + ${((1 - ease(sIn)) * 30).toFixed(1)}px)) scale(${(0.96 + 0.04 * ease(sIn)).toFixed(3)})`;
     };
