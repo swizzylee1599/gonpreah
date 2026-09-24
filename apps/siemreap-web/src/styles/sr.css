@@ -625,6 +625,7 @@ body.sr {
 
 /* DTS tracks */
 .sr .tracks-sec { position: relative; z-index: 2; background: var(--sr-ink); }
+.sr .tracks-hint { display: none; margin: 14px 0 0; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
 .sr .tracks-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; }
 .sr .tracks { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .sr .track { position: relative; border-radius: 20px; overflow: hidden; background: var(--sr-raise); border: 1px solid #232323; min-height: 420px; display: flex; flex-direction: column; justify-content: flex-end; transition: transform .5s cubic-bezier(.16,1,.3,1), border-color .4s ease; }
@@ -862,8 +863,10 @@ body.sr {
   .sr .cl-item-photo img, .sr .cl-item-photo .photo-slot { display: block; width: 100%; height: 100%; object-fit: cover; }
   .sr .cl-who { grid-template-columns: minmax(0, 1fr); }
   .sr .tracks-head { flex-direction: column; align-items: flex-start; gap: 14px; }
-  .sr .tracks { grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 28px; }
-  .sr .track { min-height: 300px; }
+  .sr .tracks { display: flex; gap: 12px; margin: 28px -20px 0; padding: 0 20px 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 20px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .sr .tracks::-webkit-scrollbar { display: none; }
+  .sr .track { flex: 0 0 78vw; scroll-snap-align: start; min-height: 380px; }
+  .sr .tracks-hint { display: block !important; }
   .sr .track-body { max-height: none; opacity: 1; }
   .sr .track-photo img { filter: grayscale(0) brightness(.85); }
   .sr .track-copy { padding: 22px 20px; }
