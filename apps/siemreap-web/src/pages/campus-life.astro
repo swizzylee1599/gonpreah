@@ -55,8 +55,11 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
     { time: '8:30 – 9:30', title: 'Staff development', note: 'Training and growth for the staff team.', hi: true },
     { time: '12:30 – 1:30', title: 'Lunch' }, { time: '6:30 – 7:30', title: 'Dinner' },
   ] },
-  { day: 'Sat – Sun', full: 'Weekend', slots: [
-    { time: 'All day', title: 'No set schedule', note: 'Rest, the city, and church on Sunday with a local congregation.' },
+  { day: 'Sat', full: 'Saturday', slots: [
+    { time: 'All day', title: 'Sabbath', note: 'A day of rest for the whole base. No chores, no meetings — sleep, the city, a slow meal.', hi: true },
+  ] },
+  { day: 'Sun', full: 'Sunday', slots: [
+    { time: 'Morning', title: 'Church', note: 'Everyone joins a local congregation — Khmer and international churches around Siem Reap.', hi: true },
   ] },
 ];
 
