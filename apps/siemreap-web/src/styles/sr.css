@@ -864,6 +864,8 @@ body.sr {
   .sr .tracks-head { flex-direction: column; align-items: flex-start; gap: 14px; }
   .sr .tracks { grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 28px; }
   .sr .track { min-height: 300px; }
+  .sr .track-body { max-height: none; opacity: 1; }
+  .sr .track-photo img { filter: grayscale(0) brightness(.85); }
   .sr .track-copy { padding: 22px 20px; }
   .sr .values-vision-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .sr .values-vision { padding: 60px 0 20px; }
