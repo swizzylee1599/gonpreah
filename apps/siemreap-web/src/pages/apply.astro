@@ -5,8 +5,8 @@ import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
 
 // Each application is a Google Form for now (the GP Portal will replace them).
-// Paste the form's share link into `form` and it appears embedded below the
-// chooser; while null, applicants are pointed to an email instead.
+// `form` is the share link, opened in a new tab; while null, applicants are
+// pointed to an email instead.
 type Option = { id: string; name: string; abbr: string; when: string; form: string | null; page?: string; email: string; group: 'Schools' | 'Staff & volunteers' };
 const OPTIONS: Option[] = [
   { group: 'Schools', id: 'dts', name: 'Discipleship Training School', abbr: 'DTS', when: 'Every January', form: 'https://docs.google.com/forms/d/e/1FAIpQLSd2m0j9ODOVe1D_IHC3O-lT50mTrtgKp09fY7bYqX0fdwJo7g/viewform', page: '/schools/dts', email: 'dts@ywamsiemreap.org' },
@@ -61,11 +61,12 @@ const STEPS: [string, string][] = [
             </div>
             {s.form ? (
               <>
-                <p class="body" style="margin:18px 0 0;max-width:60ch;">Fill out the form below, or open it in a new tab if you would rather.</p>
-                <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:18px;">
+                <p class="body" style="margin:18px 0 0;max-width:60ch;">The application is a Google Form. It opens in a new tab, takes about twenty minutes, and you can save and come back to it if you are signed in to Google.</p>
+                <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:22px;">
                   <a class="btn btn--solid" href={s.form} target="_blank" rel="noopener">Open the {s.abbr} application form ↗︎</a>
+                  <a class="btn" href={`mailto:${s.email}?subject=${encodeURIComponent(`${s.abbr} application`)}`}>Email {s.email}</a>
                 </div>
-                <iframe class="apply-form" src={`${s.form}${s.form.includes('?') ? '&' : '?'}embedded=true`} title={`${s.name} application form`} loading="lazy"></iframe>
+                <p class="muted" style="margin:18px 0 0;font-size:14px;max-width:60ch;">Trouble opening the form? Email us and we will send you the link or a copy directly.</p>
               </>
             ) : (
               <>

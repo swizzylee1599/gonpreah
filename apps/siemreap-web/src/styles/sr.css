@@ -266,7 +266,6 @@ body.sr {
 .sr .school-select:focus { outline: none; border-color: #fff; }
 .sr .apply-panel { margin-top: 34px; padding-top: 30px; border-top: 1px solid #232323; }
 .sr .apply-panel-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
-.sr .apply-form { display: block; width: 100%; height: 1400px; margin-top: 22px; border: 0; border-radius: 12px; background: #fff; }
 .sr .apply-steps { display: flex; flex-direction: column; border-bottom: 1px solid #232323; }
 .sr .apply-step { display: grid; grid-template-columns: 90px 1fr; gap: 26px; padding: 30px 0; border-top: 1px solid #232323; }
 .sr .info { padding: 44px 48px; }
@@ -873,8 +872,7 @@ body.sr {
   .sr .contact-details { grid-template-columns: minmax(0, 1fr) !important; margin-top: 36px; }
   .sr .apply-step { grid-template-columns: 56px 1fr; gap: 16px; padding: 24px 0; }
   .sr .apply-step > .disp:first-child { font-size: 24px !important; }
-  .sr .apply-form { height: 1200px; }
-  .sr .info-grid { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+    .sr .info-grid { grid-template-columns: minmax(0, 1fr); gap: 34px; }
   .sr .faq-item summary { font-size: 17px; padding: 18px 0; }
 }
 
