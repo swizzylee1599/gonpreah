@@ -38,6 +38,6 @@ export const NAV: [string, [string, string, string][]][] = [
   ]],
   ['Give', [
     ['giveOnline', 'Give Now', 'Give online through Subsplash'],
-    ['give', 'Support a Staff Member', 'Back a specific missionary'],
+    ['giveOnline', 'Support a Staff Member', 'Back a specific missionary'],
   ]],
 ];
