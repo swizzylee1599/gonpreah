@@ -6,11 +6,10 @@ import Cta from '../components/sr/Cta.astro';
 import PhotoSlot from '../components/sr/PhotoSlot.astro';
 import { CITY, PRACTICAL } from '../lib/sr-siemreap';
 ---
-<SrLayout title="Things to do in Siem Reap | YWAM Siem Reap"
+<SrLayout title="Things to do in Siem Reap | YWAM Siem Reap" spacer={false}
   description="Temples, food, markets, nature and evenings out: what students, volunteers, staff and teams at YWAM Siem Reap do on a day off, plus the practical bits.">
-  <PageHead eyebrow="Explore Siem Reap" km="សៀមរាប" title="Things to do in Siem Reap." highlight="Siem Reap."
-    lead="Where students, volunteers, staff and teams go on a day off, and what to know before you head out."
-    photo="/images/campus/angkor-view.jpg" photoPos="50% 45%" mobileFull
+  <PageHead title="Explore Siem Reap." highlight="Siem Reap." big
+    photo="/images/campus/angkor-view.jpg" photoPos="50% 45%" full center
     photoAlt="Angkor Wat rising above the forest, seen from a hilltop" />
 
   <nav class="sr-jump" aria-label="Jump to">
