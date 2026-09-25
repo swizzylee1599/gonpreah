@@ -25,7 +25,6 @@ export const NAV: [string, [string, string, string][]][] = [
   ]],
   ['Get Involved', [
     ['visit', 'Short-Term Teams', 'Bring a team to Siem Reap'],
-    ['visit', 'Outreach & Ministries', 'Where our teams serve'],
     ['staff', 'Join Staff or Volunteer', 'Serve long term, or come short term'],
   ]],
   ['About', [

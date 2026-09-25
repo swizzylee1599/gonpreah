@@ -390,7 +390,7 @@ body.sr {
   transition: transform .42s cubic-bezier(.22,.61,.36,1), background .3s ease, border-color .3s ease;
 }
 .sr nav.sr-nav.is-hidden { transform: translateY(-100%); }
-.sr nav.sr-nav.is-mobile-open { background: rgba(11,11,11,.94); backdrop-filter: blur(10px); border-bottom-color: #1e1e1e; }
+/* The bar stays clear when the menu opens; only the menu card shows. */
 .sr .navgroup { position: relative; }
 .sr .navgroup > button { background: none; border: 0; cursor: pointer; color: #fff; font-size: 15px; letter-spacing: .04em; padding: 10px 0; font-family: inherit; }
 .sr .navgroup:hover > button, .sr .navgroup.is-current > button { color: var(--sr-pink); }
