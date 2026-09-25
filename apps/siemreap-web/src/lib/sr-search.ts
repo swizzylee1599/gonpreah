@@ -1,3 +1,5 @@
+import { GIVE_URL } from './sr-routes';
+
 // Quick-search index for the nav search. Curated rather than crawled: each
 // entry is a page or a deep link with the words people are likely to type.
 // `quick` entries show before anyone types.
@@ -40,6 +42,7 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { title: 'Campus life', desc: 'Living in community, Khmer and international', href: '/campus-life', group: 'Students', keywords: 'campus life community living dorm rooms meals worship family khmer international students volunteers new staff', quick: true },
   { title: 'Things to do in Siem Reap', desc: 'Temples, food, markets, nature, getting around', href: '/siem-reap', group: 'Students', keywords: 'siem reap city things to do angkor wat temples food cafe market pub street tonle sap kulen circus tuk tuk weather sim card money riel' },
   { title: 'Give', desc: 'Partner with the work in Cambodia', href: '/give', group: 'Get involved', keywords: 'give donate giving support partner missionary staff member money', quick: true },
+  { title: 'Give online', desc: 'Give securely through Subsplash', href: GIVE_URL, group: 'Get involved', keywords: 'give online donate donation subsplash card pay giving tithe offering', external: true },
 
   { title: 'About YWAM Siem Reap', desc: 'Welcome, our story and the road to pioneering', href: '/about', group: 'About', keywords: 'about us welcome story history gonpreah youth with a mission cambodia base poipet phnom penh pioneering university of the nations uofn 2002 2016 2025 2027' },
   { title: 'Values', desc: 'YWAM statement of purpose, core beliefs and foundational values', href: '/values', group: 'About', keywords: 'values believe statement of purpose core beliefs foundational values worship holiness witness prayer fellowship service know god make god known hear gods voice' },

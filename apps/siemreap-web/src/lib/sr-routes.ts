@@ -16,6 +16,9 @@ export const ROUTE_PATH: Record<string, string> = {
   contact: '/contact',
 };
 
+// Online giving (Subsplash). Opens in a new tab.
+export const GIVE_URL = 'https://subsplash.com/u/-DTDBSM/give?campus_id=1c7f555d-5552-4aa7-9a79-484e72996412';
+
 export const NAV: [string, [string, string, string][]][] = [
   ['Students', [
     ['dts', 'What is DTS?', 'Start your journey in missions'],
