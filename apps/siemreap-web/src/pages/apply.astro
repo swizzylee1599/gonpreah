@@ -4,40 +4,139 @@ import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
 
-const steps: [string, string][] = [
-  ['Get in touch', 'Send us a message with the school you are interested in and roughly when you want to come.'],
-  ['Application', 'A written application covering your story, your health and your church background.'],
-  ['References', 'Two references, one of them from a church leader who knows you.'],
-  ['Interview', 'A conversation with our staff — a two-way one. You should be asking us questions too.'],
-  ['Acceptance and fees', 'Once accepted, we send the fee breakdown, packing list and visa guidance.'],
+// Each application is a Google Form for now (the GP Portal will replace them).
+// `form` is the share link, opened in a new tab; while null, applicants are
+// pointed to an email instead.
+type Option = { id: string; name: string; abbr: string; when: string; form: string | null; page?: string; email: string; group: 'Schools' | 'Staff & volunteers' };
+const OPTIONS: Option[] = [
+  { group: 'Schools', id: 'dts', name: 'Discipleship Training School', abbr: 'DTS', when: 'Every January', form: 'https://docs.google.com/forms/d/e/1FAIpQLSd2m0j9ODOVe1D_IHC3O-lT50mTrtgKp09fY7bYqX0fdwJo7g/viewform', page: '/schools/dts', email: 'dts@ywamsiemreap.org' },
+  { group: 'Schools', id: 'dbs', name: 'Discipleship Bible School', abbr: 'DBS', when: 'Every April', form: null, page: '/schools/dbs', email: 'info@ywamsiemreap.org' },
+  { group: 'Schools', id: 'bcs', name: 'Bible Counseling School', abbr: 'BCS', when: 'New', form: null, email: 'info@ywamsiemreap.org' },
+  { group: 'Schools', id: 'sms', name: 'Social Media School', abbr: 'SMS', when: 'New', form: null, page: '/schools/sms', email: 'info@ywamsiemreap.org' },
+  { group: 'Staff & volunteers', id: 'staff', name: 'Staff application', abbr: 'Staff', when: 'After a DTS', form: 'https://docs.google.com/forms/d/e/1FAIpQLSdGfsiMjFHq5VZXUU5_WPtfAQqD3JvOn6g6cdIiryjIAShsaw/viewform', page: '/staff', email: 'info@ywamsiemreap.org' },
+  { group: 'Staff & volunteers', id: 'volunteer', name: 'Volunteer application', abbr: 'Volunteer', when: 'Short or long term', form: 'https://docs.google.com/forms/d/e/1FAIpQLScchqoqQbPF_ca-VP19J-CQG6Obdj3VL24qTT7GamPTxgKiyQ/viewform', page: '/staff', email: 'info@ywamsiemreap.org' },
+];
+const GROUPS = [...new Set(OPTIONS.map((o) => o.group))];
+
+const STEPS: [string, string][] = [
+  ['School application', 'Choose your school above and fill out its application form. It asks about your story, your faith, your health and your church background — the same for every school, with a few questions particular to each.'],
+  ['Leader reference', 'Once your form is in, our staff get in touch on WhatsApp or Telegram to continue. International applicants send one reference form to a church leader, pastor or mentor who knows them well. Khmer applicants do not need a reference.'],
+  ['Video interview', 'A video call with our school staff. It is a two-way conversation: we want to know you, and you should be asking us questions too.'],
+  ['Acceptance', 'We let you know the outcome, and if you are accepted we welcome you into the school.'],
+  ['The practical part', 'Fees and how to pay them, the packing list, the visa process for Cambodia, and travel to Siem Reap — we walk you through each one.'],
   ['Arrive', 'We collect you from Siem Reap airport and get you settled on the base.'],
 ];
 ---
-<SrLayout title="How to Apply | YWAM Siem Reap">
-  <PageHead eyebrow="How to apply" km="ដាក់ពាក្យ"
-    lead="Six steps, no surprises. Most people are through in a few weeks.">
-    Start your <span style="color:var(--sr-pink);">application</span>
-  </PageHead>
-  <section class="sec">
-    <div class="wrap" style="display:flex;flex-direction:column;">
-      {steps.map(([t, d], n) => (
-        <div class="reveal" style="display:grid;grid-template-columns:90px 1fr;gap:26px;padding:30px 0;border-top:1px solid #232323;">
-          <span class="disp" style="font-size:32px;color:var(--sr-pink);font-weight:500;">{'0' + (n + 1)}</span>
-          <div>
-            <h3 class="disp" style="margin:0;font-size:22px;font-weight:500;">{t}</h3>
-            <p class="body" style="margin:12px 0 0;max-width:56ch;font-size:16px;">{d}</p>
-          </div>
+<SrLayout title="Apply | YWAM Siem Reap"
+  description="Apply for a school at YWAM Siem Reap. Choose your school, fill out its application form, and our staff walk with you through references, an interview, acceptance and the practical steps.">
+  <PageHead eyebrow="How to apply" km="ដាក់ពាក្យ" title="It all starts with the application." highlight="application."
+    lead="Choose what you are applying for — a school, staff or volunteering — fill out its application, and our staff will walk with you the rest of the way."
+    photo="/images/campus/calling-sunset.jpg" photoPos="50% 40%" mobileFull
+    photoAlt="A young man in a cap and backpack, silhouetted against a sunset" />
+
+  <section class="sec" style="padding-bottom:0;">
+    <div class="wrap">
+      <div class="card apply-chooser">
+        <label class="eyebrow" for="school-select">What are you applying for?</label>
+        <div class="select-wrap">
+          <select id="school-select" class="school-select">
+            <option value="">Choose one…</option>
+            {GROUPS.map((g) => (
+              <optgroup label={g}>
+                {OPTIONS.filter((o) => o.group === g).map((s) => <option value={s.id}>{s.group === 'Schools' ? `${s.name} (${s.abbr})` : s.name}</option>)}
+              </optgroup>
+            ))}
+          </select>
         </div>
-      ))}
-      <div style="border-top:1px solid #232323;"></div>
-      <p class="muted" style="font-size:14px;margin-top:26px;">Application form and fee schedule pending publication.</p>
+
+        {OPTIONS.map((s) => (
+          <div class="apply-panel" data-school={s.id} hidden>
+            <div class="apply-panel-head">
+              <div>
+                <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);letter-spacing:.14em;text-transform:uppercase;">{s.abbr} · {s.when}</p>
+                <h2 class="disp" style="margin:10px 0 0;font-size:clamp(24px,2.8vw,36px);font-weight:500;line-height:1.12;">{s.name}</h2>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                {s.page && <a class="btn" href={s.page}>{s.group === 'Schools' ? 'About the school' : 'About serving here'}</a>}
+                <a class="btn btn--plain" href="/campus-life">Campus life</a>
+              </div>
+            </div>
+            {s.form ? (
+              <>
+                <p class="body" style="margin:18px 0 0;max-width:60ch;">The application is a Google Form. It opens in a new tab, takes about twenty minutes, and you can save and come back to it if you are signed in to Google.</p>
+                <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:22px;">
+                  <a class="btn btn--solid" href={s.form} target="_blank" rel="noopener">Open the {s.abbr} application form ↗︎</a>
+                  <a class="btn" href={`mailto:${s.email}?subject=${encodeURIComponent(`${s.abbr} application`)}`}>Email {s.email}</a>
+                </div>
+                <p class="muted" style="margin:18px 0 0;font-size:14px;max-width:60ch;">Trouble opening the form? Email us and we will send you the link or a copy directly.</p>
+              </>
+            ) : (
+              <>
+                <p class="body" style="margin:18px 0 0;max-width:60ch;">The {s.abbr} application form is being finalised. Email us and we will send it to you as soon as it is ready — and answer any questions in the meantime.</p>
+                <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:22px;">
+                  <a class="btn btn--solid" href={`mailto:${s.email}?subject=${encodeURIComponent(`${s.abbr} application`)}`}>Email {s.email}</a>
+                  <a class="btn" href="/contact">Contact the base</a>
+                </div>
+              </>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <p class="eyebrow">What happens next</p>
+      <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">From application to arrival.</h2>
+      <p class="body" style="margin:18px 0 0;max-width:58ch;">The process is the same for every school, and much the same for staff and volunteers. Most people are through it in a few weeks.</p>
+      <div class="apply-steps" style="margin-top:40px;">
+        {STEPS.map(([t, d], n) => (
+          <div class="apply-step reveal">
+            <span class="disp" style="font-size:32px;color:var(--sr-pink);font-weight:500;">{'0' + (n + 1)}</span>
+            <div>
+              <h3 class="disp" style="margin:0;font-size:22px;font-weight:500;">{t}</h3>
+              <p class="body" style="margin:12px 0 0;max-width:56ch;font-size:16px;">{d}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p class="muted" style="font-size:14px;margin-top:30px;max-width:60ch;">Applications will move into the YWAM GP Portal soon, where you can follow your application and send your leader reference link. Until then, the forms above are the way in. Questions? <a href="/contact" style="color:#fff;">Contact the base</a>.</p>
+    </div>
+  </section>
+
   <Cta
-    title="Ready when you are"
-    body="Write to us and we will send the current application form for your school."
-    primary={['contact', 'Contact the base']}
+    title="Not sure which school fits?"
+    body="Tell us where you are and what you are drawn to. We will point you at the right one."
+    primary={['contact', 'Ask a question']}
     secondary={['schools', 'See schools']}
   />
   <Footer />
 </SrLayout>
+
+<script>
+  // The chooser shows one school's panel at a time and keeps ?school= in the
+  // URL so school pages can deep-link straight to their form.
+  let ctrl = null;
+  const init = () => {
+    if (ctrl) ctrl.abort();
+    ctrl = new AbortController();
+    const select = document.getElementById('school-select');
+    if (!(select instanceof HTMLSelectElement)) return;
+    const panels = [...document.querySelectorAll('.apply-panel')];
+    const show = (id, push) => {
+      panels.forEach((p) => { p.hidden = p.dataset.school !== id; });
+      if (push) {
+        const url = new URL(location.href);
+        if (id) url.searchParams.set('school', id); else url.searchParams.delete('school');
+        history.replaceState(null, '', url);
+      }
+    };
+    const fromUrl = new URL(location.href).searchParams.get('school') || '';
+    if (panels.some((p) => p.dataset.school === fromUrl)) select.value = fromUrl;
+    show(select.value, false);
+    select.addEventListener('change', () => show(select.value, true), { signal: ctrl.signal });
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

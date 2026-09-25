@@ -1,0 +1,66 @@
+---
+import SrLayout from '../layouts/SrLayout.astro';
+import Footer from '../components/sr/Footer.astro';
+import PageHead from '../components/sr/PageHead.astro';
+import Cta from '../components/sr/Cta.astro';
+import PhotoSlot from '../components/sr/PhotoSlot.astro';
+import { CITY, PRACTICAL } from '../lib/sr-siemreap';
+---
+<SrLayout title="Things to do in Siem Reap | YWAM Siem Reap" spacer={false}
+  description="Temples, food, markets, nature and evenings out: what students, volunteers, staff and teams at YWAM Siem Reap do on a day off, plus the practical bits.">
+  <PageHead title="Explore Siem Reap." highlight="Siem Reap." big
+    photo="/images/campus/angkor-view.jpg" photoPos="50% 45%" full center
+    photoAlt="Angkor Wat rising above the forest, seen from a hilltop" />
+
+  <nav class="sr-jump" aria-label="Jump to">
+    <div class="wrap sr-jump-row">
+      {CITY.map((g, i) => <a href={`#sr-${i + 1}`}>{g.title}</a>)}
+      <a href="#sr-know">Good to know</a>
+    </div>
+  </nav>
+
+  {CITY.map((g, i) => (
+    <section class="sec sr-place" id={`sr-${i + 1}`}>
+      <div class={`wrap sr-place-grid${i % 2 ? ' is-flip' : ''}`}>
+        <figure class="sr-place-photo wipe">
+          {g.photo
+            ? <img src={g.photo} alt={g.alt ?? ''} loading="lazy" decoding="async" style={g.pos ? `object-position:${g.pos}` : undefined} />
+            : <PhotoSlot label={g.label} radius={0} />}
+        </figure>
+        <div class="sr-place-copy reveal">
+          <p class="disp sr-place-n">{'0' + (i + 1)}</p>
+          <h2 class="disp sr-place-title">{g.title}</h2>
+          <p class="body sr-place-intro">{g.intro}</p>
+          <ul class="sr-place-list">
+            {g.places.map((pl) => <li><b>{pl.name}</b><span>{pl.note}</span></li>)}
+          </ul>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="sec" id="sr-know" style="padding-top:0;">
+    <div class="wrap">
+      <div class="card sr-know reveal">
+        <p class="eyebrow">Good to know</p>
+        <h2 class="disp" style="margin:12px 0 0;font-size:clamp(26px,3vw,40px);font-weight:500;line-height:1.1;">Before you head out.</h2>
+        <dl class="practical sr-know-list">
+          {PRACTICAL.map(([k, v]) => (
+            <div>
+              <dt class="disp">{k}</dt>
+              <dd class="body">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <Cta
+    title="Come and see it for yourself."
+    body="Siem Reap is home for everyone who trains, serves and visits with us. Find out what living on campus is like."
+    primary={['campus', 'Campus life']}
+    secondary={['apply', 'Apply']}
+  />
+  <Footer />
+</SrLayout>

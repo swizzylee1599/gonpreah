@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
 import '../styles/sr.css';
 import Nav from '../components/sr/Nav.astro';
 
@@ -6,11 +7,13 @@ interface Props {
   title: string;
   description?: string;
   spacer?: boolean;
+  noindex?: boolean;
 }
 const {
   title,
   description = 'YWAM Siem Reap — a Youth With A Mission training base in Cambodia. Heart for Cambodia, vision for the world.',
   spacer = true,
+  noindex = false,
 } = Astro.props;
 ---
 
@@ -20,6 +23,7 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -27,13 +31,33 @@ const {
       href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=Koulen&family=Nunito+Sans:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
+    <ViewTransitions />
   </head>
   <body class="sr">
     <div class="srbar"></div>
     <div style="min-height:100vh;background:var(--sr-ink);">
       <Nav />
-      {spacer && <div style="height:93px;"></div>}
+      {spacer && <div style="height:109px;"></div>}
       <slot />
     </div>
+    <script>
+      // Scroll reveals: the site uses CSS scroll-driven animations where the
+      // browser supports them. Elsewhere (iOS Safari, Firefox) this marks
+      // elements as they enter the viewport and CSS transitions take over.
+      const supportsTimeline = CSS.supports('animation-timeline: view()');
+      let io = null;
+      const init = () => {
+        if (io) io.disconnect();
+        document.documentElement.classList.toggle('sr-io', !supportsTimeline);
+        if (supportsTimeline) return;
+        const els = document.querySelectorAll('.reveal, .stag, .linein, .wipe, .riseup, .scaleup, .growrule, .io-in');
+        io = new IntersectionObserver((entries) => {
+          entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
+        }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+        els.forEach((el) => io.observe(el));
+      };
+      init();
+      document.addEventListener('astro:page-load', init);
+    </script>
   </body>
 </html>

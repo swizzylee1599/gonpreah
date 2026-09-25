@@ -6,12 +6,20 @@ import PhotoSlot from '../components/sr/PhotoSlot.astro';
 import HeroLine from '../components/sr/HeroLine.astro';
 import HeroVideo from '../components/sr/HeroVideo.astro';
 import SchoolCard from '../components/sr/SchoolCard.astro';
+import GlobeO from '../components/sr/GlobeO.astro';
 
-const SCHOOL_ROWS: [string, string, string, string][] = [
-  ['Discipleship Training School', 'DTS', 'The doorway into everything else. Lecture phase, then outreach phase.', 'Two intakes a year'],
-  ['Discipleship Bible School', 'DBS', "An extended season in the Word, for those who want depth before they're sent.", 'Annual'],
-  ['Bible Counseling School', 'BCS', 'Training for those caring for people who carry trauma — a growing need across Cambodia.', 'New'],
-  ['Social Media School', 'SMS', 'Storytelling and digital ministry, for the generation already living there.', 'New'],
+// 3D camera-move video, scrubbed by scroll position through the whole
+// section instead of played back normally.
+// iOS Safari/WebKit leaves a <video> blank until it has actually
+// painted a frame — the #t= fragment forces it to seek-and-paint
+// the first frame during preload instead of waiting for playback.
+const GONPREAH_3D_VIDEO = '/video/gonpreah-community-3d.mp4';
+
+const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; photo?: string; pos?: string; href?: string }[] = [
+  { name: 'Discipleship Training School', abbr: 'DTS', body: 'Discover your calling. Find a purpose greater than your own desire.', when: 'Every January', photo: '/images/gonpreah-worship-2.jpg', href: '/schools/dts' },
+  { name: 'Discipleship Bible School', abbr: 'DBS', body: 'The whole Bible in thirteen weeks. Study the Word, then live it out.', when: 'Every April', photo: '/images/schools/dts-student-bible.jpg', pos: '50% 36%', href: '/schools/dbs' },
+  { name: 'Bible Counseling School', abbr: 'BCS', body: 'Training for those caring for people who carry trauma — a growing need across Cambodia.', when: 'New', photo: '/images/schools/praying-together.jpg' },
+  { name: 'Social Media School', abbr: 'SMS', body: 'Storytelling and digital ministry, for the generation already living there.', when: 'New', photo: '/images/schools/sms-lab.jpg', href: '/schools/sms' },
 ];
 ---
 <SrLayout title="YWAM Siem Reap | Heart for Cambodia, vision for the world" spacer={false}>
@@ -23,7 +31,7 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
       </div>
       <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top, rgba(11,11,11,.96) 4%, rgba(11,11,11,.45) 55%, rgba(11,11,11,.7));"></div>
       <div class="wrap herofade sr-hero-copy" style="position:relative;pointer-events:none;padding:clamp(28px,5vh,56px) clamp(20px,5vw,40px) clamp(36px,8vh,86px);">
-        <p class="eyebrow">Youth With A Mission · Cambodia</p>
+        <p class="eyebrow">Youth With A Mission · Siem Reap, Cambodia</p>
         <HeroLine />
         <p class="body" style="margin:26px 0 0;max-width:50ch;">
           Empowering the next generation to transform their nation and the world
@@ -38,57 +46,246 @@ const SCHOOL_ROWS: [string, string, string, string][] = [
     <div style="position:relative;z-index:1;">
       <Marquee />
 
-      <section class="sec">
-        <div class="wrap reveal" style="max-width:900px;">
-          <p class="km" style="margin:0;font-size:clamp(30px,4vw,52px);line-height:1.5;">កូនព្រះ</p>
-          <p class="muted" style="margin:10px 0 0;font-size:16px;">GonPreah — Khmer for "child of God"</p>
-          <h2 class="disp" style="margin:44px 0 0;font-size:clamp(30px,4.2vw,56px);font-weight:500;max-width:24ch;line-height:1.15;">
-            Identity comes first. Purpose flows out of it.
-          </h2>
-          <p class="body" style="margin:28px 0 0;max-width:58ch;">
-            We are not defined by what we do. We do what we do because of who we already are. Every school, every team, and every person sent from this campus starts there.
-          </p>
-          <a class="btn btn--plain" href="https://gonpreah.org" style="display:inline-flex;margin-top:30px;">Back to gonpreah.org ↗</a>
-        </div>
-      </section>
-
-      <div class="flipwrap">
-        <section class="sec flipin" style="padding-top:84px;background:linear-gradient(#131313, var(--sr-ink) 42%);border-top:1px solid #2a2a2a;border-radius:30px 30px 0 0;box-shadow:0 -34px 70px rgba(0,0,0,.65);">
-          <div class="wrap">
-            <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:50px;align-items:end;">
-              <h2 class="disp" style="margin:0;font-size:clamp(30px,4.2vw,56px);font-weight:500;">Train here</h2>
-              <p class="body" style="margin:0;max-width:46ch;">
-                Four schools, run in Khmer and English. Every one begins with who you are and ends with where you're sent.
-              </p>
+      <div class="gonpreah-stack">
+        <div class="video3d-pin">
+          <video
+            class="scroll3d"
+            data-src={GONPREAH_3D_VIDEO}
+            data-src-mobile={GONPREAH_3D_VIDEO.replace(/\.mp4$/, '-mobile.mp4')}
+            muted
+            autoplay
+            playsinline
+            webkit-playsinline
+            preload="auto"
+            aria-label="The GonPreah community, rotating in 3D"
+          />
+          <div class="video3d-scrim"></div>
+          <div class="video3d-text wrap" style="position:relative;z-index:1;max-width:720px;">
+            <div style="display:flex;align-items:center;gap:16px;">
+              <img
+                src="/images/gonpreah-seal.png"
+                alt=""
+                aria-hidden="true"
+                style="width:clamp(34px,4vw,48px);opacity:.7;pointer-events:none;flex:none;"
+              />
+              <p class="km" style="margin:0;font-size:clamp(30px,4vw,52px);line-height:1.5;">កូនព្រះ</p>
             </div>
+            <p class="muted" style="margin:10px 0 0;font-size:16px;">GonPreah — Khmer for "child of God"</p>
+            <h2 class="disp" style="margin:44px 0 0;font-size:clamp(30px,4.2vw,56px);font-weight:500;max-width:24ch;line-height:1.15;">
+              Identity comes first. Purpose flows out of it.
+            </h2>
+            <p class="body" style="margin:28px 0 0;max-width:58ch;">
+              We are not defined by what we do. We do what we do because of who we already are. Every school, every team, and every person sent from this campus starts there.
+            </p>
+            <a class="btn btn--plain" href="https://gonpreah.org" style="display:inline-flex;margin-top:30px;">Learn more about GonPreah ↗︎</a>
           </div>
-          <div class="hscroll" style="margin-top:48px;">
-            {SCHOOL_ROWS.map(([name, abbr, body, when]) => (
-              <SchoolCard name={name} abbr={abbr} body={body} when={when} />
-            ))}
+        </div>
+        <div class="th-cover">
+          <div class="wrap">
+            <p class="eyebrow">Training</p>
+            <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,4.2vw,56px);font-weight:500;line-height:1.1;">
+              Train here. <span aria-hidden="true">G<GlobeO /></span><span class="vh">Go</span> anywhere.
+            </h2>
+          </div>
+          <div class="schools-deck" style="margin-top:40px;">
+            <div class="deck">
+              {SCHOOL_ROWS.map((school) => <SchoolCard {...school} />)}
+            </div>
           </div>
           <div class="wrap">
             <p class="muted" style="margin:0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;">Scroll for more →</p>
           </div>
-        </section>
-      </div>
-
-      <section class="sec" style="padding-top:0;">
-        <div class="wrap" style="display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:50px;align-items:center;">
-          <div class="wipe" style="height:420px;overflow:hidden;border-radius:20px;">
-            <div class="parslow" style="height:112%;margin-top:-6%;">
-              <PhotoSlot label="Drop a photo — a visiting team working with the community" />
+        </div>
+        <div class="bat-cover">
+          <div class="wrap bat-grid" style="display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:50px;align-items:center;width:100%;">
+            <div class="wipe bat-photo" style="height:420px;overflow:hidden;border-radius:20px;">
+              <div class="parslow" style="height:112%;margin-top:-6%;">
+                <img src="/images/campus/team-high-five.jpg" alt="A visiting team member high-fiving a leaping boy outside a village house" loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" />
+              </div>
+            </div>
+            <div class="bat-text">
+              <h2 class="disp" style="margin:0;font-size:clamp(30px,4.2vw,56px);font-weight:500;">Bring a team</h2>
+              <p class="body" style="margin:26px 0 0;max-width:48ch;">
+                We host international teams year round. You'll work alongside the Cambodian community rather than around it — on their invitation, on their terms, in their language.
+              </p>
+              <a class="btn btn--solid" style="margin-top:32px;display:inline-flex;" href="/visit">Plan your team's visit</a>
             </div>
           </div>
-          <div class="reveal">
-            <h2 class="disp" style="margin:0;font-size:clamp(30px,4.2vw,56px);font-weight:500;">Bring a team</h2>
-            <p class="body" style="margin:26px 0 0;max-width:48ch;">
-              We host international teams year round. You'll work alongside the Cambodian community rather than around it — on their invitation, on their terms, in their language.
-            </p>
-            <a class="btn btn--solid" style="margin-top:32px;display:inline-flex;" href="/visit">Plan your team's visit</a>
-          </div>
         </div>
-      </section>
+      </div>
+
+      <script>
+        // Re-runs after every client-side navigation: the DOM is swapped
+        // but hoisted scripts only execute once. The previous page's
+        // window listeners are dropped through the abort signal.
+        let ctrl = null;
+        const init = () => {
+        if (ctrl) ctrl.abort();
+        ctrl = new AbortController();
+        const { signal } = ctrl;
+        const video = document.querySelector('.scroll3d');
+        const stack = document.querySelector('.gonpreah-stack');
+        const pin = document.querySelector('.video3d-pin');
+        const scrim = document.querySelector('.video3d-scrim');
+        const text = document.querySelector('.video3d-text');
+        const cover = document.querySelector('.th-cover');
+        const deckCards = [...document.querySelectorAll('.deck .schoolcard')];
+        const batCover = document.querySelector('.bat-cover');
+        if (video instanceof HTMLVideoElement && stack) {
+          // Phones get a portrait, lighter clip; the #t= fragment makes iOS
+          // paint the first frame during preload.
+          const phone = matchMedia('(max-width: 760px)').matches;
+          const lite = phone || matchMedia('(pointer: coarse)').matches;
+          video.src = `${(phone && video.dataset.srcMobile) || video.dataset.src}#t=0.001`;
+          video.load();
+          // Many mobile browsers (iOS Safari especially) never actually
+          // decode a video's frames if it's only ever seeked via JS and
+          // has never been played — programmatic currentTime/fastSeek
+          // calls silently no-op on an unprimed video. A muted,
+          // playsinline video is allowed to autoplay, so kick it off and
+          // immediately pause to "wake up" the decoder before any seeks.
+          const primeVideo = () => {
+            const p = video.play();
+            if (p && typeof p.then === 'function') p.then(() => video.pause()).catch(() => {});
+          };
+          if (video.readyState >= 2) primeVideo();
+          else video.addEventListener('loadeddata', primeVideo, { once: true, signal });
+          // When autoplay is blocked (Low Power Mode, data saver), the first touch starts it.
+          const unlock = () => { if (video.readyState < 2) { video.load(); primeVideo(); } };
+          for (const ev of ['touchstart', 'touchend', 'click']) window.addEventListener(ev, unlock, { passive: true, signal, once: true });
+
+          let seeking = false;
+          let latestTarget = 0;
+          let dirty = false;
+
+          const seekTo = (target) => {
+            latestTarget = target;
+            dirty = true;
+            if (seeking) return;
+            seeking = true;
+            dirty = false;
+            // Exact seeks, not fastSeek: fastSeek snaps to keyframes and the scrub jumps.
+            video.currentTime = target;
+          };
+          video.addEventListener('seeked', () => {
+            seeking = false;
+            if (dirty) seekTo(latestTarget);
+          }, { signal });
+
+          // The "Train here" cover now holds its own content (heading,
+          // intro, school cards, footer line), so it's taller than one
+          // viewport — its negative margin has to match its real
+          // measured height, not a fixed 100vh, for the slide-up overlap
+          // trick to line up correctly.
+          // Re-measure only when the width changes: phones fire resize as the
+          // browser bar shows and hides, and re-measuring then made it jump.
+          let lastW = window.innerWidth;
+          const widthFns = [];
+          const onWidth = (fn) => widthFns.push(fn);
+          window.addEventListener('resize', () => {
+            if (window.innerWidth === lastW) return;
+            lastW = window.innerWidth;
+            widthFns.forEach((fn) => fn());
+          }, { signal });
+          if (cover) {
+            const setCoverMargin = () => { cover.style.marginTop = `-${cover.offsetHeight}px`; };
+            setCoverMargin();
+            onWidth(setCoverMargin);
+          }
+          if (batCover) {
+            const setBatMargin = () => { batCover.style.marginTop = `-${batCover.offsetHeight}px`; };
+            setBatMargin();
+            onWidth(setBatMargin);
+          }
+
+          // The stack is one long pin: the video/text stay fixed in place
+          // for the whole thing. Within that single scroll range: the video
+          // scrubs through its whole clip across the first 28% while the
+          // dark scrim clears so the footage comes forward, with the text
+          // holding on top until it dissipates over the last stretch of
+          // the scrub (20-28%), then the "Train here" cover slides up
+          // over it (28-42%), then the fanned deck of school cards deals
+          // through one school at a time (42-70%), then "Bring a team" slides up
+          // over Train Here the same way (70-100%) before the pin finally
+          // releases into the next section.
+          // Stack is 900vh: video scrub ~270vh, cover slide ~110vh, one
+          // school card per ~110vh, team cover slide ~200vh.
+          const TEXT_FADE_START = 0.22;
+          const VIDEO_END = 0.3;
+          const COVER_START = 0.3;
+          const COVER_END = 0.42;
+          const CARDS_START = 0.42;
+          const CARDS_END = 0.78;
+          const BAT_START = 0.78;
+          let ticking = false;
+          const update = () => {
+            ticking = false;
+            const rect = stack.getBoundingClientRect();
+            // Measure against the pinned panel (100vh in CSS), not
+            // window.innerHeight: on phones the browser bar collapses while
+            // scrolling and innerHeight changes, which made the covers jump
+            // when the pin released.
+            const scrollable = rect.height - (pin ? pin.offsetHeight : window.innerHeight);
+            const progress = scrollable <= 0 ? 0 : Math.min(1, Math.max(0, -rect.top / scrollable));
+
+            const videoProgress = Math.min(1, progress / VIDEO_END);
+            if (video.duration && !Number.isNaN(video.duration)) {
+              seekTo(videoProgress * video.duration);
+            }
+            if (scrim) scrim.style.opacity = String(1 - videoProgress);
+
+            if (text) {
+              const fade = Math.min(1, Math.max(0, (progress - TEXT_FADE_START) / (VIDEO_END - TEXT_FADE_START)));
+              text.style.opacity = String(1 - fade);
+              text.style.transform = `translateY(${-24 * fade}px) scale(${1 - 0.05 * fade})`;
+              if (!lite) text.style.filter = `blur(${fade * 10}px)`;
+              text.style.pointerEvents = fade > 0.9 ? 'none' : '';
+            }
+
+            if (cover) {
+              const coverProgress = Math.min(1, Math.max(0, (progress - COVER_START) / (COVER_END - COVER_START)));
+              cover.style.transform = `translateY(${(1 - coverProgress) * 100}%)`;
+            }
+
+            if (deckCards.length > 1) {
+              const cardsProgress = Math.min(1, Math.max(0, (progress - CARDS_START) / (CARDS_END - CARDS_START)));
+              // dealt = how many cards have been swiped away (fractional while one is mid-swipe)
+              const dealt = cardsProgress * (deckCards.length - 1);
+              deckCards.forEach((card, i) => {
+                const s = dealt - i;
+                card.style.zIndex = String(deckCards.length - i);
+                if (s <= 0) {
+                  // Still in the deck: fan back-right behind the top card, sliding forward as cards ahead leave.
+                  const k = -s;
+                  card.style.transform = `translate(${k * 14}px, ${k * 12}px) rotate(${k * 3.5}deg) scale(${1 - k * 0.035})`;
+                  card.style.opacity = '1';
+                } else {
+                  // Leaving: hold for the first quarter of the step, then swipe off left over the deck.
+                  const t = Math.min(1, Math.max(0, (s - 0.25) / 0.75));
+                  card.style.transform = `translate(${-t * 115}%, ${-t * 6}%) rotate(${-t * 14}deg)`;
+                  card.style.opacity = String(1 - Math.max(0, (t - 0.5) * 2));
+                }
+              });
+            }
+
+            if (batCover) {
+              const batProgress = Math.min(1, Math.max(0, (progress - BAT_START) / (1 - BAT_START)));
+              batCover.style.transform = `translateY(${(1 - batProgress) * 100}%)`;
+            }
+          };
+          const onScroll = () => {
+            if (!ticking) {
+              ticking = true;
+              requestAnimationFrame(update);
+            }
+          };
+          update();
+          window.addEventListener('scroll', onScroll, { passive: true, signal });
+        }
+        };
+        init();
+        document.addEventListener('astro:page-load', init);
+      </script>
 
       <section class="sec" style="padding-top:0;">
         <div class="wrap reveal">

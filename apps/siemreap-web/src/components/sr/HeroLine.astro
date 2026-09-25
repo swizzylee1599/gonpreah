@@ -8,9 +8,9 @@ const BREAK_AFTER = new Set([1, 2, 4]);
 <h1 class="disp hstack hline" style="margin:20px 0 0;font-size:clamp(44px,7vw,96px);font-weight:500;line-height:1.16;letter-spacing:.03em;max-width:16ch;pointer-events:auto;">
   {HERO_PAIRS.map(([en, km], i) => (
     <>
-      <span class="hpair" style={i === 5 ? 'color:var(--sr-pink);' : undefined}>
+      <span class="hpair" transition:name={`page-title-w${i}`} style={i === 5 ? 'color:var(--sr-pink);' : undefined}>
         <span class="hswap henw">
-          <span class="hw"><i style={`--d:${(0.075 * i + 0.12).toFixed(3)}s`}>{en}</i></span>
+          <span class="hw"><i class={i % 2 === 0 ? 'hw-a' : 'hw-b'} style={`--d:${(0.075 * i + 0.12).toFixed(3)}s`}>{en}</i></span>
         </span>
         <span class="hswap hkmw km" aria-hidden="true" style="font-size:.86em;letter-spacing:-0.01em;">{km}</span>
       </span>{' '}

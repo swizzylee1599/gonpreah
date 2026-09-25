@@ -3,12 +3,11 @@ import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
+import { GIVE_URL } from '../lib/sr-routes';
 ---
 <SrLayout title="Give | YWAM Siem Reap">
-  <PageHead eyebrow="Give" km="គាំទ្រ"
-    lead="Gifts fund training for Cambodian students, the village work, and the staff who carry both.">
-    Partner with <span style="color:var(--sr-pink);">the work</span>
-  </PageHead>
+  <PageHead eyebrow="Give" km="គាំទ្រ" title="Partner with the work" highlight="the work"
+    lead="Gifts fund training for Cambodian students, the village work, and the staff who carry both." />
   <section class="sec">
     <div class="wrap grid3 reveal">
       {[
@@ -20,12 +19,12 @@ import Cta from '../components/sr/Cta.astro';
           <h3 class="disp" style="margin:0;font-size:21px;font-weight:500;">{t}</h3>
           <span class="rule" style="margin:18px 0;"></span>
           <p class="body" style="margin:0;font-size:16px;">{d}</p>
-          <button class="btn btn--solid" style="margin-top:26px;">Give</button>
+          <a class="btn btn--solid" style="margin-top:26px;display:inline-flex;" href={GIVE_URL} target="_blank" rel="noopener">Give</a>
         </div>
       ))}
     </div>
     <div class="wrap" style="margin-top:30px;">
-      <p class="muted" style="font-size:14px;">Giving platform and receipting details pending. Gon Preah's US 501(c)(3) (EIN 87-3010675) can receive tax-deductible gifts for Cambodia.</p>
+      <p class="muted" style="font-size:14px;">Gifts are made securely through Subsplash, which opens in a new tab. Gon Preah's US 501(c)(3) (EIN 87-3010675) can receive tax-deductible gifts for Cambodia.</p>
     </div>
   </section>
   <Cta

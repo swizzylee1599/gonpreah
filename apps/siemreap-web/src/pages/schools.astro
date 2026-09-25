@@ -4,30 +4,31 @@ import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
 
-const list: [string, string, string, string][] = [
-  ['Discipleship Training School', '6 months · English', 'Three months of lecture phase in Siem Reap followed by three months of outreach. The entry point to everything else in YWAM.', 'Next intake pending'],
-  ['Khmer DTS', '6 months · Khmer', 'The same school taught in Khmer by Khmer staff, for Cambodian students.', 'Next intake pending'],
-  ['School of Biblical Studies', '9 months · English', 'Inductive study through all 66 books of the Bible.', 'Dates pending'],
-  ['Short-Term Outreach', '2–4 weeks', 'Join a team already working in Siem Reap villages. For groups and individuals.', 'Year-round'],
+const list: [string, string, string, string, string?][] = [
+  ['Discipleship Training School', '6 months · Khmer & English', 'Six months focused on knowing God and making Him known: three months of lecture in Siem Reap, then three months of outreach to the nations. One bilingual school, taught in Khmer and English.', 'Every January', '/schools/dts'],
+  ['Discipleship Bible School', '3 months · Secondary school', 'Read the whole Bible in thirteen weeks and study all sixty-six books inductively, following the story from Genesis to Revelation.', 'April 26 – July 21', '/schools/dbs'],
+  ['Bible Counseling School', 'Secondary school', 'Training for those caring for people who carry trauma — a growing need across Cambodia.', 'New'],
+  ['Social Media School', 'Secondary school', 'Storytelling and digital ministry, for the generation already living there.', 'New', '/schools/sms'],
 ];
 ---
 <SrLayout title="Schools &amp; Courses | YWAM Siem Reap">
-  <PageHead eyebrow="Schools & training" km="សាលា"
-    lead="Every YWAM journey starts with DTS. What follows depends on what God has put in you.">
-    Schools and <span style="color:var(--sr-pink);">courses</span>
-  </PageHead>
+  <PageHead eyebrow="Schools & training" km="សាលា" title="Schools and courses" highlight="courses"
+    lead="Every YWAM journey starts with DTS. What follows depends on what God has put in you." />
   <section class="sec">
     <div class="wrap" style="display:flex;flex-direction:column;gap:20px;">
-      {list.map(([t, meta, d, when]) => (
+      {list.map(([t, meta, d, when, href]) => (
         <div class="card reveal" style="display:grid;grid-template-columns:1fr auto;gap:34px;align-items:center;">
           <div>
             <p class="eyebrow">{meta}</p>
-            <h3 class="disp" style="margin:14px 0 0;font-size:26px;font-weight:500;">{t}</h3>
+            <h3 class="disp" style="margin:14px 0 0;font-size:26px;font-weight:500;">{href ? <a href={href} style="color:inherit;text-decoration:none;">{t}</a> : t}</h3>
             <p class="body" style="margin:14px 0 0;max-width:58ch;font-size:16px;">{d}</p>
           </div>
           <div style="text-align:right;">
             <p style="margin:0;color:var(--sr-pink);font-size:13px;letter-spacing:.14em;text-transform:uppercase;">{when}</p>
-            <a class="btn btn--plain" style="margin-top:18px;display:inline-flex;" href="/apply">Apply</a>
+            <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px;">
+              {href && <a class="btn" style="display:inline-flex;" href={href}>About the school</a>}
+              <a class="btn btn--plain" style="display:inline-flex;" href="/apply">Apply</a>
+            </div>
           </div>
         </div>
       ))}

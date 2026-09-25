@@ -1,0 +1,484 @@
+---
+import SrLayout from '../../layouts/SrLayout.astro';
+import Footer from '../../components/sr/Footer.astro';
+import PageHead from '../../components/sr/PageHead.astro';
+import PhotoSlot from '../../components/sr/PhotoSlot.astro';
+import Cta from '../../components/sr/Cta.astro';
+import CampusTeaser from '../../components/sr/CampusTeaser.astro';
+
+const JOURNEY: { title: string; body: string; photo: string; alt: string }[] = [
+  {
+    title: 'Apply for DTS',
+    body: 'Join our community surrounded by leaders and friends who have a heart to serve God and the nations. We will help you find your identity in Christ and your purpose in the world.',
+    photo: '/images/gonpreah-community.jpg',
+    alt: 'The community worshipping with hands raised in front of the band, one student in a GonPreah shirt',
+  },
+  {
+    title: 'Know God',
+    body: "In the six months, you will study God's word and make it known to the nations. Learn to hear God's voice and to walk out in the calling He has for you.",
+    photo: '/images/schools/dts-know-god.jpg',
+    alt: 'A DTS lecture on hearing God\'s voice — students in class with a speaker and translator at the front',
+  },
+  {
+    title: 'Discover your calling',
+    body: 'Find your purpose in the world. God has a distinctive calling on each of our lives and has given you skills and passion for a purpose. Through DTS, you will be equipped and empowered to use the gifts God has given you to bring His love into your community.',
+    photo: '/images/schools/dts-calling.jpg',
+    alt: 'Two DTS students walking down a village path in Cambodia, each holding a young girl\'s hand',
+  },
+];
+
+// Each phase gets a four-photo collage — swap `label` slots for `{ src, alt }` as photos arrive.
+type Photo = { src?: string; alt?: string; label?: string; pos?: string };
+const PHASES: { eyebrow: string; title: string; body: string[]; photos: Photo[] }[] = [
+  {
+    eyebrow: 'Lecture phase · 3 months here',
+    title: 'Training phase',
+    body: [
+      "Leaders from around the world teaching to help you hear God's voice and find the calling He has for you.",
+      'Twelve weeks of lecture, twelve topics — from speakers locally and internationally.',
+    ],
+    photos: [
+      { src: '/images/schools/dts-lecture.jpg', alt: 'A speaker teaching at a map of the world while students listen' },
+      { src: '/images/campus/worship-leader.jpg', alt: 'A worship leader singing with one hand raised' },
+      { src: '/images/campus/night-actions.jpg', alt: 'Students leading actions together in the courtyard at night' },
+      { src: '/images/campus/worship-hands.jpg', alt: 'A room of young people worshipping with hands raised' },
+    ],
+  },
+  {
+    eyebrow: 'Outreach phase · 3 months to the nations',
+    title: 'To the nations',
+    body: [
+      'Go to the nations, encounter Jesus in different cultures, and bring the love of Christ through the gospel to the unreached.',
+      'Teams serve here in Cambodia — in villages around Siem Reap and across the country — and beyond its borders.',
+    ],
+    photos: [
+      { src: '/images/schools/outreach-team.jpg', alt: 'A DTS outreach team in bright traditional dresses and shirts, standing on a hillside above a town', pos: '50% 40%' },
+      { src: '/images/schools/dts-baptism.jpg', alt: 'A young man celebrating in the river just after his baptism, friends beside him', pos: '50% 28%' },
+      { src: '/images/schools/outreach-kids-friends.jpg', alt: 'A DTS student laughing with a group of children on outreach', pos: '50% 30%' },
+      { src: '/images/schools/outreach-lakeside.jpg', alt: 'Four DTS students talking on a bench beside a lake on outreach', pos: '50% 55%' },
+      { src: '/images/schools/outreach-kids-courtyard.jpg', alt: 'DTS students sitting among dozens of children in a school courtyard on outreach', pos: '50% 60%' },
+    ],
+  },
+];
+// Higgsfield dolly shot down the corridor, scrubbed by scroll. Until the clip
+// is uploaded to public/video the still photo zooms in as a stand-in.
+const HALL_VIDEO: string | null = '/video/dts-hallway.mp4';
+
+const INFO: [string, string][] = [
+  ['Next school', 'January DTS'],
+  ['Location', 'Siem Reap, Cambodia'],
+  ['Arrival day', 'To be announced'],
+  ['Departure day', 'To be announced'],
+  ['Prerequisites', 'Must be 18+'],
+];
+
+const LECTURE_COST: [string, string][] = [
+  ['Country A', '$2,000 USD'],
+  ['Country B', '$1,500 USD'],
+  ['Country C', '$620 USD'],
+];
+
+// Tracks: a skill each student chooses to develop through the school.
+// Culinary and Hospitality lines are drafts to be confirmed.
+const TRACKS: { name: string; km: string; tag: string; body: string; photo?: string; alt?: string; pos?: string; label: string }[] = [
+  { name: 'Media', km: 'មេឌា', body: 'Social media is one of the most effective ways to reach the youth. Develop your skills in content creating, video editing and photography, and see how you can use media for the Kingdom.', tag: 'Create, film and edit for the Kingdom.', photo: '/images/schools/sms-filming.jpg', alt: 'A film crew on a Siem Reap street', pos: '50% 45%', label: 'Drop a photo — media track' },
+  { name: 'Music', km: 'តន្ត្រី', body: 'Worship is our weapon. Live out Psalm 96, bringing newness as we merge music with the arts. Join us as we continue to foster the heart of worship.', tag: 'Worship is our weapon.', photo: '/images/campus/worship-band.jpg', alt: 'A student worship band playing on stage', label: 'Drop a photo — music track' },
+  { name: 'Cafe', km: 'កាហ្វេ', body: 'Develop barista skills, learn business management, and see how you can serve Jesus in the business world.', tag: 'Barista skills and business.', photo: '/images/campus/gp-cafe-iced.jpg', alt: 'Two iced coffees from GP Cafe held up together', label: 'Drop a photo — cafe track' },
+  { name: 'Culinary', km: 'ម្ហូប', body: 'Develop skills in food and the kitchen — Khmer and international cooking, planning and preparing meals for a community — and see how a table can serve the Kingdom.', tag: 'Cook for a community.', photo: '/images/campus/food-prep.jpg', alt: 'Preparing food at a market table', pos: '50% 60%', label: 'Drop a photo — culinary track' },
+  { name: 'Hospitality', km: 'បដិសណ្ឋារកិច្ច', body: 'Learn skills in hotel management — welcoming guests, running rooms and events, hosting teams — and see how hospitality opens doors for the gospel in Siem Reap.', tag: 'Welcome guests, run a house.', photo: '/images/campus/campus-front.jpg', alt: 'The rooftop terrace set for guests', pos: '50% 45%', label: 'Drop a photo — hospitality track' },
+  { name: 'Technical', km: 'បច្ចេកទេស', body: 'Develop technical skills, from AC repair to building furniture, to serve Jesus in the business world.', tag: 'Fix, build and serve.', photo: '/images/campus/building-stairs.jpg', alt: 'Three young men fitting a wooden staircase against a brick wall', pos: '55% 40%', label: 'Drop a photo — technical track' },
+];
+
+const FAQ: [string, string][] = [
+  ['Who can apply for DTS?', 'Anyone 18 or over with a hunger to know God and make Him known. You do not need any previous Bible training or ministry experience — DTS is the starting point.'],
+  ['What language is the school taught in?', 'DTS is a bilingual school. Teaching is in Khmer and English, with translation, so Cambodian and international students learn side by side.'],
+  ['What do Country A, B and C mean?', 'School fees are tiered by the country on your passport so the school stays accessible to students from every nation. When you apply, we will tell you which tier applies to you.'],
+  ['What does the fee cover?', 'Lecture phase fees cover your teaching, accommodation and meals on campus in Siem Reap. Outreach fees cover travel, accommodation and food during the outreach phase. Flights to and from Cambodia, visas, insurance and personal spending are not included.'],
+  ['Where does outreach go?', 'Outreach teams serve in villages around Siem Reap and across Cambodia, and to other nations in Southeast Asia and beyond. Locations are confirmed during the lecture phase, and outreach costs range from $1,500 to $2,500 USD depending on where your team goes.'],
+  ['When does the school start?', 'DTS runs once a year, starting in January. Arrival and departure days for the next school will be published here — or email dts@ywamsiemreap.org and we will send you the dates.'],
+  ['What is a week in lecture phase like?', 'A different speaker and topic each week — twelve weeks, twelve topics, from leaders locally and internationally — alongside worship, small groups, time in the Word, and serving in the local community.'],
+  ['What happens after DTS?', 'DTS is the entry point to the University of the Nations. Many students go on to further schools, join staff at a YWAM base, or take what they have learned back into their church, work and city.'],
+];
+---
+<SrLayout title="Discipleship Training School | YWAM Siem Reap" spacer={false}
+  description="A six-month Discipleship Training School in Siem Reap, Cambodia: three months of lecture, then three months on outreach to the nations. Know God and make Him known.">
+  <PageHead eyebrow="Discipleship Training School · DTS" km="អត្តសញ្ញាណ" title="Discover your identity. Know your purpose." highlight="Know your purpose."
+    lead="Discover your identity in Christ and know your purpose in the world."
+    photo="/images/gonpreah-worship-2.jpg" photoPos="28% 35%" mobileFull
+    photoAlt="Students and staff worshipping on campus with hands raised under string lights" />
+
+  <div class="journey-stack">
+    <div class="journey-pin">
+      <div class="wrap">
+        <div class="jp-head">
+          <p class="eyebrow">Begin your journey</p>
+          <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Know God. Discover your calling.</h2>
+        </div>
+        <div class="jp-grid">
+          <div class="jp-photos">
+            {JOURNEY.map((step, i) => step.photo
+              ? <img class="jp-photo" src={step.photo} alt={step.alt} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+              : <div class="jp-photo jp-photo--slot"><PhotoSlot label={`Drop a photo — ${step.title}`} radius={0} /></div>)}
+          </div>
+          <div class="jp-steps">
+            {JOURNEY.map((step, i) => (
+              <div class="jp-step">
+                <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">{'0' + (i + 1)}</p>
+                <h3 class="disp" style="margin:14px 0 0;font-size:clamp(24px,2.6vw,34px);font-weight:500;line-height:1.15;">{step.title}</h3>
+                <span class="rule" style="margin:18px 0;"></span>
+                <p class="body" style="margin:0;max-width:46ch;">{step.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div class="jp-rail" aria-hidden="true">
+          {JOURNEY.map((step, i) => (
+            <span class="jp-rail-label"><b>{'0' + (i + 1)}</b> {step.title}</span>
+          ))}
+          <span class="jp-rail-bar"><i></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Pinned stepper: the panel stays put while scrolling through the
+    // stack. The first 78% of progress flips through the photos and
+    // swaps the step copy; the last 22% slides the heading off to the
+    // right and fades the rest while the breakdown section rides up over it.
+    const STEPS_END = 0.78;
+
+    // The hallway: the breakdown pins and scrolling walks you down the
+    // corridor. Progress 0-.1 is the intro heading; each phase then gets a
+    // window in which its copy grows toward you and passes, while its
+    // photos hang on the walls and slide by in perspective.
+    // Phases end at .78; the information card then rises into the hall (.8-.9) and holds to the end.
+    const HALL_PHASES = [[0.18, 0.5], [0.5, 0.78]];
+    const CARD_START = 0.8, CARD_IN = 0.1;
+    const INTRO_HOLD = 0.08, INTRO_FADE = 0.12;
+    const clamp01 = (v) => Math.min(1, Math.max(0, v));
+    const smooth = (t) => t * t * (3 - 2 * t);
+    const initHall = (signal) => {
+      const hall = document.querySelector('.hall-stack');
+      if (!hall || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const still = hall.querySelector('.hall-still');
+      // Phones get a lighter clip (dense keyframes, so exact seeks are cheap)
+      // and no blur filters, which are costly there.
+      const lite = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+      let video = hall.querySelector('.hall-video');
+      if (video) {
+        const phone = matchMedia('(max-width: 760px)').matches;
+        video.src = `${(phone && video.dataset.srcMobile) || video.dataset.src}#t=0.001`;
+        video.load();
+      }
+      const pin = hall.querySelector('.hall-pin');
+      const intro = hall.querySelector('.hall-intro');
+      let card = hall.querySelector('.hall-card');
+      // Phones: a tall card inside a pinned screen scrolls awkwardly, so it
+      // moves out below the hallway and the walk ends where the phases end.
+      let pEnd = 1;
+      if (lite && card) {
+        const sec = document.createElement('section');
+        sec.className = 'sec hall-card-sec';
+        const wrap = document.createElement('div');
+        wrap.className = 'wrap';
+        sec.appendChild(wrap);
+        wrap.appendChild(card);
+        hall.after(sec);
+        hall.classList.add('is-card-out');
+        card = null;
+        pEnd = HALL_PHASES[HALL_PHASES.length - 1][1] + 0.02;
+      }
+      const copies = [...hall.querySelectorAll('.hall-copy')];
+      const rows = [...hall.querySelectorAll('.hall-photos')].map((el) => ({
+        el, phase: +el.dataset.phase, items: [...el.querySelectorAll('.hall-photo')],
+      }));
+
+      let seeking = false, latest = 0, dirty = false;
+      const seekTo = (t) => {
+        latest = t; dirty = true;
+        if (seeking || !video) return;
+        seeking = true; dirty = false;
+        // Exact seeks, not fastSeek: fastSeek snaps to keyframes and the walk stutters.
+        video.currentTime = t;
+      };
+      if (video) {
+        // The still stays underneath until the clip has decoded a frame, and takes over again if the clip fails.
+        const prime = () => {
+          const p = video.play();
+          if (p && p.then) p.then(() => video.pause()).catch(() => {});
+          if (still) still.style.opacity = '0';
+        };
+        if (video.readyState >= 2) prime(); else video.addEventListener('loadeddata', prime, { once: true, signal });
+        // When autoplay is blocked (Low Power Mode, data saver), the first touch starts it.
+        const unlock = () => { if (video && video.readyState < 2) { video.load(); prime(); } };
+        for (const ev of ['touchstart', 'touchend', 'click']) window.addEventListener(ev, unlock, { passive: true, signal, once: true });
+        video.addEventListener('error', () => { video.remove(); video = null; if (still) still.style.opacity = '1'; }, { once: true, signal });
+        video.addEventListener('seeked', () => { seeking = false; if (dirty) seekTo(latest); }, { signal });
+      }
+
+      const measure = () => {
+        const rect = hall.getBoundingClientRect();
+        const scrollable = rect.height - (pin ? pin.offsetHeight : window.innerHeight);
+        return scrollable <= 0 ? 0 : clamp01((-rect.top / scrollable) * pEnd);
+      };
+      // The walk follows the finger 1:1; easing toward the scroll position
+      // made it trail behind and felt laggy on phones.
+      let raf = 0;
+      const frame = () => {
+        raf = 0;
+        render(measure());
+      };
+      const render = (p) => {
+        if (video && video.duration && !Number.isNaN(video.duration)) seekTo(p * video.duration * 0.985);
+        else if (still) still.style.transform = `translate3d(0, ${(-p * (lite ? 2 : 4)).toFixed(2)}%, 0) scale(${(1 + p * (lite ? 0.45 : 0.9)).toFixed(4)})`;
+
+        const io = clamp01((p - INTRO_HOLD) / INTRO_FADE);
+        intro.style.opacity = String(1 - io);
+        intro.style.transform = `translate(-50%,-50%) scale(${(1 + io * 0.25).toFixed(3)})`;
+        intro.style.filter = (!lite && io) ? `blur(${(io * 6).toFixed(1)}px)` : '';
+        intro.style.pointerEvents = io > 0.5 ? 'none' : '';
+
+        copies.forEach((el, i) => {
+          const [a, b] = HALL_PHASES[i];
+          const t = clamp01((p - a) / (b - a));
+          // approach (0-.55): grows toward you; hold (.55-.82): full size, barely drifting; pass (.82-1): through and gone
+          let scale = 0.5, op = 0, blur = 0;
+          if (t > 0 && t < 1) {
+            if (t < 0.55) { const u = t / 0.55; scale = 0.5 + 0.5 * smooth(u); op = clamp01(u / 0.35); }
+            else if (t < 0.82) { scale = 1 + ((t - 0.55) / 0.27) * 0.04; op = 1; }
+            else { const v = (t - 0.82) / 0.18; scale = 1.04 + 0.7 * v; op = 1 - smooth(v); blur = v * 8; }
+          }
+          el.style.opacity = String(op);
+          el.style.transform = `translate(-50%,-50%) scale(${scale.toFixed(3)})`;
+          el.style.filter = (!lite && blur) ? `blur(${blur.toFixed(1)}px)` : '';
+          el.style.pointerEvents = op > 0.5 ? '' : 'none';
+        });
+
+        if (card) {
+          const c = clamp01((p - CARD_START) / CARD_IN);
+          const e = smooth(c);
+          card.style.opacity = String(e);
+          card.style.transform = `translate(-50%, -50%) translateY(${((1 - e) * 60).toFixed(1)}px) scale(${(0.94 + 0.06 * e).toFixed(3)})`;
+          card.style.pointerEvents = c > 0.6 ? 'auto' : 'none';
+        }
+
+        // Photos: a collage of different sizes that lands one piece at a
+        // time just behind the copy, holds for most of the phase, then drifts
+        // past. Each keeps its own tilt (--r) from the stylesheet.
+        rows.forEach(({ el, phase, items }) => {
+          const [a, b] = HALL_PHASES[phase];
+          const t = clamp01((p - a) / (b - a));
+          el.style.pointerEvents = t > 0.15 && t < 0.92 ? 'auto' : 'none';
+          items.forEach((item, k) => {
+            const tk = clamp01((t - 0.04 - k * 0.04) / 0.8);
+            let scale = 0.86, op = 0, y = 40, blur = 0;
+            if (tk > 0 && tk < 1) {
+              if (tk < 0.34) { const e = smooth(tk / 0.34); scale = 0.86 + 0.14 * e; op = clamp01(tk / 0.16); y = 40 * (1 - e); }
+              else if (tk < 0.86) { scale = 1; op = 1; y = 0; }
+              else { const v = (tk - 0.86) / 0.14; scale = 1 + 0.18 * v; op = 1 - smooth(v); y = -20 * v; blur = v * 5; }
+            }
+            item.style.opacity = op.toFixed(3);
+            item.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0) rotate(var(--r, 0deg)) scale(${scale.toFixed(3)})`;
+            item.style.filter = (!lite && blur) ? `blur(${blur.toFixed(1)}px)` : '';
+          });
+        });
+      };
+      const onScroll = () => { if (!raf) raf = requestAnimationFrame(frame); };
+      frame();
+      window.addEventListener('scroll', onScroll, { passive: true, signal });
+      window.addEventListener('resize', onScroll, { signal });
+    };
+
+    let ctrl = null;
+    const init = () => {
+      if (ctrl) ctrl.abort();
+      ctrl = new AbortController();
+      const { signal } = ctrl;
+
+      initHall(signal);
+
+      const stack = document.querySelector('.journey-stack');
+      if (!stack) return;
+      const head = stack.querySelector('.jp-head');
+      const grid = stack.querySelector('.jp-grid');
+      const rail = stack.querySelector('.jp-rail');
+      const photos = [...stack.querySelectorAll('.jp-photo')];
+      const steps = [...stack.querySelectorAll('.jp-step')];
+      const labels = [...stack.querySelectorAll('.jp-rail-label')];
+      const bar = stack.querySelector('.jp-rail-bar i');
+      const n = steps.length;
+      if (n < 2) return;
+      const jpin = stack.querySelector('.journey-pin');
+      const jmeasure = () => {
+        const rect = stack.getBoundingClientRect();
+        const scrollable = rect.height - (jpin ? jpin.offsetHeight : window.innerHeight);
+        return scrollable <= 0 ? 0 : Math.min(1, Math.max(0, -rect.top / scrollable));
+      };
+      let ticking = false;
+      const update = () => {
+        ticking = false;
+        const p = jmeasure();
+        const d = Math.min(1, p / STEPS_END) * (n - 1);
+        const exit = Math.min(1, Math.max(0, (p - STEPS_END) / (1 - STEPS_END)));
+        steps.forEach((step, i) => {
+          const w = Math.max(0, 1 - Math.abs(d - i));
+          const dir = d > i ? -1 : 1;
+          // Copy holds while its photo is mostly facing, and hands over in a short window around the midpoint.
+          const tw = Math.min(1, Math.max(0, (w - 0.35) / 0.3));
+          step.style.opacity = String(tw);
+          step.style.transform = `translateY(${(1 - tw) * 26 * dir}px)`;
+          step.style.pointerEvents = tw > 0.5 ? '' : 'none';
+          if (photos[i]) {
+            // Card deal: each photo slides in from the right over the one before it, which stays put underneath.
+            const t = i === 0 ? 1 : Math.min(1, Math.max(0, d - (i - 1)));
+            const e = t * t * (3 - 2 * t);
+            photos[i].style.transform = `translate(${(1 - e) * 108}%, ${(1 - e) * 6}%) rotate(${(1 - e) * 5}deg)`;
+            photos[i].style.zIndex = String(i + 1);
+          }
+          if (labels[i]) labels[i].style.opacity = String(0.35 + 0.65 * w);
+        });
+        if (bar) bar.style.transform = `scaleX(${Math.min(1, p / STEPS_END)})`;
+        const ease = exit * exit * (3 - 2 * exit);
+        if (head) head.style.transform = `translateX(${ease * 110}vw)`;
+        if (grid) grid.style.opacity = String(1 - ease);
+        if (rail) rail.style.opacity = String(1 - ease);
+      };
+      const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+      update();
+      window.addEventListener('scroll', onScroll, { passive: true, signal });
+      window.addEventListener('resize', onScroll, { signal });
+    };
+    init();
+    document.addEventListener('astro:page-load', init);
+  </script>
+
+  <section class="breakdown hall-stack" aria-label="DTS breakdown">
+    <div class="hall-pin">
+      <div class="hall-bg" aria-hidden="true">
+        <img class="hall-still" src="/images/schools/dts-hallway-start.jpg" alt="" decoding="async" />
+        {HALL_VIDEO && <video class="hall-video" data-src={HALL_VIDEO} data-src-mobile={HALL_VIDEO.replace(/\.mp4$/, '-mobile.mp4')} muted autoplay playsinline webkit-playsinline preload="auto"></video>}
+      </div>
+      <div class="hall-scrim" aria-hidden="true"></div>
+      {PHASES.map((phase, p) => (
+        <div class="hall-photos" data-phase={p}>
+          {phase.photos.map((photo) => (
+            <figure class="hall-photo">
+              {photo.src
+                ? <img src={photo.src} alt={photo.alt ?? ''} loading="lazy" decoding="async" style={photo.pos ? `object-position:${photo.pos}` : undefined} />
+                : <PhotoSlot label={photo.label ?? 'Drop a photo'} radius={0} />}
+            </figure>
+          ))}
+        </div>
+      ))}
+      <div class="hall-intro">
+        <p class="eyebrow">DTS breakdown</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.6vw,48px);font-weight:500;line-height:1.1;">Three months here. Three months to the nations.</h2>
+        <p class="muted" style="margin:26px 0 0;font-size:12px;letter-spacing:.2em;text-transform:uppercase;">Scroll to walk the hall ↓</p>
+      </div>
+      {PHASES.map((phase, p) => (
+        <div class="hall-copy" data-phase={p}>
+          <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);letter-spacing:.14em;text-transform:uppercase;">{phase.eyebrow}</p>
+          <h3 class="disp" style="margin:16px 0 0;font-size:clamp(30px,4.2vw,58px);font-weight:500;line-height:1.08;">{phase.title}</h3>
+          <span class="rule" style="margin:22px auto;"></span>
+          {phase.body.map((para, i) => <p class={`body${i ? ' hall-more' : ''}`} style={`margin:${i ? '14px' : '0'} auto 0;max-width:48ch;`}>{para}</p>)}
+        </div>
+      ))}
+      <div class="hall-card" id="info">
+        <div class="card info">
+          <div class="info-grid">
+            <div>
+              <p class="eyebrow">DTS information</p>
+              <dl class="info-list">
+                {INFO.map(([k, v]) => (
+                  <div>
+                    <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">{k}</dt>
+                    <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;">{v}</dd>
+                  </div>
+                ))}
+                <div>
+                  <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">Email</dt>
+                  <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;text-transform:none;letter-spacing:0;"><a href="mailto:dts@ywamsiemreap.org" style="color:inherit;text-decoration:none;">dts@ywamsiemreap.org</a></dd>
+                </div>
+              </dl>
+            </div>
+            <div class="info-cost">
+              <p class="eyebrow">Cost of the school</p>
+              <p class="disp" style="margin:22px 0 0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#dcdcdc;">Lecture phase · 3 months</p>
+              <dl class="cost-list">
+                {LECTURE_COST.map(([k, v]) => (
+                  <div><dt class="body" style="margin:0;font-size:16px;">{k}</dt><dd class="disp" style="margin:0;font-size:20px;font-weight:500;">{v}</dd></div>
+                ))}
+              </dl>
+              <p class="muted" style="margin:12px 0 0;font-size:13px;">Flights are not included.</p>
+              <p class="disp" style="margin:28px 0 0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#dcdcdc;">Outreach phase · 3 months</p>
+              <p class="disp" style="margin:12px 0 0;font-size:20px;font-weight:500;">$1,500 – $2,500 USD</p>
+              <p class="muted" style="margin:6px 0 0;font-size:13px;">Depending on outreach location.</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:36px;">
+            <a class="btn btn--solid" href="/apply?school=dts">Apply for DTS</a>
+            <a class="btn" href="mailto:dts@ywamsiemreap.org">Email the DTS team</a>
+            <a class="btn btn--plain" href="/campus-life">Campus life</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec tracks-sec" id="tracks">
+    <div class="wrap">
+      <div class="tracks-head reveal">
+        <div>
+          <p class="eyebrow">DTS tracks</p>
+          <h2 class="disp" style="margin:12px 0 0;font-size:clamp(28px,3.6vw,48px);font-weight:500;line-height:1.08;">Pick a track. Build a skill.</h2>
+        </div>
+        <p class="body" style="margin:0;max-width:44ch;">Alongside lectures, every student chooses a track — a practical skill to develop through the six months and carry into the world.</p>
+      </div>
+      <p class="muted tracks-hint" aria-hidden="true">Swipe →</p>
+      <ul class="tracks stag">
+        {TRACKS.map((t, i) => (
+          <li class="track">
+            <figure class="track-photo">{t.photo ? <img src={t.photo} alt={t.alt ?? ''} loading="lazy" decoding="async" style={t.pos ? `object-position:${t.pos}` : undefined} /> : <PhotoSlot label={t.label} radius={0} />}</figure>
+            <div class="track-copy">
+              <p class="disp track-n">{'0' + (i + 1)}</p>
+              <h3 class="disp track-title">{t.name} <span class="km track-km" lang="km">{t.km}</span></h3>
+              <p class="body track-tag">{t.tag}</p>
+              <p class="body track-body">{t.body}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="photo-band" aria-label="DTS students">
+    <img src="/images/schools/dts-running.jpg" alt="DTS students running down a road together, laughing" loading="lazy" decoding="async" />
+  </section>
+
+  <CampusTeaser title="Where you will live for six months." />
+
+  <section class="sec faq-sec" id="faq">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">FAQ</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">Questions about DTS</h2>
+      </div>
+      <div class="faq stag" style="margin-top:34px;">
+        {FAQ.map(([q, a]) => (
+          <details class="faq-item">
+            <summary class="disp">{q}<span class="faq-mark" aria-hidden="true"></span></summary>
+            <p class="body" style="margin:0;padding:0 0 24px;max-width:66ch;font-size:16px;">{a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+  <Cta
+    title="Find a purpose greater than your own desire."
+    body="DTS starts every January in Siem Reap. Tell us a little about yourself and we will walk you through the dates, the cost and what to expect."
+    primary={['apply', 'Apply for DTS']}
+    secondary={['contact', 'Ask a question']}
+  />
+  <Footer />
+</SrLayout>

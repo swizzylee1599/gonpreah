@@ -1,42 +1,155 @@
 ---
 import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
-import PageHead from '../components/sr/PageHead.astro';
-import CardGrid from '../components/sr/CardGrid.astro';
 import Cta from '../components/sr/Cta.astro';
 import PhotoSlot from '../components/sr/PhotoSlot.astro';
+
+const WELCOME = [
+  'Welcome to YWAM Siem Reap. We are so excited to invite you into the heart of our mission, to empower the Khmer youth to transform the nation of Cambodia. To see this vision fulfilled, we serve the community, educate youth, and develop leaders.',
+  'Investing time studying the Bible, discovering your God-given calling, and utilizing your passions to serve the Kingdom of God is a decision you will never regret.',
+  'Together, God will use us to see this nation come to know Jesus in one generation.',
+];
+
+const UOFN = [
+  "After the turmoil of the Khmer Rouge regime, refugee camps emerged on the Thai border in the 1980s. Youth With A Mission (YWAM) served in these camps during that period. In 1991, Cambodia welcomed foreign aid, leading to the establishment of YWAM Cambodia under Philip and Wendy Scott's leadership. YWAM Cambodia was formed to provide medical care, community development, English teaching, and church planting in Stung Treng province along the Laos border.",
+  'In 2000, a new team of YWAM workers was established in Phnom Penh with the goal of hosting short-term teams and providing training for Cambodian youth. This initiative led to the official registration of the University of the Nations, Cambodia (UofN) with the government in 2002. Shortly after, UofN conducted its first Youth Training School (DTS) and began hosting short-term teams regularly.',
+  'Since then, our efforts have expanded to include ministries aiding children at risk, dormitory and education assistance programs, including support for university students, and the establishment of education centers focusing on English, media, arts, and office skills. Presently, we operate nationally with over 200 staff spread across 16 locations in 10 provinces, including key centers in Koh Kong, Pailin, Poipet, and Battambang.',
+];
+
+const POIPET = [
+  'YWAM Poipet, Cambodia, established in 2016, initially focused on youth development by launching the Youth Development Center (YDC) to teach English to Cambodian youth and building relationships with the local churches and schools. Beginning with a team of 5 individuals, we have since expanded to 36 full-time staff members, comprising 28 Khmer and 8 foreigners.',
+  'In subsequent years, YWAM Poipet launched its first Discipleship Training School (DTS) in 2017, hosted their first international outreach team, and started a Bible Core Course (BCC) in 2018. These training programs aim to foster the growth of Christian leaders in Cambodia. Then in 2023, YWAM Poipet introduced the first Discipleship Bible School (DBS) in Southeast Asia, further solidifying its commitment to leadership development in Cambodia.',
+  'Beyond educational endeavors YWAM Poipet is deeply involved in community outreach through initiatives such as the GP Cafe, GP Education, and volunteer teams. Our outreach efforts encompass youth education through the YDC, multimedia projects, and soccer ministry. Additionally, leadership development remains a core focus, with programs including DTS, DBS, and School of Ministry development which facilitates the training and integration of new staff.',
+  'Through these multifaceted initiatives YWAM Poipet aspires to contribute to the transformation of Cambodia by nurturing Christian leaders and serving the broader community. Our holistic approach addresses educational, spiritual, and social needs, with the overarching goal of empowering the next generation to effect positive change in the nation.',
+];
+
+// The road to pioneering: each stop is a year, a place, and what happened.
+// `state` marks where we are on the road today.
+type Stop = { year: string; place: string; title: string; body: string; state?: 'past' | 'now' | 'next'; photos?: { src?: string; alt?: string; label?: string }[] };
+const ROAD: Stop[] = [
+  { year: '1980s', place: 'Thai border', title: 'Serving in the refugee camps', body: 'After the Khmer Rouge, YWAM served Cambodians in the refugee camps that emerged along the Thai border.', state: 'past' },
+  { year: '1991', place: 'Stung Treng', title: 'YWAM Cambodia is born', body: "Cambodia welcomed foreign aid and YWAM Cambodia was established under Philip and Wendy Scott's leadership: medical care, community development, English teaching and church planting along the Laos border.", state: 'past' },
+  { year: '2002', place: 'Phnom Penh', title: 'University of the Nations, Cambodia', body: 'A team formed in Phnom Penh in 2000 to host teams and train Cambodian youth. In 2002 the University of the Nations, Cambodia was officially registered with the government, and the first DTS followed soon after.', state: 'past', photos: [{ label: 'Drop a photo — UofN Cambodia, 2002' }] },
+  { year: '2016', place: 'Poipet', title: 'YWAM Poipet', body: 'Five people start the Youth Development Center to teach English and build relationships with local churches and schools. First DTS in 2017, Bible Core Course in 2018, and in 2023 the first Discipleship Bible School in Southeast Asia. Today 36 full-time staff, 28 Khmer and 8 international.', state: 'past', photos: [
+    { src: '/images/about/poipet-first-team.jpg', alt: 'The first YWAM Poipet team standing in front of their building in 2016' },
+    { label: 'Drop a photo — Poipet' },
+    { label: 'Drop a photo — Poipet' },
+  ] },
+  { year: '2025', place: 'Siem Reap', title: 'YWAM Siem Reap', body: 'Pioneered from YWAM Poipet in 2025. We came with 15 staff and have grown to 40 full-time staff — Khmer and international — training, serving and sending from the heart of Siem Reap.', state: 'now', photos: [{ label: 'Drop a photo — the Siem Reap team' }] },
+  { year: 'Dec 2027', place: 'Phnom Penh', title: 'A YWAM campus in Phnom Penh', body: 'Planning and preparation are under way to pioneer a YWAM campus in the capital in December 2027 — the next stop on the road.', state: 'next' },
+];
 ---
-<SrLayout title="About Us | YWAM Siem Reap">
-  <PageHead eyebrow="About us" km="អំពីយើង"
-    lead="YWAM Siem Reap is a Youth With A Mission base in northern Cambodia — a training centre, a sending base, and a community of Khmer and international staff.">
-    Who we <span style="color:var(--sr-pink);">are</span>
-  </PageHead>
-  <section class="sec">
-    <div class="wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;">
-      <div style="height:380px;"><PhotoSlot label="Base or community photo" /></div>
-      <div>
-        <h2 class="disp" style="margin:0;font-size:32px;font-weight:500;">Heart for Cambodia, vision for the world</h2>
-        <p class="body" style="margin-top:20px;">
-          Cambodia is young — most of the country is under thirty. We train that generation to know God and to carry His work themselves, rather than wait for it to arrive from somewhere else.
-        </p>
-        <p class="body" style="margin-top:16px;">
-          Siem Reap is our front door. Students arrive here for training, are sent from here into Khmer villages and the nations, and many stay to build what comes next.
-        </p>
+<SrLayout title="About Us | YWAM Siem Reap" spacer={false}
+  description="Welcome to YWAM Siem Reap — empowering Khmer youth to transform the nation of Cambodia. Our story from the refugee camps to the University of the Nations Cambodia, YWAM Poipet, Siem Reap and beyond.">
+
+  <!-- The welcome sits over the whole community, gathered in the courtyard. -->
+  <section class="about-head about-head--photo">
+    <img class="about-head-photo" src="/images/campus/campus-group.jpg" alt="The YWAM Siem Reap community gathered together in the campus courtyard" loading="eager" decoding="async" />
+    <div class="about-head-scrim" aria-hidden="true"></div>
+    <div class="wrap about-head-inner">
+      <p class="eyebrow">About us</p>
+      <h1 class="km about-welcome" lang="km">សូមស្វាគមន៍</h1>
+      <p class="about-translit"><span class="disp">(som-sva-gkom)</span> <span class="muted">— welcome</span></p>
+    </div>
+  </section>
+  <section class="sec about-welcome-sec">
+    <div class="wrap">
+      <div class="about-welcome-copy">
+        {WELCOME.map((p, i) => <p class="body" style={`margin:${i ? '18px' : '28px'} 0 0;max-width:62ch;font-size:${i ? '17px' : '19px'};`}>{p}</p>)}
       </div>
     </div>
   </section>
-  <CardGrid items={[
-    ['Know God', 'Everything starts with who God is and who you are to Him. Not technique, not strategy.'],
-    ['Khmer-led', 'Cambodians lead the work in Cambodia. International staff serve that, not the other way round.'],
-    ['Sent, not stationed', 'Training exists to send people out — into villages, cities and nations.'],
-    ['Family and community', 'We live close together. Meals, worship and work are shared.'],
-    ['Open books', 'We publish what things cost and where gifts go.'],
-    ["Part of YWAM", "We hold YWAM's statement of purpose, core beliefs and foundational values."],
-  ]} />
+
+  <section class="sec about-uofn">
+    <div class="wrap about-uofn-grid">
+      <div class="reveal">
+        <p class="eyebrow">University of the Nations Cambodia</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,3.8vw,50px);font-weight:500;line-height:1.08;">Where we come from.</h2>
+        <figure class="about-figure" style="margin:30px 0 0;">
+          <img src="/images/about/uofn-registration-2002.jpg" alt="Registering the University of the Nations Cambodia as an NGO in 2002 — two people signing documents at a table under Cambodian flags" loading="lazy" decoding="async" />
+          <figcaption class="muted">Registering UofN Cambodia as an NGO, 2002</figcaption>
+        </figure>
+      </div>
+      <div class="reveal">
+        {UOFN.map((p, i) => <p class="body" style={`margin:${i ? '18px' : '0'} 0 0;`}>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec about-road" aria-label="The road to pioneering">
+    <div class="wrap">
+      <div class="reveal" style="max-width:60ch;">
+        <p class="eyebrow">Road map</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,3.8vw,50px);font-weight:500;line-height:1.08;">The road to pioneering.</h2>
+        <p class="body" style="margin:18px 0 0;">One base sends the next. YWAM Cambodia planted the University of the Nations, UofN sent a team to Poipet, Poipet pioneered Siem Reap, and Siem Reap is preparing for Phnom Penh.</p>
+      </div>
+
+      <ol class="road">
+        <span class="road-line" aria-hidden="true"><i></i></span>
+        {ROAD.map((stop) => (
+          <li class={`road-stop road-stop--${stop.state ?? 'past'}`}>
+            <span class="road-dot" aria-hidden="true"></span>
+            <div class="road-meta">
+              <span class="disp road-year">{stop.year}</span>
+              <span class="road-place">{stop.place}</span>
+            </div>
+            <div class="road-body">
+              <h3 class="disp road-title">{stop.title}</h3>
+              <p class="body" style="margin:12px 0 0;max-width:58ch;font-size:16px;">{stop.body}</p>
+              {stop.state === 'now' && <p class="road-badge">We are here</p>}
+              {stop.state === 'next' && <p class="road-badge road-badge--next">Planning &amp; preparation</p>}
+              {stop.photos && (
+                <div class={`road-photos road-photos--${stop.photos.length}`}>
+                  {stop.photos.map((ph) => (
+                    <figure class="road-photo">
+                      {ph.src ? <img src={ph.src} alt={ph.alt ?? ''} loading="lazy" decoding="async" /> : <PhotoSlot label={ph.label ?? ''} radius={0} />}
+                    </figure>
+                  ))}
+                </div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec about-poipet" id="poipet">
+    <div class="wrap about-poipet-grid">
+      <div class="reveal">
+        <p class="eyebrow">Our sending base</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;">YWAM Poipet</h2>
+        <p class="muted" style="margin:14px 0 0;font-size:14px;">Established 2016 · 36 full-time staff</p>
+        <div class="about-poipet-photos">
+          <img src="/images/about/ydc-poipet-team.jpg" alt="YWAM Poipet staff and students gathered outside the YDC" loading="lazy" decoding="async" />
+          <img src="/images/about/ydc-poipet-building.jpg" alt="The Youth Development Center in Poipet from above" loading="lazy" decoding="async" />
+        </div>
+      </div>
+      <div class="reveal">
+        {POIPET.map((p, i) => <p class="body" style={`margin:${i ? '18px' : '0'} 0 0;font-size:16px;`}>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0;" id="siem-reap">
+    <div class="wrap">
+      <div class="card about-here reveal">
+        <div>
+          <p class="eyebrow">YWAM Siem Reap · 2025</p>
+          <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;">Fifteen came. We grew to forty.</h2>
+          <p class="body" style="margin:18px 0 0;max-width:56ch;">We were pioneered from YWAM Poipet in 2025, arriving in Siem Reap with 15 staff. Today we are 40 full-time staff, Khmer and international, running DTS and DBS, serving the community and preparing the next generation of leaders.</p>
+          <p class="muted" style="margin:16px 0 0;font-size:14px;">More about our campus is coming soon.</p>
+        </div>
+        <div class="about-here-photo"><PhotoSlot label="Drop a photo — the Siem Reap campus" /></div>
+      </div>
+    </div>
+  </section>
+
   <Cta
     title="Come and see what we do"
     body="The best way to understand the base is to visit it. Short-term teams and individual visits are both welcome."
     primary={['visit', 'Plan a visit']}
+    secondary={['values', 'What we believe']}
   />
   <Footer />
 </SrLayout>

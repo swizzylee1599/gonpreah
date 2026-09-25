@@ -1,0 +1,180 @@
+---
+// The Campus Life opening: a pinned hero. "Campus Life" sits over the
+// aerial; scrolling scrubs the turn clip down to the front of the building
+// where "Welcome home." appears; scrolling on fades to black and the big
+// statement comes up. Phones and browsers without the clip crossfade the two
+// stills instead.
+import { existsSync } from 'node:fs';
+interface Props {
+  aerial: string;
+  front: string;
+  video?: string;
+  eyebrow?: string;
+  title?: string;
+  km?: string;
+  welcome?: string;
+  statement: string;
+  sub?: string;
+  photos?: { src: string; alt: string; pos?: string }[];
+}
+const {
+  aerial, front, video = '/video/campus-orbit.mp4',
+  eyebrow = 'YWAM Siem Reap', title = 'Campus Life', km = 'ជីវិតសហគមន៍', welcome = 'Welcome home.', statement, sub, photos = [],
+} = Astro.props;
+const hasVideo = existsSync('public' + video);
+const mobileVideo = video.replace(/\.mp4$/, '-mobile.mp4');
+const hasMobile = existsSync('public' + mobileVideo);
+---
+<section class="dive-stack" aria-label={title}>
+  <div class="dive-pin">
+    <div class="dive-photo dive-aerial" style={`background-image:url(${aerial})`}></div>
+    <div class="dive-photo dive-front" style={`background-image:url(${front})`}></div>
+    {hasVideo && <video class="dive-video" data-src={video} data-src-mobile={hasMobile ? mobileVideo : undefined} muted autoplay playsinline webkit-playsinline preload="auto" aria-label="The campus, turning from above to its front"></video>}
+    <div class="dive-scrim" aria-hidden="true"></div>
+
+    <div class="wrap dive-head" data-stage="0">
+      <p class="eyebrow">{eyebrow}</p>
+      <h1 class="disp dive-h1">{title}</h1>
+      {km && <p class="km" style="font-size:28px;margin:14px 0 0;color:#dcdcdc;">{km}</p>}
+      <p class="muted dive-cue" aria-hidden="true">Scroll ↓</p>
+    </div>
+
+    <div class="wrap dive-welcome" data-stage="1" aria-hidden="true">
+      <p class="eyebrow">The campus</p>
+      <p class="disp dive-title">{welcome}</p>
+    </div>
+
+    <div class="dive-black" aria-hidden="true"></div>
+
+    <div class="wrap dive-statement" data-stage="2">
+      <p class="disp dive-statement-text">{statement}</p>
+      {sub && <p class="body dive-statement-sub">{sub}</p>}
+      {photos.length > 0 && (
+        <div class="dive-photos">
+          {photos.map((ph) => <img src={ph.src} alt={ph.alt} decoding="async" style={ph.pos ? `object-position:${ph.pos}` : undefined} />)}
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<script>
+  let ctrl: AbortController | null = null;
+  const init = () => {
+    ctrl?.abort();
+    ctrl = new AbortController();
+    const { signal } = ctrl;
+    const stack = document.querySelector<HTMLElement>('.dive-stack');
+    if (!stack) return;
+    const pin = stack.querySelector<HTMLElement>('.dive-pin')!;
+    const aerial = stack.querySelector<HTMLElement>('.dive-aerial')!;
+    const front = stack.querySelector<HTMLElement>('.dive-front')!;
+    let video = stack.querySelector<HTMLVideoElement>('.dive-video');
+    const black = stack.querySelector<HTMLElement>('.dive-black')!;
+    const scrim = stack.querySelector<HTMLElement>('.dive-scrim')!;
+    const head = stack.querySelector<HTMLElement>('.dive-head')!;
+    const welcome = stack.querySelector<HTMLElement>('.dive-welcome')!;
+    const statement = stack.querySelector<HTMLElement>('.dive-statement')!;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { stack.classList.add('is-static'); return; }
+    // Pick the clip for this screen: a portrait, lighter one on phones.
+    const phone = matchMedia('(max-width: 760px)').matches;
+    if (video) {
+      const src = (phone && video.dataset.srcMobile) || video.dataset.src;
+      video.src = `${src}#t=0.001`;
+      video.load();
+    }
+    let ready = false;
+    const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+    const ease = (t: number) => t * t * (3 - 2 * t);
+
+    let seeking = false, latest = 0, dirty = false;
+    const seekTo = (t: number) => {
+      latest = t; dirty = true;
+      if (seeking || !video) return;
+      seeking = true; dirty = false;
+      // Exact seeks, not fastSeek: fastSeek snaps to keyframes and the turn stutters.
+      video.currentTime = t;
+    };
+    if (video) {
+      // iOS only paints seeks once the clip has played, so play then pause it.
+      let primed = false;
+      const prime = () => {
+        if (primed || !video) return;
+        const p = video.play();
+        if (p && p.then) p.then(() => { primed = true; ready = true; video?.pause(); onScroll(); }).catch(() => {});
+      };
+      const onData = () => { ready = true; onScroll(); prime(); };
+      if (video.readyState >= 2) onData(); else video.addEventListener('loadeddata', onData, { once: true, signal });
+      // When autoplay is blocked (Low Power Mode, data saver), a tap or the
+      // first touch counts as a gesture, so iOS lets the clip start then.
+      const unlock = () => { if (!primed && video && video.readyState < 2) video.load(); prime(); };
+      for (const ev of ['touchstart', 'touchend', 'click']) window.addEventListener(ev, unlock, { passive: true, signal });
+      video.addEventListener('seeked', () => { seeking = false; if (dirty) seekTo(latest); }, { signal });
+      video.addEventListener('error', () => { video?.remove(); video = null; onScroll(); }, { once: true, signal });
+    }
+
+    // Stages: title holds 0–.12 and fades by .3; the turn runs .1–.6; welcome
+    // .55–.78; the front dims from .68; statement .76–.9 over the building.
+    // The sequence follows the finger 1:1; easing toward the scroll position
+    // made it trail behind and felt laggy on phones.
+    const measure = () => {
+      const rect = stack.getBoundingClientRect();
+      const scrollable = rect.height - pin.offsetHeight;
+      return scrollable <= 0 ? 0 : clamp01(-rect.top / scrollable);
+    };
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const p = measure();
+
+      const turn = clamp01((p - 0.08) / 0.44);
+      if (video && ready && video.duration && !Number.isNaN(video.duration)) {
+        video.style.opacity = '1';
+        aerial.style.opacity = String(1 - clamp01(turn * 8));
+        front.style.opacity = '0';
+        seekTo(turn * video.duration * 0.985);
+      } else {
+        // Until the clip can play (or if it can't), the stills stand in.
+        if (video) video.style.opacity = '0';
+        // Stills: push in on the aerial, a short crossfade, then the front settles.
+        const x = ease(clamp01((turn - 0.5) / 0.22));
+        aerial.style.opacity = String(1 - x);
+        aerial.style.transform = `translate3d(0,0,0) scale(${(1 + ease(clamp01(turn / 0.72)) * 0.22).toFixed(4)})`;
+        front.style.opacity = String(x);
+        front.style.transform = `translate3d(0,0,0) scale(${(1.12 - 0.12 * ease(clamp01((turn - 0.5) / 0.5))).toFixed(4)})`;
+      }
+      scrim.style.opacity = String(0.55 - 0.2 * turn);
+
+      const headOut = clamp01((p - 0.1) / 0.14);
+      head.style.opacity = String(1 - headOut);
+      head.style.transform = `translateY(calc(-50% - ${(headOut * 40).toFixed(1)}px))`;
+      head.style.pointerEvents = headOut > 0.9 ? 'none' : '';
+
+      const wIn = clamp01((p - 0.46) / 0.1);
+      const wOut = clamp01((p - 0.58) / 0.07);
+      welcome.style.opacity = String(ease(wIn) * (1 - wOut));
+      welcome.style.transform = `translateY(${((1 - ease(wIn)) * 24).toFixed(1)}px)`;
+
+      // Dim the front of the campus under the statement rather than going to black.
+      const dim = clamp01((p - 0.56) / 0.12);
+      black.style.opacity = String(0.62 * ease(dim));
+
+      const sIn = clamp01((p - 0.62) / 0.1);
+      statement.style.opacity = String(ease(sIn));
+      statement.style.transform = `translateY(calc(-50% + ${((1 - ease(sIn)) * 30).toFixed(1)}px)) scale(${(0.96 + 0.04 * ease(sIn)).toFixed(3)})`;
+      const pIn = clamp01((p - 0.68) / 0.1);
+      statement.querySelectorAll<HTMLElement>('.dive-photos img').forEach((img, i) => {
+        const k = clamp01((pIn - i * 0.12) / 0.6);
+        img.style.opacity = String(ease(k));
+        img.style.transform = `translateY(${((1 - ease(k)) * 24).toFixed(1)}px) rotate(${((i % 2 ? 1 : -1) * (1 - ease(k)) * 4).toFixed(2)}deg)`;
+      });
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+    window.addEventListener('scroll', onScroll, { passive: true, signal });
+    window.addEventListener('resize', onScroll, { signal });
+    update();
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

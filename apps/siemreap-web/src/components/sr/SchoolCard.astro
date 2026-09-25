@@ -6,14 +6,19 @@ interface Props {
   abbr: string;
   body: string;
   when: string;
+  photo?: string;
+  pos?: string;
+  href?: string;
 }
-const { name, abbr, body, when } = Astro.props;
+const { name, abbr, body, when, photo, pos, href = '/schools' } = Astro.props;
 ---
-<a class="schoolcard" href="/schools">
-  <span style="display:block;height:300px;position:relative;">
-    <PhotoSlot label={`Drop a photo — ${name}`} radius={0} />
+<a class="schoolcard" href={href}>
+  <span class="schoolcard-photo" style="display:block;position:relative;">
+    {photo
+      ? <img src={photo} alt="" loading="lazy" decoding="async" style={`display:block;width:100%;height:100%;object-fit:cover;${pos ? `object-position:${pos};` : ''}`} />
+      : <PhotoSlot label={`Drop a photo — ${name}`} radius={0} />}
   </span>
-  <span style="display:flex;flex-direction:column;flex:1;padding:28px 26px 32px;min-height:196px;">
+  <span class="schoolcard-body" style="display:flex;flex-direction:column;flex:1;">
     <span class="muted" style="font-size:12px;letter-spacing:.2em;">{abbr}</span>
     <span class="disp" style="display:block;font-size:22px;font-weight:500;margin-top:10px;line-height:1.2;">{name}</span>
     <span class="body" style="display:block;font-size:15px;margin-top:14px;flex:1;">{body}</span>
