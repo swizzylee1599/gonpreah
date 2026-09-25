@@ -1,3 +1,6 @@
+// Online giving (Subsplash). Links to it open in a new tab.
+export const GIVE_URL = 'https://subsplash.com/u/-DTDBSM/give?campus_id=1c7f555d-5552-4aa7-9a79-484e72996412';
+
 export const ROUTE_PATH: Record<string, string> = {
   home: '/',
   about: '/about',
@@ -13,11 +16,9 @@ export const ROUTE_PATH: Record<string, string> = {
   siemreap: '/siem-reap',
   values: '/values',
   give: '/give',
+  giveOnline: GIVE_URL,
   contact: '/contact',
 };
-
-// Online giving (Subsplash). Opens in a new tab.
-export const GIVE_URL = 'https://subsplash.com/u/-DTDBSM/give?campus_id=1c7f555d-5552-4aa7-9a79-484e72996412';
 
 export const NAV: [string, [string, string, string][]][] = [
   ['Students', [
@@ -36,7 +37,7 @@ export const NAV: [string, [string, string, string][]][] = [
     ['contact', 'Contact', 'Get in touch with the base'],
   ]],
   ['Give', [
-    ['give', 'Give Now', 'Partner with the work in Cambodia'],
+    ['giveOnline', 'Give Now', 'Give online through Subsplash'],
     ['give', 'Support a Staff Member', 'Back a specific missionary'],
   ]],
 ];

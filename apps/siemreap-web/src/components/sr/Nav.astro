@@ -3,6 +3,8 @@ import { NAV, ROUTE_PATH } from '../../lib/sr-routes';
 import { SEARCH_INDEX } from '../../lib/sr-search';
 const currentPath = Astro.url.pathname;
 const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
+// Links that leave the site (online giving) open in a new tab.
+const ext = (id: string) => (ROUTE_PATH[id]?.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {});
 ---
 <nav class="sr-nav" id="sr-nav">
   <div class="wrap navbar-row" style="display:flex;align-items:center;justify-content:space-between;gap:28px;padding:10px 40px;">
@@ -16,7 +18,7 @@ const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
             <button type="button">{label}</button>
             <div class="navdrop">
               {items.map(([id, t, d]) => (
-                <a class="navdrop-row" href={ROUTE_PATH[id]}>
+                <a class="navdrop-row" href={ROUTE_PATH[id]} {...ext(id)}>
                   <span class="t">{t}</span>
                   <span class="d">{d}</span>
                 </a>
@@ -43,7 +45,7 @@ const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
           <p class="eyebrow" style="color:var(--gp-grey);">{label}</p>
           <div style="display:flex;flex-direction:column;margin-top:6px;">
             {items.map(([id, t]) => (
-              <a class={'navpanel-row' + (isCurrent(id) ? ' is-current' : '')} href={ROUTE_PATH[id]}>{t}</a>
+              <a class={'navpanel-row' + (isCurrent(id) ? ' is-current' : '')} href={ROUTE_PATH[id]} {...ext(id)}>{t}</a>
             ))}
           </div>
         </div>
