@@ -681,8 +681,10 @@ body.sr {
 .sr .explore { position: relative; z-index: 3; padding: 0; margin-top: -14vh; }
 .sr .explore-card { position: relative; height: 100vh; height: 100svh; overflow: hidden; background: var(--sr-ink); transform-origin: 50% 100%; will-change: transform; box-shadow: 0 -40px 90px rgba(0,0,0,.6); }
 .sr .explore-plates { position: absolute; inset: 0; }
-.sr .explore-plate { position: absolute; inset: -2%; background-size: cover; background-position: 50% 50%; opacity: 0; transform: scale(1.08); }
-.sr .explore-plate.is-on { opacity: 1; transform: scale(1); transition: transform 1.8s ease-out; }
+/* Hard cuts; each street pushes in a touch while it's on, like rolling forward. */
+.sr .explore-plate { position: absolute; inset: -2%; background-size: cover; background-position: 50% 50%; opacity: 0; transform: scale(1); }
+.sr .explore-plate.is-on { opacity: 1; transform: scale(1.06); transition: transform .5s linear; }
+.sr .explore-plate--home, .sr .explore-plate--home.is-on { inset: 0; transform: none; transition: none; background-position: 50% 60%; } /* sits exactly under the cut-out */
 .sr .explore-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; pointer-events: none; }
 .sr .explore-shade { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 70% 60% at 50% 42%, rgba(0,0,0,.28) 0%, rgba(0,0,0,.1) 45%, rgba(0,0,0,.55) 100%); }
 .sr .explore-copy { position: absolute; left: 0; right: 0; top: 40%; transform: translateY(-50%); text-align: center; text-shadow: 0 2px 30px rgba(0,0,0,.8), 0 1px 3px rgba(0,0,0,.7); }
@@ -874,7 +876,7 @@ body.sr {
   .sr .jp-step .body { font-size: 15px; }
   .sr .jp-rail { margin-top: 22px; gap: 6px 16px; }
   .sr .jp-rail-label { font-size: 11px; }
-  .sr .hall-photos { top: 47%; width: 94vw; height: 46vh; }
+  .sr .hall-photos { top: 41%; width: 94vw; height: 46vh; }
   .sr .hall-photo { border-radius: 10px; box-shadow: 0 16px 36px rgba(0,0,0,.6); }
   .sr .hall-photo:nth-child(1) { left: 0;   top: 4%;  width: 50%; aspect-ratio: 4 / 3; }
   .sr .hall-photo:nth-child(2) { left: 45%; top: 0;   width: 55%; aspect-ratio: 4 / 3; }
@@ -882,7 +884,7 @@ body.sr {
   .sr .hall-photo:nth-child(4) { left: 39%; top: 37%; width: 58%; aspect-ratio: 4 / 3; }
   .sr .hall-photo:nth-child(5) { left: 22%; top: 70%; width: 40%; aspect-ratio: 4 / 3; }
   .sr .hall-intro, .sr .hall-copy { width: 88vw; }
-  .sr .hall-copy { top: 25%; }
+  .sr .hall-copy { top: 27%; } /* sits just above the collage */
   .sr .hall-copy .body { font-size: 15px; }
   .sr .hall-copy .hall-more { display: none; }
   .sr .hall-stack.is-card-out { height: 520vh; }
@@ -1016,4 +1018,25 @@ body.sr {
   .sr .deck { width: 58vw; }
   .sr .schoolcard-photo { height: 130px; }
   .sr .schoolcard-body { min-height: 0; padding: 16px 18px 18px; }
+}
+
+/* Phones and touch screens: keep scrolling light. Continuous parallax and
+   zooms repaint large photos on every frame, clip-path wipes can't run on the
+   compositor, and backdrop blur on sticky bars is costly while scrolling. */
+@media (max-width: 760px), (pointer: coarse) {
+  .sr .par, .sr .parslow, .sr .drift, .sr .driftback, .sr .heroimg { animation: none !important; transform: none !important; }
+  @supports (animation-timeline: view()) {
+    .sr .wipe { animation: sr-fadein linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
+  }
+  .sr-io .wipe { clip-path: none; opacity: 0; transition: opacity .7s ease; }
+  .sr-io .wipe.is-in { opacity: 1; }
+  .sr .sr-jump { background: rgba(11,11,11,.97); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .sr .dbs-side-inner { background: rgba(11,11,11,.97); backdrop-filter: none; }
+  .sr .hall-card .info { backdrop-filter: none; }
+}
+@keyframes sr-fadein { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 760px) {
+  /* Centre the driver: he sits a little right of the photo's middle. */
+  .sr .explore-frame { object-position: 55% 50%; }
+  .sr .explore-plate--home, .sr .explore-plate--home.is-on { background-position: 55% 50%; }
 }

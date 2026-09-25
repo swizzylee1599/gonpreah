@@ -95,9 +95,13 @@ const isCurrent = (routeId: string) => ROUTE_PATH[routeId] === currentPath;
     let lastY = window.scrollY;
     window.addEventListener('scroll', () => {
       if (nav.classList.contains('is-mobile-open')) return;
+      // Ignore small moves and the iOS bounce past either end, which made
+      // the bar flicker in and out.
       const y = window.scrollY;
-      const down = y > lastY;
-      nav.classList.toggle('is-hidden', down && y > 140);
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      if (y < 0 || y > max) return;
+      if (Math.abs(y - lastY) < 10) return;
+      nav.classList.toggle('is-hidden', y > lastY && y > 140);
       lastY = y;
     }, { passive: true, signal });
 

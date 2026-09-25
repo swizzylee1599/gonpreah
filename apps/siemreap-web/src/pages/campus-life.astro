@@ -6,13 +6,14 @@ import PhotoSlot from '../components/sr/PhotoSlot.astro';
 import CampusDive from '../components/sr/CampusDive.astro';
 import { existsSync } from 'node:fs';
 
-// Still shots of town life that loop behind the tuk-tuk. Files live in
-// public/images/explore; any that are missing are skipped.
+// The view from the tuk-tuk: it opens on the photo's own street, then cuts
+// fast through streets around town. Files live in public/images/explore;
+// any that are missing are skipped.
 const EXPLORE = [
-  ['sr-01', 'Old Market'], ['sr-02', 'Pub Street'], ['sr-03', 'Street food'],
-  ['sr-04', 'Near the temples'], ['sr-05', 'The river'], ['sr-06', 'Night market'],
-  ['sr-07', 'The countryside'], ['sr-08', 'Around town'], ['sr-09', 'Coffee'],
-].filter(([f]) => existsSync(`public/images/explore/${f}.jpg`)).map(([f, label]) => ({ src: `/images/explore/${f}.jpg`, label }));
+  '/images/campus/tuktuk.jpg',
+  ...['drive-01', 'drive-02', 'drive-03', 'drive-04', 'drive-05', 'drive-06', 'drive-07', 'drive-08', 'drive-09']
+    .filter((f) => existsSync(`public/images/explore/${f}.jpg`)).map((f) => `/images/explore/${f}.jpg`),
+];
 
 const STATS: { n: number; suffix: string; label: string }[] = [
   { n: 40, suffix: '', label: 'full-time staff' },
@@ -76,9 +77,7 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
   <section class="explore" id="siem-reap" aria-label="Explore Siem Reap">
     <div class="explore-card">
       <div class="explore-plates" aria-hidden="true">
-        {EXPLORE.length
-          ? EXPLORE.map((sh, i) => <div class={`explore-plate${i === 0 ? ' is-on' : ''}`} data-label={sh.label} style={`background-image:url(${sh.src})`}></div>)
-          : <div class="explore-plate is-on" style="background-image:url(/images/campus/tuktuk.jpg)"></div>}
+        {EXPLORE.map((src, i) => <div class={`explore-plate${i === 0 ? ' is-on explore-plate--home' : ''}`} style={`background-image:url(${src})`}></div>)}
       </div>
       <img class="explore-frame" src="/images/campus/tuktuk-frame.webp" alt="" aria-hidden="true" decoding="async" />
       <div class="explore-shade" aria-hidden="true"></div>
@@ -88,7 +87,6 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
         <p class="body explore-lead">Temples, markets, street food and the river. This is where we spend our days off.</p>
         <a class="btn btn--solid explore-btn" href="/siem-reap">Things to do in Siem Reap →</a>
       </div>
-      <p class="explore-caption" aria-hidden="true"><span data-explore-caption>{EXPLORE[0]?.label ?? ''}</span></p>
     </div>
   </section>
 
@@ -232,12 +230,12 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
     });
 
     // Explore Siem Reap: the card tilts up into place as it scrolls in, then
-    // the view behind the tuk-tuk cuts from still to still on a loop.
+    // the view behind the tuk-tuk holds on its own street and cuts fast
+    // through the others, on a loop.
     const ex = document.querySelector('.explore');
     if (!ex) return;
     const card = ex.querySelector('.explore-card');
     const plates = [...ex.querySelectorAll('.explore-plate')];
-    const caption = ex.querySelector('[data-explore-caption]');
     const flip = () => {
       const r = ex.getBoundingClientRect();
       const vh = window.innerHeight;
@@ -254,20 +252,25 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
       flip();
     }
     if (plates.length > 1 && !reduce) {
-      let i = 0, timer = 0, visible = false;
+      const HOLD = 1400, CUT = 280;
+      let i = 0, timer = 0;
       const show = (n) => {
         plates[i].classList.remove('is-on');
         i = n;
         plates[i].classList.add('is-on');
-        if (caption) caption.textContent = plates[i].dataset.label || '';
       };
-      const run = () => { clearInterval(timer); timer = setInterval(() => show((i + 1) % plates.length), 1600); };
+      const tick = () => {
+        show((i + 1) % plates.length);
+        timer = setTimeout(tick, i === 0 ? HOLD : CUT);
+      };
+      const stop = () => { clearTimeout(timer); timer = 0; };
       const io = new IntersectionObserver((en) => {
-        visible = en[0].isIntersecting;
-        if (visible) run(); else clearInterval(timer);
-      }, { threshold: 0.25 });
+        if (en[0].isIntersecting) {
+          if (!timer) { show(0); timer = setTimeout(tick, HOLD); }
+        } else { stop(); show(0); }
+      }, { threshold: 0.35 });
       io.observe(ex);
-      signal.addEventListener('abort', () => { clearInterval(timer); io.disconnect(); });
+      signal.addEventListener('abort', () => { stop(); io.disconnect(); });
     }
   };
   init();

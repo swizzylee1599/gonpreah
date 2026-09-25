@@ -10,8 +10,8 @@ const JOURNEY: { title: string; body: string; photo: string; alt: string }[] = [
   {
     title: 'Apply for DTS',
     body: 'Join our community surrounded by leaders and friends who have a heart to serve God and the nations. We will help you find your identity in Christ and your purpose in the world.',
-    photo: '/images/campus/community-gathering.jpg',
-    alt: 'The whole community gathered in a circle under string lights, a table of food to one side',
+    photo: '/images/gonpreah-community.jpg',
+    alt: 'The community worshipping with hands raised in front of the band, one student in a GonPreah shirt',
   },
   {
     title: 'Know God',
@@ -62,7 +62,7 @@ const PHASES: { eyebrow: string; title: string; body: string[]; photos: Photo[] 
 ];
 // Higgsfield dolly shot down the corridor, scrubbed by scroll. Until the clip
 // is uploaded to public/video the still photo zooms in as a stand-in.
-const HALL_VIDEO: string | null = '/video/dts-hallway.mp4#t=0.001';
+const HALL_VIDEO: string | null = '/video/dts-hallway.mp4';
 
 const INFO: [string, string][] = [
   ['Next school', 'January DTS'],
@@ -162,11 +162,15 @@ const FAQ: [string, string][] = [
       const hall = document.querySelector('.hall-stack');
       if (!hall || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const still = hall.querySelector('.hall-still');
-      // Phones: scrubbing a video frame by frame on scroll stutters, and blur
-      // filters are costly, so use the still with a smooth zoom and no blur.
+      // Phones get a lighter clip (dense keyframes, so exact seeks are cheap)
+      // and no blur filters, which are costly there.
       const lite = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
       let video = hall.querySelector('.hall-video');
-      if (lite && video) { video.remove(); video = null; if (still) still.style.opacity = '1'; }
+      if (video) {
+        const phone = matchMedia('(max-width: 760px)').matches;
+        video.src = `${(phone && video.dataset.srcMobile) || video.dataset.src}#t=0.001`;
+        video.load();
+      }
       const pin = hall.querySelector('.hall-pin');
       const intro = hall.querySelector('.hall-intro');
       let card = hall.querySelector('.hall-card');
@@ -195,7 +199,8 @@ const FAQ: [string, string][] = [
         latest = t; dirty = true;
         if (seeking || !video) return;
         seeking = true; dirty = false;
-        if ('fastSeek' in video) video.fastSeek(t); else video.currentTime = t;
+        // Exact seeks, not fastSeek: fastSeek snaps to keyframes and the walk stutters.
+        video.currentTime = t;
       };
       if (video) {
         // The still stays underneath until the clip has decoded a frame, and takes over again if the clip fails.
@@ -205,26 +210,24 @@ const FAQ: [string, string][] = [
           if (still) still.style.opacity = '0';
         };
         if (video.readyState >= 2) prime(); else video.addEventListener('loadeddata', prime, { once: true, signal });
-        video.addEventListener('error', () => { video.remove(); if (still) still.style.opacity = '1'; }, { once: true, signal });
+        // When autoplay is blocked (Low Power Mode, data saver), the first touch starts it.
+        const unlock = () => { if (video && video.readyState < 2) { video.load(); prime(); } };
+        for (const ev of ['touchstart', 'touchend', 'click']) window.addEventListener(ev, unlock, { passive: true, signal, once: true });
+        video.addEventListener('error', () => { video.remove(); video = null; if (still) still.style.opacity = '1'; }, { once: true, signal });
         video.addEventListener('seeked', () => { seeking = false; if (dirty) seekTo(latest); }, { signal });
       }
 
-      // Phones and touch screens report scroll in coarse jumps, which made the
-      // walk shudder; there the displayed progress eases toward the real one.
       const measure = () => {
         const rect = hall.getBoundingClientRect();
         const scrollable = rect.height - (pin ? pin.offsetHeight : window.innerHeight);
         return scrollable <= 0 ? 0 : clamp01((-rect.top / scrollable) * pEnd);
       };
-      let shown = null;
+      // The walk follows the finger 1:1; easing toward the scroll position
+      // made it trail behind and felt laggy on phones.
       let raf = 0;
       const frame = () => {
         raf = 0;
-        const target = measure();
-        shown = (shown === null || !lite) ? target : shown + (target - shown) * 0.16;
-        if (Math.abs(target - shown) < 0.0004) shown = target;
-        render(shown);
-        if (shown !== target) raf = requestAnimationFrame(frame);
+        render(measure());
       };
       const render = (p) => {
         if (video && video.duration && !Number.isNaN(video.duration)) seekTo(p * video.duration * 0.985);
@@ -306,22 +309,16 @@ const FAQ: [string, string][] = [
       const bar = stack.querySelector('.jp-rail-bar i');
       const n = steps.length;
       if (n < 2) return;
-      const jlite = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
       const jpin = stack.querySelector('.journey-pin');
       const jmeasure = () => {
         const rect = stack.getBoundingClientRect();
         const scrollable = rect.height - (jpin ? jpin.offsetHeight : window.innerHeight);
         return scrollable <= 0 ? 0 : Math.min(1, Math.max(0, -rect.top / scrollable));
       };
-      let jshown = null;
       let ticking = false;
       const update = () => {
         ticking = false;
-        const target = jmeasure();
-        jshown = (jshown === null || !jlite) ? target : jshown + (target - jshown) * 0.18;
-        if (Math.abs(target - jshown) < 0.0004) jshown = target;
-        if (jshown !== target) { ticking = true; requestAnimationFrame(update); }
-        const p = jshown;
+        const p = jmeasure();
         const d = Math.min(1, p / STEPS_END) * (n - 1);
         const exit = Math.min(1, Math.max(0, (p - STEPS_END) / (1 - STEPS_END)));
         steps.forEach((step, i) => {
@@ -359,8 +356,8 @@ const FAQ: [string, string][] = [
   <section class="breakdown hall-stack" aria-label="DTS breakdown">
     <div class="hall-pin">
       <div class="hall-bg" aria-hidden="true">
-        <img class="hall-still" src="/images/schools/dts-temple.jpg" alt="" decoding="async" />
-        {HALL_VIDEO && <video class="hall-video" src={HALL_VIDEO} muted autoplay playsinline webkit-playsinline preload="auto"></video>}
+        <img class="hall-still" src="/images/schools/dts-hallway-start.jpg" alt="" decoding="async" />
+        {HALL_VIDEO && <video class="hall-video" data-src={HALL_VIDEO} data-src-mobile={HALL_VIDEO.replace(/\.mp4$/, '-mobile.mp4')} muted autoplay playsinline webkit-playsinline preload="auto"></video>}
       </div>
       <div class="hall-scrim" aria-hidden="true"></div>
       {PHASES.map((phase, p) => (

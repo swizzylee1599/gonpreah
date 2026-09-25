@@ -51,7 +51,7 @@ const hasMobile = existsSync('public' + mobileVideo);
       {sub && <p class="body dive-statement-sub">{sub}</p>}
       {photos.length > 0 && (
         <div class="dive-photos">
-          {photos.map((ph) => <img src={ph.src} alt={ph.alt} loading="lazy" decoding="async" style={ph.pos ? `object-position:${ph.pos}` : undefined} />)}
+          {photos.map((ph) => <img src={ph.src} alt={ph.alt} decoding="async" style={ph.pos ? `object-position:${ph.pos}` : undefined} />)}
         </div>
       )}
     </div>
@@ -76,7 +76,6 @@ const hasMobile = existsSync('public' + mobileVideo);
     const welcome = stack.querySelector<HTMLElement>('.dive-welcome')!;
     const statement = stack.querySelector<HTMLElement>('.dive-statement')!;
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const lite = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
     if (reduce) { stack.classList.add('is-static'); return; }
     // Pick the clip for this screen: a portrait, lighter one on phones.
     const phone = matchMedia('(max-width: 760px)').matches;
@@ -117,22 +116,17 @@ const hasMobile = existsSync('public' + mobileVideo);
 
     // Stages: title holds 0–.12 and fades by .3; the turn runs .1–.6; welcome
     // .55–.78; the front dims from .68; statement .76–.9 over the building.
-    // Touch screens scroll in coarse steps; ease the shown progress toward
-    // the real one so the sequence glides instead of jumping.
+    // The sequence follows the finger 1:1; easing toward the scroll position
+    // made it trail behind and felt laggy on phones.
     const measure = () => {
       const rect = stack.getBoundingClientRect();
       const scrollable = rect.height - pin.offsetHeight;
       return scrollable <= 0 ? 0 : clamp01(-rect.top / scrollable);
     };
-    let shown: number | null = null;
     let ticking = false;
     const update = () => {
       ticking = false;
-      const target = measure();
-      shown = (shown === null || !lite) ? target : shown + (target - shown) * 0.16;
-      if (Math.abs(target - shown) < 0.0004) shown = target;
-      if (shown !== target) { ticking = true; requestAnimationFrame(update); }
-      const p = shown;
+      const p = measure();
 
       const turn = clamp01((p - 0.08) / 0.44);
       if (video && ready && video.duration && !Number.isNaN(video.duration)) {
