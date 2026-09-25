@@ -39,15 +39,21 @@ const ROAD: Stop[] = [
   { year: 'Dec 2027', place: 'Phnom Penh', title: 'A YWAM campus in Phnom Penh', body: 'Planning and preparation are under way to pioneer a YWAM campus in the capital in December 2027 — the next stop on the road.', state: 'next' },
 ];
 ---
-<SrLayout title="About Us | YWAM Siem Reap"
+<SrLayout title="About Us | YWAM Siem Reap" spacer={false}
   description="Welcome to YWAM Siem Reap — empowering Khmer youth to transform the nation of Cambodia. Our story from the refugee camps to the University of the Nations Cambodia, YWAM Poipet, Siem Reap and beyond.">
 
-  <section class="pagehead about-head" style="padding:90px 0 0;">
-    <div class="wrap" style="position:relative;">
+  <!-- The welcome sits over the whole community, gathered in the courtyard. -->
+  <section class="about-head about-head--photo">
+    <img class="about-head-photo" src="/images/campus/campus-group.jpg" alt="The YWAM Siem Reap community gathered together in the campus courtyard" loading="eager" decoding="async" />
+    <div class="about-head-scrim" aria-hidden="true"></div>
+    <div class="wrap about-head-inner">
       <p class="eyebrow">About us</p>
       <h1 class="km about-welcome" lang="km">សូមស្វាគមន៍</h1>
       <p class="about-translit"><span class="disp">(som-sva-gkom)</span> <span class="muted">— welcome</span></p>
-      <span class="rule" style="margin:30px 0 0;"></span>
+    </div>
+  </section>
+  <section class="sec about-welcome-sec">
+    <div class="wrap">
       <div class="about-welcome-copy">
         {WELCOME.map((p, i) => <p class="body" style={`margin:${i ? '18px' : '28px'} 0 0;max-width:62ch;font-size:${i ? '17px' : '19px'};`}>{p}</p>)}
       </div>
