@@ -59,13 +59,6 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
   ] },
 ];
 
-const WHO: [string, string][] = [
-  ['Students', 'Live on campus for the length of their school.'],
-  ['Volunteers', 'Short or long term, living and eating with us.'],
-  ['New staff', 'Find their feet here before the work takes over.'],
-  ['Teams', 'Stay on or near the base and share our meals.'],
-];
-
 
 ---
 <SrLayout title="Campus Life | YWAM Siem Reap" spacer={false}
@@ -186,19 +179,6 @@ const WHO: [string, string][] = [
     </div>
   </section>
 
-  <section class="sec" style="padding-top:0;">
-    <div class="wrap">
-      <p class="eyebrow reveal">Who lives here</p>
-      <div class="cl-who stag" style="margin-top:22px;">
-        {WHO.map(([t, d]) => (
-          <div class="card cl-who-card">
-            <h3 class="disp" style="margin:0;font-size:20px;font-weight:500;">{t}</h3>
-            <p class="body" style="margin:12px 0 0;font-size:15px;">{d}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
 
 
   <Cta

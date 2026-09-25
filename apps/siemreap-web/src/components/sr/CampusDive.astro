@@ -22,12 +22,14 @@ const {
   eyebrow = 'YWAM Siem Reap', title = 'Campus Life', km = 'ជីវិតសហគមន៍', welcome = 'Welcome home.', statement, sub, photos = [],
 } = Astro.props;
 const hasVideo = existsSync('public' + video);
+const mobileVideo = video.replace(/\.mp4$/, '-mobile.mp4');
+const hasMobile = existsSync('public' + mobileVideo);
 ---
 <section class="dive-stack" aria-label={title}>
   <div class="dive-pin">
     <div class="dive-photo dive-aerial" style={`background-image:url(${aerial})`}></div>
     <div class="dive-photo dive-front" style={`background-image:url(${front})`}></div>
-    {hasVideo && <video class="dive-video" src={`${video}#t=0.001`} muted autoplay playsinline webkit-playsinline preload="auto" aria-label="The campus, turning from above to its front"></video>}
+    {hasVideo && <video class="dive-video" data-src={video} data-src-mobile={hasMobile ? mobileVideo : undefined} muted autoplay playsinline webkit-playsinline preload="auto" aria-label="The campus, turning from above to its front"></video>}
     <div class="dive-scrim" aria-hidden="true"></div>
 
     <div class="wrap dive-head" data-stage="0">
@@ -76,7 +78,14 @@ const hasVideo = existsSync('public' + video);
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const lite = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
     if (reduce) { stack.classList.add('is-static'); return; }
-    if (video && (lite || video.error)) { video.remove(); video = null; }
+    // Pick the clip for this screen: a portrait, lighter one on phones.
+    const phone = matchMedia('(max-width: 760px)').matches;
+    if (video) {
+      const src = (phone && video.dataset.srcMobile) || video.dataset.src;
+      video.src = `${src}#t=0.001`;
+      video.load();
+    }
+    let ready = false;
     const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
     const ease = (t: number) => t * t * (3 - 2 * t);
 
@@ -85,10 +94,11 @@ const hasVideo = existsSync('public' + video);
       latest = t; dirty = true;
       if (seeking || !video) return;
       seeking = true; dirty = false;
-      if ('fastSeek' in video) video.fastSeek(t); else video.currentTime = t;
+      // Exact seeks, not fastSeek: fastSeek snaps to keyframes and the turn stutters.
+      video.currentTime = t;
     };
     if (video) {
-      const prime = () => { const p = video!.play(); if (p && p.then) p.then(() => video!.pause()).catch(() => {}); };
+      const prime = () => { ready = true; const p = video!.play(); if (p && p.then) p.then(() => { video!.pause(); onScroll(); }).catch(() => {}); onScroll(); };
       if (video.readyState >= 2) prime(); else video.addEventListener('loadeddata', prime, { once: true, signal });
       video.addEventListener('seeked', () => { seeking = false; if (dirty) seekTo(latest); }, { signal });
       video.addEventListener('error', () => { video?.remove(); video = null; onScroll(); }, { once: true, signal });
@@ -114,12 +124,14 @@ const hasVideo = existsSync('public' + video);
       const p = shown;
 
       const turn = clamp01((p - 0.08) / 0.44);
-      if (video) {
+      if (video && ready && video.duration && !Number.isNaN(video.duration)) {
         video.style.opacity = '1';
         aerial.style.opacity = String(1 - clamp01(turn * 8));
         front.style.opacity = '0';
-        if (video.duration && !Number.isNaN(video.duration)) seekTo(turn * video.duration * 0.985);
+        seekTo(turn * video.duration * 0.985);
       } else {
+        // Until the clip can play (or if it can't), the stills stand in.
+        if (video) video.style.opacity = '0';
         // Stills: push in on the aerial, a short crossfade, then the front settles.
         const x = ease(clamp01((turn - 0.5) / 0.22));
         aerial.style.opacity = String(1 - x);
