@@ -98,8 +98,19 @@ const hasMobile = existsSync('public' + mobileVideo);
       video.currentTime = t;
     };
     if (video) {
-      const prime = () => { ready = true; const p = video!.play(); if (p && p.then) p.then(() => { video!.pause(); onScroll(); }).catch(() => {}); onScroll(); };
-      if (video.readyState >= 2) prime(); else video.addEventListener('loadeddata', prime, { once: true, signal });
+      // iOS only paints seeks once the clip has played, so play then pause it.
+      let primed = false;
+      const prime = () => {
+        if (primed || !video) return;
+        const p = video.play();
+        if (p && p.then) p.then(() => { primed = true; ready = true; video?.pause(); onScroll(); }).catch(() => {});
+      };
+      const onData = () => { ready = true; onScroll(); prime(); };
+      if (video.readyState >= 2) onData(); else video.addEventListener('loadeddata', onData, { once: true, signal });
+      // When autoplay is blocked (Low Power Mode, data saver), a tap or the
+      // first touch counts as a gesture, so iOS lets the clip start then.
+      const unlock = () => { if (!primed && video && video.readyState < 2) video.load(); prime(); };
+      for (const ev of ['touchstart', 'touchend', 'click']) window.addEventListener(ev, unlock, { passive: true, signal });
       video.addEventListener('seeked', () => { seeking = false; if (dirty) seekTo(latest); }, { signal });
       video.addEventListener('error', () => { video?.remove(); video = null; onScroll(); }, { once: true, signal });
     }
