@@ -681,6 +681,10 @@ body.sr {
 .sr .explore { position: relative; z-index: 3; padding: 0; margin-top: -14vh; }
 .sr .explore-card { position: relative; height: 100vh; height: 100svh; overflow: hidden; background: var(--sr-ink); transform-origin: 50% 100%; will-change: transform; box-shadow: 0 -40px 90px rgba(0,0,0,.6); }
 .sr .explore-plates { position: absolute; inset: 0; }
+/* The card after Explore flips up over it the same way. Its pivot sits at the
+   bottom of the first screen of the card, matching the Explore card. */
+.sr .flipup { position: relative; z-index: 4; margin-top: -14vh; }
+.sr .flipup-card { position: relative; background: var(--sr-ink); transform-origin: 50% 100vh; will-change: transform; box-shadow: 0 -40px 90px rgba(0,0,0,.6); padding-top: 24px; }
 /* Hard cuts; each street pushes in a touch while it's on, like rolling forward. */
 .sr .explore-plate { position: absolute; inset: -2%; background-size: cover; background-position: 50% 50%; opacity: 0; transform: scale(1); }
 .sr .explore-plate.is-on { opacity: 1; transform: scale(1.06); transition: transform .5s linear; }
