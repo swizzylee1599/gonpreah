@@ -20,44 +20,52 @@ const OPTIONS: Option[] = [
 ];
 const GROUPS: Group[] = ['Schools', 'Staff & volunteers', 'Teams'];
 
-// The steps for each kind of applicant.
+// The steps for each kind of applicant, matching the GP Portal's own stages:
+// create your account, fill out the application, we get in touch, documents
+// & reference, video interview, accepted, getting ready, arrival.
+const ACCOUNT: [string, string] = ['Create your GP Portal account', 'Pick Siem Reap, then what you are applying for. Your name, email, phone number (with country code), whether we should message you on WhatsApp or Telegram, and your country; then choose a username and a 4-digit PIN. It is a small account so you can come back to it on your phone.'];
+const REACH: [string, string] = ['We get in touch', 'Once your application is in, one of our team messages you on WhatsApp or Telegram, whichever you chose. The portal shows where your application is up to the whole way through.'];
 const STEPS: Record<Group, { title: string; intro: string; steps: [string, string][] }> = {
   'Schools': {
     title: 'From application to arrival.',
-    intro: 'The process is the same for every school. Most students are through it in a few weeks.',
+    intro: 'The process is the same for every school, and the portal shows you each stage as you reach it. Most students are through it in a few weeks.',
     steps: [
-      ['Create your GP Portal account', 'Your name, email and a password. The portal is where your application lives from here on: you can save it, come back to it, and see where it is up to.'],
-      ['Fill in the school application', 'Choose your school in the portal and answer its questions about your story, your faith, your health and your church background. Take your time; it saves as you go.'],
-      ['Leader reference', 'International applicants send one reference to a church leader, pastor or mentor who knows them well. Khmer applicants do not need a reference.'],
-      ['Video interview', 'A video call with our school staff. It is a two-way conversation: we want to know you, and you should be asking us questions too.'],
-      ['Acceptance', 'We let you know the outcome in the portal and by message. If you are accepted, we welcome you into the school.'],
-      ['The practical part', 'Fees and how to pay them, the packing list, the visa process for Cambodia, and travel to Siem Reap. We walk you through each one.'],
-      ['Arrive', 'We collect you from Siem Reap airport and get you settled on the base.'],
+      ACCOUNT,
+      ['Fill out the application', 'Your story, your faith, your health and your church background. Your answers save as a draft, so you can come back any time. DBS, BCS and SMS need a completed DTS first.'],
+      REACH,
+      ['Documents and leader reference', 'After you apply, the portal lists what to send for your school and ticks each item off as it arrives. International applicants make a leader reference link in the portal and send it to a pastor, church leader or mentor who knows them well; Khmer applicants do not need a reference.'],
+      ['Video interview', 'A video call with someone from the school. It is a two-way conversation: we want to know you, and you should be asking us questions too.'],
+      ['Accepted', 'The portal tells you the outcome. If you are accepted, welcome: next comes the practical part.'],
+      ['Getting ready: fees, packing, visa, travel', 'We walk you through fees and how to pay them, the packing list and travel to Siem Reap. If you need a visa, a step-by-step e-visa guide appears in the portal once you are accepted, and we send you a letter of invitation once your flights are confirmed.'],
+      ['Arrival at the base', 'We collect you from Siem Reap airport and get you settled on the base.'],
     ],
   },
   'Staff & volunteers': {
     title: 'From application to joining the team.',
-    intro: 'Staff commit for a term and raise their own support; volunteers come for a few weeks to a few months. The steps are the same, with a longer conversation for staff.',
+    intro: 'Staff complete a DTS first, commit for a term and raise their own support; volunteers come for a season, a few weeks to a few months, with no DTS needed. The steps are the same, with a longer conversation for staff.',
     steps: [
-      ['Create your GP Portal account', 'Your name, email and a password. Your application lives in the portal from here on.'],
-      ['Fill in the application', 'Staff: your DTS (where and when), your gifts, and the area you hope to serve in. Volunteers: your dates, your skills, and how long you can come.'],
-      ['References', 'A reference from a church leader who knows you well. Staff also give a reference from their DTS or sending base.'],
-      ['Interview with our leadership', 'A video call about your calling, the team, and what a term here looks like. Volunteers talk through dates and the work you would join.'],
-      ['Acceptance and agreement', 'We confirm the outcome in the portal. Staff agree the length of their term and a plan for raising support; volunteers confirm dates and costs.'],
-      ['Visa, travel and support', 'We walk you through the visa for Cambodia, travel to Siem Reap, housing on the base, and, for staff, support raising.'],
-      ['Arrive and settle in', 'Airport pickup, orientation to the base and the city, and you join the team.'],
+      ACCOUNT,
+      ['Fill out the application', 'Staff: your DTS (where and when), your gifts, and the area you hope to serve in. Volunteers: your dates, your skills, and how long you can come. Your answers save as a draft.'],
+      REACH,
+      ['Documents and leader reference', 'After you apply, the portal lists what to send and ticks each item off as it arrives. International applicants make a leader reference link in the portal and send it to a pastor, church leader or mentor who knows them well.'],
+      ['Video interview', 'A video call with someone from the team, about your calling, the work you would join, and what a term here looks like.'],
+      ['Accepted', 'The portal tells you the outcome. Staff agree the length of their term and a plan for raising support; volunteers confirm their dates.'],
+      ['Getting ready: visa, travel, housing', 'A step-by-step e-visa guide appears in the portal once you are accepted, and we send a letter of invitation once your flights are confirmed. We also talk you through travel to Siem Reap, housing on the base and, for staff, support raising.'],
+      ['Arrival at the base', 'Airport pickup, orientation to the base and the city, and you join the team.'],
     ],
   },
   'Teams': {
     title: 'From first message to the week itself.',
-    intro: 'Teams stay one to three weeks and work alongside Khmer staff. The team leader applies once for everyone.',
+    intro: 'Teams stay one to three weeks and work alongside Khmer staff. The team leader applies once for everyone and handles the uploads for the team.',
     steps: [
-      ['Team leader creates a GP Portal account', 'One account for the team. Open a team application with your church or base, your rough dates, and how many are coming.'],
-      ['Plan the trip together', 'We talk through dates, the villages and ministries you would serve in, where you stay, and the budget, and confirm we can host you.'],
-      ['Register the team', 'The team leader fills in the details for each member in the portal: names, passport details, dietary and medical notes.'],
-      ['Confirm', 'We confirm your dates and the team cost, and your place is booked.'],
-      ['Prepare', 'Visas for Cambodia, flights to Siem Reap, the packing list, and a briefing on the culture and the work before you come.'],
-      ['Arrive', 'We collect you from Siem Reap airport, settle you in, and walk through the week together on the first evening.'],
+      ['Team leader creates the GP Portal account', 'One account for the whole team: pick Siem Reap and Team, then your name, email, phone number (with country code), WhatsApp or Telegram, your country, and a username and 4-digit PIN.'],
+      ['Fill out the team application', 'Your church or base, your rough dates, how many are coming and what you hope to do. It saves as a draft, so you can come back to it.'],
+      ['We plan the visit together', 'One of our team messages you on WhatsApp or Telegram. We talk through dates, the villages and ministries you would serve in, where you stay and the budget, and confirm we can host you.'],
+      ['Upload the team documents', 'The portal lists them once your application is in: passport copies (the photo page of each member), a team photo with each member\'s name, and flight itineraries. Not booked yet? Upload the flights when you have them; we use them to arrange your transport from the airport.'],
+      ['Video call', 'A video call with someone from the team to settle the plan for the week.'],
+      ['Accepted', 'The portal confirms your dates and the team is booked in.'],
+      ['Getting ready: visas and travel', 'The e-visa guide appears in the portal once you are accepted: Visa E with our letter of invitation, which we send once your flights are confirmed; the Cambodia e-Arrival app, which one phone can complete for the whole team; and what to have printed for the airport.'],
+      ['Arrival', 'We collect you from Siem Reap airport, settle you in, and walk through the week together on the first evening.'],
     ],
   },
 };
@@ -97,7 +105,7 @@ const idsByGroup = (g: Group) => OPTIONS.filter((o) => o.group === g).map((o) =>
                 <a class="btn btn--plain" href="/campus-life">Campus life</a>
               </div>
             </div>
-            <p class="body" style="margin:18px 0 0;max-width:60ch;">{s.note ? s.note + ' ' : ''}The application is on the GP Portal. It opens in a new tab; create an account, choose <b>{s.name}</b>, and you can save and come back to it any time.</p>
+            <p class="body" style="margin:18px 0 0;max-width:60ch;">{s.note ? s.note + ' ' : ''}The application is on the GP Portal. It opens in a new tab: create a small account (a username and a 4-digit PIN), pick <b>{s.abbr === 'Teams' ? 'Team' : s.abbr}</b>, and your answers save as a draft so you can come back to it any time.</p>
             <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:22px;">
               <a class="btn btn--solid" href={PORTAL} target="_blank" rel="noopener">Apply on the GP Portal ↗︎</a>
               <a class="btn" href={`mailto:${s.email}?subject=${encodeURIComponent(`${s.abbr} application`)}`}>Email {s.email}</a>
