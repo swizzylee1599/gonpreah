@@ -196,10 +196,13 @@ const hasDrone = existsSync('public' + DRONE);
       head.style.opacity = String(1 - hOut);
       head.style.transform = `translateY(${(-30 * hOut).toFixed(1)}px)`;
 
+      // "1. Angkor Wat" slides in from the left; when the temple cards come
+      // up it docks small in the top-left corner, clear of them.
       const lIn = ease(clamp01((p - 0.12) / 0.08));
       const lUp = toTemples;
-      label.style.opacity = String(lIn * (phone ? 1 - lUp : 1 - 0.35 * lUp));
-      label.style.transform = `translate(${((1 - lIn) * -40).toFixed(1)}px, ${(-80 * lUp).toFixed(1)}px) scale(${(1 - 0.35 * lUp).toFixed(3)})`;
+      const dockY = (phone ? 96 : 118) - label.offsetTop;
+      label.style.opacity = String(lIn);
+      label.style.transform = `translate(${((1 - lIn) * -40).toFixed(1)}px, ${(dockY * lUp).toFixed(1)}px) scale(${(1 - (phone ? 0.5 : 0.55) * lUp).toFixed(3)})`;
 
       temples.forEach((el, i) => {
         if (phone) {
