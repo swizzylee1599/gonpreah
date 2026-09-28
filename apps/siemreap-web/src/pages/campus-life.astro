@@ -1,0 +1,285 @@
+---
+import SrLayout from '../layouts/SrLayout.astro';
+import Footer from '../components/sr/Footer.astro';
+import Cta from '../components/sr/Cta.astro';
+import PhotoSlot from '../components/sr/PhotoSlot.astro';
+import CampusDive from '../components/sr/CampusDive.astro';
+import { existsSync } from 'node:fs';
+
+// The view from the tuk-tuk: it opens on the photo's own street, then cuts
+// fast through streets around town. Files live in public/images/explore;
+// any that are missing are skipped.
+const EXPLORE = [
+  '/images/campus/tuktuk.jpg',
+  ...['drive-01', 'drive-02', 'drive-03', 'drive-04', 'drive-05', 'drive-06', 'drive-07', 'drive-08', 'drive-09']
+    .filter((f) => existsSync(`public/images/explore/${f}.jpg`)).map((f) => `/images/explore/${f}.jpg`),
+];
+
+const STATS: { n: number; suffix: string; label: string }[] = [
+  { n: 40, suffix: '', label: 'full-time staff' },
+  { n: 4, suffix: '', label: 'schools on campus' },
+  { n: 1, suffix: '', label: 'campus, one family' },
+  { n: 20, suffix: ' min', label: 'to Angkor Wat' },
+];
+
+// The base week. Every weekday shares the same frame; the 8:30 slot changes.
+type Slot = { time: string; title: string; note?: string; hi?: boolean };
+const WEEK: { day: string; full: string; slots: Slot[] }[] = [
+  { day: 'Mon', full: 'Monday', slots: [
+    { time: '7:30 – 8:00', title: 'Breakfast' }, { time: '8:00', title: 'Morning chores' },
+    { time: '8:30 – 9:30', title: 'Base worship', note: 'The whole base, one room, in Khmer and English.', hi: true },
+    { time: '12:30 – 1:30', title: 'Lunch' }, { time: '6:30 – 7:30', title: 'Dinner' },
+  ] },
+  { day: 'Tue', full: 'Tuesday', slots: [
+    { time: '7:30 – 8:00', title: 'Breakfast' }, { time: '8:00', title: 'Morning chores' },
+    { time: '8:30 – 9:30', title: 'Staff meeting', note: 'Where the week gets planned and prayed over.', hi: true },
+    { time: '12:30 – 1:30', title: 'Lunch' }, { time: '6:30 – 7:30', title: 'Dinner' },
+  ] },
+  { day: 'Wed', full: 'Wednesday', slots: [
+    { time: '7:30 – 8:00', title: 'Breakfast' }, { time: '8:00', title: 'Morning chores' },
+    { time: '8:30 – 9:30', title: 'Intercession', note: 'Praying for Cambodia, the nations, and each other.', hi: true },
+    { time: '12:30 – 1:30', title: 'Lunch' }, { time: '6:30 – 7:30', title: 'Dinner' },
+  ] },
+  { day: 'Thu', full: 'Thursday', slots: [
+    { time: '7:30 – 8:00', title: 'Breakfast' }, { time: '8:00', title: 'Morning chores' },
+    { time: '8:30 – 9:30', title: 'Small groups', note: 'A few people, honest conversation, prayer.', hi: true },
+    { time: '12:30 – 1:30', title: 'Lunch' },
+    { time: '6:15 – 7:30', title: 'Community night', note: 'Everyone together — worship, stories, food after.', hi: true },
+    { time: '7:30 – 8:30', title: 'Dinner', note: 'Later on Thursdays, after community night.' },
+  ] },
+  { day: 'Fri', full: 'Friday', slots: [
+    { time: '7:30 – 8:00', title: 'Breakfast' }, { time: '8:00', title: 'Morning chores' },
+    { time: '8:30 – 9:30', title: 'Staff development', note: 'Training and growth for the staff team.', hi: true },
+    { time: '12:30 – 1:30', title: 'Lunch' }, { time: '6:30 – 7:30', title: 'Dinner' },
+  ] },
+  { day: 'Sat', full: 'Saturday', slots: [
+    { time: 'All day', title: 'Sabbath', note: 'A day of rest for the whole base. No chores, no meetings — sleep, the city, a slow meal.', hi: true },
+  ] },
+  { day: 'Sun', full: 'Sunday', slots: [
+    { time: 'Morning', title: 'Church', note: 'Everyone joins a local congregation — Khmer and international churches around Siem Reap.', hi: true },
+  ] },
+];
+
+
+---
+<SrLayout title="Campus Life | YWAM Siem Reap" spacer={false}
+  description="What living at YWAM Siem Reap is like — Khmer and international, students, volunteers, staff and teams in one community — and what to do in Siem Reap when the day is done.">
+  <CampusDive aerial="/images/campus/campus-aerial-wide.jpg" front="/images/campus/campus-front.jpg"
+    statement="Live in a cross‑cultural community centered around Jesus."
+    sub="YWAM Siem Reap is a community of young people on fire for Jesus and making His name known."
+    photos={[
+      { src: '/images/campus/friends-temple.jpg', alt: 'Two friends, one international and one Khmer, talking among temple stones', pos: '50% 35%' },
+      { src: '/images/gonpreah-worship-1.jpg', alt: 'Students worshipping together on campus' },
+      { src: '/images/campus/high-five.jpg', alt: 'A visiting student high-fiving a laughing girl in a village', pos: '50% 40%' },
+      { src: '/images/campus/work-bamboo.jpg', alt: 'A young man carrying bamboo poles along a campus path', pos: '50% 30%' },
+    ]} />
+
+  <section class="explore" id="siem-reap" aria-label="Explore Siem Reap">
+    <div class="explore-card">
+      <div class="explore-plates" aria-hidden="true">
+        {EXPLORE.map((src, i) => <div class={`explore-plate${i === 0 ? ' is-on explore-plate--home' : ''}`} style={`background-image:url(${src})`}></div>)}
+      </div>
+      <img class="explore-frame" src="/images/campus/tuktuk-frame.webp" alt="" aria-hidden="true" decoding="async" />
+      <div class="explore-shade" aria-hidden="true"></div>
+      <div class="wrap explore-copy">
+        <p class="eyebrow">Siem Reap</p>
+        <h2 class="disp explore-title">Explore<br />Siem Reap.</h2>
+        <p class="body explore-lead">Temples, markets, street food and the river. This is where we spend our days off.</p>
+        <a class="btn btn--solid explore-btn" href="/siem-reap">Things to do in Siem Reap →</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- The next card flips up over the tuk-tuk the same way Explore does. -->
+  <div class="flipup">
+  <div class="flipup-card">
+  <section class="cl-stats" aria-label="Campus in numbers">
+    <div class="wrap cl-stats-grid">
+      {STATS.map((s) => (
+        <div class="cl-stat io-in">
+          <p class="disp cl-stat-n"><span data-count={s.n}>0</span>{s.suffix}</p>
+          <p class="muted cl-stat-l">{s.label}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="sec cl-sched-sec" id="schedule">
+    <div class="wrap cl-hs-head">
+      <div class="reveal">
+        <p class="eyebrow">Base schedule</p>
+        <h2 class="disp" style="margin:12px 0 0;font-size:clamp(28px,3.4vw,46px);font-weight:500;line-height:1.08;">The shape of a week.</h2>
+        <p class="body" style="margin:14px 0 0;max-width:52ch;">Every weekday starts with breakfast and chores together. What comes next at 8:30 depends on the day.</p>
+      </div>
+      <div class="sched-side">
+        <figure class="sched-night reveal">
+          <img src="/images/campus/community-night.jpg" alt="Community night: the base worshipping together under string lights" loading="lazy" decoding="async" />
+          <figcaption class="muted">Community night, every Thursday</figcaption>
+        </figure>
+        <div class="cl-hs-nav" aria-hidden="true">
+          <button type="button" class="cl-hs-btn" data-hs-prev="sched">←</button>
+          <button type="button" class="cl-hs-btn" data-hs-next="sched">→</button>
+        </div>
+      </div>
+    </div>
+    <div class="cl-hs" data-hs="sched">
+      <p class="disp cl-hs-label" aria-hidden="true">Base<br />schedule</p>
+      <ol class="cl-hs-track sched-track">
+        {WEEK.map((d) => (
+          <li class="sched-day io-in">
+            <p class="disp sched-day-n">{d.day}</p>
+            <p class="muted sched-day-f">{d.full}</p>
+            <ul class="sched-slots">
+              {d.slots.map((sl) => (
+                <li class={`sched-slot${sl.hi ? ' is-hi' : ''}`}>
+                  <span class="sched-time">{sl.time}</span>
+                  <b class="sched-title">{sl.title}</b>
+                  {sl.note && <span class="sched-note">{sl.note}</span>}
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="wrap"><p class="muted" style="margin:22px 0 0;font-size:13px;">Times are the base rhythm; schools add their own lectures, work duties and outreach prep around it.</p></div>
+  </section>
+  </div>
+  </div>
+
+
+  <section class="sec cl-food" id="food">
+    <div class="wrap">
+      <div class="cl-food-grid">
+        <figure class="cl-food-photo wipe">
+          <div class="parslow" style="height:116%;margin-top:-8%;">
+            <img src="/images/campus/food-prep.jpg" alt="Khmer women in blue preparing sticky rice in bamboo and palm-leaf wrapped food at a market table" loading="lazy" decoding="async" style="object-position:50% 60%;" />
+          </div>
+        </figure>
+        <div class="cl-food-copy linein">
+          <p class="eyebrow">Food</p>
+          <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,3.8vw,50px);font-weight:500;line-height:1.08;">Khmer culture happens around food.</h2>
+          <p class="body" style="margin:18px 0 0;max-width:50ch;">Nobody here eats alone. The first question you will be asked every day is whether you have eaten yet — and it is a real question. Meals are shared, rice is the centre of every one of them, and fruit appears whenever people gather.</p>
+          <p class="body" style="margin:14px 0 0;max-width:50ch;">Expect fish amok, sour soups, grilled everything, greens you cannot name yet, and a lot of chilli you are allowed to leave on the side.</p>
+        </div>
+      </div>
+
+      <div class="card cl-cafe reveal io-in">
+        <figure class="cl-cafe-photo">
+          <img src="/images/campus/gp-cafe-sign.jpg" alt="The YWAM sign and the GP Cafe sign hanging among green leaves, with an iced green drink held up in front" loading="lazy" decoding="async" />
+        </figure>
+        <div class="cl-cafe-copy">
+          <p class="eyebrow">On campus</p>
+          <h3 class="disp" style="margin:12px 0 0;font-size:clamp(26px,3vw,40px);font-weight:500;line-height:1.1;">GP Cafe</h3>
+          <p class="body" style="margin:16px 0 0;max-width:46ch;">Our own café, right on campus. Khmer coffee, iced drinks and something sweet, made by our community for our community and the neighbourhood around us. It is where conversations that start in class carry on.</p>
+          <p class="muted" style="margin:14px 0 0;font-size:14px;">Open to students, staff, teams and neighbours.</p>
+        </div>
+        <figure class="cl-cafe-barista">
+          <img src="/images/campus/gp-cafe-barista.jpg" alt="A smiling barista in an apron behind the GP Cafe counter, flashing a peace sign" loading="lazy" decoding="async" />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+
+
+  <Cta
+    title="Come and live it."
+    body="Whether you are coming for a school, to volunteer, to join staff or with a team, this is the community you are walking into."
+    primary={['apply', 'Apply']}
+    secondary={['visit', 'Bring a team']}
+  />
+  <Footer />
+</SrLayout>
+
+<script>
+  // Counters tick up when the stats strip comes into view, the schedule strip
+  // gets arrow buttons, and the Explore Siem Reap loop runs.
+  let ctrl = null;
+  const init = () => {
+    if (ctrl) ctrl.abort();
+    ctrl = new AbortController();
+    const { signal } = ctrl;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const counters = [...document.querySelectorAll('[data-count]')];
+    if (counters.length) {
+      const run = (el) => {
+        const target = Number(el.dataset.count);
+        if (reduce) { el.textContent = String(target); return; }
+        const t0 = performance.now();
+        const dur = 1200;
+        const tick = (now) => {
+          const t = Math.min(1, (now - t0) / dur);
+          const e = 1 - Math.pow(1 - t, 3);
+          el.textContent = String(Math.round(target * e));
+          if (t < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      };
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => { if (en.isIntersecting) { run(en.target); io.unobserve(en.target); } });
+      }, { threshold: 0.6 });
+      counters.forEach((c) => io.observe(c));
+      signal.addEventListener('abort', () => io.disconnect());
+    }
+
+    // Arrow buttons for the horizontal strips (schedule, facilities).
+    document.querySelectorAll('[data-hs]').forEach((hs) => {
+      const key = hs.dataset.hs;
+      const track = hs.querySelector('.cl-hs-track');
+      const step = () => { const first = track.firstElementChild; return first ? first.getBoundingClientRect().width + 18 : 320; };
+      document.querySelectorAll(`[data-hs-prev="${key}"]`).forEach((b) => b.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }), { signal }));
+      document.querySelectorAll(`[data-hs-next="${key}"]`).forEach((b) => b.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }), { signal }));
+    });
+
+    // Explore Siem Reap, and the card after it: each tilts up into place as
+    // it scrolls in. Behind the tuk-tuk, the view holds on its own street
+    // and cuts fast through the others, on a loop.
+    const ex = document.querySelector('.explore');
+    if (!ex) return;
+    const plates = [...ex.querySelectorAll('.explore-plate')];
+    const cards = [...document.querySelectorAll('.explore, .flipup')].map((sec) => ({ sec, card: sec.querySelector('.explore-card, .flipup-card') }));
+    const flip = () => {
+      const vh = window.innerHeight;
+      cards.forEach(({ sec, card }) => {
+        const t = Math.min(1, Math.max(0, 1 - sec.getBoundingClientRect().top / vh));
+        const e = t * t * (3 - 2 * t);
+        // Flat once it has landed, so nothing inside sits in a 3D layer.
+        card.style.transform = e >= 1 ? 'none' : `perspective(1600px) rotateX(${((1 - e) * 24).toFixed(2)}deg) scale(${(0.92 + 0.08 * e).toFixed(3)})`;
+        card.style.borderRadius = `${Math.round((1 - e) * 26)}px`;
+      });
+    };
+    if (!reduce) {
+      let fr = 0;
+      const onFlip = () => { if (!fr) fr = requestAnimationFrame(() => { fr = 0; flip(); }); };
+      window.addEventListener('scroll', onFlip, { passive: true, signal });
+      window.addEventListener('resize', onFlip, { signal });
+      flip();
+    }
+    if (plates.length > 1 && !reduce) {
+      const HOLD = 1400, CUT = 280;
+      let i = 0, timer = 0;
+      const show = (n) => {
+        plates[i].classList.remove('is-on');
+        i = n;
+        plates[i].classList.add('is-on');
+      };
+      const tick = () => {
+        show((i + 1) % plates.length);
+        timer = setTimeout(tick, i === 0 ? HOLD : CUT);
+      };
+      const stop = () => { clearTimeout(timer); timer = 0; };
+      const io = new IntersectionObserver((en) => {
+        if (en[0].isIntersecting) {
+          if (!timer) { show(0); timer = setTimeout(tick, HOLD); }
+        } else { stop(); show(0); }
+      }, { threshold: 0.35 });
+      io.observe(ex);
+      signal.addEventListener('abort', () => { stop(); io.disconnect(); });
+    }
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

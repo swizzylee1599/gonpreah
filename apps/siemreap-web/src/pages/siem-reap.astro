@@ -1,0 +1,229 @@
+---
+import { existsSync } from 'node:fs';
+import SrLayout from '../layouts/SrLayout.astro';
+import Footer from '../components/sr/Footer.astro';
+import Cta from '../components/sr/Cta.astro';
+import { TEMPLES, NATURE, PRACTICAL } from '../lib/sr-siemreap';
+
+// The opening: the header photo, then the same view in full colour, then a
+// drone shot that circles in on Angkor Wat. Phones get a portrait clip.
+const DRONE = '/video/angkor-drone.mp4';
+const hasDrone = existsSync('public' + DRONE);
+---
+<SrLayout title="Things to do in Siem Reap | YWAM Siem Reap" spacer={false}
+  description="Angkor Wat, the Bayon and Ta Prohm, then Phnom Kulen and the Tonlé Sap: where students, volunteers, staff and teams go on a day off, plus the practical bits.">
+
+  <!-- 1. Angkor Wat: pinned while scrolling fades the view to colour, flies
+       the drone in, then brings up the three temples. -->
+  <section class="aw-stack" aria-label="Angkor Wat">
+    <div class="aw-pin">
+      <img class="aw-still aw-still--muted" src="/images/siemreap/angkor-open-muted.jpg" alt="" decoding="async" fetchpriority="high" />
+      <img class="aw-still aw-still--color" src="/images/siemreap/angkor-open.jpg" alt="Angkor Wat rising above the jungle at golden hour" decoding="async" />
+      {hasDrone && <video class="aw-video" data-src={DRONE} data-src-mobile={DRONE.replace(/\.mp4$/, '-mobile.mp4')} muted playsinline webkit-playsinline preload="auto" aria-hidden="true"></video>}
+      <div class="aw-scrim" aria-hidden="true"></div>
+
+      <div class="wrap aw-head">
+        <h1 class="disp aw-title">Explore<br /><span style="color:var(--sr-pink);">Siem Reap.</span></h1>
+        <p class="muted aw-cue" aria-hidden="true">Scroll ↓</p>
+      </div>
+
+      <div class="wrap aw-label" aria-hidden="true">
+        <p class="disp aw-n">1.</p>
+        <p class="disp aw-name">Angkor<br />Wat</p>
+        <p class="km aw-km">អង្គរវត្ត</p>
+      </div>
+
+      <div class="wrap aw-temples">
+        {TEMPLES.map((t, i) => (
+          <article class="aw-temple">
+            <figure class="aw-temple-photo"><img src={t.photo} alt={t.alt} loading="lazy" decoding="async" style={t.pos ? `object-position:${t.pos}` : undefined} /></figure>
+            <div class="aw-temple-copy">
+              <h2 class="disp aw-temple-name"><span class="aw-temple-i">{`1.${i + 1}`}</span> {t.name}</h2>
+              <p class="body aw-temple-body">{t.body}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Nature day trips: a whole-page card that flips up over the temples. -->
+  <div class="flipup sr-nature">
+    <div class="flipup-card">
+      <section class="sec nature-sec" aria-label="Nature day trips">
+        <div class="wrap">
+          <div class="nature-head">
+            <p class="disp aw-n">2.</p>
+            <h2 class="disp nature-title">Nature<br />day trips</h2>
+            <p class="body nature-lead">When you need a break from the temples, head for the hills or out onto the water.</p>
+          </div>
+          <div class="nature-grid">
+            {NATURE.map((n, i) => (
+              <article class="nature-item reveal">
+                <figure class="nature-photo"><img src={n.photo} alt={n.alt} loading="lazy" decoding="async" style={n.pos ? `object-position:${n.pos}` : undefined} /></figure>
+                <h3 class="disp nature-name"><span class="aw-temple-i">{`2.${i + 1}`}</span> {n.name}</h3>
+                <p class="km nature-km">{n.km}</p>
+                <p class="body nature-body">{n.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" id="sr-know" style="padding-top:0;">
+        <div class="wrap">
+          <div class="card sr-know reveal">
+            <p class="eyebrow">Good to know</p>
+            <h2 class="disp" style="margin:12px 0 0;font-size:clamp(26px,3vw,40px);font-weight:500;line-height:1.1;">Before you head out.</h2>
+            <dl class="practical sr-know-list">
+              {PRACTICAL.map(([k, v]) => (
+                <div>
+                  <dt class="disp">{k}</dt>
+                  <dd class="body">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <Cta
+    title="Come and see it for yourself."
+    body="Siem Reap is home for everyone who trains, serves and visits with us. Find out what living on campus is like."
+    primary={['campus', 'Campus life']}
+    secondary={['apply', 'Apply']}
+  />
+  <Footer />
+</SrLayout>
+
+<script>
+  let ctrl: AbortController | null = null;
+  const init = () => {
+    ctrl?.abort();
+    ctrl = new AbortController();
+    const { signal } = ctrl;
+    const stack = document.querySelector<HTMLElement>('.aw-stack');
+    if (!stack) return;
+    const pin = stack.querySelector<HTMLElement>('.aw-pin')!;
+    const color = stack.querySelector<HTMLElement>('.aw-still--color')!;
+    const muted = stack.querySelector<HTMLElement>('.aw-still--muted')!;
+    const scrim = stack.querySelector<HTMLElement>('.aw-scrim')!;
+    const head = stack.querySelector<HTMLElement>('.aw-head')!;
+    const label = stack.querySelector<HTMLElement>('.aw-label')!;
+    const temples = [...stack.querySelectorAll<HTMLElement>('.aw-temple')];
+    let video = stack.querySelector<HTMLVideoElement>('.aw-video');
+    const flip = document.querySelector<HTMLElement>('.sr-nature');
+    const flipCard = flip?.querySelector<HTMLElement>('.flipup-card') ?? null;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const phone = matchMedia('(max-width: 760px)').matches;
+    if (reduce) { stack.classList.add('is-static'); video?.remove(); return; }
+
+    const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+    const ease = (t: number) => t * t * (3 - 2 * t);
+
+    // The drone clip: a portrait one on phones; exact seeks (fastSeek snaps to
+    // keyframes); iOS only paints seeks once the clip has played.
+    let ready = false, seeking = false, latest = 0, dirty = false;
+    const seekTo = (t: number) => {
+      latest = t; dirty = true;
+      if (seeking || !video) return;
+      seeking = true; dirty = false;
+      video.currentTime = t;
+    };
+    if (video) {
+      video.src = `${(phone && video.dataset.srcMobile) || video.dataset.src}#t=0.001`;
+      video.load();
+      let primed = false;
+      const prime = () => {
+        if (primed || !video) return;
+        const pr = video.play();
+        if (pr && pr.then) pr.then(() => { primed = true; ready = true; video?.pause(); onScroll(); }).catch(() => {});
+      };
+      const onData = () => { ready = true; onScroll(); prime(); };
+      if (video.readyState >= 2) onData(); else video.addEventListener('loadeddata', onData, { once: true, signal });
+      // When autoplay is blocked (Low Power Mode, data saver), the first touch starts it.
+      const unlock = () => { if (!primed && video && video.readyState < 2) video.load(); prime(); };
+      for (const ev of ['touchstart', 'touchend', 'click']) window.addEventListener(ev, unlock, { passive: true, signal });
+      video.addEventListener('seeked', () => { seeking = false; if (dirty) seekTo(latest); }, { signal });
+      video.addEventListener('error', () => { video?.remove(); video = null; onScroll(); }, { once: true, signal });
+    }
+
+    // Stages across the pinned scroll:
+    //   0–.06   the header photo and title hold
+    //   .06–.2  the view fades to full colour; the title gives way to "1. Angkor Wat"
+    //   .2–.72  the drone circles slowly around the temple
+    //   .72–1   the three temples come up (side by side, or one at a time on phones)
+    const measure = () => {
+      const r = stack.getBoundingClientRect();
+      const scrollable = r.height - pin.offsetHeight;
+      return scrollable <= 0 ? 0 : clamp01(-r.top / scrollable);
+    };
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const p = measure();
+
+      const c = ease(clamp01((p - 0.06) / 0.14));
+      color.style.opacity = String(c);
+      muted.style.opacity = String(1 - c * 0.999);
+
+      const fly = clamp01((p - 0.2) / 0.52);
+      if (video && ready && video.duration && !Number.isNaN(video.duration)) {
+        video.style.opacity = p > 0.19 ? '1' : '0';
+        if (p > 0.19) seekTo(fly * video.duration * 0.99);
+      } else {
+        if (video) video.style.opacity = '0';
+        // Without the clip, the colour still pushes in slowly instead.
+        color.style.transform = `scale(${(1 + ease(fly) * 0.35).toFixed(4)})`;
+      }
+
+      const toTemples = ease(clamp01((p - 0.7) / 0.06));
+      scrim.style.opacity = String(0.55 - 0.4 * c + 0.45 * toTemples);
+
+      const hOut = ease(clamp01((p - 0.07) / 0.09));
+      head.style.opacity = String(1 - hOut);
+      head.style.transform = `translateY(${(-30 * hOut).toFixed(1)}px)`;
+
+      // "1. Angkor Wat" slides in from the left; when the temple cards come
+      // up it docks small in the top-left corner, clear of them.
+      const lIn = ease(clamp01((p - 0.12) / 0.08));
+      const lUp = toTemples;
+      const dockY = (phone ? 96 : 118) - label.offsetTop;
+      label.style.opacity = String(lIn);
+      label.style.transform = `translate(${((1 - lIn) * -40).toFixed(1)}px, ${(dockY * lUp).toFixed(1)}px) scale(${(1 - (phone ? 0.5 : 0.55) * lUp).toFixed(3)})`;
+
+      temples.forEach((el, i) => {
+        if (phone) {
+          // One at a time: each rises in, holds, then lifts away for the next.
+          const s = 0.74 + i * 0.085;
+          const inK = ease(clamp01((p - s) / 0.04));
+          const outK = i === temples.length - 1 ? 0 : ease(clamp01((p - (s + 0.07)) / 0.03));
+          el.style.opacity = String(inK * (1 - outK));
+          el.style.transform = `translateY(${((1 - inK) * 50 - outK * 40).toFixed(1)}px)`;
+          el.style.pointerEvents = inK > 0.5 && outK < 0.5 ? 'auto' : 'none';
+        } else {
+          const k = ease(clamp01((p - (0.75 + i * 0.06)) / 0.07));
+          el.style.opacity = String(k);
+          el.style.transform = `translateY(${((1 - k) * 40).toFixed(1)}px)`;
+          el.style.pointerEvents = k > 0.5 ? 'auto' : 'none';
+        }
+      });
+
+      // 2. flips up over the temples, like the cards on Campus Life.
+      if (flip && flipCard) {
+        const t = clamp01(1 - flip.getBoundingClientRect().top / window.innerHeight);
+        const e = ease(t);
+        flipCard.style.transform = e >= 1 ? 'none' : `perspective(1600px) rotateX(${((1 - e) * 24).toFixed(2)}deg) scale(${(0.92 + 0.08 * e).toFixed(3)})`;
+        flipCard.style.borderRadius = `${Math.round((1 - e) * 26)}px`;
+      }
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+    window.addEventListener('scroll', onScroll, { passive: true, signal });
+    window.addEventListener('resize', onScroll, { signal });
+    update();
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

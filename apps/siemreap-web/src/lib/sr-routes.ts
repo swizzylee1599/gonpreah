@@ -1,34 +1,43 @@
+// Online giving (Subsplash). Links to it open in a new tab.
+export const GIVE_URL = 'https://subsplash.com/u/-DTDBSM/give?campus_id=1c7f555d-5552-4aa7-9a79-484e72996412';
+
 export const ROUTE_PATH: Record<string, string> = {
   home: '/',
   about: '/about',
   schools: '/schools',
+  dts: '/schools/dts',
+  dbs: '/schools/dbs',
+  sms: '/schools/sms',
   apply: '/apply',
   staff: '/staff',
+  team: '/team',
   visit: '/visit',
+  campus: '/campus-life',
+  siemreap: '/siem-reap',
+  values: '/values',
   give: '/give',
+  giveOnline: GIVE_URL,
   contact: '/contact',
 };
 
 export const NAV: [string, [string, string, string][]][] = [
   ['Students', [
-    ['schools', 'What is DTS?', 'Start your journey in missions'],
-    ['schools', 'Schools & Courses', 'DTS and other UofN courses in Siem Reap'],
-    ['visit', 'Campus Life', 'What living here is actually like'],
+    ['dts', 'What is DTS?', 'Start your journey in missions'],
+    ['schools', 'Schools & Courses', 'DTS, DBS and the other schools in Siem Reap'],
+    ['campus', 'Campus Life', 'Living in community, and the city around us'],
     ['apply', 'How to Apply', 'What you need to start your application'],
   ]],
   ['Get Involved', [
     ['visit', 'Short-Term Teams', 'Bring a team to Siem Reap'],
-    ['visit', 'Outreach & Ministries', 'Where our teams serve'],
-    ['staff', 'Join Staff', 'Serve long term with us'],
+    ['staff', 'Join Staff or Volunteer', 'Serve long term, or come short term'],
   ]],
   ['About', [
     ['about', 'About Us', 'Who we are and how we started'],
-    ['about', 'Values', 'What we believe and how we work'],
-    ['staff', 'Our Team', 'Khmer and international staff'],
+    ['values', 'Values', 'What we believe and how we work'],
     ['contact', 'Contact', 'Get in touch with the base'],
   ]],
   ['Give', [
-    ['give', 'Give Now', 'Partner with the work in Cambodia'],
-    ['give', 'Support a Staff Member', 'Back a specific missionary'],
+    ['giveOnline', 'Give Now', 'Give online through Subsplash'],
+    ['giveOnline', 'Support a Staff Member', 'Back a specific missionary'],
   ]],
 ];

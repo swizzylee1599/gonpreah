@@ -1,0 +1,122 @@
+---
+import SrLayout from '../../layouts/SrLayout.astro';
+import Footer from '../../components/sr/Footer.astro';
+import PageHead from '../../components/sr/PageHead.astro';
+import Cta from '../../components/sr/Cta.astro';
+import CampusTeaser from '../../components/sr/CampusTeaser.astro';
+import PhotoSlot from '../../components/sr/PhotoSlot.astro';
+import { CONTACT } from '../../lib/sr-contact';
+
+// Draft copy for the team to correct — dates, length and cost are not yet set.
+const LEARN: [string, string][] = [
+  ['Storytelling', 'How to find the story, shape it, and tell it honestly — in a post, a reel, a short film.'],
+  ['Camera & sound', 'Phones, cameras, lenses, light and audio: enough craft to make the story look and sound the way it deserves.'],
+  ['Editing', 'Cutting video, colour, captions and graphics with the tools your audience already scrolls past.'],
+  ['Platforms & strategy', 'What works where, when to post, how to read the numbers, and how to stay sane doing it.'],
+  ['Digital ministry', 'Carrying the gospel into the place a generation actually lives, with integrity and without gimmicks.'],
+  ['A real project', 'Students produce work for YWAM Siem Reap and partner ministries during the school — the portfolio is the coursework.'],
+];
+
+const PHOTOS: { src?: string; alt?: string; label?: string; pos?: string }[] = [
+  { label: 'Drop a photo — filming on location' },
+  { src: '/images/schools/sms-editing.jpg', alt: 'SMS students editing together at a desk of monitors in the media room' },
+  { label: 'Drop a photo — a student behind the camera' },
+];
+
+const INFO: [string, string][] = [
+  ['Next school', 'To be announced'],
+  ['Length', 'To be announced'],
+  ['Arrival day', 'To be announced'],
+  ['Departure day', 'To be announced'],
+  ['Location', 'Siem Reap, Cambodia'],
+  ['Prerequisites', 'Completed DTS'],
+];
+---
+<SrLayout title="Social Media School | YWAM Siem Reap" spacer={false}
+  description="The Social Media School at YWAM Siem Reap: storytelling, camera, editing and digital ministry for the generation already living online.">
+  <PageHead eyebrow="Social Media School · SMS" km="រឿងរ៉ាវ" title="Tell the story. Where they already are." highlight="Where they already are."
+    lead="Storytelling and digital ministry, for the generation already living there."
+    photo="/images/schools/sms-filming.jpg" photoPos="50% 40%" mobileFull
+    photoAlt="A film crew on a Siem Reap street: a camera on a tripod, two people filming on phones, and a presenter speaking" />
+
+  <section class="sec">
+    <div class="wrap dbs-intro-grid">
+      <div class="reveal">
+        <p class="eyebrow">A new school</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,3.8vw,50px);font-weight:500;line-height:1.08;">Craft and calling, on the same screen.</h2>
+      </div>
+      <div class="reveal">
+        <p class="body" style="margin:0;font-size:18px;">Cambodia is one of the youngest countries in the world, and its young people live online. The Social Media School trains Christians to tell true stories well — with a camera, a phone, an edit and a plan — and to carry the gospel into the feeds where this generation already spends its day.</p>
+        <p class="body" style="margin:18px 0 0;">It is a secondary school of the University of the Nations, taught in Khmer and English, with real projects for real ministries. You leave with skills, a portfolio, and a clearer sense of what you have to say.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0;">
+    <div class="wrap">
+      <p class="eyebrow reveal">What you learn</p>
+      <div class="grid3 stag" style="margin-top:22px;">
+        {LEARN.map(([t, d], i) => (
+          <div class="card">
+            <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">{'0' + (i + 1)}</p>
+            <h3 class="disp" style="margin:16px 0 0;font-size:21px;font-weight:500;">{t}</h3>
+            <p class="body" style="margin:12px 0 0;font-size:15px;">{d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0;">
+    <div class="wrap dbs-strip-photos stag" style="margin-top:0;">
+      {PHOTOS.map((ph) => (
+        <figure>{ph.src ? <img src={ph.src} alt={ph.alt ?? ''} loading="lazy" decoding="async" style={ph.pos ? `object-position:${ph.pos}` : undefined} /> : <PhotoSlot label={ph.label ?? ''} radius={0} />}</figure>
+      ))}
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0;" id="info">
+    <div class="wrap">
+      <div class="card info reveal">
+        <div class="info-grid">
+          <div>
+            <p class="eyebrow">SMS information</p>
+            <dl class="info-list">
+              {INFO.map(([k, v]) => (
+                <div>
+                  <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">{k}</dt>
+                  <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;">{v}</dd>
+                </div>
+              ))}
+              <div>
+                <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">Email</dt>
+                <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;text-transform:none;letter-spacing:0;"><a href={`mailto:${CONTACT.email}`} style="color:inherit;text-decoration:none;">{CONTACT.email}</a></dd>
+              </div>
+            </dl>
+          </div>
+          <div class="info-cost">
+            <p class="eyebrow">Cost of the school</p>
+            <p class="disp" style="margin:22px 0 0;font-size:20px;font-weight:500;">To be confirmed</p>
+            <p class="body" style="margin:12px 0 0;max-width:40ch;font-size:15px;">The first school's dates and fees are being finalised. Email us and we will let you know as soon as they are set.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:36px;">
+          <a class="btn btn--solid" href="/apply?school=sms">Apply for SMS</a>
+          <a class="btn" href="/apply?school=dts">Haven't done a DTS? Apply for DTS</a>
+          <a class="btn btn--plain" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('SMS enquiry')}`}>Email us about SMS</a>
+          <a class="btn btn--plain" href="/campus-life">Campus life</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CampusTeaser title="Where you will live while you train." />
+
+  <Cta
+    title="Say something true. Say it well."
+    body="Tell us a little about yourself and what you already make, and we will let you know when the first Social Media School opens for applications."
+    primary={['apply', 'Apply for SMS']}
+    secondary={['contact', 'Ask a question']}
+  />
+  <Footer />
+</SrLayout>
