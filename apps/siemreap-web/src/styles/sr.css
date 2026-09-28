@@ -1059,3 +1059,64 @@ body.sr {
   .sr .about-head--photo { min-height: 72vh; min-height: 72svh; padding-top: 110px; }
   .sr .photo-band img { height: 62vw; min-height: 260px; }
 }
+
+/* Things to do in Siem Reap: 1. Angkor Wat. A pinned stack: the header
+   photo fades to full colour, the drone flies in, then the temples. */
+.sr .aw-stack { position: relative; height: 720vh; }
+.sr .aw-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #0b0b0b; }
+.sr .aw-still, .sr .aw-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; will-change: opacity, transform; }
+.sr .aw-still--color { opacity: 0; }
+.sr .aw-video { opacity: 0; }
+.sr .aw-scrim { position: absolute; inset: 0; background: linear-gradient(to right, rgba(11,11,11,.85) 0%, rgba(11,11,11,.45) 45%, rgba(11,11,11,.2) 100%); opacity: .55; pointer-events: none; }
+.sr .aw-head { position: absolute; left: 0; right: 0; top: 50%; margin-top: -1em; transform-origin: 0 50%; }
+.sr .aw-title { margin: -0.4em 0 0; font-size: clamp(62px, 11vw, 150px); font-weight: 500; line-height: .95; text-shadow: 0 2px 40px rgba(0,0,0,.5); }
+.sr .aw-cue { position: absolute; right: 40px; top: calc(100% + 30vh); margin: 0; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
+.sr .aw-label { position: absolute; left: 0; right: 0; top: 50%; transform-origin: 0 0; opacity: 0; pointer-events: none; text-shadow: 0 2px 40px rgba(0,0,0,.6); }
+.sr .aw-label { margin-top: calc(-1 * clamp(110px, 14vw, 210px)); }
+.sr .aw-n { margin: 0; font-size: clamp(34px, 4vw, 56px); font-weight: 700; color: var(--sr-pink); line-height: 1; }
+.sr .aw-name { margin: 10px 0 0; font-size: clamp(64px, 10vw, 150px); font-weight: 700; line-height: .9; }
+.sr .aw-km { margin: 16px 0 0; font-size: clamp(22px, 2.4vw, 32px); color: #e6e6e6; }
+.sr .aw-temples { position: absolute; left: 0; right: 0; bottom: 7vh; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+.sr .aw-temple { opacity: 0; background: rgba(17,17,17,.9); border: 1px solid #262626; border-radius: 20px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.55); pointer-events: none; }
+.sr .aw-temple-photo { margin: 0; aspect-ratio: 16 / 10; }
+.sr .aw-temple-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sr .aw-temple-copy { padding: 18px 20px 22px; }
+.sr .aw-temple-name { margin: 0; font-size: clamp(20px, 1.8vw, 26px); font-weight: 600; }
+.sr .aw-temple-i { color: var(--sr-pink); font-weight: 700; margin-right: .2em; }
+.sr .aw-temple-body { margin: 10px 0 0; font-size: 15px; line-height: 1.55; }
+.sr .aw-stack.is-static { height: auto; }
+.sr .aw-stack.is-static .aw-pin { position: relative; height: auto; min-height: 100svh; padding-bottom: 60px; }
+.sr .aw-stack.is-static .aw-still--color { opacity: 1; }
+.sr .aw-stack.is-static .aw-head, .sr .aw-stack.is-static .aw-cue { display: none; }
+.sr .aw-stack.is-static .aw-label { position: relative; top: auto; margin: 0; padding-top: 140px; opacity: 1; }
+.sr .aw-stack.is-static .aw-temples { position: relative; bottom: auto; margin-top: 40px; }
+.sr .aw-stack.is-static .aw-temple { opacity: 1; pointer-events: auto; }
+
+/* 2. Nature day trips, on the card that flips up. */
+.sr .nature-sec { padding-top: clamp(90px, 12vh, 140px); }
+.sr .nature-head { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 26px; align-items: end; }
+.sr .nature-head .aw-n { grid-row: 1; align-self: start; padding-top: .4em; }
+.sr .nature-title { grid-row: 1; margin: 0; font-size: clamp(56px, 9vw, 130px); font-weight: 700; line-height: .9; }
+.sr .nature-lead { grid-column: 1 / -1; margin: 26px 0 0; max-width: 52ch; font-size: 18px; }
+.sr .nature-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; margin-top: 48px; }
+.sr .nature-photo { margin: 0; border-radius: 20px; overflow: hidden; aspect-ratio: 4 / 3; }
+.sr .nature-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sr .nature-name { margin: 22px 0 0; font-size: clamp(26px, 2.6vw, 38px); font-weight: 600; }
+.sr .nature-km { margin: 8px 0 0; font-size: 20px; color: #cfcfcf; }
+.sr .nature-body { margin: 12px 0 0; max-width: 56ch; }
+
+@media (max-width: 760px) {
+  .sr .aw-stack { height: 640vh; }
+  .sr .aw-scrim { background: linear-gradient(to bottom, rgba(11,11,11,.35) 0%, rgba(11,11,11,.55) 60%, rgba(11,11,11,.8) 100%); }
+  .sr .aw-cue { right: 20px; }
+  .sr .aw-label { margin-top: -150px; }
+  /* Temples come up one at a time, each over the whole screen width. */
+  .sr .aw-temples { display: block; bottom: 5vh; }
+  .sr .aw-temple { position: absolute; left: 16px; right: 16px; bottom: 0; }
+  .sr .aw-temple-photo { aspect-ratio: 4 / 3; }
+  .sr .aw-temple-body { font-size: 14.5px; }
+  .sr .aw-stack.is-static .aw-temples { display: grid; grid-template-columns: 1fr; }
+  .sr .aw-stack.is-static .aw-temple { position: relative; left: auto; right: auto; }
+  .sr .nature-grid { grid-template-columns: 1fr; gap: 40px; margin-top: 36px; }
+  .sr .nature-head { column-gap: 14px; }
+}
