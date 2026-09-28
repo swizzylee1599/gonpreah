@@ -1062,7 +1062,7 @@ body.sr {
 
 /* Things to do in Siem Reap: 1. Angkor Wat. A pinned stack: the header
    photo fades to full colour, the drone flies in, then the temples. */
-.sr .aw-stack { position: relative; height: 720vh; }
+.sr .aw-stack { position: relative; height: 860vh; }
 .sr .aw-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #0b0b0b; }
 .sr .aw-still, .sr .aw-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; will-change: opacity, transform; }
 .sr .aw-still--color { opacity: 0; }
@@ -1106,7 +1106,7 @@ body.sr {
 .sr .nature-body { margin: 12px 0 0; max-width: 56ch; }
 
 @media (max-width: 760px) {
-  .sr .aw-stack { height: 640vh; }
+  .sr .aw-stack { height: 760vh; }
   .sr .aw-scrim { background: linear-gradient(to bottom, rgba(11,11,11,.35) 0%, rgba(11,11,11,.55) 60%, rgba(11,11,11,.8) 100%); }
   .sr .aw-cue { right: 20px; }
   .sr .aw-label { margin-top: -150px; }
