@@ -1,4 +1,4 @@
-import { GIVE_URL } from './sr-routes';
+import { GIVE_URL, PORTAL } from './sr-routes';
 
 // Quick-search index for the nav search. Curated rather than crawled: each
 // entry is a page or a deep link with the words people are likely to type.
@@ -28,8 +28,10 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { title: 'How to apply', desc: 'Choose a school, staff or volunteering', href: '/apply', group: 'Apply', keywords: 'apply application form process steps reference interview acceptance visa fees packing list', quick: true },
   { title: 'Apply for DTS', desc: 'DTS application form', href: '/apply?school=dts', group: 'Apply', keywords: 'apply dts application form google form' },
   { title: 'Apply for DBS', desc: 'DBS application', href: '/apply?school=dbs', group: 'Apply', keywords: 'apply dbs application' },
+  { title: 'Bring a team (apply)', desc: 'Short-term team application', href: '/apply?school=team', group: 'Apply', keywords: 'team application short term team visit apply group church' },
   { title: 'Staff application', desc: 'Join staff at YWAM Siem Reap', href: '/apply?school=staff', group: 'Apply', keywords: 'staff application join staff missionary long term serve' },
   { title: 'Volunteer application', desc: 'Volunteer with us short or long term', href: '/apply?school=volunteer', group: 'Apply', keywords: 'volunteer application mission builder serve short term' },
+  { title: 'GP Portal (apply online)', desc: 'Schools, staff, volunteers and teams', href: PORTAL, group: 'Apply', keywords: 'gp portal apply online application account login sign in impact gonpreah', external: true },
   { title: 'Leader reference', desc: 'One reference for international applicants', href: '/apply', group: 'Apply', keywords: 'leader reference pastor mentor church reference form international khmer' },
 
   { title: 'Contact the base', desc: 'WhatsApp or email', href: '/contact', group: 'Contact', keywords: 'contact talk reach us message phone address', quick: true },
