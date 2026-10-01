@@ -93,21 +93,6 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
               {SCHOOL_ROWS.map((school) => <SchoolCard {...school} />)}
             </div>
           </div>
-          <!-- Desktop: the schools as an index. A photo follows the cursor down the list. -->
-          <div class="school-index" aria-label="Schools">
-            {SCHOOL_ROWS.map((s, i) => (
-              <a class="si-row" href={s.href ?? '/schools'} data-i={i}>
-                <span class="si-n">{'0' + (i + 1)}</span>
-                <span class="si-main"><span class="disp si-name">{s.name}</span><span class="si-body">{s.body}</span></span>
-                <span class="si-when">{s.when}</span>
-                <span class="si-arrow" aria-hidden="true">→</span>
-              </a>
-            ))}
-            <div class="si-preview" aria-hidden="true">
-              {SCHOOL_ROWS.map((s, i) => s.photo
-                ? <img src={s.photo} alt="" data-i={i} loading="lazy" decoding="async" style={s.pos ? `object-position:${s.pos}` : undefined} />
-                : <span class="si-preview-empty disp" data-i={i}>{s.abbr}</span>)}
-            </div>
           </div>
           <div class="wrap deck-hint">
             <p class="muted" style="margin:0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;">Scroll for more →</p>
@@ -179,32 +164,6 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
         ctrl = new AbortController();
         const { signal } = ctrl;
 
-        // Desktop schools index: the preview photo eases after the cursor and
-        // crossfades to the school under it.
-        const index = document.querySelector('.school-index');
-        if (index && !matchMedia('(max-width: 760px)').matches) {
-          const prev = index.querySelector('.si-preview');
-          const slides = [...prev.children];
-          let tx = 0, ty = 0, x = 0, y = 0, raf = 0, started = false;
-          const loop = () => {
-            x += (tx - x) * 0.16; y += (ty - y) * 0.16;
-            prev.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-50%, -50%) rotate(-3deg)`;
-            raf = (Math.abs(tx - x) > 0.3 || Math.abs(ty - y) > 0.3) ? requestAnimationFrame(loop) : 0;
-          };
-          index.addEventListener('pointermove', (e) => {
-            const r = index.getBoundingClientRect();
-            // Keep the photo in the open space right of the names; it follows the cursor up and down.
-            tx = Math.min(r.width - 180, r.width * 0.82);
-            ty = e.clientY - r.top;
-            if (!started) { started = true; x = tx; y = ty; }
-            if (!raf) raf = requestAnimationFrame(loop);
-          }, { signal });
-          index.querySelectorAll('.si-row').forEach((row) => row.addEventListener('pointerenter', () => {
-            slides.forEach((s) => s.classList.toggle('is-cur', s.dataset.i === row.dataset.i));
-            prev.classList.add('is-on');
-          }, { signal }));
-          index.addEventListener('pointerleave', () => { prev.classList.remove('is-on'); started = false; }, { signal });
-        }
         const video = document.querySelector('.scroll3d');
         const stack = document.querySelector('.gonpreah-stack');
         const pin = document.querySelector('.video3d-pin');
