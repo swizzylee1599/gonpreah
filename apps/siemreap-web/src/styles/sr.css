@@ -933,7 +933,7 @@ body.sr {
   .sr .road-place { margin-top: 0; }
   .sr .road-photos--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sr .road-photos--3 .road-photo:first-child { grid-column: 1 / -1; }
-  .sr .about-here { padding: 28px 22px; gap: 22px; }
+  .sr .about-here { grid-template-columns: 1fr; padding: 28px 22px; gap: 22px; }
   .sr .about-here-photo { height: 220px; order: -1; }
   .sr .cl-stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 16px; }
   .sr .cl-stat { border-left: 0; padding-left: 0; }
