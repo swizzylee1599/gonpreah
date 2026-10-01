@@ -178,8 +178,11 @@ const ext = (id: string) => (ROUTE_PATH[id]?.startsWith('http') ? { target: '_bl
       dialog.hidden = false;
       document.documentElement.classList.add('sr-search-open');
       input.value = '';
+      // Focus right away, inside the tap: iOS only shows the keyboard for a
+      // focus that happens directly in a user gesture, not a frame later.
+      input.focus({ preventScroll: true });
       render();
-      requestAnimationFrame(() => input.focus());
+      requestAnimationFrame(() => { if (document.activeElement !== input) input.focus({ preventScroll: true }); });
     };
     const close = () => {
       dialog.hidden = true;

@@ -1141,3 +1141,9 @@ body.sr {
   .sr .values-toc a { padding: 9px 0; }
   .sr .contact-detail a { display: inline-block; padding: 6px 0; }
 }
+
+@media (max-width: 760px) {
+  /* Search on phones: a close button a thumb can hit, and room for the keyboard. */
+  .sr .srsearch-close { font-size: 13px; padding: 10px 14px; margin: -6px -6px -6px 0; }
+  .sr .srsearch-results { max-height: 52vh; }
+}
