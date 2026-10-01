@@ -18,6 +18,9 @@
   --sr-raise: #141414;
 }
 
+/* Nothing may widen the page: no sideways panning, and pinch-zoom snaps back
+   to the screen. `clip` keeps sticky sections working, unlike `hidden`. */
+html.sr, body.sr { overflow-x: clip; }
 html.sr,
 body.sr {
   margin: 0;
@@ -877,7 +880,7 @@ body.sr {
   .sr .practical { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
-  .sr html, .sr body { overflow-x: hidden; }
+
   .sr .wrap { padding: 0 20px; }
   .sr .sec { padding: 56px 0; }
   .sr .body { font-size: 16px; }
@@ -1146,4 +1149,13 @@ body.sr {
   /* Search on phones: a close button a thumb can hit, and room for the keyboard. */
   .sr .srsearch-close { font-size: 13px; padding: 10px 14px; margin: -6px -6px -6px 0; }
   .sr .srsearch-results { max-height: 52vh; }
+}
+
+@media (max-width: 760px) {
+  /* Full-screen sections cover the strip Safari's bar uncovers as it slides
+     away (the large viewport), so no page background shows underneath. */
+  .sr .dive-pin, .sr .explore-card, .sr .aw-pin { height: 100lvh; }
+  .sr .aw-temples { bottom: calc(5vh + (100lvh - 100svh)); }
+  .sr .aw-head { margin-top: calc(-1em - (100lvh - 100svh) / 2); }
+  .sr .dive-head, .sr .dive-statement { margin-top: calc(-1 * (100lvh - 100svh) / 2); }
 }
