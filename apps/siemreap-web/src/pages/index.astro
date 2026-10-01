@@ -137,6 +137,12 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
         <div class="wrap cl-full-copy reveal">
           <p class="eyebrow">Campus life</p>
           <h2 class="disp cl-full-title">Live in a cross‑cultural community centered around Jesus.</h2>
+          <p class="body cl-full-sub">Shared meals, worship, work and outreach. One campus, Khmer and international, living and learning together.</p>
+          <div class="cl-full-photos" aria-hidden="true">
+            <img src="/images/campus/fruit-table.jpg" alt="" loading="lazy" decoding="async" />
+            <img src="/images/campus/community-gathering.jpg" alt="" loading="lazy" decoding="async" />
+            <img src="/images/schools/dbs-graduation.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 35%;" />
+          </div>
           <a class="arrow-link" href="/campus-life"><span>Go to campus life</span><span class="arrow-circle" aria-hidden="true">→</span></a>
         </div>
       </section>
@@ -188,7 +194,7 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
           index.addEventListener('pointermove', (e) => {
             const r = index.getBoundingClientRect();
             // Keep the photo in the open space right of the names; it follows the cursor up and down.
-            tx = Math.min(r.width - 300, Math.max(r.width * 0.6, e.clientX - r.left + 260));
+            tx = Math.min(r.width - 180, r.width * 0.82);
             ty = e.clientY - r.top;
             if (!started) { started = true; x = tx; y = ty; }
             if (!raf) raf = requestAnimationFrame(loop);
