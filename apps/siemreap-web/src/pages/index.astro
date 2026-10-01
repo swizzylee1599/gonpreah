@@ -5,7 +5,6 @@ import Marquee from '../components/sr/Marquee.astro';
 import PhotoSlot from '../components/sr/PhotoSlot.astro';
 import HeroLine from '../components/sr/HeroLine.astro';
 import HeroVideo from '../components/sr/HeroVideo.astro';
-import CampusTeaser from '../components/sr/CampusTeaser.astro';
 import { NEWS } from '../lib/sr-news';
 import SchoolCard from '../components/sr/SchoolCard.astro';
 import GlobeO from '../components/sr/GlobeO.astro';
@@ -116,9 +115,15 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
         </div>
       </div>
 
-      <CampusTeaser
-        title="Live in a cross‑cultural community centered around Jesus."
-        body="YWAM Siem Reap is a community of young people on fire for Jesus and making His name known. One campus, Khmer and international: shared meals, our own cafe, and Angkor twenty minutes down the road." />
+      <section class="cl-full" aria-label="Campus life">
+        <img class="cl-full-bg" src="/images/campus/campus-aerial-wide.jpg" alt="" loading="lazy" decoding="async" />
+        <div class="cl-full-scrim" aria-hidden="true"></div>
+        <div class="wrap cl-full-copy reveal">
+          <p class="eyebrow">Campus life</p>
+          <h2 class="disp cl-full-title">Live in a cross‑cultural community centered around Jesus.</h2>
+          <a class="arrow-link" href="/campus-life"><span>Go to campus life</span><span class="arrow-circle" aria-hidden="true">→</span></a>
+        </div>
+      </section>
 
       <section class="sec news-sec" id="whats-new">
         <div class="wrap">
@@ -319,8 +324,8 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
         document.addEventListener('astro:page-load', init);
       </script>
 
-      <section class="sec" style="padding-top:0;">
-        <div class="wrap reveal" style="text-align:center;border-top:1px solid #232323;padding-top:80px;">
+      <section class="sec sec--paper">
+        <div class="wrap reveal" style="text-align:center;">
           <h2 class="disp scaleup" style="margin:0;font-size:clamp(32px,5.4vw,72px);font-weight:500;">Discipled here. Sent everywhere.</h2>
           <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:40px;">
             <a class="btn btn--solid" href="/apply">Apply to a school</a>
