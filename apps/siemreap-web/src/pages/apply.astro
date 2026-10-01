@@ -11,7 +11,7 @@ type Group = 'Schools' | 'Staff & volunteers' | 'Teams';
 type Option = { id: string; name: string; abbr: string; when: string; page?: string; email: string; group: Group; note?: string };
 const OPTIONS: Option[] = [
   { group: 'Schools', id: 'dts', name: 'Discipleship Training School', abbr: 'DTS', when: 'Next school January 2027', page: '/schools/dts', email: 'dts@ywamsiemreap.org' },
-  { group: 'Schools', id: 'dbs', name: 'Discipleship Bible School', abbr: 'DBS', when: 'Every April · DTS required', page: '/schools/dbs', email: 'info@ywamsiemreap.org' },
+  { group: 'Schools', id: 'dbs', name: 'Discipleship Bible School', abbr: 'DBS', when: 'Next school June 2027 · DTS required', page: '/schools/dbs', email: 'info@ywamsiemreap.org' },
   { group: 'Schools', id: 'bcs', name: 'Bible Counseling School', abbr: 'BCS', when: 'New', email: 'info@ywamsiemreap.org' },
   { group: 'Schools', id: 'sms', name: 'Social Media School', abbr: 'SMS', when: 'New · DTS required', page: '/schools/sms', email: 'info@ywamsiemreap.org' },
   { group: 'Staff & volunteers', id: 'staff', name: 'Staff application', abbr: 'Staff', when: 'After a DTS', page: '/staff', email: 'info@ywamsiemreap.org', note: 'Staff complete a DTS first, then apply to a role on the base.' },
