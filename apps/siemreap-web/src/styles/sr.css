@@ -281,6 +281,10 @@ body.sr {
 .sr .school-select:focus { outline: none; border-color: #fff; }
 .sr .apply-panel { margin-top: 34px; padding-top: 30px; border-top: 1px solid #232323; }
 .sr .apply-panel-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+/* Steps come in three sets (schools, staff & volunteers, teams); the tabs switch them. */
+.sr .apply-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+.sr .apply-tab { padding: 11px 18px; font-size: 14px; }
+.sr .apply-tab.is-on { background: #fff; color: #000; border-color: #fff; }
 .sr .apply-steps { display: flex; flex-direction: column; border-bottom: 1px solid #232323; }
 .sr .apply-step { display: grid; grid-template-columns: 90px 1fr; gap: 26px; padding: 30px 0; border-top: 1px solid #232323; }
 .sr .info { padding: 44px 48px; }
@@ -414,6 +418,10 @@ body.sr {
 .sr nav.sr-nav.is-mobile-open .navtoggle i:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 .sr .navscrim { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 1; }
 .sr .navbar-row { position: relative; z-index: 3; }
+/* Home hero copy sits at the bottom of the first screen; on short screens
+   it is taller than the space under the menu, so keep the menu's height
+   clear above it and let the section grow instead of overlapping. */
+.sr .sr-hero-copy { padding-top: 130px !important; }
 .sr .navpanel {
   display: none; position: absolute; z-index: 2; top: calc(100% - 6px); right: 24px; box-sizing: border-box;
   width: min(calc(100vw - 48px), 380px); max-height: calc(100vh - 130px); overflow-y: auto;
@@ -879,7 +887,7 @@ body.sr {
   .sr .deck { width: 72vw; transform: translateX(-10px); }
   .sr .srlogo { height: 60px !important; }
   .sr .marqset { gap: 34px; padding-right: 34px; }
-  .sr .sr-hero-copy { padding-bottom: 15vh !important; }
+  .sr .sr-hero-copy { padding-top: 100px !important; padding-bottom: 12vh !important; }
   .sr .schoolcard-photo { height: 170px; }
   .sr .schoolcard-body { padding: 20px 20px 22px; min-height: 168px; }
   .sr .th-cover { display: flex; flex-direction: column; justify-content: center; }

@@ -3,34 +3,78 @@ import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
+import { PORTAL } from '../lib/sr-routes';
 
-// Each application is a Google Form for now (the GP Portal will replace them).
-// `form` is the share link, opened in a new tab; while null, applicants are
-// pointed to an email instead.
-type Option = { id: string; name: string; abbr: string; when: string; form: string | null; page?: string; email: string; group: 'Schools' | 'Staff & volunteers' };
+// Every application now goes through the GP Portal. The chooser picks what
+// you are applying for; its group decides which set of steps shows below.
+type Group = 'Schools' | 'Staff & volunteers' | 'Teams';
+type Option = { id: string; name: string; abbr: string; when: string; page?: string; email: string; group: Group; note?: string };
 const OPTIONS: Option[] = [
-  { group: 'Schools', id: 'dts', name: 'Discipleship Training School', abbr: 'DTS', when: 'Every January', form: 'https://docs.google.com/forms/d/e/1FAIpQLSd2m0j9ODOVe1D_IHC3O-lT50mTrtgKp09fY7bYqX0fdwJo7g/viewform', page: '/schools/dts', email: 'dts@ywamsiemreap.org' },
-  { group: 'Schools', id: 'dbs', name: 'Discipleship Bible School', abbr: 'DBS', when: 'Every April', form: null, page: '/schools/dbs', email: 'info@ywamsiemreap.org' },
-  { group: 'Schools', id: 'bcs', name: 'Bible Counseling School', abbr: 'BCS', when: 'New', form: null, email: 'info@ywamsiemreap.org' },
-  { group: 'Schools', id: 'sms', name: 'Social Media School', abbr: 'SMS', when: 'New', form: null, page: '/schools/sms', email: 'info@ywamsiemreap.org' },
-  { group: 'Staff & volunteers', id: 'staff', name: 'Staff application', abbr: 'Staff', when: 'After a DTS', form: 'https://docs.google.com/forms/d/e/1FAIpQLSdGfsiMjFHq5VZXUU5_WPtfAQqD3JvOn6g6cdIiryjIAShsaw/viewform', page: '/staff', email: 'info@ywamsiemreap.org' },
-  { group: 'Staff & volunteers', id: 'volunteer', name: 'Volunteer application', abbr: 'Volunteer', when: 'Short or long term', form: 'https://docs.google.com/forms/d/e/1FAIpQLScchqoqQbPF_ca-VP19J-CQG6Obdj3VL24qTT7GamPTxgKiyQ/viewform', page: '/staff', email: 'info@ywamsiemreap.org' },
+  { group: 'Schools', id: 'dts', name: 'Discipleship Training School', abbr: 'DTS', when: 'Next school January 2027', page: '/schools/dts', email: 'dts@ywamsiemreap.org' },
+  { group: 'Schools', id: 'dbs', name: 'Discipleship Bible School', abbr: 'DBS', when: 'Next school June 2027 · DTS required', page: '/schools/dbs', email: 'info@ywamsiemreap.org' },
+  { group: 'Schools', id: 'bcs', name: 'Bible Counseling School', abbr: 'BCS', when: 'New', email: 'info@ywamsiemreap.org' },
+  { group: 'Schools', id: 'sms', name: 'Social Media School', abbr: 'SMS', when: 'New · DTS required', page: '/schools/sms', email: 'info@ywamsiemreap.org' },
+  { group: 'Staff & volunteers', id: 'staff', name: 'Staff application', abbr: 'Staff', when: 'After a DTS', page: '/staff', email: 'info@ywamsiemreap.org', note: 'Staff complete a DTS first, then apply to a role on the base.' },
+  { group: 'Staff & volunteers', id: 'volunteer', name: 'Volunteer application', abbr: 'Volunteer', when: 'A few weeks to a few months', page: '/staff', email: 'info@ywamsiemreap.org', note: 'No DTS required. Trades, admin, teaching, media and practical skills are all welcome.' },
+  { group: 'Teams', id: 'team', name: 'Bring a team', abbr: 'Teams', when: 'One to three weeks, year round', page: '/visit', email: 'info@ywamsiemreap.org', note: 'The team leader applies for the whole team.' },
 ];
-const GROUPS = [...new Set(OPTIONS.map((o) => o.group))];
+const GROUPS: Group[] = ['Schools', 'Staff & volunteers', 'Teams'];
 
-const STEPS: [string, string][] = [
-  ['School application', 'Choose your school above and fill out its application form. It asks about your story, your faith, your health and your church background — the same for every school, with a few questions particular to each.'],
-  ['Leader reference', 'Once your form is in, our staff get in touch on WhatsApp or Telegram to continue. International applicants send one reference form to a church leader, pastor or mentor who knows them well. Khmer applicants do not need a reference.'],
-  ['Video interview', 'A video call with our school staff. It is a two-way conversation: we want to know you, and you should be asking us questions too.'],
-  ['Acceptance', 'We let you know the outcome, and if you are accepted we welcome you into the school.'],
-  ['The practical part', 'Fees and how to pay them, the packing list, the visa process for Cambodia, and travel to Siem Reap — we walk you through each one.'],
-  ['Arrive', 'We collect you from Siem Reap airport and get you settled on the base.'],
-];
+// The steps for each kind of applicant, matching the GP Portal's own stages:
+// create your account, fill out the application, we get in touch, documents
+// & reference, video interview, accepted, getting ready, arrival.
+const ACCOUNT: [string, string] = ['Create your GP Portal account', 'Pick Siem Reap, then what you are applying for. Your name, email, phone number (with country code), whether we should message you on WhatsApp or Telegram, and your country; then choose a username and a 4-digit PIN. It is a small account so you can come back to it on your phone.'];
+const REACH: [string, string] = ['We get in touch', 'Once your application is in, one of our team messages you on WhatsApp or Telegram, whichever you chose. The portal shows where your application is up to the whole way through.'];
+const STEPS: Record<Group, { title: string; intro: string; steps: [string, string][] }> = {
+  'Schools': {
+    title: 'From application to arrival.',
+    intro: 'The process is the same for every school, and the portal shows you each stage as you reach it. Most students are through it in a few weeks.',
+    steps: [
+      ACCOUNT,
+      ['Fill out the application', 'Your story, your faith, your health and your church background. Your answers save as a draft, so you can come back any time. DBS, BCS and SMS need a completed DTS first.'],
+      REACH,
+      ['Documents and leader reference', 'After you apply, the portal lists what to send for your school and ticks each item off as it arrives. International applicants make a leader reference link in the portal and send it to a pastor, church leader or mentor who knows them well; Khmer applicants do not need a reference.'],
+      ['Video interview', 'A video call with someone from the school. It is a two-way conversation: we want to know you, and you should be asking us questions too.'],
+      ['Accepted', 'The portal tells you the outcome. If you are accepted, welcome: next comes the practical part.'],
+      ['Getting ready: fees, packing, visa, travel', 'We walk you through fees and how to pay them, the packing list and travel to Siem Reap. If you need a visa, a step-by-step e-visa guide appears in the portal once you are accepted, and we send you a letter of invitation once your flights are confirmed.'],
+      ['Arrival at the base', 'We collect you from Siem Reap airport and get you settled on the base.'],
+    ],
+  },
+  'Staff & volunteers': {
+    title: 'From application to joining the team.',
+    intro: 'Staff complete a DTS first, commit for a term and raise their own support; volunteers come for a season, a few weeks to a few months, with no DTS needed. The steps are the same, with a longer conversation for staff.',
+    steps: [
+      ACCOUNT,
+      ['Fill out the application', 'Staff: your DTS (where and when), your gifts, and the area you hope to serve in. Volunteers: your dates, your skills, and how long you can come. Your answers save as a draft.'],
+      REACH,
+      ['Documents and leader reference', 'After you apply, the portal lists what to send and ticks each item off as it arrives. International applicants make a leader reference link in the portal and send it to a pastor, church leader or mentor who knows them well.'],
+      ['Video interview', 'A video call with someone from the team, about your calling, the work you would join, and what a term here looks like.'],
+      ['Accepted', 'The portal tells you the outcome. Staff agree the length of their term and a plan for raising support; volunteers confirm their dates.'],
+      ['Getting ready: visa, travel, housing', 'A step-by-step e-visa guide appears in the portal once you are accepted, and we send a letter of invitation once your flights are confirmed. We also talk you through travel to Siem Reap, housing on the base and, for staff, support raising.'],
+      ['Arrival at the base', 'Airport pickup, orientation to the base and the city, and you join the team.'],
+    ],
+  },
+  'Teams': {
+    title: 'From first message to the week itself.',
+    intro: 'Teams stay one to three weeks and work alongside Khmer staff. The team leader applies once for everyone and handles the uploads for the team.',
+    steps: [
+      ['Team leader creates the GP Portal account', 'One account for the whole team: pick Siem Reap and Team, then your name, email, phone number (with country code), WhatsApp or Telegram, your country, and a username and 4-digit PIN.'],
+      ['Fill out the team application', 'Your church or base, your rough dates, how many are coming and what you hope to do. It saves as a draft, so you can come back to it.'],
+      ['We plan the visit together', 'One of our team messages you on WhatsApp or Telegram. We talk through dates, the villages and ministries you would serve in, where you stay and the budget, and confirm we can host you.'],
+      ['Upload the team documents', 'The portal lists them once your application is in: passport copies (the photo page of each member), a team photo with each member\'s name, and flight itineraries. Not booked yet? Upload the flights when you have them; we use them to arrange your transport from the airport.'],
+      ['Video call', 'A video call with someone from the team to settle the plan for the week.'],
+      ['Accepted', 'The portal confirms your dates and the team is booked in.'],
+      ['Getting ready: visas and travel', 'The e-visa guide appears in the portal once you are accepted: Visa E with our letter of invitation, which we send once your flights are confirmed; the Cambodia e-Arrival app, which one phone can complete for the whole team; and what to have printed for the airport.'],
+      ['Arrival', 'We collect you from Siem Reap airport, settle you in, and walk through the week together on the first evening.'],
+    ],
+  },
+};
+const idsByGroup = (g: Group) => OPTIONS.filter((o) => o.group === g).map((o) => o.id).join(' ');
 ---
-<SrLayout title="Apply | YWAM Siem Reap"
-  description="Apply for a school at YWAM Siem Reap. Choose your school, fill out its application form, and our staff walk with you through references, an interview, acceptance and the practical steps.">
+<SrLayout title="Apply | YWAM Siem Reap" spacer={false}
+  description="Apply to YWAM Siem Reap through the GP Portal: schools, staff, volunteering and short-term teams. Choose what you are applying for and see every step from application to arrival.">
   <PageHead eyebrow="How to apply" km="ដាក់ពាក្យ" title="It all starts with the application." highlight="application."
-    lead="Choose what you are applying for — a school, staff or volunteering — fill out its application, and our staff will walk with you the rest of the way."
+    lead="Every application, for a school, staff, volunteering or a team, goes through the GP Portal. Choose what you are applying for, and we will walk with you the rest of the way."
     photo="/images/campus/calling-sunset.jpg" photoPos="50% 40%" mobileFull
     photoAlt="A young man in a cap and backpack, silhouetted against a sunset" />
 
@@ -50,63 +94,58 @@ const STEPS: [string, string][] = [
         </div>
 
         {OPTIONS.map((s) => (
-          <div class="apply-panel" data-school={s.id} hidden>
+          <div class="apply-panel" data-school={s.id} data-group={s.group} hidden>
             <div class="apply-panel-head">
               <div>
                 <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);letter-spacing:.14em;text-transform:uppercase;">{s.abbr} · {s.when}</p>
                 <h2 class="disp" style="margin:10px 0 0;font-size:clamp(24px,2.8vw,36px);font-weight:500;line-height:1.12;">{s.name}</h2>
               </div>
               <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                {s.page && <a class="btn" href={s.page}>{s.group === 'Schools' ? 'About the school' : 'About serving here'}</a>}
+                {s.page && <a class="btn" href={s.page}>{s.group === 'Schools' ? 'About the school' : s.group === 'Teams' ? 'About team visits' : 'About serving here'}</a>}
                 <a class="btn btn--plain" href="/campus-life">Campus life</a>
               </div>
             </div>
-            {s.form ? (
-              <>
-                <p class="body" style="margin:18px 0 0;max-width:60ch;">The application is a Google Form. It opens in a new tab, takes about twenty minutes, and you can save and come back to it if you are signed in to Google.</p>
-                <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:22px;">
-                  <a class="btn btn--solid" href={s.form} target="_blank" rel="noopener">Open the {s.abbr} application form ↗︎</a>
-                  <a class="btn" href={`mailto:${s.email}?subject=${encodeURIComponent(`${s.abbr} application`)}`}>Email {s.email}</a>
-                </div>
-                <p class="muted" style="margin:18px 0 0;font-size:14px;max-width:60ch;">Trouble opening the form? Email us and we will send you the link or a copy directly.</p>
-              </>
-            ) : (
-              <>
-                <p class="body" style="margin:18px 0 0;max-width:60ch;">The {s.abbr} application form is being finalised. Email us and we will send it to you as soon as it is ready — and answer any questions in the meantime.</p>
-                <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:22px;">
-                  <a class="btn btn--solid" href={`mailto:${s.email}?subject=${encodeURIComponent(`${s.abbr} application`)}`}>Email {s.email}</a>
-                  <a class="btn" href="/contact">Contact the base</a>
-                </div>
-              </>
-            )}
+            <p class="body" style="margin:18px 0 0;max-width:60ch;">{s.note ? s.note + ' ' : ''}The application is on the GP Portal. It opens in a new tab: create a small account (a username and a 4-digit PIN), pick <b>{s.abbr === 'Teams' ? 'Team' : s.abbr}</b>, and your answers save as a draft so you can come back to it any time.</p>
+            <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:22px;">
+              <a class="btn btn--solid" href={PORTAL} target="_blank" rel="noopener">Apply on the GP Portal ↗︎</a>
+              <a class="btn" href={`mailto:${s.email}?subject=${encodeURIComponent(`${s.abbr} application`)}`}>Email {s.email}</a>
+            </div>
+            <p class="muted" style="margin:18px 0 0;font-size:14px;max-width:60ch;">Trouble with the portal? Email us and we will help you through it.</p>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="steps">
     <div class="wrap">
       <p class="eyebrow">What happens next</p>
-      <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">From application to arrival.</h2>
-      <p class="body" style="margin:18px 0 0;max-width:58ch;">The process is the same for every school, and much the same for staff and volunteers. Most people are through it in a few weeks.</p>
-      <div class="apply-steps" style="margin-top:40px;">
-        {STEPS.map(([t, d], n) => (
-          <div class="apply-step reveal">
-            <span class="disp" style="font-size:32px;color:var(--sr-pink);font-weight:500;">{'0' + (n + 1)}</span>
-            <div>
-              <h3 class="disp" style="margin:0;font-size:22px;font-weight:500;">{t}</h3>
-              <p class="body" style="margin:12px 0 0;max-width:56ch;font-size:16px;">{d}</p>
-            </div>
-          </div>
-        ))}
+      <div class="apply-tabs" role="tablist" aria-label="Steps for">
+        {GROUPS.map((g, i) => <button type="button" class={`btn apply-tab${i === 0 ? ' is-on' : ''}`} role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-tab={g} data-ids={idsByGroup(g)}>{g}</button>)}
       </div>
-      <p class="muted" style="font-size:14px;margin-top:30px;max-width:60ch;">Applications will move into the YWAM GP Portal soon, where you can follow your application and send your leader reference link. Until then, the forms above are the way in. Questions? <a href="/contact" style="color:#fff;">Contact the base</a>.</p>
+      {GROUPS.map((g, i) => (
+        <div class="apply-steps-panel" role="tabpanel" data-panel={g} hidden={i !== 0}>
+          <h2 class="disp" style="margin:26px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.12;">{STEPS[g].title}</h2>
+          <p class="body" style="margin:18px 0 0;max-width:58ch;">{STEPS[g].intro}</p>
+          <div class="apply-steps" style="margin-top:40px;">
+            {STEPS[g].steps.map(([t, d], n) => (
+              <div class="apply-step reveal">
+                <span class="disp" style="font-size:32px;color:var(--sr-pink);font-weight:500;">{'0' + (n + 1)}</span>
+                <div>
+                  <h3 class="disp" style="margin:0;font-size:22px;font-weight:500;">{t}</h3>
+                  <p class="body" style="margin:12px 0 0;max-width:56ch;font-size:16px;">{d}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+      <p class="muted" style="font-size:14px;margin-top:30px;max-width:60ch;">Everything happens in the <a href={PORTAL} target="_blank" rel="noopener" style="color:#fff;">GP Portal</a>: your application, your reference, and where it is up to. Our staff also stay in touch on WhatsApp or Telegram along the way.</p>
     </div>
   </section>
 
   <Cta
-    title="Not sure which school fits?"
+    title="Not sure which one fits?"
     body="Tell us where you are and what you are drawn to. We will point you at the right one."
     primary={['contact', 'Ask a question']}
     secondary={['schools', 'See schools']}
@@ -115,17 +154,27 @@ const STEPS: [string, string][] = [
 </SrLayout>
 
 <script>
-  // The chooser shows one school's panel at a time and keeps ?school= in the
-  // URL so school pages can deep-link straight to their form.
-  let ctrl = null;
+  // The chooser shows one panel at a time and keeps ?school= in the URL so
+  // other pages can deep-link to it. Choosing something also switches the
+  // steps below to that kind of applicant; the tabs switch them by hand.
+  let ctrl: AbortController | null = null;
   const init = () => {
-    if (ctrl) ctrl.abort();
+    ctrl?.abort();
     ctrl = new AbortController();
+    const { signal } = ctrl;
     const select = document.getElementById('school-select');
     if (!(select instanceof HTMLSelectElement)) return;
-    const panels = [...document.querySelectorAll('.apply-panel')];
-    const show = (id, push) => {
+    const panels = [...document.querySelectorAll<HTMLElement>('.apply-panel')];
+    const tabs = [...document.querySelectorAll<HTMLButtonElement>('.apply-tab')];
+    const stepPanels = [...document.querySelectorAll<HTMLElement>('.apply-steps-panel')];
+    const showSteps = (group: string) => {
+      tabs.forEach((t) => { const on = t.dataset.tab === group; t.classList.toggle('is-on', on); t.setAttribute('aria-selected', String(on)); });
+      stepPanels.forEach((p) => { p.hidden = p.dataset.panel !== group; });
+    };
+    const show = (id: string, push: boolean) => {
       panels.forEach((p) => { p.hidden = p.dataset.school !== id; });
+      const group = panels.find((p) => p.dataset.school === id)?.dataset.group;
+      if (group) showSteps(group);
       if (push) {
         const url = new URL(location.href);
         if (id) url.searchParams.set('school', id); else url.searchParams.delete('school');
@@ -135,7 +184,8 @@ const STEPS: [string, string][] = [
     const fromUrl = new URL(location.href).searchParams.get('school') || '';
     if (panels.some((p) => p.dataset.school === fromUrl)) select.value = fromUrl;
     show(select.value, false);
-    select.addEventListener('change', () => show(select.value, true), { signal: ctrl.signal });
+    select.addEventListener('change', () => show(select.value, true), { signal });
+    tabs.forEach((t) => t.addEventListener('click', () => showSteps(t.dataset.tab!), { signal }));
   };
   init();
   document.addEventListener('astro:page-load', init);

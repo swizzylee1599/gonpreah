@@ -1,3 +1,6 @@
+// The GP Portal, where every application is made. Opens in a new tab.
+export const PORTAL = 'https://impact.gonpreah.org/portal.html';
+
 // Online giving (Subsplash). Links to it open in a new tab.
 export const GIVE_URL = 'https://subsplash.com/u/-DTDBSM/give?campus_id=1c7f555d-5552-4aa7-9a79-484e72996412';
 
