@@ -236,7 +236,12 @@ const FAQ: [string, string][] = [
 
         const io = clamp01((p - INTRO_HOLD) / INTRO_FADE);
         intro.style.opacity = String(1 - io);
-        intro.style.transform = `translate(-50%,-50%) scale(${(1 + io * 0.25).toFixed(3)})`;
+        // Touch screens: no scaling of text. Safari re-rasterises text every
+        // time its scale changes, which reads as a shimmer while scrolling;
+        // whole-pixel movement and a fade are steady.
+        intro.style.transform = lite
+          ? `translate(-50%,-50%) translateY(${Math.round(-io * 40)}px)`
+          : `translate(-50%,-50%) scale(${(1 + io * 0.25).toFixed(3)})`;
         intro.style.filter = (!lite && io) ? `blur(${(io * 6).toFixed(1)}px)` : '';
         intro.style.pointerEvents = io > 0.5 ? 'none' : '';
 
@@ -251,7 +256,14 @@ const FAQ: [string, string][] = [
             else { const v = (t - 0.82) / 0.18; scale = 1.04 + 0.7 * v; op = 1 - smooth(v); blur = v * 8; }
           }
           el.style.opacity = String(op);
-          el.style.transform = `translate(-50%,-50%) scale(${scale.toFixed(3)})`;
+          if (lite) {
+            // Rise in, hold, lift away; never scale.
+            let y = 0;
+            if (t > 0 && t < 1) { if (t < 0.55) y = 60 * (1 - smooth(t / 0.55)); else if (t >= 0.82) y = -50 * smooth((t - 0.82) / 0.18); }
+            el.style.transform = `translate(-50%,-50%) translateY(${Math.round(y)}px)`;
+          } else {
+            el.style.transform = `translate(-50%,-50%) scale(${scale.toFixed(3)})`;
+          }
           el.style.filter = (!lite && blur) ? `blur(${blur.toFixed(1)}px)` : '';
           el.style.pointerEvents = op > 0.5 ? '' : 'none';
         });
@@ -280,7 +292,7 @@ const FAQ: [string, string][] = [
               else { const v = (tk - 0.86) / 0.14; scale = 1 + 0.18 * v; op = 1 - smooth(v); y = -20 * v; blur = v * 5; }
             }
             item.style.opacity = op.toFixed(3);
-            item.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0) rotate(var(--r, 0deg)) scale(${scale.toFixed(3)})`;
+            item.style.transform = `translate3d(0, ${lite ? Math.round(y) : y.toFixed(1)}px, 0) rotate(var(--r, 0deg)) scale(${scale.toFixed(3)})`;
             item.style.filter = (!lite && blur) ? `blur(${blur.toFixed(1)}px)` : '';
           });
         });
