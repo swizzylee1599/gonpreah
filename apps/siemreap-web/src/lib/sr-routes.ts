@@ -39,7 +39,6 @@ export const NAV: [string, [string, string, string][]][] = [
   ['About', [
     ['about', 'About Us', 'Who we are and how we started'],
     ['values', 'Values', 'What we believe and how we work'],
-    ['team', 'Our Team', 'The Khmer and international staff'],
     ['contact', 'Contact', 'Get in touch with the base'],
   ]],
   ['Give', [

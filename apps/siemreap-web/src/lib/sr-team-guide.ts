@@ -194,6 +194,6 @@ export const GUIDE: Spread[] = [
   {
     kind: 'end', title: 'See you in Siem Reap.',
     body: 'Questions about anything in this guide? Message the teams coordinator on WhatsApp, or email us. We are honored to walk this journey with you.',
-    links: [['/visit', 'Bring a team'], ['/team', 'Meet the team'], ['/give#khmer-staff', 'Support our Khmer staff'], ['/campus-life', 'Campus life']],
+    links: [['/visit', 'Bring a team'], ['/give#khmer-staff', 'Support our Khmer staff'], ['/campus-life', 'Campus life']],
   },
 ];
