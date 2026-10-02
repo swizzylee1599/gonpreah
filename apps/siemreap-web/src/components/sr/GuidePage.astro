@@ -1,0 +1,184 @@
+---
+// One page (half a spread) of the team guide book. `side` picks which half
+// of the spread to draw; the designs per `kind` live here, the words in
+// src/lib/sr-team-guide.ts.
+import { srcset } from '../../lib/sr-img';
+import { CONTACT } from '../../lib/sr-contact';
+import { GUIDE_TITLE, GUIDE_UPDATED, type Spread } from '../../lib/sr-team-guide';
+interface Props {
+  spread: Spread;
+  side: 'left' | 'right';
+  index: number;
+}
+const { spread: s, side, index } = Astro.props;
+const left = side === 'left';
+const pageNo = left ? index * 2 : index * 2 + 1;
+const chapter = 'chapter' in s ? s.chapter : '';
+const half = <T,>(items: T[]) => {
+  const cut = Math.ceil(items.length / 2);
+  return left ? items.slice(0, cut) : items.slice(cut);
+};
+const sizes = '(max-width: 760px) 100vw, 40vw';
+---
+<div class:list={['tg-page', `tg-page--${left ? 'l' : 'r'}`, { 'tg-page--dark': s.kind === 'cover' || (s.kind === 'end' && !left) }]}>
+  {s.kind === 'cover' && !left && (
+    <div class="tg-cover">
+      <img class="tg-bg" src="/images/guide/worship-flags.webp" srcset={srcset('/images/guide/worship-flags.webp')} sizes={sizes} alt="" decoding="async" />
+      <div class="tg-cover-copy">
+        <p class="eyebrow">YWAM Siem Reap</p>
+        <p class="km tg-cover-km">មគ្គុទ្ទេសក៍សម្រាប់ក្រុម</p>
+        <h1 class="disp tg-cover-title">{GUIDE_TITLE}</h1>
+        <p class="tg-cover-sub">Everything a team needs to know before serving with us in Siem Reap, Cambodia.</p>
+        <p class="tg-cover-meta">Updated {GUIDE_UPDATED} · Open the book →</p>
+      </div>
+    </div>
+  )}
+
+  {s.kind === 'letter' && left && (
+    <div class="tg-photo">
+      {s.photo && <img class="tg-bg" src={s.photo} srcset={srcset(s.photo)} sizes={sizes} alt="" decoding="async" />}
+      <div class="tg-photo-copy">
+        <h2 class="disp tg-h2">{s.title}</h2>
+      </div>
+    </div>
+  )}
+  {s.kind === 'letter' && !left && (
+    <div class="tg-paper tg-letter">
+      {s.paragraphs.map((p, i) => <p class:list={['tg-p', { 'tg-p--first': i === 0 }]}>{p}</p>)}
+      {s.signoff && <p class="tg-signoff">{s.signoff}</p>}
+    </div>
+  )}
+
+  {s.kind === 'quote' && left && (
+    <div class="tg-photo">
+      <img class="tg-bg" src={s.photo} srcset={srcset(s.photo)} sizes={sizes} alt="" decoding="async" />
+    </div>
+  )}
+  {s.kind === 'quote' && !left && (
+    <div class="tg-paper tg-quote">
+      <p class="tg-quote-mark" aria-hidden="true">“</p>
+      <p class="disp tg-quote-text">{s.quote}</p>
+      <p class="tg-quote-by">{s.by}</p>
+    </div>
+  )}
+
+  {s.kind === 'stats' && left && (
+    <div class="tg-paper">
+      <p class="eyebrow tg-eyebrow">{s.chapter}</p>
+      <h2 class="disp tg-h2">{s.title}</h2>
+      <p class="tg-p">{s.intro}</p>
+      <div class="tg-stats">
+        {s.stats.map(([n, l]) => <div class="tg-stat"><span class="disp tg-stat-n">{n}</span><span class="tg-stat-l">{l}</span></div>)}
+      </div>
+    </div>
+  )}
+  {s.kind === 'stats' && !left && (
+    <div class="tg-photo">
+      {s.photo && <img class="tg-bg" src={s.photo} srcset={srcset(s.photo)} sizes={sizes} alt="" decoding="async" />}
+    </div>
+  )}
+
+  {s.kind === 'list' && s.photo && left && (
+    <div class="tg-photo">
+      <img class="tg-bg" src={s.photo} srcset={srcset(s.photo)} sizes={sizes} alt="" decoding="async" style={s.pos ? `object-position:${s.pos}` : undefined} />
+      <div class="tg-photo-copy">
+        <p class="eyebrow tg-eyebrow">{s.chapter}</p>
+        <h2 class="disp tg-h2">{s.title}</h2>
+      </div>
+    </div>
+  )}
+  {s.kind === 'list' && s.photo && !left && (
+    <div class="tg-paper">
+      {s.intro && <p class="tg-p tg-p--intro">{s.intro}</p>}
+      <dl class:list={['tg-items', { 'tg-items--2': s.columns === 2 }]}>
+        {s.items.map(([t, b]) => <div class="tg-item"><dt>{t}</dt><dd>{b}</dd></div>)}
+      </dl>
+    </div>
+  )}
+  {s.kind === 'list' && !s.photo && (
+    <div class="tg-paper">
+      {left && (
+        <>
+          <p class="eyebrow tg-eyebrow">{s.chapter}</p>
+          <h2 class="disp tg-h2">{s.title}</h2>
+          {s.intro && <p class="tg-p tg-p--intro">{s.intro}</p>}
+        </>
+      )}
+      <dl class="tg-items">
+        {half(s.items).map(([t, b]) => <div class="tg-item"><dt>{t}</dt><dd>{b}</dd></div>)}
+      </dl>
+    </div>
+  )}
+
+  {s.kind === 'checklist' && left && (
+    <div class="tg-photo">
+      {s.photo && <img class="tg-bg" src={s.photo} srcset={srcset(s.photo)} sizes={sizes} alt="" decoding="async" />}
+      <div class="tg-photo-copy">
+        <p class="eyebrow tg-eyebrow">{s.chapter}</p>
+        <h2 class="disp tg-h2">{s.title}</h2>
+      </div>
+    </div>
+  )}
+  {s.kind === 'checklist' && !left && (
+    <div class="tg-paper">
+      {s.intro && <p class="tg-p tg-p--intro">{s.intro}</p>}
+      <ul class="tg-checks">
+        {s.items.map((it) => <li>{it}</li>)}
+      </ul>
+    </div>
+  )}
+
+  {s.kind === 'dress' && left && (
+    <div class="tg-paper">
+      <p class="eyebrow tg-eyebrow">{s.chapter}</p>
+      <h2 class="disp tg-h2">{s.title}</h2>
+      <p class="tg-p tg-p--intro">{s.intro}</p>
+      <p class="tg-sub">Everyone</p>
+      <ul class="tg-dots">
+        {s.both.map((it) => <li>{it}</li>)}
+      </ul>
+    </div>
+  )}
+  {s.kind === 'dress' && !left && (
+    <div class="tg-paper tg-dress">
+      <div>
+        <p class="tg-sub">Women</p>
+        <dl class="tg-items tg-items--tight">
+          {s.girls.map(([t, b]) => <div class="tg-item"><dt>{t}</dt><dd>{b}</dd></div>)}
+        </dl>
+      </div>
+      <div>
+        <p class="tg-sub">Men</p>
+        <dl class="tg-items tg-items--tight">
+          {s.boys.map(([t, b]) => <div class="tg-item"><dt>{t}</dt><dd>{b}</dd></div>)}
+        </dl>
+      </div>
+    </div>
+  )}
+
+  {s.kind === 'end' && left && (
+    <div class="tg-paper tg-end">
+      <h2 class="disp tg-h2 tg-h2--big">{s.title}</h2>
+      <p class="tg-p">{s.body}</p>
+      <p class="tg-sub">Teams coordinator</p>
+      <p class="tg-p"><a href={CONTACT.whatsapp} target="_blank" rel="noopener">WhatsApp {CONTACT.phoneDisplay}</a><br /><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></p>
+    </div>
+  )}
+  {s.kind === 'end' && !left && (
+    <div class="tg-photo">
+      <img class="tg-bg" src="/images/campus/campus-group.webp" srcset={srcset('/images/campus/campus-group.webp')} sizes={sizes} alt="" decoding="async" />
+      <div class="tg-photo-copy">
+        <p class="eyebrow tg-eyebrow">Keep exploring</p>
+        <ul class="tg-links">
+          {s.links.map(([href, label]) => <li><a href={href}>{label} →</a></li>)}
+        </ul>
+      </div>
+    </div>
+  )}
+
+  {s.kind !== 'cover' && (
+    <p class="tg-folio" aria-hidden="true">
+      {left ? <><span>{pageNo}</span><span>{chapter || GUIDE_TITLE}</span></> : <><span>{chapter || 'YWAM Siem Reap'}</span><span>{pageNo}</span></>}
+    </p>
+  )}
+</div>

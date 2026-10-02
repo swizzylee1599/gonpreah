@@ -15,6 +15,7 @@ export const ROUTE_PATH: Record<string, string> = {
   staff: '/staff',
   team: '/team',
   visit: '/visit',
+  teamGuide: '/team-guide',
   campus: '/campus-life',
   siemreap: '/siem-reap',
   values: '/values',
@@ -32,6 +33,7 @@ export const NAV: [string, [string, string, string][]][] = [
   ]],
   ['Get Involved', [
     ['visit', 'Short-Term Teams', 'Bring a team: how to prepare, what to pack, life on base'],
+    ['teamGuide', 'Team Guide', 'The guide for short-term teams, as a book you can flip through'],
     ['staff', 'Join Staff or Volunteer', 'Serve long term, or come short term'],
   ]],
   ['About', [

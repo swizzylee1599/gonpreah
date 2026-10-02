@@ -9,8 +9,8 @@ import { CONTACT } from '../lib/sr-contact';
 import { srcset } from '../lib/sr-img';
 
 // Bring a team. The content follows the Guide for Short-term Teams that the
-// base sends every team; the full guide is linked for download.
-const GUIDE = '/ywam-siem-reap-team-guide.pdf';
+// base sends every team; the full guide is a book at /team-guide.
+const GUIDE = '/team-guide';
 
 const SERVE = [
   { title: 'Sharing the gospel', body: 'Testimonies, house visits in the villages and youth events: many chances to share the love of Jesus and bring the gospel to the unreached.', photo: '/images/schools/outreach-kids-friends.webp', pos: '50% 30%' },
@@ -94,7 +94,7 @@ const PRACTICAL: [string, string][] = [
         <p class="body" style="margin-top:16px;">Most teams stay one to three weeks. You stay on campus, eat with the community, and work with Khmer staff on things that continue after you leave.</p>
         <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:28px;">
           <a class="btn btn--solid" href="/apply?school=team">Apply to bring a team</a>
-          <a class="btn" href={GUIDE} target="_blank" rel="noopener">Download the team guide (PDF)</a>
+          <a class="btn" href={GUIDE}>Read the team guide</a>
         </div>
       </div>
     </div>
@@ -228,7 +228,7 @@ const PRACTICAL: [string, string][] = [
       <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:32px;">
         <a class="btn btn--solid" href={PORTAL} target="_blank" rel="noopener">Apply on the GP Portal ↗︎</a>
         <a class="btn" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('Bringing a team')}`}>Email {CONTACT.email}</a>
-        <a class="btn btn--plain" href={GUIDE} target="_blank" rel="noopener">Team guide (PDF)</a>
+        <a class="btn btn--plain" href={GUIDE}>Read the team guide</a>
       </div>
     </div>
   </section>

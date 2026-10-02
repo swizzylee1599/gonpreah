@@ -8,13 +8,18 @@ interface Props {
   description?: string;
   spacer?: boolean;
   noindex?: boolean;
+  /** Share-preview image (absolute path); default is the campus aerial. */
+  image?: string;
 }
 const {
   title,
   description = 'YWAM Siem Reap empowers the next generation to transform their nation and the world. A Youth With A Mission training base in Siem Reap, Cambodia.',
   spacer = true,
   noindex = false,
+  image = '/images/campus/campus-aerial-wide.webp',
 } = Astro.props;
+const pageUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://ywamsiemreap.org').href;
+const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
 ---
 
 <!doctype html>
@@ -25,6 +30,14 @@ const {
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex" />}
     <title>{title}</title>
+    <link rel="canonical" href={pageUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="YWAM Siem Reap" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={imageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
