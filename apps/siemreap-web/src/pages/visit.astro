@@ -36,17 +36,6 @@ const PACK: string[] = [
   'A passport valid at least six months after arrival',
 ];
 
-const CULTURE: [string, string][] = [
-  ['Feet and heads', 'Do not show the soles of your feet when sitting; sit cross-legged or kneel. Do not touch anyone’s head. Shoes off in homes, and hats off indoors.'],
-  ['Generosity', 'You will be invited to sit and eat, often. Accept it; generosity is a love language here. Share what you have too.'],
-  ['Relationships first', 'It is all about relationships. Get to know someone before you talk about faith, and ask open questions: what do you think about that?'],
-  ['Evangelism', 'Loud open-air preaching can be shut down, and so can we. Never speak against Buddhism or other religions, and do not go into a pagoda to evangelise. Respect opens the door.'],
-  ['Monks and pagodas', 'You may talk with monks, but do not touch them. Visit pagodas with someone else, modestly dressed, never after dark.'],
-  ['Children and photos', 'Children may be treated differently from home; ask your ministry contact. Check before taking photos or posting online. Kids are not a museum.'],
-  ['Touch', 'Men hold hands with men and women with women; it is friendship. Touching the opposite sex in public is not appropriate.'],
-  ['Money', 'Carry little cash, leave your passport in a safe place, and do not give money to begging children. Offer water or a snack instead.'],
-  ['Time', 'People will be late, and will finish a conversation before the next thing. Be on time yourself, and say how long you are free.'],
-];
 
 const DRESS: [string, string][] = [
   ['Teaching', 'Semi-professional: skirts or tidy long pants with a nice shirt; slacks and a polo or button-up for men.'],
@@ -75,7 +64,7 @@ const PRACTICAL: [string, string][] = [
 ];
 ---
 <SrLayout title="Bring a Team | YWAM Siem Reap" spacer={false}
-  description="Bring a short-term team to YWAM Siem Reap. How teams serve, how to prepare, what to pack, the culture, the dress code, life on base and the practical details, from the guide we send every team.">
+  description="Bring a short-term team to YWAM Siem Reap. How teams serve, how to prepare, what to pack, the dress code, life on base and the practical details, from the guide we send every team.">
   <PageHead eyebrow="Visit / short-term teams" km="មកលេង" title="Bring a team" highlight="team"
     lead="Teams that come here work alongside Khmer staff on projects that continue after you leave."
     photo="/images/campus/team-market.webp" photoPos="50% 35%" full center
@@ -99,7 +88,7 @@ const PRACTICAL: [string, string][] = [
 
   <nav class="sr-jump" aria-label="On this page">
     <div class="wrap sr-jump-row">
-      <a href="#serve">How teams serve</a><a href="#prep">Before the trip</a><a href="#culture">Culture</a><a href="#dress">Dress</a><a href="#base">On base</a><a href="#practical">Practical</a><a href="#how">How to apply</a>
+      <a href="#serve">How teams serve</a><a href="#prep">Before the trip</a><a href="#dress">Dress</a><a href="#base">On base</a><a href="#practical">Practical</a><a href="#how">How to apply</a>
     </div>
   </nav>
 
@@ -136,20 +125,6 @@ const PRACTICAL: [string, string][] = [
       <div class="pack reveal">
         <h3 class="disp" style="margin:0;font-size:22px;font-weight:600;">Packing essentials</h3>
         <ul class="pack-list">{PACK.map((p) => <li>{p}</li>)}</ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec" id="culture">
-    <div class="wrap">
-      <div class="reveal">
-        <p class="eyebrow">Cultural do’s and don’ts</p>
-        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;">Respect opens every door.</h2>
-      </div>
-      <div class="culture-grid stag">
-        {CULTURE.map(([t, d]) => (
-          <div class="culture-item"><h3 class="disp" style="margin:0;font-size:18px;font-weight:600;">{t}</h3><p class="body" style="margin:8px 0 0;font-size:15px;">{d}</p></div>
-        ))}
       </div>
     </div>
   </section>
