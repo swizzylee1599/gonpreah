@@ -3,6 +3,7 @@ import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
+import CampusTeaser from '../components/sr/CampusTeaser.astro';
 import { PORTAL } from '../lib/sr-routes';
 import { CONTACT } from '../lib/sr-contact';
 import { srcset } from '../lib/sr-img';
@@ -37,6 +38,19 @@ const PACK: string[] = [
 ];
 
 
+// Each one has a small line icon; the cards rise in one after another.
+const CULTURE: { icon: string; title: string; body: string }[] = [
+  { icon: 'M4 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M9 4v6M15 4v6M7 10h10', title: 'Feet and heads', body: 'Do not show the soles of your feet when sitting; sit cross-legged or kneel. Do not touch anyone’s head. Shoes off in homes, hats off indoors.' },
+  { icon: 'M3 11h18M5 11v8h14v-8M12 11V5a3 3 0 0 1 3-3M12 11V5a3 3 0 0 0-3-3', title: 'Generosity', body: 'You will be invited to sit and eat, often. Accept it; generosity is a love language here. Share what you have too.' },
+  { icon: 'M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM16 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM2 20c0-3 3-5 6-5s6 2 6 5M10 20c0-3 3-5 6-5s6 2 6 5', title: 'Relationships first', body: 'It is all about relationships. Get to know someone before you talk about faith, and ask open questions: what do you think about that?' },
+  { icon: 'M12 3a4 4 0 0 1 4 4v3a4 4 0 0 1-8 0V7a4 4 0 0 1 4-4zM6 11a6 6 0 0 0 12 0M12 17v4M9 21h6', title: 'Evangelism', body: 'Loud open-air preaching can be shut down, and so can we. Never speak against Buddhism or other religions, and do not go into a pagoda to evangelise. Respect opens the door.' },
+  { icon: 'M12 3l8 6v2H4V9l8-6zM6 11v8M12 11v8M18 11v8M3 19h18', title: 'Monks and pagodas', body: 'You may talk with monks, but do not touch them. Visit pagodas with someone else, modestly dressed, never after dark.' },
+  { icon: 'M4 7h3l2-3h6l2 3h3v12H4V7zM12 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z', title: 'Children and photos', body: 'Children may be treated differently from home; ask your ministry contact. Check before taking photos or posting online. Kids are not a museum.' },
+  { icon: 'M7 11V7a2 2 0 1 1 4 0v4M11 11V6a2 2 0 1 1 4 0v5M15 11V8a2 2 0 1 1 4 0v6a6 6 0 0 1-6 6h-2a6 6 0 0 1-6-6v-2a2 2 0 1 1 4 0', title: 'Touch', body: 'Men hold hands with men and women with women; it is friendship. Touching the opposite sex in public is not appropriate.' },
+  { icon: 'M3 7h18v10H3zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 10h.01M18 14h.01', title: 'Money', body: 'Carry little cash, leave your passport in a safe place, and do not give money to begging children. Offer water or a snack instead.' },
+  { icon: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2', title: 'Time', body: 'People will be late, and will finish a conversation before the next thing. Be on time yourself, and say how long you are free.' },
+];
+
 const DRESS: [string, string][] = [
   ['Teaching', 'Semi-professional: skirts or tidy long pants with a nice shirt; slacks and a polo or button-up for men.'],
   ['Ministry', 'Jeans or tidy long pants, or capris past the knee. T-shirts are fine. No Thai elephant pants for ministry.'],
@@ -64,7 +78,7 @@ const PRACTICAL: [string, string][] = [
 ];
 ---
 <SrLayout title="Bring a Team | YWAM Siem Reap" spacer={false}
-  description="Bring a short-term team to YWAM Siem Reap. How teams serve, how to prepare, what to pack, the dress code, life on base and the practical details, from the guide we send every team.">
+  description="Bring a short-term team to YWAM Siem Reap. How teams serve, how to prepare, what to pack, the culture, the dress code, life on base and the practical details, from the guide we send every team.">
   <PageHead eyebrow="Visit / short-term teams" km="មកលេង" title="Bring a team" highlight="team"
     lead="Teams that come here work alongside Khmer staff on projects that continue after you leave."
     photo="/images/campus/team-market.webp" photoPos="50% 35%" full center
@@ -88,7 +102,7 @@ const PRACTICAL: [string, string][] = [
 
   <nav class="sr-jump" aria-label="On this page">
     <div class="wrap sr-jump-row">
-      <a href="#serve">How teams serve</a><a href="#prep">Before the trip</a><a href="#dress">Dress</a><a href="#base">On base</a><a href="#practical">Practical</a><a href="#how">How to apply</a>
+      <a href="#serve">How teams serve</a><a href="#prep">Before the trip</a><a href="#culture">Culture</a><a href="#dress">Dress</a><a href="#base">On base</a><a href="#practical">Practical</a><a href="#how">How to apply</a>
     </div>
   </nav>
 
@@ -125,6 +139,28 @@ const PRACTICAL: [string, string][] = [
       <div class="pack reveal">
         <h3 class="disp" style="margin:0;font-size:22px;font-weight:600;">Packing essentials</h3>
         <ul class="pack-list">{PACK.map((p) => <li>{p}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="culture">
+    <div class="wrap">
+      <div class="culture-head reveal">
+        <div>
+          <p class="eyebrow">Cultural do’s and don’ts</p>
+          <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;">Respect opens every door.</h2>
+        </div>
+        <p class="body" style="margin:0;max-width:44ch;">Nine things our staff wish every team knew before day one. None of them are hard; all of them are noticed.</p>
+      </div>
+      <div class="culture-grid">
+        {CULTURE.map((c, i) => (
+          <div class="culture-item" style={`--i:${i}`}>
+            <span class="culture-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d={c.icon} /></svg></span>
+            <span class="culture-n disp">{'0' + (i + 1)}</span>
+            <h3 class="disp" style="margin:14px 0 0;font-size:19px;font-weight:600;">{c.title}</h3>
+            <p class="body" style="margin:8px 0 0;font-size:15px;">{c.body}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -197,11 +233,6 @@ const PRACTICAL: [string, string][] = [
     </div>
   </section>
 
-  <Cta
-    title="Campus life"
-    body="What living here is like: community, meals, worship, and what Siem Reap has to offer when the day is done."
-    primary={['campus', 'See campus life']}
-    secondary={['team', 'Meet the team']}
-  />
+  <CampusTeaser title="Where your team will live for the week." body="One campus, Khmer and international, shared meals, our own cafe, and Angkor twenty minutes down the road. Here is what living here is actually like." />
   <Footer />
 </SrLayout>

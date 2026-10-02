@@ -60,7 +60,7 @@ const {
         if (io) io.disconnect();
         document.documentElement.classList.toggle('sr-io', !supportsTimeline);
         if (supportsTimeline) return;
-        const els = document.querySelectorAll('.reveal, .stag, .linein, .wipe, .riseup, .scaleup, .growrule, .io-in');
+        const els = document.querySelectorAll('.reveal, .stag, .linein, .wipe, .riseup, .scaleup, .growrule, .io-in, .culture-item');
         io = new IntersectionObserver((entries) => {
           entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
         }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
