@@ -4,6 +4,13 @@ import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
 import CardGrid from '../components/sr/CardGrid.astro';
 import Cta from '../components/sr/Cta.astro';
+import { srcset } from '../lib/sr-img';
+
+const LIFE: { src: string; alt: string; pos?: string }[] = [
+  { src: '/images/campus/staff-desk-smile.webp', alt: 'A staff member at his desk by the window, grinning at the camera' },
+  { src: '/images/campus/staff-office.webp', alt: 'The staff office: desks, monitors and the garden through the glass doors', pos: '50% 62%' },
+  { src: '/images/campus/staff-sharing.webp', alt: 'A staff member standing to share, a book in his hands', pos: '50% 30%' },
+];
 ---
 <SrLayout title="Join Staff or Volunteer | YWAM Siem Reap" spacer={false}>
   <PageHead eyebrow="Join staff or volunteer" km="ក្រុមការងារ" title="Serve long term. Or come short term." highlight="short term."
@@ -13,6 +20,11 @@ import Cta from '../components/sr/Cta.astro';
     ['Joining staff', 'Staff complete a DTS first, then apply to a role on the base. We will talk you through visas, support raising and housing.'],
     ['Volunteering short term', 'A few weeks to a few months. Trades, admin, teaching, media and practical skills — often the most useful people on site. No DTS required.'],
   ]} />
+  <section class="sec" style="padding-top:0;">
+    <div class="wrap dbs-strip-photos stag" style="margin-top:0;">
+      {LIFE.map((ph) => <figure><img src={ph.src} srcset={srcset(ph.src)} sizes="(max-width: 760px) 100vw, 33vw" alt={ph.alt} loading="lazy" decoding="async" style={ph.pos ? `object-position:${ph.pos}` : undefined} /></figure>)}
+    </div>
+  </section>
   <section class="sec" style="padding-top:0;">
     <div class="wrap" style="display:flex;gap:14px;flex-wrap:wrap;">
       <a class="btn btn--solid" href="/apply?school=staff">Staff application</a>

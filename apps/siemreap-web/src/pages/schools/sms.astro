@@ -19,9 +19,10 @@ const LEARN: [string, string][] = [
 ];
 
 const PHOTOS: { src?: string; alt?: string; label?: string; pos?: string }[] = [
-  { label: 'Drop a photo — filming on location' },
+  { src: '/images/schools/sms-class.webp', alt: 'A media class in the studio: students at white desks listening to a teacher beside the lights and a camera rig' },
+  { src: '/images/schools/sms-studio.webp', alt: 'A teacher at his laptop in the studio, studio lights and a gimbal behind him', pos: '60% 50%' },
   { src: '/images/schools/sms-editing.webp', alt: 'SMS students editing together at a desk of monitors in the media room' },
-  { label: 'Drop a photo — a student behind the camera' },
+  { src: '/images/schools/sms-laptop.webp', alt: 'A student working at his laptop by the window', pos: '50% 40%' },
 ];
 
 const INFO: [string, string][] = [
@@ -45,6 +46,7 @@ const INFO: [string, string][] = [
       <div class="reveal">
         <p class="eyebrow">A new school</p>
         <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,3.8vw,50px);font-weight:500;line-height:1.08;">Craft and calling, on the same screen.</h2>
+        <img class="sms-intro-photo" src="/images/schools/sms-students.webp" srcset={srcset('/images/schools/sms-students.webp')} sizes="(max-width: 760px) 100vw, 40vw" alt="Students in a bright classroom looking up at a lesson" loading="lazy" decoding="async" />
       </div>
       <div class="reveal">
         <p class="body" style="margin:0;font-size:18px;">Cambodia is one of the youngest countries in the world, and its young people live online. The Social Media School trains Christians to tell true stories well — with a camera, a phone, an edit and a plan — and to carry the gospel into the feeds where this generation already spends its day.</p>
@@ -69,7 +71,7 @@ const INFO: [string, string][] = [
   </section>
 
   <section class="sec" style="padding-top:0;">
-    <div class="wrap dbs-strip-photos stag" style="margin-top:0;">
+    <div class="wrap dbs-strip-photos dbs-strip-photos--4 stag" style="margin-top:0;">
       {PHOTOS.map((ph) => (
         <figure>{ph.src ? <img src={ph.src} srcset={srcset(ph.src)} sizes="(max-width: 760px) 100vw, 50vw" alt={ph.alt ?? ''} loading="lazy" decoding="async" style={ph.pos ? `object-position:${ph.pos}` : undefined} /> : <PhotoSlot label={ph.label ?? ''} radius={0} />}</figure>
       ))}

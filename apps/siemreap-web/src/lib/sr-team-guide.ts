@@ -53,7 +53,7 @@ export const GUIDE: Spread[] = [
       ['Develop leaders', 'Through DTS, DBS and the School of Ministry Development we disciple the next generation of Cambodian leaders, helping them find their identity in Christ and their purpose in the world.'],
       ['Train professionals', 'We train Khmer youth in technical, music, multimedia, hospitality, culinary, finance, cafe and education skills.'],
     ],
-    photo: '/images/guide/media-room.webp', columns: 2,
+    photo: '/images/schools/sms-studio.webp', columns: 2,
   },
   {
     kind: 'list', chapter: 'How teams serve', title: 'There are many ways a team can serve.',
