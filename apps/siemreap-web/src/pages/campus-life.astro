@@ -10,7 +10,7 @@ import { existsSync } from 'node:fs';
 // fast through streets around town. Files live in public/images/explore;
 // any that are missing are skipped.
 const EXPLORE = [
-  '/images/campus/tuktuk.jpg',
+  '/images/campus/tuktuk.webp',
   ...['drive-01', 'drive-02', 'drive-03', 'drive-04', 'drive-05', 'drive-06', 'drive-07', 'drive-08', 'drive-09']
     .filter((f) => existsSync(`public/images/explore/${f}.jpg`)).map((f) => `/images/explore/${f}.jpg`),
 ];
@@ -64,22 +64,22 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
 ---
 <SrLayout title="Campus Life | YWAM Siem Reap" spacer={false}
   description="What living at YWAM Siem Reap is like — Khmer and international, students, volunteers, staff and teams in one community — and what to do in Siem Reap when the day is done.">
-  <CampusDive aerial="/images/campus/campus-aerial-wide.jpg" front="/images/campus/campus-front.jpg"
+  <CampusDive aerial="/images/campus/campus-aerial-wide.webp" front="/images/campus/campus-front.webp"
     statement="Live in a cross‑cultural community centered around Jesus."
     sub="YWAM Siem Reap is a community of young people on fire for Jesus and making His name known."
     photos={[
-      { src: '/images/campus/friends-temple.jpg', alt: 'Two friends, one international and one Khmer, talking among temple stones', pos: '50% 35%' },
-      { src: '/images/gonpreah-worship-1.jpg', alt: 'Students worshipping together on campus' },
-      { src: '/images/campus/high-five.jpg', alt: 'A visiting student high-fiving a laughing girl in a village', pos: '50% 40%' },
-      { src: '/images/campus/work-bamboo.jpg', alt: 'A young man carrying bamboo poles along a campus path', pos: '50% 30%' },
+      { src: '/images/campus/friends-temple.webp', alt: 'Two friends, one international and one Khmer, talking among temple stones', pos: '50% 35%' },
+      { src: '/images/gonpreah-worship-1.webp', alt: 'Students worshipping together on campus' },
+      { src: '/images/campus/high-five.webp', alt: 'A visiting student high-fiving a laughing girl in a village', pos: '50% 40%' },
+      { src: '/images/campus/work-bamboo.webp', alt: 'A young man carrying bamboo poles along a campus path', pos: '50% 30%' },
     ]} />
 
   <section class="explore" id="siem-reap" aria-label="Explore Siem Reap">
     <div class="explore-card">
       <div class="explore-plates" aria-hidden="true">
-        {EXPLORE.map((src, i) => <div class={`explore-plate${i === 0 ? ' is-on explore-plate--home' : ''}`} style={`background-image:url(${src})`}></div>)}
+        {EXPLORE.map((src, i) => <div class={`explore-plate${i === 0 ? ' is-on explore-plate--home' : ''}`} style={`background-image:url(${src})`} data-small={src.replace(/\.webp$/, '-800.webp')}></div>)}
       </div>
-      <img class="explore-frame" src="/images/campus/tuktuk-frame.webp" alt="" aria-hidden="true" decoding="async" />
+      <img class="explore-frame" src="/images/campus/tuktuk-frame.webp" srcset="/images/campus/tuktuk-frame-800.webp 800w, /images/campus/tuktuk-frame.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="" aria-hidden="true" decoding="async" />
       <div class="explore-shade" aria-hidden="true"></div>
       <div class="wrap explore-copy">
         <p class="eyebrow">Siem Reap</p>
@@ -114,7 +114,7 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
       </div>
       <div class="sched-side">
         <figure class="sched-night reveal">
-          <img src="/images/campus/community-night.jpg" alt="Community night: the base worshipping together under string lights" loading="lazy" decoding="async" />
+          <img src="/images/campus/community-night.webp" srcset="/images/campus/community-night-800.webp 800w, /images/campus/community-night.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="Community night: the base worshipping together under string lights" loading="lazy" decoding="async" />
           <figcaption class="muted">Community night, every Thursday</figcaption>
         </figure>
         <div class="cl-hs-nav" aria-hidden="true">
@@ -154,7 +154,7 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
       <div class="cl-food-grid">
         <figure class="cl-food-photo wipe">
           <div class="parslow" style="height:116%;margin-top:-8%;">
-            <img src="/images/campus/food-prep.jpg" alt="Khmer women in blue preparing sticky rice in bamboo and palm-leaf wrapped food at a market table" loading="lazy" decoding="async" style="object-position:50% 60%;" />
+            <img src="/images/campus/food-prep.webp" srcset="/images/campus/food-prep-800.webp 800w, /images/campus/food-prep.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="Khmer women in blue preparing sticky rice in bamboo and palm-leaf wrapped food at a market table" loading="lazy" decoding="async" style="object-position:50% 60%;" />
           </div>
         </figure>
         <div class="cl-food-copy linein">
@@ -167,7 +167,7 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
 
       <div class="card cl-cafe reveal io-in">
         <figure class="cl-cafe-photo">
-          <img src="/images/campus/gp-cafe-sign.jpg" alt="The YWAM sign and the GP Cafe sign hanging among green leaves, with an iced green drink held up in front" loading="lazy" decoding="async" />
+          <img src="/images/campus/gp-cafe-sign.webp" srcset="/images/campus/gp-cafe-sign-800.webp 800w, /images/campus/gp-cafe-sign.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="The YWAM sign and the GP Cafe sign hanging among green leaves, with an iced green drink held up in front" loading="lazy" decoding="async" />
         </figure>
         <div class="cl-cafe-copy">
           <p class="eyebrow">On campus</p>
@@ -176,7 +176,7 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
           <p class="muted" style="margin:14px 0 0;font-size:14px;">Open to students, staff, teams and neighbours.</p>
         </div>
         <figure class="cl-cafe-barista">
-          <img src="/images/campus/gp-cafe-barista.jpg" alt="A smiling barista in an apron behind the GP Cafe counter, flashing a peace sign" loading="lazy" decoding="async" />
+          <img src="/images/campus/gp-cafe-barista.webp" srcset="/images/campus/gp-cafe-barista-800.webp 800w, /images/campus/gp-cafe-barista.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="A smiling barista in an apron behind the GP Cafe counter, flashing a peace sign" loading="lazy" decoding="async" />
         </figure>
       </div>
     </div>

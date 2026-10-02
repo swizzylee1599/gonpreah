@@ -5,6 +5,7 @@ import Marquee from '../components/sr/Marquee.astro';
 import PhotoSlot from '../components/sr/PhotoSlot.astro';
 import HeroLine from '../components/sr/HeroLine.astro';
 import HeroVideo from '../components/sr/HeroVideo.astro';
+import { NEWS } from '../lib/sr-news';
 import SchoolCard from '../components/sr/SchoolCard.astro';
 import GlobeO from '../components/sr/GlobeO.astro';
 
@@ -16,10 +17,10 @@ import GlobeO from '../components/sr/GlobeO.astro';
 const GONPREAH_3D_VIDEO = '/video/gonpreah-community-3d.mp4';
 
 const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; photo?: string; pos?: string; href?: string }[] = [
-  { name: 'Discipleship Training School', abbr: 'DTS', body: 'Discover your calling. Find a purpose greater than your own desire.', when: 'Every January', photo: '/images/gonpreah-worship-2.jpg', href: '/schools/dts' },
-  { name: 'Discipleship Bible School', abbr: 'DBS', body: 'The whole Bible in thirteen weeks. Study the Word, then live it out.', when: 'Next school June 2027', photo: '/images/schools/dts-student-bible.jpg', pos: '50% 36%', href: '/schools/dbs' },
-  { name: 'Bible Counseling School', abbr: 'BCS', body: 'Training for those caring for people who carry trauma — a growing need across Cambodia.', when: 'New', photo: '/images/schools/praying-together.jpg' },
-  { name: 'Social Media School', abbr: 'SMS', body: 'Storytelling and digital ministry, for the generation already living there.', when: 'New', photo: '/images/schools/sms-lab.jpg', href: '/schools/sms' },
+  { name: 'Discipleship Training School', abbr: 'DTS', body: 'Discover your calling. Find a purpose greater than your own desire.', when: 'Every January', photo: '/images/gonpreah-worship-2.webp', href: '/schools/dts' },
+  { name: 'Discipleship Bible School', abbr: 'DBS', body: 'The whole Bible in thirteen weeks. Study the Word, then live it out.', when: 'Next school June 2027', photo: '/images/schools/dts-student-bible.webp', pos: '50% 36%', href: '/schools/dbs' },
+  { name: 'Bible Counseling School', abbr: 'BCS', body: 'Training for those caring for people who carry trauma — a growing need across Cambodia.', when: 'New', photo: '/images/schools/praying-together.webp' },
+  { name: 'Social Media School', abbr: 'SMS', body: 'Storytelling and digital ministry, for the generation already living there.', when: 'New', photo: '/images/schools/sms-studio.webp', href: '/schools/sms' },
 ];
 ---
 <SrLayout title="YWAM Siem Reap | Heart for Cambodia, vision for the world" spacer={false}>
@@ -56,7 +57,7 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
             autoplay
             playsinline
             webkit-playsinline
-            preload="auto"
+            preload="none"
             aria-label="The GonPreah community, rotating in 3D"
           />
           <div class="video3d-scrim"></div>
@@ -92,7 +93,8 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
               {SCHOOL_ROWS.map((school) => <SchoolCard {...school} />)}
             </div>
           </div>
-          <div class="wrap">
+          </div>
+          <div class="wrap deck-hint">
             <p class="muted" style="margin:0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;">Scroll for more →</p>
           </div>
         </div>
@@ -100,7 +102,7 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
           <div class="wrap bat-grid" style="display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:50px;align-items:center;width:100%;">
             <div class="wipe bat-photo" style="height:420px;overflow:hidden;border-radius:20px;">
               <div class="parslow" style="height:112%;margin-top:-6%;">
-                <img src="/images/campus/team-high-five.jpg" alt="A visiting team member high-fiving a leaping boy outside a village house" loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" />
+                <img src="/images/campus/team-high-five.webp" srcset="/images/campus/team-high-five-800.webp 800w, /images/campus/team-high-five.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="A visiting team member high-fiving a leaping boy outside a village house" loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" />
               </div>
             </div>
             <div class="bat-text">
@@ -114,6 +116,44 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
         </div>
       </div>
 
+      <section class="cl-full" aria-label="Campus life">
+        <img class="cl-full-bg" src="/images/campus/campus-aerial-wide.webp" srcset="/images/campus/campus-aerial-wide-800.webp 800w, /images/campus/campus-aerial-wide.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="" loading="lazy" decoding="async" />
+        <div class="cl-full-scrim" aria-hidden="true"></div>
+        <div class="wrap cl-full-copy reveal">
+          <p class="eyebrow">Campus life</p>
+          <h2 class="disp cl-full-title">Live in a cross‑cultural community centered around Jesus.</h2>
+          <p class="body cl-full-sub">Shared meals, worship, work and outreach. One campus, Khmer and international, living and learning together.</p>
+          <div class="cl-full-photos" aria-hidden="true">
+            <img src="/images/campus/fruit-table.webp" srcset="/images/campus/fruit-table-800.webp 800w, /images/campus/fruit-table.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="" loading="lazy" decoding="async" />
+            <img src="/images/campus/community-gathering.webp" srcset="/images/campus/community-gathering-800.webp 800w, /images/campus/community-gathering.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="" loading="lazy" decoding="async" />
+            <img src="/images/schools/dbs-graduation.webp" srcset="/images/schools/dbs-graduation-800.webp 800w, /images/schools/dbs-graduation.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="" loading="lazy" decoding="async" style="object-position:50% 35%;" />
+          </div>
+          <a class="arrow-link" href="/campus-life"><span>Go to campus life</span><span class="arrow-circle" aria-hidden="true">→</span></a>
+        </div>
+      </section>
+
+      <section class="sec news-sec" id="whats-new">
+        <div class="wrap">
+          <div class="news-head reveal">
+            <div>
+              <p class="eyebrow">What's new</p>
+              <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,4.2vw,56px);font-weight:500;line-height:1.1;">From the campus, and beyond.</h2>
+            </div>
+            <a class="btn" href="https://www.instagram.com/ywamsiemreap" target="_blank" rel="noopener">Follow @ywamsiemreap ↗︎</a>
+          </div>
+          <div class="news-grid stag">
+            {NEWS.map((n) => (
+              <a class="card news-card" href={n.href} target={n.external ? '_blank' : undefined} rel={n.external ? 'noopener' : undefined}>
+                <p class="news-meta"><span class="news-tag">{n.tag}</span><span class="muted">{n.date}</span></p>
+                <h3 class="disp news-title">{n.title}</h3>
+                <p class="body news-body">{n.body}</p>
+                <span class="news-link">{n.label} {n.external ? '↗︎' : '→'}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <script>
         // Re-runs after every client-side navigation: the DOM is swapped
         // but hoisted scripts only execute once. The previous page's
@@ -123,6 +163,7 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
         if (ctrl) ctrl.abort();
         ctrl = new AbortController();
         const { signal } = ctrl;
+
         const video = document.querySelector('.scroll3d');
         const stack = document.querySelector('.gonpreah-stack');
         const pin = document.querySelector('.video3d-pin');
@@ -136,8 +177,13 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
           // paint the first frame during preload.
           const phone = matchMedia('(max-width: 760px)').matches;
           const lite = phone || matchMedia('(pointer: coarse)').matches;
-          video.src = `${(phone && video.dataset.srcMobile) || video.dataset.src}#t=0.001`;
-          video.load();
+          // Fetch the clip only once its section is within a screen of view.
+          const startClip = () => {
+            video.src = `${(phone && video.dataset.srcMobile) || video.dataset.src}#t=0.001`;
+            video.load();
+          };
+          const near = new IntersectionObserver((en) => { if (en[0].isIntersecting) { near.disconnect(); startClip(); } }, { rootMargin: '100% 0px' });
+          near.observe(video); signal.addEventListener('abort', () => near.disconnect());
           // Many mobile browsers (iOS Safari especially) never actually
           // decode a video's frames if it's only ever seeked via JS and
           // has never been played — programmatic currentTime/fastSeek
@@ -210,13 +256,17 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
           // releases into the next section.
           // Stack is 900vh: video scrub ~270vh, cover slide ~110vh, one
           // school card per ~110vh, team cover slide ~200vh.
-          const TEXT_FADE_START = 0.22;
-          const VIDEO_END = 0.3;
-          const COVER_START = 0.3;
-          const COVER_END = 0.42;
+          // Phones deal the school cards one by one as you scroll; desktop
+          // shows them fanned side by side (hover brings one forward), so its
+          // stack is shorter and has no dealing phase.
+          const dealCards = phone;
+          const TEXT_FADE_START = phone ? 0.22 : 0.26;
+          const VIDEO_END = phone ? 0.3 : 0.34;
+          const COVER_START = VIDEO_END;
+          const COVER_END = phone ? 0.42 : 0.5;
           const CARDS_START = 0.42;
-          const CARDS_END = 0.78;
-          const BAT_START = 0.78;
+          const CARDS_END = 0.74;
+          const BAT_START = phone ? 0.74 : 0.66;
           let ticking = false;
           const update = () => {
             ticking = false;
@@ -247,7 +297,7 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
               cover.style.transform = `translateY(${(1 - coverProgress) * 100}%)`;
             }
 
-            if (deckCards.length > 1) {
+            if (dealCards && deckCards.length > 1) {
               const cardsProgress = Math.min(1, Math.max(0, (progress - CARDS_START) / (CARDS_END - CARDS_START)));
               // dealt = how many cards have been swiped away (fractional while one is mid-swipe)
               const dealt = cardsProgress * (deckCards.length - 1);
@@ -287,25 +337,8 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
         document.addEventListener('astro:page-load', init);
       </script>
 
-      <section class="sec" style="padding-top:0;">
-        <div class="wrap reveal">
-          <h2 class="disp" style="margin:0;font-size:clamp(30px,4.2vw,56px);font-weight:500;max-width:22ch;">One table, two languages</h2>
-          <div class="grid2 stag" style="margin-top:50px;gap:30px;">
-            {[
-              ['Khmer community', 'Local staff, students, and families who live here year round. This is a Cambodian campus first — the international community joins what Cambodians are already leading.'],
-              ['International community', 'Staff and students from across the world with a heart and calling to Cambodia. Trained here, then sent to pioneer — in Cambodia and to the nations.'],
-            ].map(([t, d]) => (
-              <div style="border-top:1px solid #fff;padding-top:26px;">
-                <h3 class="disp" style="margin:0;font-size:23px;font-weight:500;">{t}</h3>
-                <p class="body" style="margin:18px 0 0;max-width:44ch;">{d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section class="sec" style="padding-top:0;">
-        <div class="wrap reveal" style="text-align:center;border-top:1px solid #232323;padding-top:80px;">
+      <section class="sec sec--paper">
+        <div class="wrap reveal" style="text-align:center;">
           <h2 class="disp scaleup" style="margin:0;font-size:clamp(32px,5.4vw,72px);font-weight:500;">Discipled here. Sent everywhere.</h2>
           <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:40px;">
             <a class="btn btn--solid" href="/apply">Apply to a school</a>

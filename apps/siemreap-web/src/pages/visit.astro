@@ -2,38 +2,242 @@
 import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
-import CardGrid from '../components/sr/CardGrid.astro';
 import Cta from '../components/sr/Cta.astro';
+import CampusTeaser from '../components/sr/CampusTeaser.astro';
+import { PORTAL } from '../lib/sr-routes';
+import { CONTACT } from '../lib/sr-contact';
+import { srcset } from '../lib/sr-img';
+
+// Bring a team. The content follows the Guide for Short-term Teams that the
+// base sends every team; the full guide is a book at /team-guide.
+const GUIDE = '/team-guide';
+
+const SERVE = [
+  { title: 'Sharing the gospel', body: 'Testimonies, house visits in the villages and youth events: many chances to share the love of Jesus and bring the gospel to the unreached.', photo: '/images/teams/team-village-girls.webp', pos: '50% 35%' },
+  { title: 'Supporting ministries', body: 'Teams support the ministries we partner with in Siem Reap: education, children’s ministry, food distribution and construction.', photo: '/images/teams/team-kids-class.webp', pos: '50% 45%' },
+  { title: 'Skills', body: 'Worship, media, barista, kitchen and technical skills empower and inspire our staff while supporting the ministries.', photo: '/images/teams/team-construction.webp', pos: '50% 55%' },
+  { title: 'Encouraging missionaries', body: 'Teams work alongside our staff, bringing fresh energy, prayer and support to those serving long term, and often keep praying and giving after they go home.', photo: '/images/campus/community-night.webp' },
+];
+
+const PREP: [string, string][] = [
+  ['Worship and prayer', 'Your journey starts with prayer. Worship and prayer bring unity, strength and guidance, and prepare your heart for what is ahead.'],
+  ['Ministry prep', 'Be ready to share your story. Come prepared with songs, dances, skits and games: they are some of the best ways to connect with Khmer people.'],
+  ['Culture, language, awareness', 'Learn a few Khmer phrases and something of Cambodia’s history and traditions. It shows respect and opens doors.'],
+  ['The right mindset', 'Come with a heart to serve. You are here to support long-term missions. Things will not always go as planned, so be FAT: flexible, adaptable and teachable.'],
+];
+
+const PACK: string[] = [
+  'Shoes you do not mind getting dirty, and sandals',
+  'Towels (bedding and pillows are provided, towels are not)',
+  'A water bottle',
+  'Sunscreen, lots of it',
+  'Your own toiletries (familiar brands are hard to find)',
+  'Mosquito spray, especially in rainy season',
+  'A raincoat in rainy season',
+  'A passport valid at least six months after arrival',
+];
+
+
+// Each one has a small line icon; the cards rise in one after another.
+const CULTURE: { icon: string; title: string; body: string }[] = [
+  { icon: 'M4 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0M9 4v6M15 4v6M7 10h10', title: 'Feet and heads', body: 'Do not show the soles of your feet when sitting; sit cross-legged or kneel. Do not touch anyone’s head. Shoes off in homes, hats off indoors.' },
+  { icon: 'M3 11h18M5 11v8h14v-8M12 11V5a3 3 0 0 1 3-3M12 11V5a3 3 0 0 0-3-3', title: 'Generosity', body: 'You will be invited to sit and eat, often. Accept it; generosity is a love language here. Share what you have too.' },
+  { icon: 'M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM16 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM2 20c0-3 3-5 6-5s6 2 6 5M10 20c0-3 3-5 6-5s6 2 6 5', title: 'Relationships first', body: 'It is all about relationships. Get to know someone before you talk about faith, and ask open questions: what do you think about that?' },
+  { icon: 'M12 3a4 4 0 0 1 4 4v3a4 4 0 0 1-8 0V7a4 4 0 0 1 4-4zM6 11a6 6 0 0 0 12 0M12 17v4M9 21h6', title: 'Evangelism', body: 'Loud open-air preaching can be shut down, and so can we. Never speak against Buddhism or other religions, and do not go into a pagoda to evangelise. Respect opens the door.' },
+  { icon: 'M12 3l8 6v2H4V9l8-6zM6 11v8M12 11v8M18 11v8M3 19h18', title: 'Monks and pagodas', body: 'You may talk with monks, but do not touch them. Visit pagodas with someone else, modestly dressed, never after dark.' },
+  { icon: 'M4 7h3l2-3h6l2 3h3v12H4V7zM12 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z', title: 'Children and photos', body: 'Children may be treated differently from home; ask your ministry contact. Check before taking photos or posting online. Kids are not a museum.' },
+  { icon: 'M7 11V7a2 2 0 1 1 4 0v4M11 11V6a2 2 0 1 1 4 0v5M15 11V8a2 2 0 1 1 4 0v6a6 6 0 0 1-6 6h-2a6 6 0 0 1-6-6v-2a2 2 0 1 1 4 0', title: 'Touch', body: 'Men hold hands with men and women with women; it is friendship. Touching the opposite sex in public is not appropriate.' },
+  { icon: 'M3 7h18v10H3zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 10h.01M18 14h.01', title: 'Money', body: 'Carry little cash, leave your passport in a safe place, and do not give money to begging children. Offer water or a snack instead.' },
+  { icon: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2', title: 'Time', body: 'People will be late, and will finish a conversation before the next thing. Be on time yourself, and say how long you are free.' },
+];
+
+const DRESS: [string, string][] = [
+  ['Teaching', 'Semi-professional: skirts or tidy long pants with a nice shirt; slacks and a polo or button-up for men.'],
+  ['Ministry', 'Jeans or tidy long pants, or capris past the knee. T-shirts are fine. No Thai elephant pants for ministry.'],
+  ['Sport and dirty work', 'Long basketball shorts to the knee. No short running shorts.'],
+  ['Out of hours', 'T-shirts, long shorts or any pants. In your room, whatever you like.'],
+  ['Swimming', 'Khmer women swim in shorts and a T-shirt, so we do too; men wear trunks to the knee.'],
+  ['Also', 'Dresses and skirts below the knee or with leggings. Long sleeves keep you cooler in the sun. Keep tattoos low-key; no new tattoos or piercings on outreach.'],
+];
+
+const BASE: [string, string][] = [
+  ['Meals', 'Breakfast 7:30, lunch 12:30, dinner 6:30 on weekdays and Sunday night; a bell rings. Tell your coordinator if you will eat out or bring guests.'],
+  ['Quiet hours', '9:30pm to 7:30am. The gate locks at 9:30pm; let someone know if you will be late.'],
+  ['Rooms', 'No toilet paper down the toilet, no shoes in the bedrooms, no food in rooms, and AC at 22° or above. Last one out turns off lights and AC.'],
+  ['Getting around', 'Teams do not drive cars or motos; bicycles are fine. Wear a helmet as a moto passenger. PassApp or Grab for tuk-tuks: a ride is usually $1 to $2.50.'],
+  ['Drinking and smoking', 'Not allowed on base or out.'],
+];
+
+const PRACTICAL: [string, string][] = [
+  ['Airport', 'Siem Reap Angkor International (SAI), about an hour from the base. Transfer: $25 car (4), $30 van (12), $35 van (15).'],
+  ['Seasons', 'Dry November to April; cool and busiest November to February; March and April up to 42°C. Rainy May to October, usually an hour or two a day.'],
+  ['Money', 'Riel and US dollars; 4,000 riel to the dollar. Change money at Wing booths, with clean, unripped notes.'],
+  ['Vaccinations', 'Hepatitis B, tetanus (up to date) and typhoid are required.'],
+  ['Time zone', 'Indochina Time (ICT), UTC+7.'],
+  ['Visas and housing', 'The e-visa guide and your letter of invitation come through the GP Portal once your team is accepted. Ask the teams coordinator about anything else.'],
+];
 ---
-<SrLayout title="Bring a Team | YWAM Siem Reap" spacer={false}>
+<SrLayout title="Bring a Team | YWAM Siem Reap" spacer={false}
+  description="Bring a short-term team to YWAM Siem Reap. How teams serve, how to prepare, what to pack, the culture, the dress code, life on base and the practical details, from the guide we send every team.">
   <PageHead eyebrow="Visit / short-term teams" km="មកលេង" title="Bring a team" highlight="team"
     lead="Teams that come here work alongside Khmer staff on projects that continue after you leave."
-    photo="/images/campus/team-market.jpg" photoPos="50% 35%" full center
+    photo="/images/campus/team-market.webp" photoPos="50% 35%" full center
     photoAlt="A visiting team in Khmer skirts laughing together at a market of thatched stalls" />
+
   <section class="sec">
-    <div class="wrap" style="display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center;">
-      <div style="height:400px;border-radius:20px;overflow:hidden;"><img src="/images/campus/visitors-angkor.jpg" alt="Two young men grinning from behind a stone pillar at Angkor Wat" loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" /></div>
-      <div>
-        <h2 class="disp" style="margin:0;font-size:30px;font-weight:500;">What a trip looks like</h2>
-        <p class="body" style="margin-top:18px;">Most teams stay one to three weeks: village work in the mornings, teaching or children's programs in the afternoons, debrief in the evenings. You stay on or near the base and eat with the community.</p>
-        <p class="body" style="margin-top:16px;">We will not build a trip around photographs. If a project does not need your team, we will tell you and suggest something that does.</p>
+    <div class="wrap visit-intro">
+      <div class="visit-intro-photo wipe"><img src="/images/teams/team-boat.webp" srcset={srcset('/images/teams/team-boat.webp')} sizes="(max-width: 760px) 100vw, 50vw" alt="A visiting team and Khmer staff smiling on a wooden boat on the Tonle Sap" loading="lazy" decoding="async" style="object-position:50% 40%;" /></div>
+      <div class="reveal">
+        <p class="eyebrow">Welcome to your adventure</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;">Thank you for your yes, and your heart for Cambodia.</h2>
+        <p class="body" style="margin-top:18px;">We believe God has a purpose for your time here. As a short-term team you serve alongside us in villages, schools, churches and communities, sharing the gospel in word and action. Siem Reap is known for Angkor Wat; it is also home to many who have never heard the name of Jesus.</p>
+        <p class="body" style="margin-top:16px;">Most teams stay one to three weeks. You stay on campus, eat with the community, and work with Khmer staff on things that continue after you leave.</p>
         <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:28px;">
-          <a class="btn btn--solid" href="/contact">Enquire about dates</a>
-          <a class="btn" href="/campus-life">Campus life</a>
+          <a class="btn btn--solid" href="/apply?school=team">Apply to bring a team</a>
+          <a class="btn" href={GUIDE}>Read the team guide</a>
         </div>
       </div>
     </div>
   </section>
-  <CardGrid items={[
-    ['Village outreach', 'Working with Khmer leaders in villages around Siem Reap.'],
-    ['Children & youth', 'Programs with schools and community groups.'],
-    ['Practical projects', 'Building, repair and site work on the base and in villages.'],
-  ]} />
-  <Cta
-    title="Campus life"
-    body="What living here is like — community, meals, worship — and what Siem Reap has to offer when the day is done."
-    primary={['campus', 'See campus life']}
-    secondary={['contact', 'Ask us anything']}
-  />
+
+  <nav class="sr-jump" aria-label="On this page">
+    <div class="wrap sr-jump-row">
+      <a href="#serve">How teams serve</a><a href="#prep">Before the trip</a><a href="#culture">Culture</a><a href="#dress">Dress</a><a href="#base">On base</a><a href="#practical">Practical</a><a href="#how">How to apply</a>
+    </div>
+  </nav>
+
+  <section class="sec" id="serve">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">How teams serve</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;">Part of something bigger.</h2>
+        <p class="body" style="margin-top:18px;max-width:60ch;">Short-term teams play a real part in YWAM Cambodia’s vision of One Nation, One Generation: raising up a generation of Khmer believers to transform their nation. Your time here impacts lives, and it strengthens the local believers who carry on the work.</p>
+      </div>
+      <div class="serve-grid stag">
+        {SERVE.map((s) => (
+          <article class="serve-item">
+            <figure class="serve-photo"><img src={s.photo} srcset={srcset(s.photo)} sizes="(max-width: 760px) 100vw, 50vw" alt="" loading="lazy" decoding="async" style={s.pos ? `object-position:${s.pos}` : undefined} /></figure>
+            <h3 class="disp" style="margin:18px 0 0;font-size:22px;font-weight:500;">{s.title}</h3>
+            <p class="body" style="margin:10px 0 0;font-size:16px;">{s.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--paper" id="prep">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Before the trip</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;">Spiritual and practical preparation.</h2>
+      </div>
+      <div class="prep-grid stag">
+        {PREP.map(([t, d]) => (
+          <div class="prep-item"><h3 class="disp" style="margin:0;font-size:20px;font-weight:600;">{t}</h3><p class="body" style="margin:10px 0 0;font-size:15px;">{d}</p></div>
+        ))}
+      </div>
+      <div class="pack reveal">
+        <h3 class="disp" style="margin:0;font-size:22px;font-weight:600;">Packing essentials</h3>
+        <ul class="pack-list">{PACK.map((p) => <li>{p}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="culture">
+    <div class="wrap">
+      <div class="culture-head reveal">
+        <div>
+          <p class="eyebrow">Cultural do’s and don’ts</p>
+          <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;">Respect opens every door.</h2>
+        </div>
+        <p class="body" style="margin:0;max-width:44ch;">Nine things our staff wish every team knew before day one. None of them are hard; all of them are noticed.</p>
+      </div>
+      <div class="culture-grid">
+        {CULTURE.map((c, i) => (
+          <div class="culture-item" style={`--i:${i}`}>
+            <span class="culture-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d={c.icon} /></svg></span>
+            <span class="culture-n disp">{'0' + (i + 1)}</span>
+            <h3 class="disp" style="margin:14px 0 0;font-size:19px;font-weight:600;">{c.title}</h3>
+            <p class="body" style="margin:8px 0 0;font-size:15px;">{c.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="visit-band wipe" aria-label="A team walking into a village">
+    <img src="/images/teams/team-village-path.webp" srcset={srcset('/images/teams/team-village-path.webp')} sizes="100vw" alt="Two team members carrying timber down a sandy palm-lined village path" loading="lazy" decoding="async" />
+    <p class="visit-band-cap"><span class="eyebrow">During the trip</span><span class="disp">Growth happens in the moments of discomfort. Go all in.</span></p>
+  </section>
+
+  <section class="sec" style="padding-top:0;" id="dress">
+    <div class="wrap">
+      <div class="card reveal">
+        <p class="eyebrow">Dress code</p>
+        <h2 class="disp" style="margin:12px 0 0;font-size:clamp(26px,3vw,40px);font-weight:500;line-height:1.1;">Modest is hottest.</h2>
+        <p class="body" style="margin:14px 0 0;max-width:60ch;font-size:15px;">Ministry time is semi-professional; the rest of the time, still appropriate when you are out of the house, right up to the day you leave.</p>
+        <dl class="practical sr-know-list">
+          {DRESS.map(([k, v]) => <div><dt class="disp">{k}</dt><dd class="body">{v}</dd></div>)}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--paper" id="base">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Base guide</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;">Our home is your home.</h2>
+        <p class="body" style="margin-top:18px;max-width:58ch;">The base houses long-term staff and families with children, so we ask every team to help us steward it well.</p>
+      </div>
+      <dl class="practical sr-know-list reveal" style="margin-top:30px;">
+        {BASE.map(([k, v]) => <div><dt class="disp">{k}</dt><dd class="body">{v}</dd></div>)}
+      </dl>
+    </div>
+  </section>
+
+  <section class="sec" id="practical">
+    <div class="wrap">
+      <div class="card reveal">
+        <p class="eyebrow">Practical information</p>
+        <h2 class="disp" style="margin:12px 0 0;font-size:clamp(26px,3vw,40px);font-weight:500;line-height:1.1;">Before you fly.</h2>
+        <dl class="practical sr-know-list">
+          {PRACTICAL.map(([k, v]) => <div><dt class="disp">{k}</dt><dd class="body">{v}</dd></div>)}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0;" id="how">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">How it works</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;">From first message to the week itself.</h2>
+      </div>
+      <div class="apply-steps" style="margin-top:34px;">
+        {[
+          ['Tell us about your team', 'Your church or base, rough dates, and how many are coming. The team leader applies once for everyone on the GP Portal.'],
+          ['We plan it together', 'Dates, the villages and ministries you would serve in, where you stay and the budget. We confirm we can host you.'],
+          ['Register and prepare', 'Passport copies, a team photo, flights when booked. Then the e-visa guide, our letter of invitation, and this guide.'],
+          ['Arrive', 'We collect you from Siem Reap airport, settle you in, and walk through the week together on the first evening.'],
+        ].map(([t, d], n) => (
+          <div class="apply-step reveal">
+            <span class="disp" style="font-size:32px;color:var(--sr-pink);font-weight:500;">{'0' + (n + 1)}</span>
+            <div>
+              <h3 class="disp" style="margin:0;font-size:22px;font-weight:500;">{t}</h3>
+              <p class="body" style="margin:12px 0 0;max-width:56ch;font-size:16px;">{d}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:32px;">
+        <a class="btn btn--solid" href={PORTAL} target="_blank" rel="noopener">Apply on the GP Portal ↗︎</a>
+        <a class="btn" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('Bringing a team')}`}>Email {CONTACT.email}</a>
+        <a class="btn btn--plain" href={GUIDE}>Read the team guide</a>
+      </div>
+    </div>
+  </section>
+
+  <CampusTeaser title="Where your team will live for the week." body="One campus, Khmer and international, shared meals, our own cafe, and Angkor twenty minutes down the road. Here is what living here is actually like." />
   <Footer />
 </SrLayout>

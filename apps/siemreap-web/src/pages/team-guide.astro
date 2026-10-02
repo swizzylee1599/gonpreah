@@ -1,0 +1,186 @@
+---
+import SrLayout from '../layouts/SrLayout.astro';
+import Footer from '../components/sr/Footer.astro';
+import GuidePage from '../components/sr/GuidePage.astro';
+import { GUIDE, GUIDE_TITLE, GUIDE_UPDATED } from '../lib/sr-team-guide';
+
+// The Guide for Short-term Teams as a book. Each entry in GUIDE is a
+// spread; a sheet carries the right page of one spread on its front and the
+// left page of the next on its back, so turning a sheet turns the page. The
+// last right page sits underneath. Printed, the faces fall in reading order.
+const n = GUIDE.length;
+const sheets = GUIDE.slice(0, n - 1).map((s, k) => ({ k, front: s, back: GUIDE[k + 1] }));
+const label = (s: (typeof GUIDE)[number]) =>
+  s.kind === 'cover' ? 'Cover' : s.kind === 'quote' ? 'A word from Loren' : 'title' in s ? s.title : '';
+const toc = GUIDE.map((s, i) => ({ i, chapter: 'chapter' in s ? s.chapter : '', label: label(s) }));
+---
+<SrLayout title={`${GUIDE_TITLE} | YWAM Siem Reap`}
+  description="The guide we send every short-term team coming to YWAM Siem Reap: who we are, how teams serve, how to prepare, the culture, the dress code, life on base and the practical details."
+  image="/images/guide/worship-flags.webp">
+  <section class="tg" data-pages={n}>
+    <div class="wrap tg-head">
+      <div>
+        <p class="eyebrow">Short-term teams</p>
+        <h1 class="disp tg-title">{GUIDE_TITLE}</h1>
+      </div>
+      <div class="tg-tools">
+        <span class="muted tg-updated">Updated {GUIDE_UPDATED}</span>
+        <button class="btn btn--plain tg-tool" type="button" id="tg-contents" aria-expanded="false" aria-controls="tg-toc">Contents</button>
+        <button class="btn btn--plain tg-tool" type="button" id="tg-share">Share</button>
+        <button class="btn btn--plain tg-tool" type="button" id="tg-print">Print / PDF</button>
+      </div>
+    </div>
+
+    <div class="tg-toc" id="tg-toc" hidden>
+      <div class="wrap">
+        <ol class="tg-toc-list">
+          {toc.map((t) => (
+            <li><button type="button" data-go={t.i}><span class="tg-toc-n">{t.i === 0 ? '' : t.i}</span><span class="tg-toc-l">{t.label}</span>{t.chapter && t.chapter !== t.label && <span class="tg-toc-c">{t.chapter}</span>}</button></li>
+          ))}
+        </ol>
+      </div>
+    </div>
+
+    <div class="tg-stage">
+      <div class="tg-book is-closed" id="tg-book">
+        {sheets.map(({ k, front, back }) => (
+          <div class="tg-sheet" data-k={k} style={`z-index:${n - k};`}>
+            <div class="tg-face tg-face--front"><GuidePage spread={front} side="right" index={k} /></div>
+            <div class="tg-face tg-face--back"><GuidePage spread={back} side="left" index={k + 1} /></div>
+          </div>
+        ))}
+        <div class="tg-base"><div class="tg-face"><GuidePage spread={GUIDE[n - 1]} side="right" index={n - 1} /></div></div>
+        <button class="tg-edge tg-edge--l" type="button" aria-label="Previous page" data-prev></button>
+        <button class="tg-edge tg-edge--r" type="button" aria-label="Next page" data-next></button>
+      </div>
+    </div>
+
+    <div class="wrap tg-controls">
+      <button class="tg-arrow" type="button" aria-label="Previous page" data-prev>←</button>
+      <div class="tg-progress" aria-hidden="true"><span id="tg-bar"></span></div>
+      <span class="tg-count muted"><span id="tg-cur">1</span> / {n}</span>
+      <button class="tg-arrow" type="button" aria-label="Next page" data-next>→</button>
+    </div>
+    <p class="muted tg-hint">Use the arrow keys, swipe, or tap the edge of a page.</p>
+    <div class="tg-toast" id="tg-toast" role="status" aria-live="polite" hidden>Link copied</div>
+  </section>
+  <Footer />
+</SrLayout>
+
+<script>
+  let ctrl: AbortController | null = null;
+  const init = () => {
+    ctrl?.abort();
+    ctrl = new AbortController();
+    const { signal } = ctrl;
+    const root = document.querySelector<HTMLElement>('.tg');
+    const book = document.getElementById('tg-book');
+    if (!root || !book) return;
+    const n = Number(root.dataset.pages);
+    const sheets = Array.from(book.querySelectorAll<HTMLElement>('.tg-sheet'));
+    const bar = document.getElementById('tg-bar')!;
+    const curEl = document.getElementById('tg-cur')!;
+    const toc = document.getElementById('tg-toc')!;
+    const tocBtn = document.getElementById('tg-contents')!;
+    const toast = document.getElementById('tg-toast')!;
+    const phoneQ = matchMedia('(max-width: 760px)');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) book.classList.add('no-anim');
+
+    // cur is the open spread; on phones `side` says which half is on screen.
+    let cur = 0;
+    let side: 'left' | 'right' = 'right';
+    const fromHash = () => {
+      const m = /^#p(\d+)$/.exec(location.hash);
+      if (m) cur = Math.min(n - 1, Math.max(0, Number(m[1]) - 1));
+      side = cur === 0 || !phoneQ.matches ? 'right' : 'left';
+    };
+    fromHash();
+
+    let timer = 0;
+    const render = (turning = -1) => {
+      sheets.forEach((s, k) => {
+        const flipped = k < cur;
+        s.classList.toggle('is-flipped', flipped);
+        s.style.zIndex = String(k === turning ? n + 5 : flipped ? k + 1 : n - k);
+      });
+      if (turning >= 0) {
+        clearTimeout(timer);
+        timer = window.setTimeout(() => { sheets.forEach((s, k) => { s.style.zIndex = String(k < cur ? k + 1 : n - k); }); }, 1000);
+      }
+      book.classList.toggle('is-closed', cur === 0);
+      book.classList.toggle('show-right', side === 'right');
+      curEl.textContent = String(cur + 1);
+      bar.style.width = `${((cur + 1) / n) * 100}%`;
+      root.querySelectorAll<HTMLButtonElement>('[data-prev]').forEach((b) => { b.disabled = cur === 0 && side === 'right'; });
+      root.querySelectorAll<HTMLButtonElement>('[data-next]').forEach((b) => { b.disabled = cur === n - 1 && side === 'right'; });
+      history.replaceState(null, '', cur === 0 ? location.pathname : `#p${cur + 1}`);
+      // A fresh page starts at its top.
+      book.querySelectorAll<HTMLElement>('.tg-paper').forEach((p) => { p.scrollTop = 0; });
+    };
+    const next = () => {
+      if (phoneQ.matches && side === 'left') { side = 'right'; render(); return; }
+      if (cur >= n - 1) return;
+      const k = cur; cur += 1; side = phoneQ.matches ? 'left' : 'right';
+      render(k);
+    };
+    const prev = () => {
+      if (phoneQ.matches && side === 'right' && cur > 0) { side = 'left'; render(); return; }
+      if (cur <= 0) return;
+      cur -= 1; side = 'right';
+      render(cur);
+    };
+    const go = (i: number) => {
+      const target = Math.min(n - 1, Math.max(0, i));
+      if (target === cur) return;
+      const k = target > cur ? cur : target;
+      cur = target; side = phoneQ.matches && cur > 0 ? 'left' : 'right';
+      render(k);
+    };
+
+    root.querySelectorAll('[data-next]').forEach((b) => b.addEventListener('click', next, { signal }));
+    root.querySelectorAll('[data-prev]').forEach((b) => b.addEventListener('click', prev, { signal }));
+    window.addEventListener('keydown', (e) => {
+      if ((e.target as HTMLElement)?.tagName === 'INPUT') return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); next(); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+      if (e.key === 'Escape' && !toc.hidden) closeToc();
+    }, { signal });
+
+    // Swipe: a sideways move that is clearly not a scroll turns the page.
+    let x0 = 0, y0 = 0, t0 = 0;
+    book.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now(); }, { passive: true, signal });
+    book.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+      if (Date.now() - t0 > 700 || Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
+      if (dx < 0) next(); else prev();
+    }, { passive: true, signal });
+
+    // Contents
+    const closeToc = () => { toc.hidden = true; tocBtn.setAttribute('aria-expanded', 'false'); };
+    tocBtn.addEventListener('click', () => { toc.hidden = !toc.hidden; tocBtn.setAttribute('aria-expanded', String(!toc.hidden)); }, { signal });
+    toc.querySelectorAll<HTMLButtonElement>('[data-go]').forEach((b) => b.addEventListener('click', () => { go(Number(b.dataset.go)); closeToc(); }, { signal }));
+
+    // Share: the native sheet where there is one, otherwise copy the link.
+    let toastTimer = 0;
+    const say = (msg: string) => {
+      toast.textContent = msg; toast.hidden = false;
+      clearTimeout(toastTimer); toastTimer = window.setTimeout(() => { toast.hidden = true; }, 2200);
+    };
+    document.getElementById('tg-share')?.addEventListener('click', async () => {
+      const url = `${location.origin}${location.pathname}`;
+      const data = { title: 'YWAM Siem Reap · Guide for Short-term Teams', text: 'The guide for teams coming to serve with YWAM Siem Reap.', url };
+      try {
+        if (navigator.share && (!navigator.canShare || navigator.canShare(data))) { await navigator.share(data); return; }
+      } catch { return; }
+      try { await navigator.clipboard.writeText(url); say('Link copied'); } catch { say(url); }
+    }, { signal });
+    document.getElementById('tg-print')?.addEventListener('click', () => window.print(), { signal });
+
+    phoneQ.addEventListener('change', () => { side = cur === 0 || !phoneQ.matches ? 'right' : 'left'; render(); }, { signal });
+    window.addEventListener('hashchange', () => { fromHash(); render(); }, { signal });
+    render();
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

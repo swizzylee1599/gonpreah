@@ -1,4 +1,5 @@
 ---
+import { srcset } from '../../lib/sr-img';
 import PhotoSlot from './PhotoSlot.astro';
 
 interface Props {
@@ -15,7 +16,7 @@ const { name, abbr, body, when, photo, pos, href = '/schools' } = Astro.props;
 <a class="schoolcard" href={href}>
   <span class="schoolcard-photo" style="display:block;position:relative;">
     {photo
-      ? <img src={photo} alt="" loading="lazy" decoding="async" style={`display:block;width:100%;height:100%;object-fit:cover;${pos ? `object-position:${pos};` : ''}`} />
+      ? <img src={photo} srcset={srcset(photo)} sizes="(max-width: 760px) 100vw, 50vw" alt="" loading="lazy" decoding="async" style={`display:block;width:100%;height:100%;object-fit:cover;${pos ? `object-position:${pos};` : ''}`} />
       : <PhotoSlot label={`Drop a photo — ${name}`} radius={0} />}
   </span>
   <span class="schoolcard-body" style="display:flex;flex-direction:column;flex:1;">

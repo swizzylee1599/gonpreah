@@ -1,4 +1,5 @@
 ---
+import { srcset } from '../lib/sr-img';
 import { existsSync } from 'node:fs';
 import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
@@ -17,9 +18,9 @@ const hasDrone = existsSync('public' + DRONE);
        the drone in, then brings up the three temples. -->
   <section class="aw-stack" aria-label="Angkor Wat">
     <div class="aw-pin">
-      <img class="aw-still aw-still--muted" src="/images/siemreap/angkor-open-muted.jpg" alt="" decoding="async" fetchpriority="high" />
-      <img class="aw-still aw-still--color" src="/images/siemreap/angkor-open.jpg" alt="Angkor Wat rising above the jungle at golden hour" decoding="async" />
-      {hasDrone && <video class="aw-video" data-src={DRONE} data-src-mobile={DRONE.replace(/\.mp4$/, '-mobile.mp4')} muted playsinline webkit-playsinline preload="auto" aria-hidden="true"></video>}
+      <img class="aw-still aw-still--muted" src="/images/siemreap/angkor-open-muted.webp" srcset="/images/siemreap/angkor-open-muted-800.webp 800w, /images/siemreap/angkor-open-muted.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="" decoding="async" fetchpriority="high" />
+      <img class="aw-still aw-still--color" src="/images/siemreap/angkor-open.webp" srcset="/images/siemreap/angkor-open-800.webp 800w, /images/siemreap/angkor-open.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="Angkor Wat rising above the jungle at golden hour" decoding="async" />
+      {hasDrone && <video class="aw-video" data-src={DRONE} data-src-mobile={DRONE.replace(/\.mp4$/, '-mobile.mp4')} muted playsinline webkit-playsinline preload="none" aria-hidden="true"></video>}
       <div class="aw-scrim" aria-hidden="true"></div>
 
       <div class="wrap aw-head">
@@ -36,7 +37,7 @@ const hasDrone = existsSync('public' + DRONE);
       <div class="wrap aw-temples">
         {TEMPLES.map((t, i) => (
           <article class="aw-temple">
-            <figure class="aw-temple-photo"><img src={t.photo} alt={t.alt} loading="lazy" decoding="async" style={t.pos ? `object-position:${t.pos}` : undefined} /></figure>
+            <figure class="aw-temple-photo"><img src={t.photo} srcset={srcset(t.photo)} sizes="(max-width: 760px) 100vw, 50vw" alt={t.alt} loading="lazy" decoding="async" style={t.pos ? `object-position:${t.pos}` : undefined} /></figure>
             <div class="aw-temple-copy">
               <h2 class="disp aw-temple-name"><span class="aw-temple-i">{`1.${i + 1}`}</span> {t.name}</h2>
               <p class="body aw-temple-body">{t.body}</p>
@@ -60,7 +61,7 @@ const hasDrone = existsSync('public' + DRONE);
           <div class="nature-grid">
             {NATURE.map((n, i) => (
               <article class="nature-item reveal">
-                <figure class="nature-photo"><img src={n.photo} alt={n.alt} loading="lazy" decoding="async" style={n.pos ? `object-position:${n.pos}` : undefined} /></figure>
+                <figure class="nature-photo"><img src={n.photo} srcset={srcset(n.photo)} sizes="(max-width: 760px) 100vw, 50vw" alt={n.alt} loading="lazy" decoding="async" style={n.pos ? `object-position:${n.pos}` : undefined} /></figure>
                 <h3 class="disp nature-name"><span class="aw-temple-i">{`2.${i + 1}`}</span> {n.name}</h3>
                 <p class="km nature-km">{n.km}</p>
                 <p class="body nature-body">{n.body}</p>
@@ -133,8 +134,13 @@ const hasDrone = existsSync('public' + DRONE);
       video.currentTime = t;
     };
     if (video) {
-      video.src = `${(phone && video.dataset.srcMobile) || video.dataset.src}#t=0.001`;
-      video.load();
+      // Fetch the clip only once its section is within a screen of view.
+      const startClip = () => {
+        video.src = `${(phone && video.dataset.srcMobile) || video.dataset.src}#t=0.001`;
+        video.load();
+      };
+      const near = new IntersectionObserver((en) => { if (en[0].isIntersecting) { near.disconnect(); startClip(); } }, { rootMargin: '100% 0px' });
+      near.observe(video); signal.addEventListener('abort', () => near.disconnect());
       let primed = false;
       const prime = () => {
         if (primed || !video) return;

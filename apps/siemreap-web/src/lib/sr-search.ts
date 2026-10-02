@@ -41,12 +41,14 @@ export const SEARCH_INDEX: SearchEntry[] = [
 
   { title: 'Join staff or volunteer', desc: 'Serve long term, or come short term', href: '/staff', group: 'Get involved', keywords: 'staff join serve long term short term volunteer volunteering mission builders', quick: true },
   { title: 'Bring a team', desc: 'Short-term teams in Siem Reap', href: '/visit', group: 'Get involved', keywords: 'visit bring a team short-term teams outreach ministries villages trip mission trip' },
+  { title: 'Team guide (book)', desc: 'The guide for short-term teams, page by page', href: '/team-guide', group: 'Get involved', keywords: 'team guide book pdf handbook packing list dress code culture dos donts base rules quiet hours mealtimes visa vaccinations airport money tuk tuk' },
   { title: 'Campus life', desc: 'Living in community, Khmer and international', href: '/campus-life', group: 'Students', keywords: 'campus life community living dorm rooms meals worship family khmer international students volunteers new staff', quick: true },
   { title: 'Things to do in Siem Reap', desc: 'Temples, food, markets, nature, getting around', href: '/siem-reap', group: 'Students', keywords: 'siem reap city things to do angkor wat temples food cafe market pub street tonle sap kulen circus tuk tuk weather sim card money riel' },
   { title: 'Give', desc: 'Partner with the work in Cambodia', href: '/give', group: 'Get involved', keywords: 'give donate giving support partner missionary staff member money', quick: true },
   { title: 'Give online', desc: 'Give securely through Subsplash', href: GIVE_URL, group: 'Get involved', keywords: 'give online donate donation subsplash card pay giving tithe offering', external: true },
 
   { title: 'About YWAM Siem Reap', desc: 'Welcome, our story and the road to pioneering', href: '/about', group: 'About', keywords: 'about us welcome story history gonpreah youth with a mission cambodia base poipet phnom penh pioneering university of the nations uofn 2002 2016 2025 2027' },
+  { title: 'Our team', desc: 'Base leaders and staff, Khmer and international', href: '/team', group: 'About', keywords: 'team staff people leaders base director who works here faces', quick: false },
   { title: 'Values', desc: 'YWAM statement of purpose, core beliefs and foundational values', href: '/values', group: 'About', keywords: 'values believe statement of purpose core beliefs foundational values worship holiness witness prayer fellowship service know god make god known hear gods voice' },
   { title: 'Home', desc: 'YWAM Siem Reap', href: '/', group: 'About', keywords: 'home start ywam siem reap cambodia' },
 ];
