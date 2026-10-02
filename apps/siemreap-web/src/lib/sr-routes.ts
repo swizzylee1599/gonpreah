@@ -31,12 +31,13 @@ export const NAV: [string, [string, string, string][]][] = [
     ['apply', 'How to Apply', 'What you need to start your application'],
   ]],
   ['Get Involved', [
-    ['visit', 'Short-Term Teams', 'Bring a team to Siem Reap'],
+    ['visit', 'Short-Term Teams', 'Bring a team: how to prepare, what to pack, life on base'],
     ['staff', 'Join Staff or Volunteer', 'Serve long term, or come short term'],
   ]],
   ['About', [
     ['about', 'About Us', 'Who we are and how we started'],
     ['values', 'Values', 'What we believe and how we work'],
+    ['team', 'Our Team', 'The Khmer and international staff'],
     ['contact', 'Contact', 'Get in touch with the base'],
   ]],
   ['Give', [

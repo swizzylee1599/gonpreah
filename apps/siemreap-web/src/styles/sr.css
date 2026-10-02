@@ -1239,3 +1239,42 @@ body.sr {
   .sr .day-list li { grid-template-columns: 64px minmax(0, 1fr); gap: 14px; padding: 13px 0; }
   .sr .day-time { font-size: 17px; }
 }
+/* Our team */
+.sr .people { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px 22px; margin-top: 26px; }
+.sr .person { margin: 0; }
+.sr .person img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 16px; filter: saturate(.92); transition: transform .5s cubic-bezier(.16,1,.3,1), filter .4s ease; }
+.sr .person:hover img { transform: translateY(-4px); filter: saturate(1); }
+.sr .person figcaption { margin-top: 12px; }
+.sr .person-name { display: block; font-size: 17px; font-weight: 500; }
+.sr .person-role { display: block; margin-top: 3px; font-size: 13px; color: #9a9a9a; }
+/* Give: support our Khmer staff */
+.sr .supporters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 36px; }
+.sr .supporter { background: #fff; border: 1px solid rgba(11,11,11,.12); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; }
+.sr .supporter img { display: block; width: 100%; aspect-ratio: 4 / 4; object-fit: cover; object-position: 50% 30%; }
+.sr .supporter-body { padding: 20px 22px 24px; display: flex; flex-direction: column; flex: 1; }
+.sr .supporter-body .body { flex: 1; }
+.sr .support-bar { height: 6px; border-radius: 999px; background: rgba(11,11,11,.1); margin-top: 18px; overflow: hidden; }
+.sr .support-bar i { display: block; height: 100%; background: var(--sr-pink); border-radius: 999px; }
+.sr .support-nums { margin: 8px 0 16px; font-size: 13px; color: #6f6a62; }
+.sr .support-nums b { color: #0b0b0b; font-weight: 600; }
+/* Bring a team */
+.sr .prep-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 36px; margin-top: 30px; }
+.sr .prep-item { padding-top: 16px; border-top: 1px solid rgba(11,11,11,.18); }
+.sr .pack { margin-top: 40px; padding: 26px 28px; border-radius: 18px; background: rgba(11,11,11,.05); }
+.sr .pack-list { margin: 14px 0 0; padding-left: 20px; columns: 2; column-gap: 36px; font-size: 15px; line-height: 1.6; }
+.sr .pack-list li { break-inside: avoid; padding: 3px 0; }
+.sr .culture-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 30px; }
+.sr .culture-item { padding: 20px 22px; border: 1px solid #262626; border-radius: 16px; background: #111; }
+@media (max-width: 760px) {
+  .sr .people { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 14px; }
+  .sr .person-name { font-size: 15px; }
+  .sr .supporters { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 26px; }
+  .sr .prep-grid, .sr .culture-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 22px; }
+  .sr .pack-list { columns: 1; }
+  .sr .pack { padding: 20px; }
+}
+
+/* Families and couples get a wider portrait so nobody is cropped out. */
+.sr .person--wide { grid-column: span 2; }
+.sr .person--wide img { aspect-ratio: 8 / 5; }
+@media (max-width: 760px) { .sr .person--wide { grid-column: span 2; } .sr .person--wide img { aspect-ratio: 16 / 10; } }
