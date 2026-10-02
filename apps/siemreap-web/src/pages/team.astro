@@ -1,4 +1,5 @@
 ---
+import { srcset } from '../lib/sr-img';
 import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
@@ -17,7 +18,7 @@ const TEAM: { name: string; role: string; photo?: string }[] = Array.from({ leng
       {TEAM.map((m) => (
         <div class="card" style="padding:0;overflow:hidden;">
           <div style="height:250px;">
-            {m.photo ? <img src={m.photo} alt={m.name} loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" /> : <PhotoSlot label="Staff portrait" radius={0} />}
+            {m.photo ? <img src={m.photo} srcset={srcset(m.photo)} sizes="(max-width: 760px) 100vw, 50vw" alt={m.name} loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" /> : <PhotoSlot label="Staff portrait" radius={0} />}
           </div>
           <div style="padding:22px 24px 26px;">
             <p class="disp" style="margin:0;font-size:17px;font-weight:500;">{m.name}</p>

@@ -1,4 +1,5 @@
 ---
+import { srcset } from '../../lib/sr-img';
 import SrLayout from '../../layouts/SrLayout.astro';
 import Footer from '../../components/sr/Footer.astro';
 import PageHead from '../../components/sr/PageHead.astro';
@@ -19,7 +20,7 @@ const LEARN: [string, string][] = [
 
 const PHOTOS: { src?: string; alt?: string; label?: string; pos?: string }[] = [
   { label: 'Drop a photo — filming on location' },
-  { src: '/images/schools/sms-editing.jpg', alt: 'SMS students editing together at a desk of monitors in the media room' },
+  { src: '/images/schools/sms-editing.webp', alt: 'SMS students editing together at a desk of monitors in the media room' },
   { label: 'Drop a photo — a student behind the camera' },
 ];
 
@@ -36,7 +37,7 @@ const INFO: [string, string][] = [
   description="The Social Media School at YWAM Siem Reap: storytelling, camera, editing and digital ministry for the generation already living online.">
   <PageHead eyebrow="Social Media School · SMS" km="រឿងរ៉ាវ" title="Tell the story. Where they already are." highlight="Where they already are."
     lead="Storytelling and digital ministry, for the generation already living there."
-    photo="/images/schools/sms-filming.jpg" photoPos="50% 40%" mobileFull
+    photo="/images/schools/sms-filming.webp" photoPos="50% 40%" mobileFull
     photoAlt="A film crew on a Siem Reap street: a camera on a tripod, two people filming on phones, and a presenter speaking" />
 
   <section class="sec">
@@ -70,7 +71,7 @@ const INFO: [string, string][] = [
   <section class="sec" style="padding-top:0;">
     <div class="wrap dbs-strip-photos stag" style="margin-top:0;">
       {PHOTOS.map((ph) => (
-        <figure>{ph.src ? <img src={ph.src} alt={ph.alt ?? ''} loading="lazy" decoding="async" style={ph.pos ? `object-position:${ph.pos}` : undefined} /> : <PhotoSlot label={ph.label ?? ''} radius={0} />}</figure>
+        <figure>{ph.src ? <img src={ph.src} srcset={srcset(ph.src)} sizes="(max-width: 760px) 100vw, 50vw" alt={ph.alt ?? ''} loading="lazy" decoding="async" style={ph.pos ? `object-position:${ph.pos}` : undefined} /> : <PhotoSlot label={ph.label ?? ''} radius={0} />}</figure>
       ))}
     </div>
   </section>

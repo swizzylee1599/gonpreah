@@ -17,10 +17,10 @@ import GlobeO from '../components/sr/GlobeO.astro';
 const GONPREAH_3D_VIDEO = '/video/gonpreah-community-3d.mp4';
 
 const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; photo?: string; pos?: string; href?: string }[] = [
-  { name: 'Discipleship Training School', abbr: 'DTS', body: 'Discover your calling. Find a purpose greater than your own desire.', when: 'Every January', photo: '/images/gonpreah-worship-2.jpg', href: '/schools/dts' },
-  { name: 'Discipleship Bible School', abbr: 'DBS', body: 'The whole Bible in thirteen weeks. Study the Word, then live it out.', when: 'Next school June 2027', photo: '/images/schools/dts-student-bible.jpg', pos: '50% 36%', href: '/schools/dbs' },
-  { name: 'Bible Counseling School', abbr: 'BCS', body: 'Training for those caring for people who carry trauma — a growing need across Cambodia.', when: 'New', photo: '/images/schools/praying-together.jpg' },
-  { name: 'Social Media School', abbr: 'SMS', body: 'Storytelling and digital ministry, for the generation already living there.', when: 'New', photo: '/images/schools/sms-lab.jpg', href: '/schools/sms' },
+  { name: 'Discipleship Training School', abbr: 'DTS', body: 'Discover your calling. Find a purpose greater than your own desire.', when: 'Every January', photo: '/images/gonpreah-worship-2.webp', href: '/schools/dts' },
+  { name: 'Discipleship Bible School', abbr: 'DBS', body: 'The whole Bible in thirteen weeks. Study the Word, then live it out.', when: 'Next school June 2027', photo: '/images/schools/dts-student-bible.webp', pos: '50% 36%', href: '/schools/dbs' },
+  { name: 'Bible Counseling School', abbr: 'BCS', body: 'Training for those caring for people who carry trauma — a growing need across Cambodia.', when: 'New', photo: '/images/schools/praying-together.webp' },
+  { name: 'Social Media School', abbr: 'SMS', body: 'Storytelling and digital ministry, for the generation already living there.', when: 'New', photo: '/images/schools/sms-lab.webp', href: '/schools/sms' },
 ];
 ---
 <SrLayout title="YWAM Siem Reap | Heart for Cambodia, vision for the world" spacer={false}>
@@ -57,7 +57,7 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
             autoplay
             playsinline
             webkit-playsinline
-            preload="auto"
+            preload="none"
             aria-label="The GonPreah community, rotating in 3D"
           />
           <div class="video3d-scrim"></div>
@@ -102,7 +102,7 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
           <div class="wrap bat-grid" style="display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:50px;align-items:center;width:100%;">
             <div class="wipe bat-photo" style="height:420px;overflow:hidden;border-radius:20px;">
               <div class="parslow" style="height:112%;margin-top:-6%;">
-                <img src="/images/campus/team-high-five.jpg" alt="A visiting team member high-fiving a leaping boy outside a village house" loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" />
+                <img src="/images/campus/team-high-five.webp" srcset="/images/campus/team-high-five-800.webp 800w, /images/campus/team-high-five.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="A visiting team member high-fiving a leaping boy outside a village house" loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;" />
               </div>
             </div>
             <div class="bat-text">
@@ -117,16 +117,16 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
       </div>
 
       <section class="cl-full" aria-label="Campus life">
-        <img class="cl-full-bg" src="/images/campus/campus-aerial-wide.jpg" alt="" loading="lazy" decoding="async" />
+        <img class="cl-full-bg" src="/images/campus/campus-aerial-wide.webp" srcset="/images/campus/campus-aerial-wide-800.webp 800w, /images/campus/campus-aerial-wide.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="" loading="lazy" decoding="async" />
         <div class="cl-full-scrim" aria-hidden="true"></div>
         <div class="wrap cl-full-copy reveal">
           <p class="eyebrow">Campus life</p>
           <h2 class="disp cl-full-title">Live in a cross‑cultural community centered around Jesus.</h2>
           <p class="body cl-full-sub">Shared meals, worship, work and outreach. One campus, Khmer and international, living and learning together.</p>
           <div class="cl-full-photos" aria-hidden="true">
-            <img src="/images/campus/fruit-table.jpg" alt="" loading="lazy" decoding="async" />
-            <img src="/images/campus/community-gathering.jpg" alt="" loading="lazy" decoding="async" />
-            <img src="/images/schools/dbs-graduation.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 35%;" />
+            <img src="/images/campus/fruit-table.webp" srcset="/images/campus/fruit-table-800.webp 800w, /images/campus/fruit-table.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="" loading="lazy" decoding="async" />
+            <img src="/images/campus/community-gathering.webp" srcset="/images/campus/community-gathering-800.webp 800w, /images/campus/community-gathering.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="" loading="lazy" decoding="async" />
+            <img src="/images/schools/dbs-graduation.webp" srcset="/images/schools/dbs-graduation-800.webp 800w, /images/schools/dbs-graduation.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="" loading="lazy" decoding="async" style="object-position:50% 35%;" />
           </div>
           <a class="arrow-link" href="/campus-life"><span>Go to campus life</span><span class="arrow-circle" aria-hidden="true">→</span></a>
         </div>
@@ -177,8 +177,13 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
           // paint the first frame during preload.
           const phone = matchMedia('(max-width: 760px)').matches;
           const lite = phone || matchMedia('(pointer: coarse)').matches;
-          video.src = `${(phone && video.dataset.srcMobile) || video.dataset.src}#t=0.001`;
-          video.load();
+          // Fetch the clip only once its section is within a screen of view.
+          const startClip = () => {
+            video.src = `${(phone && video.dataset.srcMobile) || video.dataset.src}#t=0.001`;
+            video.load();
+          };
+          const near = new IntersectionObserver((en) => { if (en[0].isIntersecting) { near.disconnect(); startClip(); } }, { rootMargin: '100% 0px' });
+          near.observe(video); signal.addEventListener('abort', () => near.disconnect());
           // Many mobile browsers (iOS Safari especially) never actually
           // decode a video's frames if it's only ever seeked via JS and
           // has never been played — programmatic currentTime/fastSeek

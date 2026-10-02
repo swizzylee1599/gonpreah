@@ -1,4 +1,5 @@
 ---
+import { srcset } from '../../lib/sr-img';
 // The Campus Life opening: a pinned hero. "Campus Life" sits over the
 // aerial; scrolling scrubs the turn clip down to the front of the building
 // where "Welcome home." appears; scrolling on fades to black and the big
@@ -22,14 +23,15 @@ const {
   eyebrow = 'YWAM Siem Reap', title = 'Campus Life', km = 'ជីវិតសហគមន៍', welcome = 'Welcome home.', statement, sub, photos = [],
 } = Astro.props;
 const hasVideo = existsSync('public' + video);
+const small = (p: string) => p.replace(/\.webp$/, '-800.webp');
 const mobileVideo = video.replace(/\.mp4$/, '-mobile.mp4');
 const hasMobile = existsSync('public' + mobileVideo);
 ---
 <section class="dive-stack" aria-label={title}>
   <div class="dive-pin">
-    <div class="dive-photo dive-aerial" style={`background-image:url(${aerial})`}></div>
-    <div class="dive-photo dive-front" style={`background-image:url(${front})`}></div>
-    {hasVideo && <video class="dive-video" data-src={video} data-src-mobile={hasMobile ? mobileVideo : undefined} muted autoplay playsinline webkit-playsinline preload="auto" aria-label="The campus, turning from above to its front"></video>}
+    <div class="dive-photo dive-aerial" style={`background-image:url(${aerial})`} data-small={small(aerial)}></div>
+    <div class="dive-photo dive-front" style={`background-image:url(${front})`} data-small={small(front)}></div>
+    {hasVideo && <video class="dive-video" data-src={video} data-src-mobile={hasMobile ? mobileVideo : undefined} muted autoplay playsinline webkit-playsinline preload="none" aria-label="The campus, turning from above to its front"></video>}
     <div class="dive-scrim" aria-hidden="true"></div>
 
     <div class="wrap dive-head" data-stage="0">
@@ -51,7 +53,7 @@ const hasMobile = existsSync('public' + mobileVideo);
       {sub && <p class="body dive-statement-sub">{sub}</p>}
       {photos.length > 0 && (
         <div class="dive-photos">
-          {photos.map((ph) => <img src={ph.src} alt={ph.alt} decoding="async" style={ph.pos ? `object-position:${ph.pos}` : undefined} />)}
+          {photos.map((ph) => <img src={ph.src} srcset={srcset(ph.src)} sizes="(max-width: 760px) 100vw, 50vw" alt={ph.alt} decoding="async" style={ph.pos ? `object-position:${ph.pos}` : undefined} />)}
         </div>
       )}
     </div>
@@ -81,8 +83,13 @@ const hasMobile = existsSync('public' + mobileVideo);
     const phone = matchMedia('(max-width: 760px)').matches;
     if (video) {
       const src = (phone && video.dataset.srcMobile) || video.dataset.src;
-      video.src = `${src}#t=0.001`;
-      video.load();
+      // Fetch the clip only once its section is within a screen of view.
+      const startClip = () => {
+        video.src = `${src}#t=0.001`;
+        video.load();
+      };
+      const near = new IntersectionObserver((en) => { if (en[0].isIntersecting) { near.disconnect(); startClip(); } }, { rootMargin: '100% 0px' });
+      near.observe(video); signal.addEventListener('abort', () => near.disconnect());
     }
     let ready = false;
     const clamp01 = (v: number) => Math.min(1, Math.max(0, v));

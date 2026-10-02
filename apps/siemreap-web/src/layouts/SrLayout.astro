@@ -28,10 +28,20 @@ const {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=Koulen&family=Nunito+Sans:wght@300;400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Koulen&family=Nunito+Sans:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <ViewTransitions />
+    <script is:inline>
+      // Phones: background photos marked data-small use their 800px copy.
+      (function () {
+        var swap = function () {
+          if (!window.matchMedia('(max-width: 760px)').matches) return;
+          document.querySelectorAll('[data-small]').forEach(function (el) { el.style.backgroundImage = 'url(' + el.getAttribute('data-small') + ')'; });
+        };
+        swap(); document.addEventListener('astro:page-load', swap);
+      })();
+    </script>
   </head>
   <body class="sr">
     <div class="srbar"></div>

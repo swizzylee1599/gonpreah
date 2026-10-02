@@ -1,4 +1,5 @@
 ---
+import { srcset } from '../../lib/sr-img';
 interface Props {
   eyebrow?: string;
   km?: string;
@@ -22,7 +23,7 @@ const highlightCount = highlight ? highlight.split(' ').length : 0;
 <section class:list={['pagehead', { 'pagehead--photo': !!photo, 'pagehead--full': full, 'pagehead--center': center, 'pagehead--mfull': mobileFull, 'pagehead--long': long }]} style={photo ? undefined : 'padding:90px 0 0;'}>
   {photo && (
     <>
-      <img class="pagehead-photo" src={photo} alt={photoAlt} loading="eager" decoding="async" style={photoPos ? `object-position:${photoPos}` : undefined} />
+      <img class="pagehead-photo" src={photo} srcset={srcset(photo)} sizes="(max-width: 760px) 100vw, 50vw" alt={photoAlt} loading="eager" decoding="async" style={photoPos ? `object-position:${photoPos}` : undefined} />
       <div class="pagehead-scrim"></div>
     </>
   )}
