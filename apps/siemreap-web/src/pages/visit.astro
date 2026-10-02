@@ -13,9 +13,9 @@ import { srcset } from '../lib/sr-img';
 const GUIDE = '/team-guide';
 
 const SERVE = [
-  { title: 'Sharing the gospel', body: 'Testimonies, house visits in the villages and youth events: many chances to share the love of Jesus and bring the gospel to the unreached.', photo: '/images/schools/outreach-kids-friends.webp', pos: '50% 30%' },
-  { title: 'Supporting ministries', body: 'Teams support the ministries we partner with in Siem Reap: education, children’s ministry, food distribution and construction.', photo: '/images/schools/outreach-kids-courtyard.webp', pos: '50% 60%' },
-  { title: 'Skills', body: 'Worship, media, barista, kitchen and technical skills empower and inspire our staff while supporting the ministries.', photo: '/images/campus/building-stairs.webp', pos: '55% 40%' },
+  { title: 'Sharing the gospel', body: 'Testimonies, house visits in the villages and youth events: many chances to share the love of Jesus and bring the gospel to the unreached.', photo: '/images/teams/team-village-girls.webp', pos: '50% 35%' },
+  { title: 'Supporting ministries', body: 'Teams support the ministries we partner with in Siem Reap: education, children’s ministry, food distribution and construction.', photo: '/images/teams/team-kids-class.webp', pos: '50% 45%' },
+  { title: 'Skills', body: 'Worship, media, barista, kitchen and technical skills empower and inspire our staff while supporting the ministries.', photo: '/images/teams/team-construction.webp', pos: '50% 55%' },
   { title: 'Encouraging missionaries', body: 'Teams work alongside our staff, bringing fresh energy, prayer and support to those serving long term, and often keep praying and giving after they go home.', photo: '/images/campus/community-night.webp' },
 ];
 
@@ -86,7 +86,7 @@ const PRACTICAL: [string, string][] = [
 
   <section class="sec">
     <div class="wrap visit-intro">
-      <div class="visit-intro-photo wipe"><img src="/images/campus/visitors-angkor.webp" srcset={srcset('/images/campus/visitors-angkor.webp')} sizes="(max-width: 760px) 100vw, 50vw" alt="Two young men grinning from behind a stone pillar at Angkor Wat" loading="lazy" decoding="async" /></div>
+      <div class="visit-intro-photo wipe"><img src="/images/teams/team-boat.webp" srcset={srcset('/images/teams/team-boat.webp')} sizes="(max-width: 760px) 100vw, 50vw" alt="A visiting team and Khmer staff smiling on a wooden boat on the Tonle Sap" loading="lazy" decoding="async" style="object-position:50% 40%;" /></div>
       <div class="reveal">
         <p class="eyebrow">Welcome to your adventure</p>
         <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;">Thank you for your yes, and your heart for Cambodia.</h2>
@@ -163,6 +163,11 @@ const PRACTICAL: [string, string][] = [
         ))}
       </div>
     </div>
+  </section>
+
+  <section class="visit-band wipe" aria-label="A team walking into a village">
+    <img src="/images/teams/team-village-path.webp" srcset={srcset('/images/teams/team-village-path.webp')} sizes="100vw" alt="Two team members carrying timber down a sandy palm-lined village path" loading="lazy" decoding="async" />
+    <p class="visit-band-cap"><span class="eyebrow">During the trip</span><span class="disp">Growth happens in the moments of discomfort. Go all in.</span></p>
   </section>
 
   <section class="sec" style="padding-top:0;" id="dress">

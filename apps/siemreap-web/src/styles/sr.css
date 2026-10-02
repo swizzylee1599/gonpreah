@@ -1224,6 +1224,11 @@ body.sr {
 .sr .visit-intro { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 50px; align-items: center; }
 .sr .visit-intro-photo { height: 420px; border-radius: 20px; overflow: hidden; }
 .sr .visit-intro-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sr .visit-band { position: relative; height: min(78vh, 640px); margin: 0 0 90px; overflow: hidden; }
+.sr .visit-band img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+.sr .visit-band::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, .7)); }
+.sr .visit-band-cap { position: absolute; left: 0; right: 0; bottom: 0; margin: 0; padding: 0 40px 44px; z-index: 1; display: grid; gap: 12px; max-width: 1240px; margin-inline: auto; box-sizing: border-box; }
+.sr .visit-band-cap .disp { font-size: clamp(24px, 3vw, 40px); font-weight: 500; line-height: 1.08; max-width: 20ch; }
 .sr .serve-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 36px; margin-top: 40px; }
 .sr .serve-photo { margin: 0; aspect-ratio: 16 / 10; border-radius: 18px; overflow: hidden; }
 .sr .serve-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -1234,6 +1239,8 @@ body.sr {
 @media (max-width: 760px) {
   .sr .visit-intro { grid-template-columns: minmax(0, 1fr); gap: 22px; }
   .sr .visit-intro-photo { height: 260px; }
+  .sr .visit-band { height: 62vh; margin-bottom: 60px; }
+  .sr .visit-band-cap { padding: 0 20px 30px; }
   .sr .serve-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; margin-top: 26px; }
   .sr .visit-week { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .sr .day-list li { grid-template-columns: 64px minmax(0, 1fr); gap: 14px; padding: 13px 0; }

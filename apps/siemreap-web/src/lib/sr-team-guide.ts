@@ -63,7 +63,7 @@ export const GUIDE: Spread[] = [
       ['Skills', 'Experience in worship, media, barista, kitchen or technical skills empowers and inspires our staff while supporting the ministries.'],
       ['Encouraging missionaries', 'Teams work alongside our staff, bringing fresh energy, prayer and support to those serving long term, and many keep encouraging them through prayer and giving after they go home.'],
     ],
-    photo: '/images/guide/kids-dance.webp', pos: '50% 40%',
+    photo: '/images/teams/team-village-girls.webp', pos: '50% 35%',
   },
   {
     kind: 'letter', title: 'How teams make a lasting impact', photo: '/images/guide/team-village.webp',
@@ -167,7 +167,7 @@ export const GUIDE: Spread[] = [
       ['Food and culture', 'God has brought you here for a purpose. Do not be afraid to step beyond your comfort zone; growth happens in the moments of discomfort. Go all in and be bold in your faith.'],
       ['Curiosity, not passivity', 'You will meet new foods, unfamiliar smells and unique experiences. Each one is a chance to learn. Cambodia’s history and culture are worth exploring; step in with curiosity and appreciation.'],
     ],
-    photo: '/images/guide/technical.webp', pos: '50% 50%',
+    photo: '/images/teams/team-village-path.webp', pos: '50% 45%',
   },
   {
     kind: 'list', chapter: 'Our city: Siem Reap', title: 'Markets, tuk-tuks and warm hearts.',
