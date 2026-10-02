@@ -64,7 +64,7 @@ body.sr {
 .sr .reveal { opacity: 1; transform: none; }
 .sr .srbar { position: fixed; left: 0; top: 0; height: 3px; width: 100%; background: var(--sr-pink); transform-origin: 0 50%; transform: scaleX(0); z-index: 70; }
 
-.sr .gonpreah-stack { position: relative; height: 600vh; }
+.sr .gonpreah-stack { position: relative; height: 340vh; }
 .sr .video3d-pin {
   position: sticky; top: 0; height: 100vh; height: 100svh; width: 100%; overflow: hidden;
   display: flex; align-items: center;
@@ -1158,7 +1158,7 @@ body.sr {
    readable small text, and tap targets a thumb can hit. */
 @media (max-width: 760px) {
   .sr .dbs-intro-grid, .sr .about-uofn-grid, .sr .about-poipet-grid, .sr .values-grid { grid-template-columns: minmax(0, 1fr); gap: 22px; }
-  .sr .gonpreah-stack { height: 620vh; }
+  .sr .gonpreah-stack { height: 540vh; }
   .sr .hall-stack.is-card-out { height: 420vh; }
   .sr .hall-card-sec .info-list dt { font-size: 12px !important; }
   .sr footer a { display: inline-block; padding: 5px 0; }

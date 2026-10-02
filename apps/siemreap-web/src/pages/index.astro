@@ -260,13 +260,13 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
           // shows them fanned side by side (hover brings one forward), so its
           // stack is shorter and has no dealing phase.
           const dealCards = phone;
-          const TEXT_FADE_START = phone ? 0.22 : 0.3;
-          const VIDEO_END = phone ? 0.3 : 0.4;
+          const TEXT_FADE_START = phone ? 0.22 : 0.26;
+          const VIDEO_END = phone ? 0.3 : 0.34;
           const COVER_START = VIDEO_END;
-          const COVER_END = phone ? 0.42 : 0.56;
+          const COVER_END = phone ? 0.42 : 0.5;
           const CARDS_START = 0.42;
-          const CARDS_END = 0.78;
-          const BAT_START = phone ? 0.78 : 0.76;
+          const CARDS_END = 0.74;
+          const BAT_START = phone ? 0.74 : 0.66;
           let ticking = false;
           const update = () => {
             ticking = false;
