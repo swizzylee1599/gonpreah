@@ -23,6 +23,8 @@ const PHOTOS: { src?: string; alt?: string; label?: string; pos?: string }[] = [
   { src: '/images/schools/sms-studio.webp', alt: 'A teacher at his laptop in the studio, studio lights and a gimbal behind him', pos: '60% 50%' },
   { src: '/images/schools/sms-editing.webp', alt: 'SMS students editing together at a desk of monitors in the media room' },
   { src: '/images/schools/sms-laptop.webp', alt: 'A student working at his laptop by the window', pos: '50% 40%' },
+  { src: '/images/schools/sms-desk.webp', alt: 'A student at his desk by the window, grinning at the camera' },
+  { src: '/images/schools/sms-sharing.webp', alt: 'A student standing to share, a book in his hands', pos: '50% 30%' },
 ];
 
 const INFO: [string, string][] = [
@@ -71,7 +73,7 @@ const INFO: [string, string][] = [
   </section>
 
   <section class="sec" style="padding-top:0;">
-    <div class="wrap dbs-strip-photos dbs-strip-photos--4 stag" style="margin-top:0;">
+    <div class="wrap dbs-strip-photos stag" style="margin-top:0;">
       {PHOTOS.map((ph) => (
         <figure>{ph.src ? <img src={ph.src} srcset={srcset(ph.src)} sizes="(max-width: 760px) 100vw, 50vw" alt={ph.alt ?? ''} loading="lazy" decoding="async" style={ph.pos ? `object-position:${ph.pos}` : undefined} /> : <PhotoSlot label={ph.label ?? ''} radius={0} />}</figure>
       ))}

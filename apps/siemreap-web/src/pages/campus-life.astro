@@ -12,7 +12,7 @@ import { existsSync } from 'node:fs';
 const EXPLORE = [
   '/images/campus/tuktuk.webp',
   ...['drive-01', 'drive-02', 'drive-03', 'drive-04', 'drive-05', 'drive-06', 'drive-07', 'drive-08', 'drive-09']
-    .filter((f) => existsSync(`public/images/explore/${f}.jpg`)).map((f) => `/images/explore/${f}.jpg`),
+    .filter((f) => existsSync(`public/images/explore/${f}.webp`)).map((f) => `/images/explore/${f}.webp`),
 ];
 
 const STATS: { n: number; suffix: string; label: string }[] = [
