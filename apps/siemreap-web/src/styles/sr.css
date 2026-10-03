@@ -383,7 +383,9 @@ body.sr {
 .sr .deck .schoolcard-body { min-height: 0; padding: 20px 22px 22px; }
 .sr .deck .schoolcard-body > .disp { font-size: 19px !important; }
 .sr .deck .schoolcard-body .body, .sr .deck .schoolcard-body p { font-size: 14px !important; }
-.sr .th-cover { padding: 80px 0 40px; }
+/* At least a screen tall, so the pinned video never shows beneath it. */
+.sr .th-cover { padding: 80px 0 40px; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; }
+.sr .th-cover > .wrap, .sr .th-cover > .schools-deck { width: 100%; box-sizing: border-box; }
 .sr .deck-hint { display: none; }
 @media (max-width: 760px) {
   .sr .deck { display: grid; grid-template-columns: none; width: clamp(300px, 34vw, 430px); margin: 0 auto; padding: 0; }
@@ -579,7 +581,6 @@ body.sr {
 .sr .dbs-strip-photos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
 .sr .dbs-strip-photos figure { margin: 0; aspect-ratio: 4 / 3; border-radius: 16px; overflow: hidden; background: var(--sr-raise); }
 .sr .dbs-strip-photos img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.sr .dbs-strip-photos--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .sr .sms-intro-photo { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 60%; border-radius: 16px; margin-top: 30px; }
 .sr .visit-photos { position: relative; height: 440px; }
 .sr .visit-photo-main { position: absolute; inset: 0 60px 0 0; border-radius: 20px; overflow: hidden; }
@@ -1017,7 +1018,6 @@ body.sr {
   .sr .fac-card { flex: 0 0 calc(100vw - 60px); }
   .sr .pagehead--mfull { min-height: 100vh; min-height: 100svh; align-items: center; padding-top: 120px; padding-bottom: 80px; }
   .sr .dbs-strip-photos { grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 28px; }
-  .sr .dbs-strip-photos--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sr .sms-intro-photo { margin-top: 20px; }
   .sr .visit-photos { height: 300px; margin-bottom: 30px; }
   .sr .visit-photo-main { inset: 0 40px 0 0; }
@@ -1099,7 +1099,7 @@ body.sr {
 
 /* Things to do in Siem Reap: 1. Angkor Wat. A pinned stack: the header
    photo fades to full colour, the drone flies in, then the temples. */
-.sr .aw-stack { position: relative; height: 860vh; }
+.sr .aw-stack { position: relative; height: 620vh; }
 .sr .aw-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #0b0b0b; }
 .sr .aw-still, .sr .aw-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; will-change: opacity, transform; }
 .sr .aw-still--color { opacity: 0; }
@@ -1143,7 +1143,7 @@ body.sr {
 .sr .nature-body { margin: 12px 0 0; max-width: 56ch; }
 
 @media (max-width: 760px) {
-  .sr .aw-stack { height: 760vh; }
+  .sr .aw-stack { height: 540vh; }
   .sr .aw-scrim { background: linear-gradient(to bottom, rgba(11,11,11,.35) 0%, rgba(11,11,11,.55) 60%, rgba(11,11,11,.8) 100%); }
   .sr .aw-cue { right: 20px; }
   .sr .aw-label { margin-top: -150px; }

@@ -31,7 +31,7 @@ const hasMobile = existsSync('public' + mobileVideo);
   <div class="dive-pin">
     <div class="dive-photo dive-aerial" style={`background-image:url(${aerial})`} data-small={small(aerial)}></div>
     <div class="dive-photo dive-front" style={`background-image:url(${front})`} data-small={small(front)}></div>
-    {hasVideo && <video class="dive-video" data-src={video} data-src-mobile={hasMobile ? mobileVideo : undefined} muted autoplay playsinline webkit-playsinline preload="none" aria-label="The campus, turning from above to its front"></video>}
+    {hasVideo && <video class="dive-video" data-src={video} data-src-mobile={hasMobile ? mobileVideo : undefined} muted playsinline webkit-playsinline preload="none" aria-label="The campus, turning from above to its front"></video>}
     <div class="dive-scrim" aria-hidden="true"></div>
 
     <div class="wrap dive-head" data-stage="0">
@@ -105,17 +105,23 @@ const hasMobile = existsSync('public' + mobileVideo);
     };
     if (video) {
       // iOS only paints seeks once the clip has played, so play then pause it.
-      let primed = false;
+      // The clip has no autoplay attribute: this is the only thing that
+      // starts it, and it stops it straight away so the scroll stays in charge.
+      let primed = false, priming = false;
       const prime = () => {
-        if (primed || !video) return;
+        if (primed || priming || !video) return;
         const p = video.play();
-        if (p && p.then) p.then(() => { primed = true; ready = true; video?.pause(); onScroll(); }).catch(() => {});
+        if (!p || !p.then) return;
+        priming = true;
+        p.then(() => { primed = true; ready = true; video?.pause(); onScroll(); }).catch(() => {}).finally(() => { priming = false; });
       };
       const onData = () => { ready = true; onScroll(); prime(); };
       if (video.readyState >= 2) onData(); else video.addEventListener('loadeddata', onData, { once: true, signal });
       // When autoplay is blocked (Low Power Mode, data saver), a tap or the
       // first touch counts as a gesture, so iOS lets the clip start then.
-      const unlock = () => { if (!primed && video && video.readyState < 2) video.load(); prime(); };
+      // Only start a load if none is in progress; reloading on every touch
+      // restarted the download each time on slow connections.
+      const unlock = () => { if (primed || !video) return; if (video.readyState < 2 && video.networkState !== HTMLMediaElement.NETWORK_LOADING && video.src) video.load(); prime(); };
       for (const ev of ['touchstart', 'touchend', 'click']) window.addEventListener(ev, unlock, { passive: true, signal });
       video.addEventListener('seeked', () => { seeking = false; if (dirty) seekTo(latest); }, { signal });
       video.addEventListener('error', () => { video?.remove(); video = null; onScroll(); }, { once: true, signal });
@@ -137,6 +143,7 @@ const hasMobile = existsSync('public' + mobileVideo);
 
       const turn = clamp01((p - 0.08) / 0.44);
       if (video && ready && video.duration && !Number.isNaN(video.duration)) {
+        if (!video.paused) video.pause();
         video.style.opacity = '1';
         aerial.style.opacity = String(1 - clamp01(turn * 8));
         front.style.opacity = '0';
