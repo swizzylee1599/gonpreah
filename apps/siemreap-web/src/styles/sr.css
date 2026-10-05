@@ -1100,7 +1100,7 @@ body.sr {
 /* Things to do in Siem Reap: 1. Angkor Wat. A pinned stack: the header
    photo fades to full colour, the drone flies in, then the temples. */
 .sr .aw-stack { position: relative; height: 620vh; }
-.sr .aw-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #0b0b0b; }
+.sr .aw-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #0b0b0b; z-index: 1; }
 .sr .aw-still, .sr .aw-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; will-change: opacity, transform; }
 .sr .aw-still--color { opacity: 0; }
 .sr .aw-video { opacity: 0; }
@@ -1113,8 +1113,11 @@ body.sr {
 .sr .aw-n { margin: 0; font-size: clamp(34px, 4vw, 56px); font-weight: 700; color: var(--sr-pink); line-height: 1; }
 .sr .aw-name { margin: 10px 0 0; font-size: clamp(64px, 10vw, 150px); font-weight: 700; line-height: .9; }
 .sr .aw-km { margin: 16px 0 0; font-size: clamp(22px, 2.4vw, 32px); color: #e6e6e6; }
-.sr .aw-temples { position: absolute; left: 0; right: 0; bottom: 7vh; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
-.sr .aw-temple { opacity: 0; background: rgba(17,17,17,.9); border: 1px solid #262626; border-radius: 20px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.55); pointer-events: none; }
+/* The temple cards live in the stack itself, not the pin, so they scroll
+   past over the pinned view at exactly the speed of the page. */
+.sr .aw-side { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.sr .aw-temple { position: absolute; right: 40px; width: min(400px, 32vw); top: calc(200vh + var(--k) * 115vh); background: rgba(17,17,17,.92); border: 1px solid #262626; border-radius: 20px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.55); pointer-events: auto; }
+.sr .aw-temple-km { margin: 6px 0 0; font-size: 18px; color: #cfcfcf; }
 .sr .aw-temple-photo { margin: 0; aspect-ratio: 16 / 10; }
 .sr .aw-temple-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .sr .aw-temple-copy { padding: 18px 20px 22px; }
@@ -1126,8 +1129,8 @@ body.sr {
 .sr .aw-stack.is-static .aw-still--color { opacity: 1; }
 .sr .aw-stack.is-static .aw-head, .sr .aw-stack.is-static .aw-cue { display: none; }
 .sr .aw-stack.is-static .aw-label { position: relative; top: auto; margin: 0; padding-top: 140px; opacity: 1; }
-.sr .aw-stack.is-static .aw-temples { position: relative; bottom: auto; margin-top: 40px; }
-.sr .aw-stack.is-static .aw-temple { opacity: 1; pointer-events: auto; }
+.sr .aw-stack.is-static .aw-side { position: relative; inset: auto; padding: 0 40px 60px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+.sr .aw-stack.is-static .aw-temple { position: static; width: auto; }
 
 /* 2. Nature day trips, on the card that flips up. */
 /* Explore Siem Reap: the day trips as a stack of full-screen cards. Each
@@ -1169,12 +1172,10 @@ body.sr {
   .sr .aw-cue { right: 20px; }
   .sr .aw-label { margin-top: -150px; }
   /* Temples come up one at a time, each over the whole screen width. */
-  .sr .aw-temples { display: block; bottom: 5vh; }
-  .sr .aw-temple { position: absolute; left: 16px; right: 16px; bottom: 0; }
+  .sr .aw-temple { left: 16px; right: 16px; width: auto; top: calc(190vh + var(--k) * 95vh); }
   .sr .aw-temple-photo { aspect-ratio: 4 / 3; }
   .sr .aw-temple-body { font-size: 14.5px; }
-  .sr .aw-stack.is-static .aw-temples { display: grid; grid-template-columns: 1fr; }
-  .sr .aw-stack.is-static .aw-temple { position: relative; left: auto; right: auto; }
+  .sr .aw-stack.is-static .aw-side { grid-template-columns: 1fr; padding: 0 16px 50px; }
   .sr .nature-grid { grid-template-columns: 1fr; gap: 40px; margin-top: 36px; }
   .sr .nature-head { column-gap: 14px; }
   .sr .sr-card-copy { padding-bottom: 40px; }
@@ -1208,7 +1209,6 @@ body.sr {
   /* Full-screen sections cover the strip Safari's bar uncovers as it slides
      away (the large viewport), so no page background shows underneath. */
   .sr .dive-pin, .sr .explore-card, .sr .aw-pin { height: 100lvh; }
-  .sr .aw-temples { bottom: calc(5vh + (100lvh - 100svh)); }
   .sr .aw-head { margin-top: calc(-1em - (100lvh - 100svh) / 2); }
   .sr .dive-head, .sr .dive-statement { margin-top: calc(-1 * (100lvh - 100svh) / 2); }
 }
