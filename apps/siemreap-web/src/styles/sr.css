@@ -1130,6 +1130,27 @@ body.sr {
 .sr .aw-stack.is-static .aw-temple { opacity: 1; pointer-events: auto; }
 
 /* 2. Nature day trips, on the card that flips up. */
+/* Explore Siem Reap: the day trips as a stack of full-screen cards. Each
+   sticks at the top once it has flipped up; the next comes up over it. */
+.sr .sr-cards { position: relative; z-index: 4; margin-top: -14vh; }
+/* Each wrapper is taller than its card, so a card holds on screen for a
+   while after it has flipped up before the next one starts to rise. */
+.sr .sr-card { position: sticky; top: 0; height: 165vh; height: 165lvh; z-index: calc(4 + var(--i)); }
+.sr .sr-card--tall { height: auto; min-height: 100vh; min-height: 100lvh; }
+.sr .sr-card--tall .sr-card-face { height: auto; }
+.sr .sr-card-face { position: relative; height: 100vh; height: 100lvh; min-height: inherit; overflow: hidden; background: var(--sr-ink); transform-origin: 50% 100vh; will-change: transform; box-shadow: 0 -40px 90px rgba(0, 0, 0, .6); box-sizing: border-box; }
+.sr .sr-card-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sr .sr-card-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .12) 30%, rgba(0, 0, 0, .8)); }
+.sr .sr-card-copy { position: absolute; left: 0; right: 0; bottom: 0; padding-bottom: clamp(40px, 7vh, 80px); }
+.sr .sr-card-title { margin: 14px 0 0; font-size: clamp(50px, 8vw, 120px); font-weight: 700; line-height: .92; }
+.sr .sr-card-km { margin: 12px 0 0; font-size: 22px; color: #dcdcdc; }
+.sr .sr-card-body { margin: 18px 0 0; max-width: 56ch; font-size: 17px; }
+.sr .sr-card--paper { display: flex; align-items: center; padding: 110px 0 70px; }
+.sr .sr-card--paper .eyebrow { color: #8a7f6a; }
+.sr .sr-card--paper .wrap { width: 100%; box-sizing: border-box; }
+.sr .sr-card--paper .sr-know-list { margin-top: 36px; gap: 26px 36px; }
+.sr .sr-card--paper .sr-know-list dt { font-size: 16px; }
+.sr .sr-card--paper .sr-know-list dd { font-size: 15px; }
 .sr .nature-sec { padding-top: clamp(90px, 12vh, 140px); }
 .sr .nature-head { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 26px; align-items: end; }
 .sr .nature-head .aw-n { grid-row: 1; align-self: start; padding-top: .4em; }
@@ -1156,6 +1177,12 @@ body.sr {
   .sr .aw-stack.is-static .aw-temple { position: relative; left: auto; right: auto; }
   .sr .nature-grid { grid-template-columns: 1fr; gap: 40px; margin-top: 36px; }
   .sr .nature-head { column-gap: 14px; }
+  .sr .sr-card-copy { padding-bottom: 40px; }
+  .sr .sr-card-title { font-size: clamp(44px, 14vw, 64px); }
+  .sr .sr-card-km { font-size: 18px; }
+  .sr .sr-card-body { font-size: 15px; }
+  .sr .sr-card--paper { padding: 100px 0 50px; }
+  .sr .sr-card--paper .sr-know-list { gap: 16px 16px; margin-top: 24px; }
 }
 
 /* Phones: layouts that were still two columns, shorter pinned sections,
