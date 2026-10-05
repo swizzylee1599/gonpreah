@@ -48,43 +48,36 @@ const hasDrone = existsSync('public' + DRONE);
     </div>
   </section>
 
-  <!-- 2. Nature day trips: a whole-page card that flips up over the temples. -->
-  <div class="flipup sr-nature">
-    <div class="flipup-card">
-      <section class="sec nature-sec" aria-label="Nature day trips">
-        <div class="wrap">
-          <div class="nature-head">
-            <p class="disp aw-n">2.</p>
-            <h2 class="disp nature-title">Nature<br />day trips</h2>
-            <p class="body nature-lead">When you need a break from the temples, head for the hills or out onto the water.</p>
+  <!-- 2. Each day trip is its own full-screen card that flips up over the
+       one before and stays put while the next arrives; Good to know last. -->
+  <div class="sr-cards">
+    {NATURE.map((n, i) => (
+      <div class="sr-card" style={`--i:${i + 1}`}>
+        <section class="sr-card-face sr-card--photo" aria-label={n.name}>
+          <img class="sr-card-bg" src={n.photo} srcset={srcset(n.photo)} sizes="100vw" alt={n.alt} loading="lazy" decoding="async" style={n.pos ? `object-position:${n.pos}` : undefined} />
+          <div class="sr-card-scrim" aria-hidden="true"></div>
+          <div class="wrap sr-card-copy">
+            <p class="eyebrow">{`2.${i + 1}`} · Nature day trips</p>
+            <h2 class="disp sr-card-title">{n.name}</h2>
+            <p class="km sr-card-km">{n.km}</p>
+            <p class="body sr-card-body">{n.body}</p>
           </div>
-          <div class="nature-grid">
-            {NATURE.map((n, i) => (
-              <article class="nature-item reveal">
-                <figure class="nature-photo"><img src={n.photo} srcset={srcset(n.photo)} sizes="(max-width: 760px) 100vw, 50vw" alt={n.alt} loading="lazy" decoding="async" style={n.pos ? `object-position:${n.pos}` : undefined} /></figure>
-                <h3 class="disp nature-name"><span class="aw-temple-i">{`2.${i + 1}`}</span> {n.name}</h3>
-                <p class="km nature-km">{n.km}</p>
-                <p class="body nature-body">{n.body}</p>
-              </article>
+        </section>
+      </div>
+    ))}
+    <div class="sr-card sr-card--tall" style={`--i:${NATURE.length + 1}`} id="sr-know">
+      <section class="sr-card-face sr-card--paper sec--paper" aria-label="Good to know">
+        <div class="wrap">
+          <p class="eyebrow">3 · Good to know</p>
+          <h2 class="disp" style="margin:12px 0 0;font-size:clamp(34px,5vw,72px);font-weight:600;line-height:1;">Before you head out.</h2>
+          <dl class="practical sr-know-list">
+            {PRACTICAL.map(([k, v]) => (
+              <div>
+                <dt class="disp">{k}</dt>
+                <dd class="body">{v}</dd>
+              </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section class="sec" id="sr-know" style="padding-top:0;">
-        <div class="wrap">
-          <div class="card sr-know reveal">
-            <p class="eyebrow">Good to know</p>
-            <h2 class="disp" style="margin:12px 0 0;font-size:clamp(26px,3vw,40px);font-weight:500;line-height:1.1;">Before you head out.</h2>
-            <dl class="practical sr-know-list">
-              {PRACTICAL.map(([k, v]) => (
-                <div>
-                  <dt class="disp">{k}</dt>
-                  <dd class="body">{v}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
+          </dl>
         </div>
       </section>
     </div>
@@ -115,8 +108,7 @@ const hasDrone = existsSync('public' + DRONE);
     const label = stack.querySelector<HTMLElement>('.aw-label')!;
     const temples = [...stack.querySelectorAll<HTMLElement>('.aw-temple')];
     let video = stack.querySelector<HTMLVideoElement>('.aw-video');
-    const flip = document.querySelector<HTMLElement>('.sr-nature');
-    const flipCard = flip?.querySelector<HTMLElement>('.flipup-card') ?? null;
+    const cards = [...document.querySelectorAll<HTMLElement>('.sr-card')].map((el) => ({ el, face: el.querySelector<HTMLElement>('.sr-card-face')! }));
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const phone = matchMedia('(max-width: 760px)').matches;
     if (reduce) { stack.classList.add('is-static'); video?.remove(); return; }
@@ -217,12 +209,13 @@ const hasDrone = existsSync('public' + DRONE);
         }
       });
 
-      // 2. flips up over the temples, like the cards on Campus Life.
-      if (flip && flipCard) {
-        const t = clamp01(1 - flip.getBoundingClientRect().top / window.innerHeight);
+      // 2. Each card flips up as it arrives, like the cards on Campus Life,
+      // then sticks while the next one comes up over it.
+      for (const { el, face } of cards) {
+        const t = clamp01(1 - el.getBoundingClientRect().top / window.innerHeight);
         const e = ease(t);
-        flipCard.style.transform = e >= 1 ? 'none' : `perspective(1600px) rotateX(${((1 - e) * 24).toFixed(2)}deg) scale(${(0.92 + 0.08 * e).toFixed(3)})`;
-        flipCard.style.borderRadius = `${Math.round((1 - e) * 26)}px`;
+        face.style.transform = e >= 1 ? 'none' : `perspective(1600px) rotateX(${((1 - e) * 24).toFixed(2)}deg) scale(${(0.92 + 0.08 * e).toFixed(3)})`;
+        face.style.borderRadius = `${Math.round((1 - e) * 26)}px`;
       }
     };
     const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
