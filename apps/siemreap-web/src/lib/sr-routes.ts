@@ -14,6 +14,7 @@ export const ROUTE_PATH: Record<string, string> = {
   dts: '/schools/dts',
   dbs: '/schools/dbs',
   sms: '/schools/sms',
+  bcs: '/schools/bcs',
   howToApply: '/apply',
   apply: applyUrl('dts'),
   applyDts: applyUrl('dts'),

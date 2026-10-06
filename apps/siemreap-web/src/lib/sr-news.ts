@@ -7,6 +7,12 @@ export type NewsItem = { date: string; tag: string; title: string; body: string;
 
 export const NEWS: NewsItem[] = [
   {
+    date: 'September 2026', tag: 'Schools',
+    title: 'Two new schools have started in Siem Reap',
+    body: 'The Bible Counseling School (25 students) and the Social Media School (7 students) both began on September 28 and run for three months. Would you partner with these 32 students this season?',
+    href: '/schools/bcs', label: 'About the schools',
+  },
+  {
     date: 'October 2026', tag: 'Schools',
     title: 'DTS January 2027 is open for applications',
     body: 'Arrival day is January 3, 2027. Three months of lecture in Siem Reap, then three months on outreach to the nations.',
@@ -17,11 +23,5 @@ export const NEWS: NewsItem[] = [
     title: 'Applications now run through the GP Portal',
     body: 'One place to apply for a school, staff, volunteering or a team, send your leader reference, and follow your application.',
     href: '/apply', label: 'How to apply',
-  },
-  {
-    date: 'October 2026', tag: 'Follow along',
-    title: 'Campus life, on Instagram',
-    body: 'Worship nights, outreach days, the cafe, the city. Follow @ywamsiemreap for what is happening this week.',
-    href: 'https://www.instagram.com/ywamsiemreap', label: 'Open Instagram', external: true,
   },
 ];

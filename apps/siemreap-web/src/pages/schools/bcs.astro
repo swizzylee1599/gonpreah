@@ -1,0 +1,125 @@
+---
+import { applyUrl } from '../../lib/sr-routes';
+import { srcset } from '../../lib/sr-img';
+import SrLayout from '../../layouts/SrLayout.astro';
+import Footer from '../../components/sr/Footer.astro';
+import PageHead from '../../components/sr/PageHead.astro';
+import Cta from '../../components/sr/Cta.astro';
+import CampusTeaser from '../../components/sr/CampusTeaser.astro';
+import { CONTACT } from '../../lib/sr-contact';
+import { GIVE_URL } from '../../lib/sr-routes';
+
+// From the schools newsletter: the first BCS started September 28, 2026 with
+// 25 students and runs three months (eleven weeks of teaching).
+const JOURNEY: [string, string][] = [
+  ['Know yourself', 'Over eleven weeks, students get to know themselves more deeply: their story, their relationships and the family systems they come from.'],
+  ['Find the places that need healing', 'Space to explore the areas that need healing, and to let God work in each heart first, before anyone is sent to help someone else.'],
+  ['Grow with God and with others', 'A season of learning, personal growth, healing and relationships, always with Christ and His Word at the center.'],
+  ['Be equipped to walk alongside others', 'Practical tools for Christian ministry. As students experience their own restoration, they become better equipped to walk with others on their journeys.'],
+];
+
+const PHOTOS: { src: string; alt: string; pos?: string }[] = [
+  { src: '/images/schools/praying-together.webp', alt: 'Students praying together, hands on each other’s shoulders' },
+  { src: '/images/guide/classroom.webp', alt: 'A class listening in the lecture room' },
+  { src: '/images/schools/dbs-small-groups.webp', alt: 'Small groups talking around tables' },
+];
+
+const INFO: [string, string][] = [
+  ['Current school', 'Started September 28, 2026'],
+  ['Length', 'Three months'],
+  ['Students', '25'],
+  ['Next school', 'To be announced'],
+  ['Location', 'Siem Reap, Cambodia'],
+  ['Prerequisites', 'Completed DTS'],
+];
+---
+<SrLayout title="Bible Counseling School | YWAM Siem Reap" spacer={false}
+  description="The Bible Counseling School at YWAM Siem Reap: a three-month journey of discipleship and inner healing, with practical tools to walk alongside others in Christian ministry."
+  image="/images/schools/praying-together.webp">
+  <PageHead eyebrow="Bible Counseling School · BCS" km="ការប្រឹក្សា" title="Healed first. Then sent to heal." highlight="Then sent to heal."
+    lead="A journey of discipleship and inner healing, for people who will care for people."
+    photo="/images/schools/praying-together.webp" photoPos="50% 40%" mobileFull
+    photoAlt="Young people praying for one another with hands on shoulders" />
+
+  <section class="sec">
+    <div class="wrap dbs-intro-grid">
+      <div class="reveal">
+        <p class="eyebrow">Running now</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(30px,3.8vw,50px);font-weight:500;line-height:1.08;">Space for God to work in each heart first.</h2>
+      </div>
+      <div class="reveal">
+        <p class="body" style="margin:0;font-size:18px;">The first Bible Counseling School began on September 28, 2026 with twenty-five students, and runs for three months. It is a journey of discipleship and inner healing: students get to know themselves more deeply, understand their relationships and family systems, and explore the areas that need healing, while growing in their relationship with God and with others.</p>
+        <p class="body" style="margin:18px 0 0;">Our desire is not just to give knowledge. It is to create space where God can work in each person’s heart first. As students experience their own restoration, they become better equipped to walk alongside others, and they leave with practical tools to serve in Christian ministry. A secondary school of the University of the Nations, taught in Khmer and English.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0;">
+    <div class="wrap">
+      <p class="eyebrow reveal">The journey</p>
+      <div class="grid3 stag" style="margin-top:22px;grid-template-columns:repeat(2,minmax(0,1fr));">
+        {JOURNEY.map(([t, d], i) => (
+          <div class="card">
+            <p class="disp" style="margin:0;font-size:13px;color:var(--sr-pink);">{'0' + (i + 1)}</p>
+            <h3 class="disp" style="margin:16px 0 0;font-size:21px;font-weight:500;">{t}</h3>
+            <p class="body" style="margin:12px 0 0;font-size:15px;">{d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0;">
+    <div class="wrap dbs-strip-photos stag" style="margin-top:0;">
+      {PHOTOS.map((ph) => (
+        <figure><img src={ph.src} srcset={srcset(ph.src)} sizes="(max-width: 760px) 100vw, 33vw" alt={ph.alt} loading="lazy" decoding="async" style={ph.pos ? `object-position:${ph.pos}` : undefined} /></figure>
+      ))}
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:0;" id="info">
+    <div class="wrap">
+      <div class="card info reveal">
+        <div class="info-grid">
+          <div>
+            <p class="eyebrow">BCS information</p>
+            <dl class="info-list">
+              {INFO.map(([k, v]) => (
+                <div>
+                  <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">{k}</dt>
+                  <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;">{v}</dd>
+                </div>
+              ))}
+              <div>
+                <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">Email</dt>
+                <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;text-transform:none;letter-spacing:0;"><a href={`mailto:${CONTACT.email}`} style="color:inherit;text-decoration:none;">{CONTACT.email}</a></dd>
+              </div>
+            </dl>
+          </div>
+          <div class="info-cost">
+            <p class="eyebrow">Partner with this school</p>
+            <p class="disp" style="margin:22px 0 0;font-size:20px;font-weight:500;">Twenty-five students this season</p>
+            <p class="body" style="margin:12px 0 0;max-width:40ch;font-size:15px;">Staffing, housing, meals and ministry resources all need support. A small monthly gift makes a lasting difference in these students’ lives and in the communities they go on to serve.</p>
+            <a class="btn btn--solid" style="margin-top:22px;display:inline-flex;" href={GIVE_URL} target="_blank" rel="noopener">Become a monthly partner ↗︎</a>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:36px;">
+          <a class="btn btn--solid" href={applyUrl('bcs')} target="_blank" rel="noopener">Apply for BCS ↗︎</a>
+          <a class="btn" href={applyUrl('dts')} target="_blank" rel="noopener">Haven't done a DTS? Apply for DTS</a>
+          <a class="btn btn--plain" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('BCS enquiry')}`}>Email us about BCS</a>
+          <a class="btn btn--plain" href="/campus-life">Campus life</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CampusTeaser title="Where you will live while you train." />
+
+  <Cta
+    title="Healing is where ministry starts."
+    body="Tell us a little about yourself and we will let you know when the next Bible Counseling School opens for applications."
+    primary={['applyBcs', 'Apply for BCS']}
+    secondary={['contact', 'Ask a question']}
+  />
+  <Footer />
+</SrLayout>

@@ -21,7 +21,7 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { title: 'Discipleship Bible School (DBS)', desc: 'Thirteen weeks · June 28 to September 22, 2027', href: '/schools/dbs', group: 'Schools', keywords: 'dbs discipleship bible school 3 months secondary word of god inductive 66 books april july', quick: true },
   { title: 'DBS week by week', desc: 'The thirteen-week curriculum', href: '/schools/dbs#week-1', group: 'Schools', keywords: 'dbs curriculum weeks genesis exodus pentateuch tribal david kings prophets exile jesus church paul john revelation teaching week' },
   { title: 'DBS dates and information', desc: 'June 28 to September 22, 2027 · completed DTS required', href: '/schools/dbs#info', group: 'Schools', keywords: 'dbs dates cost arrival departure june 28 september 22 2027 prerequisites' },
-  { title: 'Bible Counseling School (BCS)', desc: 'Caring for people who carry trauma', href: '/schools', group: 'Schools', keywords: 'bcs bible counseling counselling school trauma care' },
+  { title: 'Bible Counseling School (BCS)', desc: 'Discipleship and inner healing · running now', href: '/schools/bcs', group: 'Schools', keywords: 'bcs bible counseling counselling school trauma care healing inner healing family systems restoration' },
   { title: 'Social Media School (SMS)', desc: 'Storytelling and digital ministry', href: '/schools/sms', group: 'Schools', keywords: 'sms social media school storytelling digital content video' },
   { title: 'Schools & Courses', desc: 'Every school in Siem Reap', href: '/schools', group: 'Schools', keywords: 'schools courses training uofn university of the nations short-term outreach' },
 
