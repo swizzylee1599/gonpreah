@@ -3,12 +3,15 @@ import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
+import { srcset } from '../lib/sr-img';
+import { applyUrl } from '../lib/sr-routes';
 
-const list: [string, string, string, string, string?][] = [
-  ['Discipleship Training School', '6 months · Khmer & English', 'Six months focused on knowing God and making Him known: three months of lecture in Siem Reap, then three months of outreach to the nations. One bilingual school, taught in Khmer and English.', 'Every January', '/schools/dts'],
-  ['Discipleship Bible School', '3 months · Secondary school', 'Read the whole Bible in thirteen weeks and study all sixty-six books inductively, following the story from Genesis to Revelation.', 'June 28 – September 22, 2027', '/schools/dbs'],
-  ['Bible Counseling School', 'Secondary school', 'Training for those caring for people who carry trauma — a growing need across Cambodia.', 'New'],
-  ['Social Media School', 'Secondary school', 'Storytelling and digital ministry, for the generation already living there.', 'New', '/schools/sms'],
+// The same photos as the school cards on the home page sit behind each row.
+const list: { key: string; name: string; meta: string; body: string; when: string; href?: string; photo: string; pos?: string }[] = [
+  { key: 'dts', name: 'Discipleship Training School', meta: '6 months · Khmer & English', body: 'Six months focused on knowing God and making Him known: three months of lecture in Siem Reap, then three months of outreach to the nations. One bilingual school, taught in Khmer and English.', when: 'Every January', href: '/schools/dts', photo: '/images/gonpreah-worship-2.webp', pos: '50% 35%' },
+  { key: 'dbs', name: 'Discipleship Bible School', meta: '3 months · Secondary school', body: 'Read the whole Bible in thirteen weeks and study all sixty-six books inductively, following the story from Genesis to Revelation.', when: 'June 28 – September 22, 2027', href: '/schools/dbs', photo: '/images/schools/dts-student-bible.webp', pos: '50% 36%' },
+  { key: 'bcs', name: 'Bible Counseling School', meta: 'Secondary school', body: 'Training for those caring for people who carry trauma — a growing need across Cambodia.', when: 'New', photo: '/images/schools/praying-together.webp' },
+  { key: 'sms', name: 'Social Media School', meta: 'Secondary school', body: 'Storytelling and digital ministry, for the generation already living there.', when: 'New', href: '/schools/sms', photo: '/images/schools/sms-studio.webp', pos: '60% 50%' },
 ];
 ---
 <SrLayout title="Schools &amp; Courses | YWAM Siem Reap">
@@ -16,18 +19,20 @@ const list: [string, string, string, string, string?][] = [
     lead="Every YWAM journey starts with DTS. What follows depends on what God has put in you." />
   <section class="sec">
     <div class="wrap" style="display:flex;flex-direction:column;gap:20px;">
-      {list.map(([t, meta, d, when, href]) => (
-        <div class="card reveal" style="display:grid;grid-template-columns:1fr auto;gap:34px;align-items:center;">
-          <div>
-            <p class="eyebrow">{meta}</p>
-            <h3 class="disp" style="margin:14px 0 0;font-size:26px;font-weight:500;">{href ? <a href={href} style="color:inherit;text-decoration:none;">{t}</a> : t}</h3>
-            <p class="body" style="margin:14px 0 0;max-width:58ch;font-size:16px;">{d}</p>
+      {list.map((s) => (
+        <div class="card reveal school-row">
+          <img class="school-row-bg" src={s.photo} srcset={srcset(s.photo)} sizes="(max-width: 760px) 100vw, 1240px" alt="" loading="lazy" decoding="async" style={s.pos ? `object-position:${s.pos}` : undefined} />
+          <div class="school-row-scrim" aria-hidden="true"></div>
+          <div class="school-row-copy">
+            <p class="eyebrow">{s.meta}</p>
+            <h3 class="disp" style="margin:14px 0 0;font-size:clamp(24px,2.4vw,30px);font-weight:500;">{s.href ? <a href={s.href} style="color:inherit;text-decoration:none;">{s.name}</a> : s.name}</h3>
+            <p class="body" style="margin:14px 0 0;max-width:54ch;font-size:16px;">{s.body}</p>
           </div>
-          <div style="text-align:right;">
-            <p style="margin:0;color:var(--sr-pink);font-size:13px;letter-spacing:.14em;text-transform:uppercase;">{when}</p>
-            <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px;">
-              {href && <a class="btn" style="display:inline-flex;" href={href}>About the school</a>}
-              <a class="btn btn--plain" style="display:inline-flex;" href="/apply">Apply</a>
+          <div class="school-row-side">
+            <p style="margin:0;color:var(--sr-pink);font-size:13px;letter-spacing:.14em;text-transform:uppercase;">{s.when}</p>
+            <div class="school-row-btns">
+              {s.href && <a class="btn" style="display:inline-flex;" href={s.href}>About the school</a>}
+              <a class="btn btn--plain" style="display:inline-flex;" href={applyUrl(s.key)} target="_blank" rel="noopener">Apply ↗︎</a>
             </div>
           </div>
         </div>

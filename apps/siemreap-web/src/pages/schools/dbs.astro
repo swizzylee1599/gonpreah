@@ -1,4 +1,5 @@
 ---
+import { applyUrl } from '../../lib/sr-routes';
 import SrLayout from '../../layouts/SrLayout.astro';
 import Footer from '../../components/sr/Footer.astro';
 import PageHead from '../../components/sr/PageHead.astro';
@@ -258,8 +259,8 @@ const FAQ: [string, string][] = [
           </div>
         </div>
         <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:36px;">
-          <a class="btn btn--solid" href="/apply?school=dbs">Apply for DBS</a>
-          <a class="btn" href="/apply?school=dts">Haven't done a DTS? Apply for DTS</a>
+          <a class="btn btn--solid" href={applyUrl('dbs')} target="_blank" rel="noopener">Apply for DBS ↗︎</a>
+          <a class="btn" href={applyUrl('dts')} target="_blank" rel="noopener">Haven't done a DTS? Apply for DTS</a>
           <a class="btn btn--plain" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('DBS enquiry')}`}>Email us about DBS</a>
           <a class="btn btn--plain" href="/campus-life">Campus life</a>
         </div>
@@ -289,7 +290,7 @@ const FAQ: [string, string][] = [
   <Cta
     title="Know the whole story."
     body="The next DBS runs June 28 to September 22, 2027 in Siem Reap. Tell us a little about yourself and we will walk you through the dates, the cost and what to expect."
-    primary={['apply', 'Apply for DBS']}
+    primary={['applyDbs', 'Apply for DBS']}
     secondary={['contact', 'Ask a question']}
   />
   <Footer />

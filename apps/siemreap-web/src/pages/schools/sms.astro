@@ -1,4 +1,5 @@
 ---
+import { applyUrl } from '../../lib/sr-routes';
 import { srcset } from '../../lib/sr-img';
 import SrLayout from '../../layouts/SrLayout.astro';
 import Footer from '../../components/sr/Footer.astro';
@@ -106,8 +107,8 @@ const INFO: [string, string][] = [
           </div>
         </div>
         <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:36px;">
-          <a class="btn btn--solid" href="/apply?school=sms">Apply for SMS</a>
-          <a class="btn" href="/apply?school=dts">Haven't done a DTS? Apply for DTS</a>
+          <a class="btn btn--solid" href={applyUrl('sms')} target="_blank" rel="noopener">Apply for SMS ↗︎</a>
+          <a class="btn" href={applyUrl('dts')} target="_blank" rel="noopener">Haven't done a DTS? Apply for DTS</a>
           <a class="btn btn--plain" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('SMS enquiry')}`}>Email us about SMS</a>
           <a class="btn btn--plain" href="/campus-life">Campus life</a>
         </div>
@@ -120,7 +121,7 @@ const INFO: [string, string][] = [
   <Cta
     title="Say something true. Say it well."
     body="Tell us a little about yourself and what you already make, and we will let you know when the first Social Media School opens for applications."
-    primary={['apply', 'Apply for SMS']}
+    primary={['applySms', 'Apply for SMS']}
     secondary={['contact', 'Ask a question']}
   />
   <Footer />

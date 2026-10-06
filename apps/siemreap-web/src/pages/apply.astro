@@ -3,7 +3,7 @@ import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
-import { PORTAL } from '../lib/sr-routes';
+import { PORTAL, applyUrl } from '../lib/sr-routes';
 
 // Every application now goes through the GP Portal. The chooser picks what
 // you are applying for; its group decides which set of steps shows below.
@@ -105,9 +105,9 @@ const idsByGroup = (g: Group) => OPTIONS.filter((o) => o.group === g).map((o) =>
                 <a class="btn btn--plain" href="/campus-life">Campus life</a>
               </div>
             </div>
-            <p class="body" style="margin:18px 0 0;max-width:60ch;">{s.note ? s.note + ' ' : ''}The application is on the GP Portal. It opens in a new tab: create a small account (a username and a 4-digit PIN), pick <b>{s.abbr === 'Teams' ? 'Team' : s.abbr}</b>, and your answers save as a draft so you can come back to it any time.</p>
+            <p class="body" style="margin:18px 0 0;max-width:60ch;">{s.note ? s.note + ' ' : ''}The application is on the GP Portal. The button opens it in a new tab with <b>{s.abbr === 'Teams' ? 'Team' : s.abbr}</b> already picked: create a small account (a username and a 4-digit PIN), and your answers save as a draft so you can come back to it any time.</p>
             <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:22px;">
-              <a class="btn btn--solid" href={PORTAL} target="_blank" rel="noopener">Apply on the GP Portal ↗︎</a>
+              <a class="btn btn--solid" href={applyUrl(s.id)} target="_blank" rel="noopener">Apply on the GP Portal ↗︎</a>
               <a class="btn" href={`mailto:${s.email}?subject=${encodeURIComponent(`${s.abbr} application`)}`}>Email {s.email}</a>
             </div>
             <p class="muted" style="margin:18px 0 0;font-size:14px;max-width:60ch;">Trouble with the portal? Email us and we will help you through it.</p>

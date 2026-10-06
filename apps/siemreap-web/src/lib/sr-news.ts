@@ -1,3 +1,5 @@
+import { applyUrl } from './sr-routes';
+
 // "What's new" on the home page: updates from the campus and beyond — a
 // school opening for applications, a new song, a post, a newsletter. Newest
 // first; keep it to three or four. `href` can be a page or an outside link.
@@ -8,7 +10,7 @@ export const NEWS: NewsItem[] = [
     date: 'October 2026', tag: 'Schools',
     title: 'DTS January 2027 is open for applications',
     body: 'Arrival day is January 3, 2027. Three months of lecture in Siem Reap, then three months on outreach to the nations.',
-    href: '/apply?school=dts', label: 'Apply for DTS',
+    href: applyUrl('dts'), label: 'Apply for DTS', external: true,
   },
   {
     date: 'October 2026', tag: 'Campus',

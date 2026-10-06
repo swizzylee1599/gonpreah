@@ -1,4 +1,5 @@
 ---
+import { ROUTE_PATH } from '../lib/sr-routes';
 import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
 import Marquee from '../components/sr/Marquee.astro';
@@ -341,7 +342,7 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
         <div class="wrap reveal" style="text-align:center;">
           <h2 class="disp scaleup" style="margin:0;font-size:clamp(32px,5.4vw,72px);font-weight:500;">Discipled here. Sent everywhere.</h2>
           <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:40px;">
-            <a class="btn btn--solid" href="/apply">Apply to a school</a>
+            <a class="btn btn--solid" href={ROUTE_PATH.apply} target="_blank" rel="noopener">Apply to a school ↗︎</a>
             <a class="btn" href="/visit">Bring a team</a>
             <a class="btn" href="/give">Give</a>
           </div>
