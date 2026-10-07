@@ -1,0 +1,124 @@
+---
+import SrLayout from '../../layouts/SrLayout.astro';
+import Footer from '../../components/sr/Footer.astro';
+import { srcset } from '../../lib/sr-img';
+import { ISSUES, issueUrl, type Issue } from '../../lib/sr-newsletters';
+
+export function getStaticPaths() {
+  return ISSUES.map((issue) => ({ params: { slug: issue.slug }, props: { issue } }));
+}
+const { issue } = Astro.props as { issue: Issue };
+const idx = ISSUES.findIndex((i) => i.slug === issue.slug);
+const older = ISSUES[idx + 1];
+const newer = ISSUES[idx - 1];
+const no = String(issue.number).padStart(2, '0');
+const ext = (href: string) => (href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {});
+---
+<SrLayout title={`${issue.title} | YWAM Siem Reap newsletter`} description={issue.deck} spacer={false} image={issue.cover}>
+  <article class="nl">
+    <header class="nl-cover">
+      <img class="nl-cover-bg" src={issue.cover} srcset={srcset(issue.cover)} sizes="100vw" alt={issue.coverAlt} loading="eager" decoding="async" fetchpriority="high" style={issue.coverPos ? `object-position:${issue.coverPos}` : undefined} />
+      <div class="nl-cover-scrim" aria-hidden="true"></div>
+      <div class="wrap nl-cover-copy">
+        <p class="eyebrow nl-eyebrow"><span>Newsletter</span><span class="nl-dot">·</span><span>No. {no}</span><span class="nl-dot">·</span><time datetime={issue.dateISO}>{issue.date}</time></p>
+        <h1 class="disp nl-title">{issue.title}</h1>
+        <p class="body nl-deck">{issue.deck}</p>
+        <p class="muted nl-cue" aria-hidden="true">Scroll ↓</p>
+      </div>
+    </header>
+
+    {issue.blocks.map((b) => (
+      <>
+        {b.kind === 'text' && (
+          <section class="nl-sec">
+            <div class="wrap nl-text reveal">
+              {b.heading && <h2 class="disp nl-h2">{b.heading}</h2>}
+              {b.paragraphs.map((p, i) => <p class:list={['body', 'nl-p', { 'nl-p--lead': i === 0 && !b.heading }]}>{p}</p>)}
+            </div>
+          </section>
+        )}
+        {b.kind === 'stats' && (
+          <section class="nl-sec nl-sec--paper">
+            <div class="wrap nl-stats stag">
+              {b.items.map(([n, l]) => <div class="nl-stat"><span class="disp nl-stat-n">{n}</span><span class="nl-stat-l">{l}</span></div>)}
+            </div>
+          </section>
+        )}
+        {b.kind === 'feature' && (
+          <section class:list={['nl-sec', 'nl-feature', { 'nl-feature--flip': b.flip }]}>
+            <div class="wrap nl-feature-grid">
+              <figure class="nl-feature-photo wipe"><img src={b.photo} srcset={srcset(b.photo)} sizes="(max-width: 760px) 100vw, 50vw" alt={b.alt} loading="lazy" decoding="async" style={b.pos ? `object-position:${b.pos}` : undefined} /></figure>
+              <div class="nl-feature-copy reveal">
+                <p class="eyebrow">{b.eyebrow}</p>
+                <h2 class="disp nl-h2 nl-h2--big">{b.title}</h2>
+                {b.paragraphs.map((p) => <p class="body nl-p">{p}</p>)}
+                {b.href && b.label && <a class="arrow-link" href={b.href}><span>{b.label}</span><span class="arrow-circle" aria-hidden="true">→</span></a>}
+              </div>
+            </div>
+          </section>
+        )}
+        {b.kind === 'quote' && (
+          <section class="nl-sec nl-quote-sec">
+            <div class="wrap reveal">
+              <blockquote class="nl-quote"><p class="disp nl-quote-text">{b.text}</p>{b.by && <footer class="nl-quote-by">{b.by}</footer>}</blockquote>
+            </div>
+          </section>
+        )}
+        {b.kind === 'photo' && (
+          <section class="nl-sec nl-sec--flush">
+            <figure class="nl-photo wipe">
+              <img src={b.src} srcset={srcset(b.src)} sizes="100vw" alt={b.alt} loading="lazy" decoding="async" style={b.pos ? `object-position:${b.pos}` : undefined} />
+              {b.caption && <figcaption class="wrap muted nl-caption">{b.caption}</figcaption>}
+            </figure>
+          </section>
+        )}
+        {b.kind === 'ask' && (
+          <section class="nl-sec nl-sec--paper nl-ask">
+            <div class="wrap reveal">
+              <p class="eyebrow">The ask</p>
+              <h2 class="disp nl-h2 nl-h2--big">{b.title}</h2>
+              <p class="body nl-p">{b.body}</p>
+              <div class="nl-ask-btns">
+                <a class="btn btn--solid" href={b.primary[0]} {...ext(b.primary[0])}>{b.primary[1]}{b.primary[0].startsWith('http') ? ' ↗︎' : ''}</a>
+                {b.secondary && <a class="btn" href={b.secondary[0]} {...ext(b.secondary[0])}>{b.secondary[1]}</a>}
+              </div>
+            </div>
+          </section>
+        )}
+      </>
+    ))}
+
+    <footer class="nl-sec nl-foot">
+      <div class="wrap nl-foot-row">
+        <div class="nl-foot-nav">
+          {older && <a class="nl-foot-link" href={issueUrl(older)}>← Older: {older.title}</a>}
+          {newer && <a class="nl-foot-link" href={issueUrl(newer)}>Newer: {newer.title} →</a>}
+          <a class="nl-foot-link" href="/news">All newsletters</a>
+        </div>
+        <button class="btn btn--plain nl-share" type="button" id="nl-share">Share this newsletter</button>
+      </div>
+      <div class="nl-toast" id="nl-toast" role="status" aria-live="polite" hidden>Link copied</div>
+    </footer>
+  </article>
+  <Footer />
+</SrLayout>
+
+<script>
+  let ctrl: AbortController | null = null;
+  const init = () => {
+    ctrl?.abort(); ctrl = new AbortController(); const { signal } = ctrl;
+    const btn = document.getElementById('nl-share');
+    const toast = document.getElementById('nl-toast');
+    if (!btn || !toast) return;
+    let timer = 0;
+    const say = (m: string) => { toast.textContent = m; toast.hidden = false; clearTimeout(timer); timer = window.setTimeout(() => { toast.hidden = true; }, 2200); };
+    btn.addEventListener('click', async () => {
+      const url = `${location.origin}${location.pathname}`;
+      const data = { title: document.title, text: document.querySelector('meta[name="description"]')?.getAttribute('content') ?? '', url };
+      try { if (navigator.share && (!navigator.canShare || navigator.canShare(data))) { await navigator.share(data); return; } } catch { return; }
+      try { await navigator.clipboard.writeText(url); say('Link copied'); } catch { say(url); }
+    }, { signal });
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

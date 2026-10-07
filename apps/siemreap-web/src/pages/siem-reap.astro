@@ -34,17 +34,22 @@ const hasDrone = existsSync('public' + DRONE);
         <p class="km aw-km">អង្គរវត្ត</p>
       </div>
 
-      <div class="wrap aw-temples">
-        {TEMPLES.map((t, i) => (
-          <article class="aw-temple">
-            <figure class="aw-temple-photo"><img src={t.photo} srcset={srcset(t.photo)} sizes="(max-width: 760px) 100vw, 50vw" alt={t.alt} loading="lazy" decoding="async" style={t.pos ? `object-position:${t.pos}` : undefined} /></figure>
-            <div class="aw-temple-copy">
-              <h2 class="disp aw-temple-name"><span class="aw-temple-i">{`1.${i + 1}`}</span> {t.name}</h2>
-              <p class="body aw-temple-body">{t.body}</p>
-            </div>
-          </article>
-        ))}
-      </div>
+    </div>
+
+    <!-- The temples scroll past on the side while the drone circles behind
+         them: each card sits at its own place in the stack, comes up from
+         the bottom with the page and leaves at the top. -->
+    <div class="aw-side" aria-label="The temples">
+      {TEMPLES.map((t, i) => (
+        <article class="aw-temple" style={`--k:${i}`}>
+          <figure class="aw-temple-photo"><img src={t.photo} srcset={srcset(t.photo)} sizes="(max-width: 760px) 100vw, 30vw" alt={t.alt} loading="lazy" decoding="async" style={t.pos ? `object-position:${t.pos}` : undefined} /></figure>
+          <div class="aw-temple-copy">
+            <h2 class="disp aw-temple-name"><span class="aw-temple-i">{`1.${i + 1}`}</span> {t.name}</h2>
+            <p class="km aw-temple-km">{t.km}</p>
+            <p class="body aw-temple-body">{t.body}</p>
+          </div>
+        </article>
+      ))}
     </div>
   </section>
 
@@ -106,7 +111,6 @@ const hasDrone = existsSync('public' + DRONE);
     const scrim = stack.querySelector<HTMLElement>('.aw-scrim')!;
     const head = stack.querySelector<HTMLElement>('.aw-head')!;
     const label = stack.querySelector<HTMLElement>('.aw-label')!;
-    const temples = [...stack.querySelectorAll<HTMLElement>('.aw-temple')];
     let video = stack.querySelector<HTMLVideoElement>('.aw-video');
     const cards = [...document.querySelectorAll<HTMLElement>('.sr-card')].map((el) => ({ el, face: el.querySelector<HTMLElement>('.sr-card-face')! }));
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -151,8 +155,9 @@ const hasDrone = existsSync('public' + DRONE);
     // Stages across the pinned scroll:
     //   0–.06   the header photo and title hold
     //   .06–.2  the view fades to full colour; the title gives way to "1. Angkor Wat"
-    //   .2–.72  the drone circles slowly around the temple
-    //   .72–1   the three temples come up (side by side, or one at a time on phones)
+    //   .2–.95  the drone circles slowly around the temple while the temple
+    //           cards scroll past on the side (they are in the page flow,
+    //           so they track the finger exactly)
     const measure = () => {
       const r = stack.getBoundingClientRect();
       const scrollable = r.height - pin.offsetHeight;
@@ -167,47 +172,29 @@ const hasDrone = existsSync('public' + DRONE);
       color.style.opacity = String(c);
       muted.style.opacity = String(1 - c * 0.999);
 
-      const fly = clamp01((p - 0.2) / 0.52);
+      const fly = clamp01((p - 0.2) / 0.75);
       if (video && ready && video.duration && !Number.isNaN(video.duration)) {
         video.style.opacity = p > 0.19 ? '1' : '0';
         if (p > 0.19) seekTo(fly * video.duration * 0.99);
-      } else {
-        if (video) video.style.opacity = '0';
-        // Without the clip, the colour still pushes in slowly instead.
-        color.style.transform = `scale(${(1 + ease(fly) * 0.35).toFixed(4)})`;
+      } else if (video) {
+        // Until the clip can play, the colour still simply holds: no push-in.
+        video.style.opacity = '0';
       }
 
-      const toTemples = ease(clamp01((p - 0.7) / 0.06));
-      scrim.style.opacity = String(0.55 - 0.4 * c + 0.45 * toTemples);
+      scrim.style.opacity = String(0.55 - 0.3 * c);
 
       const hOut = ease(clamp01((p - 0.07) / 0.09));
       head.style.opacity = String(1 - hOut);
       head.style.transform = `translateY(${(-30 * hOut).toFixed(1)}px)`;
 
-      // "1. Angkor Wat" slides in from the left; when the temple cards come
-      // up it docks small in the top-left corner, clear of them.
+      // "1. Angkor Wat" slides in from the left. On phones it then docks
+      // small in the top-left corner before the temple cards scroll through;
+      // on desktop it stays large on the left while the cards pass on the right.
       const lIn = ease(clamp01((p - 0.12) / 0.08));
-      const lUp = toTemples;
-      const dockY = (phone ? 96 : 118) - label.offsetTop;
+      const lUp = phone ? ease(clamp01((p - 0.2) / 0.06)) : 0;
+      const dockY = 96 - label.offsetTop;
       label.style.opacity = String(lIn);
-      label.style.transform = `translate(${((1 - lIn) * -40).toFixed(1)}px, ${(dockY * lUp).toFixed(1)}px) scale(${(1 - (phone ? 0.5 : 0.55) * lUp).toFixed(3)})`;
-
-      temples.forEach((el, i) => {
-        if (phone) {
-          // One at a time: each rises in, holds, then lifts away for the next.
-          const s = 0.74 + i * 0.085;
-          const inK = ease(clamp01((p - s) / 0.04));
-          const outK = i === temples.length - 1 ? 0 : ease(clamp01((p - (s + 0.07)) / 0.03));
-          el.style.opacity = String(inK * (1 - outK));
-          el.style.transform = `translateY(${((1 - inK) * 50 - outK * 40).toFixed(1)}px)`;
-          el.style.pointerEvents = inK > 0.5 && outK < 0.5 ? 'auto' : 'none';
-        } else {
-          const k = ease(clamp01((p - (0.75 + i * 0.06)) / 0.07));
-          el.style.opacity = String(k);
-          el.style.transform = `translateY(${((1 - k) * 40).toFixed(1)}px)`;
-          el.style.pointerEvents = k > 0.5 ? 'auto' : 'none';
-        }
-      });
+      label.style.transform = `translate(${((1 - lIn) * -40).toFixed(1)}px, ${(dockY * lUp).toFixed(1)}px) scale(${(1 - 0.5 * lUp).toFixed(3)})`;
 
       // 2. Each card flips up as it arrives, like the cards on Campus Life,
       // then sticks while the next one comes up over it.

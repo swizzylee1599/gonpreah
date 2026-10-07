@@ -1,4 +1,5 @@
 ---
+import { ROUTE_PATH } from '../lib/sr-routes';
 import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
 import Marquee from '../components/sr/Marquee.astro';
@@ -6,6 +7,8 @@ import PhotoSlot from '../components/sr/PhotoSlot.astro';
 import HeroLine from '../components/sr/HeroLine.astro';
 import HeroVideo from '../components/sr/HeroVideo.astro';
 import { NEWS } from '../lib/sr-news';
+import { LATEST, issueUrl } from '../lib/sr-newsletters';
+import { srcset } from '../lib/sr-img';
 import SchoolCard from '../components/sr/SchoolCard.astro';
 import GlobeO from '../components/sr/GlobeO.astro';
 
@@ -19,8 +22,8 @@ const GONPREAH_3D_VIDEO = '/video/gonpreah-community-3d.mp4';
 const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; photo?: string; pos?: string; href?: string }[] = [
   { name: 'Discipleship Training School', abbr: 'DTS', body: 'Discover your calling. Find a purpose greater than your own desire.', when: 'Every January', photo: '/images/gonpreah-worship-2.webp', href: '/schools/dts' },
   { name: 'Discipleship Bible School', abbr: 'DBS', body: 'The whole Bible in thirteen weeks. Study the Word, then live it out.', when: 'Next school June 2027', photo: '/images/schools/dts-student-bible.webp', pos: '50% 36%', href: '/schools/dbs' },
-  { name: 'Bible Counseling School', abbr: 'BCS', body: 'Training for those caring for people who carry trauma — a growing need across Cambodia.', when: 'New', photo: '/images/schools/praying-together.webp' },
-  { name: 'Social Media School', abbr: 'SMS', body: 'Storytelling and digital ministry, for the generation already living there.', when: 'New', photo: '/images/schools/sms-studio.webp', href: '/schools/sms' },
+  { name: 'Bible Counseling School', abbr: 'BCS', body: 'A journey of discipleship and inner healing. Be restored first, then equipped to walk alongside others.', when: 'Running now', photo: '/images/schools/praying-together.webp', href: '/schools/bcs' },
+  { name: 'Social Media School', abbr: 'SMS', body: 'Storytelling and digital ministry, for the generation already living there.', when: 'Running now', photo: '/images/schools/sms-studio.webp', href: '/schools/sms' },
 ];
 ---
 <SrLayout title="YWAM Siem Reap | Heart for Cambodia, vision for the world" spacer={false}>
@@ -141,6 +144,15 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
             </div>
             <a class="btn" href="https://www.instagram.com/ywamsiemreap" target="_blank" rel="noopener">Follow @ywamsiemreap ↗︎</a>
           </div>
+          <a class="news-feature reveal" href={issueUrl(LATEST)}>
+            <figure class="news-feature-photo"><img src={LATEST.cover} srcset={srcset(LATEST.cover)} sizes="(max-width: 760px) 100vw, 55vw" alt={LATEST.coverAlt} loading="lazy" decoding="async" style={LATEST.coverPos ? `object-position:${LATEST.coverPos}` : undefined} /></figure>
+            <div class="news-feature-copy">
+              <p class="news-meta"><span class="news-tag">Newsletter · No. {String(LATEST.number).padStart(2, '0')}</span><span class="muted">{LATEST.date}</span></p>
+              <h3 class="disp news-feature-title">{LATEST.title}</h3>
+              <p class="body news-feature-deck">{LATEST.deck}</p>
+              <span class="arrow-link"><span>Read the newsletter</span><span class="arrow-circle" aria-hidden="true">→</span></span>
+            </div>
+          </a>
           <div class="news-grid stag">
             {NEWS.map((n) => (
               <a class="card news-card" href={n.href} target={n.external ? '_blank' : undefined} rel={n.external ? 'noopener' : undefined}>
@@ -341,7 +353,7 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
         <div class="wrap reveal" style="text-align:center;">
           <h2 class="disp scaleup" style="margin:0;font-size:clamp(32px,5.4vw,72px);font-weight:500;">Discipled here. Sent everywhere.</h2>
           <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:40px;">
-            <a class="btn btn--solid" href="/apply">Apply to a school</a>
+            <a class="btn btn--solid" href={ROUTE_PATH.apply} target="_blank" rel="noopener">Apply to a school ↗︎</a>
             <a class="btn" href="/visit">Bring a team</a>
             <a class="btn" href="/give">Give</a>
           </div>

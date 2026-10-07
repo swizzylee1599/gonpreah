@@ -1,4 +1,4 @@
-import { GIVE_URL, PORTAL } from './sr-routes';
+import { GIVE_URL, PORTAL, applyUrl } from './sr-routes';
 
 // Quick-search index for the nav search. Curated rather than crawled: each
 // entry is a page or a deep link with the words people are likely to type.
@@ -21,19 +21,20 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { title: 'Discipleship Bible School (DBS)', desc: 'Thirteen weeks · June 28 to September 22, 2027', href: '/schools/dbs', group: 'Schools', keywords: 'dbs discipleship bible school 3 months secondary word of god inductive 66 books april july', quick: true },
   { title: 'DBS week by week', desc: 'The thirteen-week curriculum', href: '/schools/dbs#week-1', group: 'Schools', keywords: 'dbs curriculum weeks genesis exodus pentateuch tribal david kings prophets exile jesus church paul john revelation teaching week' },
   { title: 'DBS dates and information', desc: 'June 28 to September 22, 2027 · completed DTS required', href: '/schools/dbs#info', group: 'Schools', keywords: 'dbs dates cost arrival departure june 28 september 22 2027 prerequisites' },
-  { title: 'Bible Counseling School (BCS)', desc: 'Caring for people who carry trauma', href: '/schools', group: 'Schools', keywords: 'bcs bible counseling counselling school trauma care' },
+  { title: 'Bible Counseling School (BCS)', desc: 'Discipleship and inner healing · running now', href: '/schools/bcs', group: 'Schools', keywords: 'bcs bible counseling counselling school trauma care healing inner healing family systems restoration' },
   { title: 'Social Media School (SMS)', desc: 'Storytelling and digital ministry', href: '/schools/sms', group: 'Schools', keywords: 'sms social media school storytelling digital content video' },
   { title: 'Schools & Courses', desc: 'Every school in Siem Reap', href: '/schools', group: 'Schools', keywords: 'schools courses training uofn university of the nations short-term outreach' },
 
   { title: 'How to apply', desc: 'Choose a school, staff or volunteering', href: '/apply', group: 'Apply', keywords: 'apply application form process steps reference interview acceptance visa fees packing list', quick: true },
-  { title: 'Apply for DTS', desc: 'DTS application form', href: '/apply?school=dts', group: 'Apply', keywords: 'apply dts application form google form' },
-  { title: 'Apply for DBS', desc: 'DBS application', href: '/apply?school=dbs', group: 'Apply', keywords: 'apply dbs application' },
-  { title: 'Bring a team (apply)', desc: 'Short-term team application', href: '/apply?school=team', group: 'Apply', keywords: 'team application short term team visit apply group church' },
-  { title: 'Staff application', desc: 'Join staff at YWAM Siem Reap', href: '/apply?school=staff', group: 'Apply', keywords: 'staff application join staff missionary long term serve' },
-  { title: 'Volunteer application', desc: 'Volunteer with us short or long term', href: '/apply?school=volunteer', group: 'Apply', keywords: 'volunteer application mission builder serve short term' },
+  { title: 'Apply for DTS', desc: 'Opens the GP Portal with DTS picked', href: applyUrl('dts'), group: 'Apply', keywords: 'apply dts application form', external: true },
+  { title: 'Apply for DBS', desc: 'Opens the GP Portal with DBS picked', href: applyUrl('dbs'), group: 'Apply', keywords: 'apply dbs application', external: true },
+  { title: 'Bring a team (apply)', desc: 'Short-term team application', href: applyUrl('team'), group: 'Apply', external: true, keywords: 'team application short term team visit apply group church' },
+  { title: 'Staff application', desc: 'Join staff at YWAM Siem Reap', href: applyUrl('staff'), group: 'Apply', external: true, keywords: 'staff application join staff missionary long term serve' },
+  { title: 'Volunteer application', desc: 'Volunteer with us short or long term', href: applyUrl('volunteer'), group: 'Apply', external: true, keywords: 'volunteer application mission builder serve short term' },
   { title: 'GP Portal (apply online)', desc: 'Schools, staff, volunteers and teams', href: PORTAL, group: 'Apply', keywords: 'gp portal apply online application account login sign in impact gonpreah', external: true },
   { title: 'Leader reference', desc: 'One reference for international applicants', href: '/apply', group: 'Apply', keywords: 'leader reference pastor mentor church reference form international khmer' },
 
+  { title: 'Newsletters', desc: 'News from the campus: new schools, outreach, how to partner', href: '/news', group: 'About', keywords: 'newsletter news updates update blog stories partner monthly give bcs sms two new schools' },
   { title: 'Contact the base', desc: 'WhatsApp or email', href: '/contact', group: 'Contact', keywords: 'contact talk reach us message phone address', quick: true },
   { title: 'WhatsApp +855 69 911 705', desc: 'Message us on WhatsApp', href: 'https://wa.me/85569911705', group: 'Contact', keywords: 'whatsapp phone number telegram call message chat 069 911 705', external: true },
   { title: 'info@ywamsiemreap.org', desc: 'Email the base', href: 'mailto:info@ywamsiemreap.org', group: 'Contact', keywords: 'email mail info write', external: true },

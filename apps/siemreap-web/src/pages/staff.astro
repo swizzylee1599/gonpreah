@@ -4,6 +4,7 @@ import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
 import CardGrid from '../components/sr/CardGrid.astro';
 import Cta from '../components/sr/Cta.astro';
+import { applyUrl } from '../lib/sr-routes';
 ---
 <SrLayout title="Join Staff or Volunteer | YWAM Siem Reap" spacer={false}>
   <PageHead eyebrow="Join staff or volunteer" km="ក្រុមការងារ" title="Serve long term. Or come short term." highlight="short term."
@@ -15,15 +16,15 @@ import Cta from '../components/sr/Cta.astro';
   ]} />
   <section class="sec" style="padding-top:0;">
     <div class="wrap" style="display:flex;gap:14px;flex-wrap:wrap;">
-      <a class="btn btn--solid" href="/apply?school=staff">Staff application</a>
-      <a class="btn" href="/apply?school=volunteer">Volunteer application</a>
+      <a class="btn btn--solid" href={applyUrl('staff')} target="_blank" rel="noopener">Staff application ↗︎</a>
+      <a class="btn" href={applyUrl('volunteer')} target="_blank" rel="noopener">Volunteer application ↗︎</a>
       <a class="btn btn--plain" href="/campus-life">Campus life</a>
     </div>
   </section>
   <Cta
     title="Think you might belong here?"
     body="Tell us what you do and when you are free. We would rather hear from you early than late."
-    primary={['apply', 'Apply to staff or volunteer']}
+    primary={['applyStaff', 'Apply to staff or volunteer']}
     secondary={['contact', 'Get in touch']}
   />
   <Footer />

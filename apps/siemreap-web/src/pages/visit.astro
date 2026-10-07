@@ -4,7 +4,7 @@ import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
 import CampusTeaser from '../components/sr/CampusTeaser.astro';
-import { PORTAL } from '../lib/sr-routes';
+import { applyUrl } from '../lib/sr-routes';
 import { CONTACT } from '../lib/sr-contact';
 import { srcset } from '../lib/sr-img';
 
@@ -93,7 +93,7 @@ const PRACTICAL: [string, string][] = [
         <p class="body" style="margin-top:18px;">We believe God has a purpose for your time here. As a short-term team you serve alongside us in villages, schools, churches and communities, sharing the gospel in word and action. Siem Reap is known for Angkor Wat; it is also home to many who have never heard the name of Jesus.</p>
         <p class="body" style="margin-top:16px;">Most teams stay one to three weeks. You stay on campus, eat with the community, and work with Khmer staff on things that continue after you leave.</p>
         <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:28px;">
-          <a class="btn btn--solid" href="/apply?school=team">Apply to bring a team</a>
+          <a class="btn btn--solid" href={applyUrl('team')} target="_blank" rel="noopener">Apply to bring a team ↗︎</a>
           <a class="btn" href={GUIDE}>Read the team guide</a>
         </div>
       </div>
@@ -231,7 +231,7 @@ const PRACTICAL: [string, string][] = [
         ))}
       </div>
       <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:32px;">
-        <a class="btn btn--solid" href={PORTAL} target="_blank" rel="noopener">Apply on the GP Portal ↗︎</a>
+        <a class="btn btn--solid" href={applyUrl('team')} target="_blank" rel="noopener">Apply on the GP Portal ↗︎</a>
         <a class="btn" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('Bringing a team')}`}>Email {CONTACT.email}</a>
         <a class="btn btn--plain" href={GUIDE}>Read the team guide</a>
       </div>

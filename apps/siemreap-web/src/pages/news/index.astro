@@ -1,0 +1,39 @@
+---
+import SrLayout from '../../layouts/SrLayout.astro';
+import Footer from '../../components/sr/Footer.astro';
+import PageHead from '../../components/sr/PageHead.astro';
+import { srcset } from '../../lib/sr-img';
+import { ISSUES, issueUrl } from '../../lib/sr-newsletters';
+import { CONTACT } from '../../lib/sr-contact';
+---
+<SrLayout title="Newsletters | YWAM Siem Reap"
+  description="News from the YWAM Siem Reap campus: new schools, outreach, the people and the numbers, and how to partner with us.">
+  <PageHead eyebrow="Newsletters" km="ព័ត៌មាន" title="From the campus, in your inbox." highlight="in your inbox."
+    lead="What God is doing in Siem Reap, a few times a year. New schools, outreach, the people and the numbers, and how to stand with us." />
+
+  <section class="sec" style="padding-top:20px;">
+    <div class="wrap nl-list stag">
+      {ISSUES.map((i, k) => (
+        <a class:list={['nl-item', { 'nl-item--lead': k === 0 }]} href={issueUrl(i)}>
+          <figure class="nl-item-photo"><img src={i.cover} srcset={srcset(i.cover)} sizes={k === 0 ? '(max-width: 760px) 100vw, 1240px' : '(max-width: 760px) 100vw, 33vw'} alt={i.coverAlt} loading={k === 0 ? 'eager' : 'lazy'} decoding="async" style={i.coverPos ? `object-position:${i.coverPos}` : undefined} /></figure>
+          <div class="nl-item-copy">
+            <p class="eyebrow nl-eyebrow"><span>No. {String(i.number).padStart(2, '0')}</span><span class="nl-dot">·</span><time datetime={i.dateISO}>{i.date}</time></p>
+            <h2 class="disp nl-item-title">{i.title}</h2>
+            <p class="body nl-item-deck">{i.deck}</p>
+            <span class="arrow-link"><span>Read the newsletter</span><span class="arrow-circle" aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="sec sec--paper">
+    <div class="wrap reveal" style="text-align:center;">
+      <p class="eyebrow">Get the next one</p>
+      <h2 class="disp" style="margin:14px auto 0;max-width:22ch;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;">Want these in your inbox?</h2>
+      <p class="body" style="margin:18px auto 0;max-width:50ch;">Email us and we will add you to the list. We send a few a year, and never more than that.</p>
+      <a class="btn btn--solid" style="margin-top:28px;display:inline-flex;" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('Add me to the newsletter')}`}>Email {CONTACT.email}</a>
+    </div>
+  </section>
+  <Footer />
+</SrLayout>

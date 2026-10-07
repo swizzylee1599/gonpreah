@@ -3,7 +3,7 @@ import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
-import { PORTAL } from '../lib/sr-routes';
+import { PORTAL, applyUrl } from '../lib/sr-routes';
 
 // Every application now goes through the GP Portal. The chooser picks what
 // you are applying for; its group decides which set of steps shows below.
@@ -12,7 +12,7 @@ type Option = { id: string; name: string; abbr: string; when: string; page?: str
 const OPTIONS: Option[] = [
   { group: 'Schools', id: 'dts', name: 'Discipleship Training School', abbr: 'DTS', when: 'Next school January 2027', page: '/schools/dts', email: 'dts@ywamsiemreap.org' },
   { group: 'Schools', id: 'dbs', name: 'Discipleship Bible School', abbr: 'DBS', when: 'Next school June 2027 · DTS required', page: '/schools/dbs', email: 'info@ywamsiemreap.org' },
-  { group: 'Schools', id: 'bcs', name: 'Bible Counseling School', abbr: 'BCS', when: 'New', email: 'info@ywamsiemreap.org' },
+  { group: 'Schools', id: 'bcs', name: 'Bible Counseling School', abbr: 'BCS', when: 'Running now · next school TBA · DTS required', page: '/schools/bcs', email: 'info@ywamsiemreap.org' },
   { group: 'Schools', id: 'sms', name: 'Social Media School', abbr: 'SMS', when: 'New · DTS required', page: '/schools/sms', email: 'info@ywamsiemreap.org' },
   { group: 'Staff & volunteers', id: 'staff', name: 'Staff application', abbr: 'Staff', when: 'After a DTS', page: '/staff', email: 'info@ywamsiemreap.org', note: 'Staff complete a DTS first, then apply to a role on the base.' },
   { group: 'Staff & volunteers', id: 'volunteer', name: 'Volunteer application', abbr: 'Volunteer', when: 'A few weeks to a few months', page: '/staff', email: 'info@ywamsiemreap.org', note: 'No DTS required. Trades, admin, teaching, media and practical skills are all welcome.' },
@@ -105,9 +105,9 @@ const idsByGroup = (g: Group) => OPTIONS.filter((o) => o.group === g).map((o) =>
                 <a class="btn btn--plain" href="/campus-life">Campus life</a>
               </div>
             </div>
-            <p class="body" style="margin:18px 0 0;max-width:60ch;">{s.note ? s.note + ' ' : ''}The application is on the GP Portal. It opens in a new tab: create a small account (a username and a 4-digit PIN), pick <b>{s.abbr === 'Teams' ? 'Team' : s.abbr}</b>, and your answers save as a draft so you can come back to it any time.</p>
+            <p class="body" style="margin:18px 0 0;max-width:60ch;">{s.note ? s.note + ' ' : ''}The application is on the GP Portal. The button opens it in a new tab with <b>{s.abbr === 'Teams' ? 'Team' : s.abbr}</b> already picked: create a small account (a username and a 4-digit PIN), and your answers save as a draft so you can come back to it any time.</p>
             <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:22px;">
-              <a class="btn btn--solid" href={PORTAL} target="_blank" rel="noopener">Apply on the GP Portal ↗︎</a>
+              <a class="btn btn--solid" href={applyUrl(s.id)} target="_blank" rel="noopener">Apply on the GP Portal ↗︎</a>
               <a class="btn" href={`mailto:${s.email}?subject=${encodeURIComponent(`${s.abbr} application`)}`}>Email {s.email}</a>
             </div>
             <p class="muted" style="margin:18px 0 0;font-size:14px;max-width:60ch;">Trouble with the portal? Email us and we will help you through it.</p>
