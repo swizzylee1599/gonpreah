@@ -1,0 +1,41 @@
+---
+import SrLayout from '../../layouts/SrLayout.astro';
+import Footer from '../../components/sr/Footer.astro';
+import { PORTAL, applyUrl } from '../../lib/sr-routes';
+
+// The menu's Apply lands here: the same chooser the GP Portal shows, on
+// our site. Each card opens the portal's Create-your-account page with that
+// programme picked, which is what the portal's own chooser does on a tap.
+const CHOICES: { key: string; label: string; blurb: string; dts?: boolean }[] = [
+  { key: 'dts', label: 'DTS', blurb: 'Discipleship Training School' },
+  { key: 'dbs', label: 'DBS', blurb: 'Discipleship Bible School', dts: true },
+  { key: 'bcs', label: 'BCS', blurb: 'Bible Counseling School', dts: true },
+  { key: 'sms', label: 'SMS', blurb: 'Social Media School', dts: true },
+  { key: 'staff', label: 'Staff', blurb: 'Join the staff team' },
+  { key: 'volunteer', label: 'Volunteer', blurb: 'Serve with us for a season' },
+  { key: 'team', label: 'Team', blurb: 'Bring a short-term team' },
+];
+---
+<SrLayout title="Apply | YWAM Siem Reap" description="Pick what you are applying for at YWAM Siem Reap: DTS, DBS, BCS, SMS, staff, volunteering or a short-term team. Your application is on the GP Portal.">
+  <section class="sec start">
+    <div class="wrap start-wrap">
+      <p class="eyebrow">YWAM Siem Reap · GP Portal</p>
+      <h1 class="disp start-title">I want to apply</h1>
+      <p class="body start-sub">Pick what you are applying for. You will create a small account on the GP Portal so you can come back to it on your phone.</p>
+      <div class="start-grid stag">
+        {CHOICES.map((c) => (
+          <a class="start-card" href={applyUrl(c.key)} target="_blank" rel="noopener">
+            <span class="disp start-key">{c.label}</span>
+            <span class="start-blurb">{c.blurb}</span>
+            {c.dts && <span class="start-req">Requires a completed DTS</span>}
+          </a>
+        ))}
+      </div>
+      <p class="start-foot">
+        <a class="start-link" href={PORTAL} target="_blank" rel="noopener">I already have an account</a>
+        <a class="start-link muted" href="/apply">How applying works</a>
+      </p>
+    </div>
+  </section>
+  <Footer />
+</SrLayout>

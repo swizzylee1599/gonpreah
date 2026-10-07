@@ -1581,3 +1581,26 @@ body.sr {
   .sr .news-feature-photo { min-height: 0; aspect-ratio: 4 / 3; }
   .sr .news-feature + .news-grid { margin-top: 12px; }
 }
+
+/* The apply chooser (/apply/start): the portal's "I want to apply" screen,
+   on our site. Each card opens the portal with that programme picked. */
+.sr .start { padding-top: 40px; }
+.sr .start-wrap { max-width: 900px; text-align: center; }
+.sr .start-title { margin: 16px 0 0; font-size: clamp(36px, 5vw, 60px); font-weight: 600; line-height: 1.05; text-transform: none; letter-spacing: 0; }
+.sr .start-sub { margin: 16px auto 0; max-width: 52ch; font-size: 17px; }
+.sr .start-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 40px; text-align: left; }
+.sr .start-card { display: flex; flex-direction: column; gap: 6px; padding: 28px 26px 30px; min-height: 150px; box-sizing: border-box; background: var(--sr-raise); border: 1px solid #2a2a2a; border-radius: 22px; color: #fff; text-decoration: none; transition: border-color .22s ease, transform .3s ease; }
+.sr .start-card:hover { border-color: var(--sr-pink); transform: translateY(-4px); color: #fff; }
+.sr .start-key { font-size: clamp(28px, 3.2vw, 40px); font-weight: 700; line-height: 1; text-transform: none; letter-spacing: 0; }
+.sr .start-blurb { font-size: 17px; color: #cfcfcf; margin-top: 6px; }
+.sr .start-req { font-size: 15px; color: #ffb323; margin-top: 2px; }
+.sr .start-foot { margin: 36px 0 0; display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; }
+.sr .start-link { font-size: 16px; text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 760px) {
+  .sr .start { padding-top: 10px; }
+  .sr .start-grid { gap: 12px; margin-top: 30px; }
+  .sr .start-card { padding: 22px 18px 24px; min-height: 130px; border-radius: 18px; }
+  .sr .start-key { font-size: 30px; }
+  .sr .start-blurb { font-size: 15px; }
+  .sr .start-req { font-size: 13.5px; }
+}
