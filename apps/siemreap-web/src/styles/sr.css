@@ -1158,6 +1158,11 @@ body.sr {
 .sr .sr-card-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .sr .sr-card-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .12) 30%, rgba(0, 0, 0, .8)); }
 .sr .sr-card-copy { position: absolute; left: 0; right: 0; bottom: 0; padding-bottom: clamp(40px, 7vh, 80px); }
+/* A couple more views of the place, tucked in the top-right of the card. */
+.sr .sr-card-extras { position: absolute; top: clamp(100px, 14vh, 150px); right: clamp(20px, 4vw, 60px); display: flex; gap: 14px; }
+.sr .sr-card-extras img { width: clamp(150px, 16vw, 250px); aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; border: 1px solid rgba(255, 255, 255, .35); box-shadow: 0 20px 50px rgba(0, 0, 0, .5); }
+.sr .sr-card-extras img:first-child { transform: rotate(-3deg) translateY(10px); }
+.sr .sr-card-extras img:last-child { transform: rotate(2.5deg); }
 .sr .sr-card-title { margin: 14px 0 0; font-size: clamp(50px, 8vw, 120px); font-weight: 700; line-height: .92; }
 .sr .sr-card-km { margin: 12px 0 0; font-size: 22px; color: #dcdcdc; }
 .sr .sr-card-body { margin: 18px 0 0; max-width: 56ch; font-size: 17px; }
@@ -1192,6 +1197,8 @@ body.sr {
   .sr .nature-grid { grid-template-columns: 1fr; gap: 40px; margin-top: 36px; }
   .sr .nature-head { column-gap: 14px; }
   .sr .sr-card-copy { padding-bottom: 40px; }
+  .sr .sr-card-extras { top: 96px; right: 16px; gap: 10px; }
+  .sr .sr-card-extras img { width: 38vw; }
   .sr .sr-card-title { font-size: clamp(44px, 14vw, 64px); }
   .sr .sr-card-km { font-size: 18px; }
   .sr .sr-card-body { font-size: 15px; }
