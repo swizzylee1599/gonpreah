@@ -31,7 +31,7 @@ export const ISSUES: Issue[] = [
     date: 'September 2026',
     dateISO: '2026-09-28',
     title: 'Two new schools. Thirty-two students.',
-    deck: 'The Bible Counseling School and the Social Media School both started on September 28 in Siem Reap, and both run for three months. Here is who is in the room, and why it matters.',
+    deck: 'Bible counseling and media, three months, one campus.',
     cover: '/images/guide/worship-flags.webp',
     coverAlt: 'A crowd worshipping with flags raised in the Siem Reap lecture hall',
     coverPos: '50% 40%',
@@ -39,7 +39,7 @@ export const ISSUES: Issue[] = [
       {
         kind: 'text',
         paragraphs: [
-          'We are thrilled to announce two training schools at YWAM Siem Reap, both starting September 28 and running for three months. Together they put thirty-two young Cambodians in a classroom for a season, with Christ and His Word at the center.',
+          'Two new training schools started this September in Siem Reap. Thirty-two students, three months, Christ and His Word at the center.',
         ],
       },
       {
