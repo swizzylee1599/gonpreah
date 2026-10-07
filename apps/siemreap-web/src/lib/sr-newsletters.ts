@@ -44,7 +44,7 @@ export const ISSUES: Issue[] = [
       },
       {
         kind: 'stats',
-        items: [['25', 'students in the Bible Counseling School'], ['7', 'students in the Social Media School'], ['3', 'months, side by side on one campus'], ['28', 'September 28, the day both schools began']],
+        items: [['25', 'students in the Bible Counseling School'], ['7', 'students in the Social Media School'], ['3', 'months, side by side on one campus'], ['5', 'nations represented across the two schools']],
       },
       {
         kind: 'feature',
