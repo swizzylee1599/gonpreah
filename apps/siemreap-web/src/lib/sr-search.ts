@@ -34,6 +34,7 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { title: 'GP Portal (apply online)', desc: 'Schools, staff, volunteers and teams', href: PORTAL, group: 'Apply', keywords: 'gp portal apply online application account login sign in impact gonpreah', external: true },
   { title: 'Leader reference', desc: 'One reference for international applicants', href: '/apply', group: 'Apply', keywords: 'leader reference pastor mentor church reference form international khmer' },
 
+  { title: 'Newsletters', desc: 'News from the campus: new schools, outreach, how to partner', href: '/news', group: 'About', keywords: 'newsletter news updates update blog stories partner monthly give bcs sms two new schools' },
   { title: 'Contact the base', desc: 'WhatsApp or email', href: '/contact', group: 'Contact', keywords: 'contact talk reach us message phone address', quick: true },
   { title: 'WhatsApp +855 69 911 705', desc: 'Message us on WhatsApp', href: 'https://wa.me/85569911705', group: 'Contact', keywords: 'whatsapp phone number telegram call message chat 069 911 705', external: true },
   { title: 'info@ywamsiemreap.org', desc: 'Email the base', href: 'mailto:info@ywamsiemreap.org', group: 'Contact', keywords: 'email mail info write', external: true },
