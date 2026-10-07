@@ -61,6 +61,11 @@ const hasDrone = existsSync('public' + DRONE);
         <section class="sr-card-face sr-card--photo" aria-label={n.name}>
           <img class="sr-card-bg" src={n.photo} srcset={srcset(n.photo)} sizes="100vw" alt={n.alt} loading="lazy" decoding="async" style={n.pos ? `object-position:${n.pos}` : undefined} />
           <div class="sr-card-scrim" aria-hidden="true"></div>
+          {n.extras && (
+            <div class="sr-card-extras" aria-hidden="true">
+              {n.extras.map((x) => <img src={x.src} srcset={srcset(x.src)} sizes="(max-width: 760px) 40vw, 22vw" alt="" loading="lazy" decoding="async" style={x.pos ? `object-position:${x.pos}` : undefined} />)}
+            </div>
+          )}
           <div class="wrap sr-card-copy">
             <p class="eyebrow">{`2.${i + 1}`} · Nature day trips</p>
             <h2 class="disp sr-card-title">{n.name}</h2>

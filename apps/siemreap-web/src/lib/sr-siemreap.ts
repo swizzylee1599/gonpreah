@@ -2,7 +2,7 @@
 // practical notes.
 // Each section of the page is a numbered stop: a place, a photo and a short
 // piece of history.
-export type Stop = { name: string; km: string; body: string; photo: string; alt: string; pos?: string };
+export type Stop = { name: string; km: string; body: string; photo: string; alt: string; pos?: string; extras?: { src: string; alt: string; pos?: string }[] };
 
 // 1. Angkor Wat, and the two other temples most people see first.
 export const TEMPLES: Stop[] = [
@@ -28,12 +28,14 @@ export const NATURE: Stop[] = [
   {
     name: 'Phnom Kulen', km: 'ភ្នំគូលេន',
     body: 'The sacred mountain about an hour and a half north, where the Khmer Empire was declared in 802. Swim under the waterfall, see the carvings in the riverbed at the River of a Thousand Lingas, and climb to the giant reclining Buddha.',
-    photo: '/images/siemreap/kulen.webp', alt: 'A wide waterfall dropping into a green jungle pool on Phnom Kulen', pos: '50% 45%',
+    photo: '/images/siemreap/kulen-aerial.webp', alt: 'The Phnom Kulen waterfall from above, white water through the jungle into a brown pool with swimmers', pos: '50% 50%',
+    extras: [{ src: '/images/siemreap/kulen.webp', alt: 'Swimming under the waterfall on Phnom Kulen', pos: '50% 45%' }],
   },
   {
     name: 'Tonlé Sap', km: 'ទន្លេសាប',
     body: 'Southeast Asia\'s largest freshwater lake, a short drive south. In the wet season it swells to several times its size, and whole villages live on stilts and boats. Take a boat out to the floating villages of Chong Kneas or Kampong Phluk.',
     photo: '/images/siemreap/floating-village.webp', alt: 'Wooden stilt houses and boats in a floating village on the Tonle Sap', pos: '40% 50%',
+    extras: [{ src: '/images/siemreap/tonle-boat.webp', alt: 'Standing on the bow of a boat heading up the flooded forest toward the lake' }, { src: '/images/siemreap/tonle-vendor.webp', alt: 'A vendor’s boat on the Tonle Sap, stacked with snacks and cold boxes' }],
   },
 ];
 

@@ -54,7 +54,7 @@ export const ISSUES: Issue[] = [
           'This school is a journey of discipleship and inner healing. Over eleven weeks, twenty-five students get to know themselves more deeply, understand their relationships and family systems, and explore the areas that need healing. They grow in their relationship with God and with others while receiving practical tools to serve in Christian ministry.',
           'Our desire is not just to give knowledge. It is to create space where God can work in each person’s heart first. As students experience their own restoration, they become better equipped to walk alongside others on their journeys. This is a season of learning, personal growth, healing, relationships and equipping, always with Christ and His Word at the center.',
         ],
-        photo: '/images/schools/praying-together.webp', alt: 'Students praying for one another, hands on shoulders',
+        photo: '/images/schools/bcs-class.webp', alt: 'The Bible Counseling School in session, two teachers at the front of the classroom',
         href: '/schools/bcs', label: 'About the Bible Counseling School',
       },
       { kind: 'quote', text: 'Our desire isn’t just to give knowledge. It’s to create space where God can work in each person’s heart first.' },
