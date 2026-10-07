@@ -16,6 +16,8 @@ export const ROUTE_PATH: Record<string, string> = {
   sms: '/schools/sms',
   bcs: '/schools/bcs',
   howToApply: '/apply',
+  // The menu's Apply: the chooser on our site, then the portal.
+  applyStart: '/apply/start',
   apply: applyUrl('dts'),
   applyDts: applyUrl('dts'),
   applyDbs: applyUrl('dbs'),
