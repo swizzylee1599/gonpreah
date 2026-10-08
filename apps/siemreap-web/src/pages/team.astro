@@ -13,7 +13,7 @@ const PORTRAITS = 'public/images/team/portraits/';
 const portrait = (slug: string) => (existsSync(`${PORTRAITS}${slug}.webp`) ? `/images/team/portraits/${slug}.webp` : null);
 const leaders = TEAM.filter((m) => m.lead);
 const staff = TEAM.filter((m) => !m.lead);
-const byGroup = GROUPS.map((g) => ({ g, members: staff.filter((m) => m.group === g) })).filter((x) => x.members.length);
+const byGroup = GROUPS.map(({ g, holds }) => ({ g, holds, members: staff.filter((m) => m.group === g) })).filter((x) => x.members.length);
 const khmer = TEAM.filter((m) => m.khmer).length;
 const nations = 6;
 ---
@@ -37,18 +37,18 @@ const nations = 6;
         <div class="tm-stat"><span class="disp tm-stat-n">{nations}</span><span class="tm-stat-l">nations represented</span></div>
       </div>
       <div class="reveal">
-        <p class="body" style="margin:0;font-size:18px;">We came from Poipet in 2025 with fifteen staff and have grown to forty. Half the team is Khmer, trained here, now training the next DTS. The other half came from around the world and stayed. Two languages at every meal, one goal: one nation, one generation.</p>
-        <p class="body" style="margin:16px 0 0;">Here is who you will meet on campus.</p>
+        <p class="body" style="margin:0;font-size:18px;">As YWAM Siem Reap, we serve the community, educate youth, develop leaders and train professionals, to see this next generation of youth transform their nation.</p>
+        <p class="disp" style="margin:18px 0 0;font-size:clamp(20px,2.2vw,28px);font-weight:500;line-height:1.15;">One nation. One generation.</p>
       </div>
     </div>
   </section>
 
-  {byGroup.map(({ g, members }) => (
+  {byGroup.map(({ g, holds, members }) => (
     <section class="sec tm-sec" style="padding-top:0;">
       <div class="wrap">
         <div class="tm-head reveal">
           <p class="eyebrow">{g}</p>
-          <h2 class="disp tm-h2">{g === 'Training' ? 'DTS, DBS and the schools.' : g === 'Media & music' ? 'Media and GP Music.' : g === 'Hospitality & technical' ? 'Hospitality and technical.' : g === 'Teams & youth' ? 'Teams and the Youth Development Center.' : 'Finance.'}</h2>
+          <h2 class="disp tm-h2">{holds}</h2>
         </div>
         <div class="tm-grid stag">
           {members.map((m, i) => (
