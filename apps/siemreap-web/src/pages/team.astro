@@ -44,27 +44,6 @@ const nations = 6;
     </div>
   </section>
 
-  <section class="sec tm-sec" id="leadership" style="padding-top:0;">
-    <div class="wrap">
-      <div class="tm-head reveal">
-        <p class="eyebrow">Leadership</p>
-        <h2 class="disp tm-h2">The leadership team.</h2>
-      </div>
-      <div class="tm-grid tm-grid--lead stag">
-        {leaders.map((m, i) => (
-          <figure class:list={['tm-person', { 'tm-person--wide': m.name.includes('&') }]} style={`--i:${i}`}>
-            <div class="tm-photo">
-              {portrait(m.slug)
-                ? <img src={portrait(m.slug)!} srcset={srcset(portrait(m.slug)!)} sizes="(max-width: 760px) 50vw, 33vw" alt={m.name} loading="lazy" decoding="async" />
-                : <div class="tm-slot"><span class="tm-slot-name">{m.name}</span><span class="tm-slot-hint">Photo coming</span></div>}
-              <figcaption class="tm-cap"><span class="disp tm-name">{m.name}</span><span class="tm-role">{m.role}</span></figcaption>
-            </div>
-          </figure>
-        ))}
-      </div>
-    </div>
-  </section>
-
   {byGroup.map(({ g, members }) => (
     <section class="sec tm-sec" style="padding-top:0;">
       <div class="wrap">
@@ -87,6 +66,27 @@ const nations = 6;
       </div>
     </section>
   ))}
+
+  <section class="sec tm-sec" id="leadership" style="padding-top:0;">
+    <div class="wrap">
+      <div class="tm-head reveal">
+        <p class="eyebrow">Leadership</p>
+        <h2 class="disp tm-h2">The leadership team.</h2>
+      </div>
+      <div class="tm-grid tm-grid--lead stag">
+        {leaders.map((m, i) => (
+          <figure class:list={['tm-person', { 'tm-person--wide': m.name.includes('&') }]} style={`--i:${i}`}>
+            <div class="tm-photo">
+              {portrait(m.slug)
+                ? <img src={portrait(m.slug)!} srcset={srcset(portrait(m.slug)!)} sizes="(max-width: 760px) 50vw, 33vw" alt={m.name} loading="lazy" decoding="async" />
+                : <div class="tm-slot"><span class="tm-slot-name">{m.name}</span><span class="tm-slot-hint">Photo coming</span></div>}
+              <figcaption class="tm-cap"><span class="disp tm-name">{m.name}</span><span class="tm-role">{m.role}</span></figcaption>
+            </div>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
 
   <section class="sec sec--paper">
     <div class="wrap reveal" style="text-align:center;">
