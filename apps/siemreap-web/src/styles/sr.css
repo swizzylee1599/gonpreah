@@ -1611,3 +1611,56 @@ body.sr {
   .sr .start-blurb { font-size: 15px; }
   .sr .start-req { font-size: 13.5px; }
 }
+
+/* ---------------------------------------------------------------- Our team
+   A group photo up top, the numbers, then portraits by ministry: leaders
+   large, staff in a staggered grid. Name and role sit over the bottom of
+   each portrait. Empty slots stand in until the photos arrive. */
+.sr .tm-hero { position: relative; min-height: 86svh; display: flex; align-items: flex-end; overflow: hidden; background: var(--sr-ink); }
+.sr .tm-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+.sr .tm-hero-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11, 11, 11, .5) 0%, rgba(11, 11, 11, .1) 40%, rgba(11, 11, 11, .9) 100%); }
+.sr .tm-hero-copy { position: relative; padding-top: 150px; padding-bottom: clamp(44px, 8vh, 90px); }
+.sr .tm-title { margin: 16px 0 0; font-size: clamp(48px, 8vw, 120px); font-weight: 700; line-height: .92; }
+.sr .tm-km { margin: 16px 0 0; font-size: 26px; color: #dcdcdc; }
+.sr .tm-lead { margin: 22px 0 0; max-width: 56ch; font-size: 18px; color: #e6e6e6; }
+.sr .tm-intro-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(30px, 5vw, 80px); align-items: center; }
+.sr .tm-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.sr .tm-stat { display: grid; gap: 6px; padding-top: 14px; border-top: 2px solid var(--sr-pink); }
+.sr .tm-stat-n { font-size: clamp(40px, 4.6vw, 72px); font-weight: 700; line-height: .95; }
+.sr .tm-stat-l { font-size: 13px; color: #9a9a9a; }
+.sr .tm-head { margin-bottom: 26px; }
+.sr .tm-h2 { margin: 12px 0 0; font-size: clamp(28px, 3.4vw, 44px); font-weight: 500; line-height: 1.1; }
+.sr .tm-sec + .tm-sec { padding-top: 0; }
+.sr .tm-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px 18px; grid-auto-flow: dense; }
+.sr .tm-grid--lead { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.sr .tm-person { margin: 0; }
+.sr .tm-person--wide { grid-column: span 2; }
+.sr .tm-photo { position: relative; aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden; background: #161616; }
+.sr .tm-person--wide .tm-photo { aspect-ratio: 8 / 5; }
+.sr .tm-photo img { display: block; width: 100%; height: 100%; object-fit: cover; filter: saturate(.92); transition: transform .7s cubic-bezier(.16, 1, .3, 1), filter .4s ease; }
+.sr .tm-person:hover .tm-photo img { transform: scale(1.04); filter: saturate(1); }
+.sr .tm-slot { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 1px dashed #3a3a3a; border-radius: 18px; text-align: center; padding: 20px; box-sizing: border-box; background: repeating-linear-gradient(135deg, #151515 0 14px, #171717 14px 28px); }
+.sr .tm-slot-name { font-family: var(--gp-font-display); text-transform: uppercase; letter-spacing: .04em; font-size: 15px; color: #777; }
+.sr .tm-slot-hint { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #4a4a4a; }
+.sr .tm-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 50px 18px 16px; background: linear-gradient(180deg, rgba(11, 11, 11, 0), rgba(11, 11, 11, .88)); display: grid; gap: 3px; }
+.sr .tm-name { font-size: 17px; font-weight: 500; line-height: 1.15; }
+.sr .tm-role { font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; color: #bdbdbd; }
+.sr .tm-grid--lead .tm-name { font-size: 21px; }
+@media (max-width: 760px) {
+  .sr .tm-hero { min-height: 78svh; }
+  .sr .tm-hero-copy { padding-top: 120px; padding-bottom: 40px; }
+  .sr .tm-title { font-size: clamp(42px, 13vw, 60px); }
+  .sr .tm-km { font-size: 22px; }
+  .sr .tm-lead { font-size: 16px; }
+  .sr .tm-intro-grid { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+  .sr .tm-stats { gap: 12px; }
+  .sr .tm-stat-n { font-size: 40px; }
+  .sr .tm-grid, .sr .tm-grid--lead { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
+  .sr .tm-person--wide { grid-column: span 2; }
+  .sr .tm-person--wide .tm-photo { aspect-ratio: 16 / 10; }
+  .sr .tm-cap { padding: 40px 14px 12px; }
+  .sr .tm-name { font-size: 15px; }
+  .sr .tm-grid--lead .tm-name { font-size: 17px; }
+  .sr .tm-role { font-size: 11px; }
+  .sr .tm-slot-name { font-size: 13px; }
+}

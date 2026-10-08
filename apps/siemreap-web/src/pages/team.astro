@@ -1,45 +1,92 @@
 ---
 import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
-import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
-import { TEAM, photo } from '../lib/sr-team';
+import { TEAM, GROUPS, photo } from '../lib/sr-team';
+import { srcset } from '../lib/sr-img';
+import { existsSync } from 'node:fs';
 
+// Portraits: a member whose file is in public/images/team/portraits shows
+// it; everyone else gets an empty slot with their name, so the layout can
+// be judged before the photos arrive. Drop a photo in as <slug>.webp.
+const PORTRAITS = 'public/images/team/portraits/';
+const portrait = (slug: string) => (existsSync(`${PORTRAITS}${slug}.webp`) ? `/images/team/portraits/${slug}.webp` : null);
 const leaders = TEAM.filter((m) => m.lead);
 const staff = TEAM.filter((m) => !m.lead);
+const byGroup = GROUPS.map((g) => ({ g, members: staff.filter((m) => m.group === g) })).filter((x) => x.members.length);
+const khmer = TEAM.filter((m) => m.khmer).length;
+const nations = 6;
 ---
-<SrLayout title="Our Team | YWAM Siem Reap" noindex
+<SrLayout title="Our Team | YWAM Siem Reap" noindex spacer={false}
   description="The Khmer and international staff of YWAM Siem Reap: base leaders, DTS and DBS staff, media, music, hospitality, technical and teams.">
-  <PageHead eyebrow="Our team" km="ក្រុមការងារ" title="Khmer and international, one team." highlight="one team."
-    lead="Forty full-time staff, some here for two years, some for twenty. Every one of them raises their own support and lives in the community." />
+  <header class="tm-hero">
+    <img class="tm-hero-bg" src="/images/campus/campus-group.webp" srcset={srcset('/images/campus/campus-group.webp')} sizes="100vw" alt="The YWAM Siem Reap community gathered in the campus courtyard" loading="eager" decoding="async" fetchpriority="high" />
+    <div class="tm-hero-scrim" aria-hidden="true"></div>
+    <div class="wrap tm-hero-copy">
+      <p class="eyebrow">Our team</p>
+      <h1 class="disp tm-title">One team.<br />Two languages.</h1>
+      <p class="km tm-km">ក្រុមការងារ</p>
+      <p class="body tm-lead">Forty full-time staff, Khmer and international, some here for two years, some for twenty. Every one of them raises their own support and lives in the community.</p>
+    </div>
+  </header>
 
-  <section class="sec" style="padding-bottom:0;">
+  <section class="sec tm-intro">
+    <div class="wrap tm-intro-grid">
+      <div class="tm-stats stag">
+        <div class="tm-stat"><span class="disp tm-stat-n">{TEAM.length}</span><span class="tm-stat-l">staff and staff couples</span></div>
+        <div class="tm-stat"><span class="disp tm-stat-n">{khmer}</span><span class="tm-stat-l">Khmer staff</span></div>
+        <div class="tm-stat"><span class="disp tm-stat-n">{nations}</span><span class="tm-stat-l">nations represented</span></div>
+      </div>
+      <div class="reveal">
+        <p class="body" style="margin:0;font-size:18px;">We came from Poipet in 2025 with fifteen staff and have grown to forty. Half the team is Khmer, trained here, now training the next DTS. The other half came from around the world and stayed. Two languages at every meal, one goal: one nation, one generation.</p>
+        <p class="body" style="margin:16px 0 0;">Here is who you will meet on campus.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec tm-sec" id="leadership" style="padding-top:0;">
     <div class="wrap">
-      <p class="eyebrow reveal">Leadership</p>
-      <div class="people stag">
-        {leaders.map((m) => (
-          <figure class={`person${m.name.includes('&') ? ' person--wide' : ''}`}>
-            <img src={photo(m)} alt={m.name} loading="lazy" decoding="async" width="640" height="800" />
-            <figcaption><span class="disp person-name">{m.name}</span><span class="person-role">{m.role}</span></figcaption>
+      <div class="tm-head reveal">
+        <p class="eyebrow">Leadership</p>
+        <h2 class="disp tm-h2">The leadership team.</h2>
+      </div>
+      <div class="tm-grid tm-grid--lead stag">
+        {leaders.map((m, i) => (
+          <figure class:list={['tm-person', { 'tm-person--wide': m.name.includes('&') }]} style={`--i:${i}`}>
+            <div class="tm-photo">
+              {portrait(m.slug)
+                ? <img src={portrait(m.slug)!} srcset={srcset(portrait(m.slug)!)} sizes="(max-width: 760px) 50vw, 33vw" alt={m.name} loading="lazy" decoding="async" />
+                : <div class="tm-slot"><span class="tm-slot-name">{m.name}</span><span class="tm-slot-hint">Photo coming</span></div>}
+              <figcaption class="tm-cap"><span class="disp tm-name">{m.name}</span><span class="tm-role">{m.role}</span></figcaption>
+            </div>
           </figure>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="sec">
-    <div class="wrap">
-      <p class="eyebrow reveal">Staff</p>
-      <div class="people stag">
-        {staff.map((m) => (
-          <figure class={`person${m.name.includes('&') ? ' person--wide' : ''}`}>
-            <img src={photo(m)} alt={m.name} loading="lazy" decoding="async" width="640" height="800" />
-            <figcaption><span class="disp person-name">{m.name}</span><span class="person-role">{m.role}</span></figcaption>
-          </figure>
-        ))}
+  {byGroup.map(({ g, members }) => (
+    <section class="sec tm-sec" style="padding-top:0;">
+      <div class="wrap">
+        <div class="tm-head reveal">
+          <p class="eyebrow">{g}</p>
+          <h2 class="disp tm-h2">{g === 'Training' ? 'DTS, DBS and the schools.' : g === 'Media & music' ? 'Media and GP Music.' : g === 'Hospitality & technical' ? 'Hospitality and technical.' : g === 'Teams & youth' ? 'Teams and the Youth Development Center.' : 'Finance.'}</h2>
+        </div>
+        <div class="tm-grid stag">
+          {members.map((m, i) => (
+            <figure class:list={['tm-person', { 'tm-person--wide': m.name.includes('&') }]} style={`--i:${i}`}>
+              <div class="tm-photo">
+                {portrait(m.slug)
+                  ? <img src={portrait(m.slug)!} srcset={srcset(portrait(m.slug)!)} sizes="(max-width: 760px) 50vw, 25vw" alt={m.name} loading="lazy" decoding="async" />
+                  : <div class="tm-slot"><span class="tm-slot-name">{m.name}</span><span class="tm-slot-hint">Photo coming</span></div>}
+                <figcaption class="tm-cap"><span class="disp tm-name">{m.name}</span><span class="tm-role">{m.role}</span></figcaption>
+              </div>
+            </figure>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  ))}
 
   <section class="sec sec--paper">
     <div class="wrap reveal" style="text-align:center;">
@@ -53,7 +100,7 @@ const staff = TEAM.filter((m) => !m.lead);
   <Cta
     title="Want to be on this page?"
     body="Staff join after a DTS. Volunteers come for a few weeks or a few months. Either way, you live and serve with this team."
-    primary={['staff', 'Join staff or volunteer']}
+    primary={['applyStaff', 'Join staff or volunteer']}
     secondary={['contact', 'Get in touch']}
   />
   <Footer />
