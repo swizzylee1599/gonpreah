@@ -119,20 +119,19 @@ const hasMobileLo = hasMobile && existsSync('public' + lo(mobileVideo));
     const prime = (c: Clip) => {
       if (c.primed || c.priming) return;
       const p = c.el.play();
-      if (!p || !p.then) { c.primed = true; return; }
+      if (!p || !p.then) { c.primed = true; onReady(c); return; }
       c.priming = true;
       p.then(() => { c.primed = true; c.el.pause(); onReady(c); }).catch(() => {}).finally(() => { c.priming = false; });
     };
+    // A clip goes on screen only once it has played (so iOS will draw it) and
+    // has painted the current frame; until then the stills stay up. The
+    // preview never replaces the sharp clip.
     const onReady = (c: Clip) => {
-      if (!c.ready || !c.el.duration) return;
-      if (c.tier === 'hi') {
-        if (active === c || incoming === c) return;
-        // Line the sharp clip up on the current frame, then swap on its first paint.
-        incoming = c;
-        seekTo(c, target(c));
-      } else if (!active) {
-        active = c;
-      }
+      if (!c.ready || !c.primed || !c.el.duration) return;
+      if (active === c || incoming === c) return;
+      if (c.tier === 'lo' && (active?.tier === 'hi' || incoming?.tier === 'hi')) return;
+      incoming = c;
+      seekTo(c, target(c));
       onScroll();
     };
     const load = async (c: Clip) => {
@@ -156,7 +155,7 @@ const hasMobileLo = hasMobile && existsSync('public' + lo(mobileVideo));
       c.el.load();
     };
     clips.forEach((c) => {
-      c.el.addEventListener('loadeddata', () => { c.ready = true; prime(c); onReady(c); }, { signal });
+      c.el.addEventListener('loadeddata', () => { c.ready = true; prime(c); }, { signal });
       c.el.addEventListener('seeked', () => {
         c.seeking = false;
         if (c === incoming) { incoming = null; active = c; clips.forEach((o) => { if (o !== c) o.el.style.opacity = '0'; }); onScroll(); return; }
