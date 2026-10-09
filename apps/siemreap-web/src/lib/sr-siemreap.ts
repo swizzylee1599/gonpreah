@@ -28,14 +28,14 @@ export const NATURE: Stop[] = [
   {
     name: 'Phnom Kulen', km: 'ភ្នំគូលេន',
     body: 'The sacred mountain about an hour and a half north, where the Khmer Empire was declared in 802. Swim under the waterfall, see the carvings in the riverbed at the River of a Thousand Lingas, and climb to the giant reclining Buddha.',
-    photo: '/images/siemreap/kulen-aerial.webp', alt: 'The Phnom Kulen waterfall from above, white water through the jungle into a brown pool with swimmers', pos: '50% 50%',
-    extras: [{ src: '/images/siemreap/kulen.webp', alt: 'Swimming under the waterfall on Phnom Kulen', pos: '50% 45%' }],
+    photo: '/images/siemreap/kulen.webp', alt: 'Swimming under the twin falls of the Phnom Kulen waterfall, jungle on both sides', pos: '60% 45%',
+    extras: [{ src: '/images/siemreap/kulen-aerial.webp', alt: 'The Phnom Kulen waterfall from above, white water through the jungle into a pool with swimmers' }],
   },
   {
     name: 'Tonlé Sap', km: 'ទន្លេសាប',
     body: 'Southeast Asia\'s largest freshwater lake, a short drive south. In the wet season it swells to several times its size, and whole villages live on stilts and boats. Take a boat out to the floating villages of Chong Kneas or Kampong Phluk.',
     photo: '/images/siemreap/floating-village.webp', alt: 'Wooden stilt houses and boats in a floating village on the Tonle Sap', pos: '40% 50%',
-    extras: [{ src: '/images/siemreap/tonle-boat.webp', alt: 'Standing on the bow of a boat heading up the flooded forest toward the lake' }, { src: '/images/siemreap/tonle-vendor.webp', alt: 'A vendor’s boat on the Tonle Sap, stacked with snacks and cold boxes' }],
+    extras: [{ src: '/images/siemreap/tonle-boat.webp', alt: 'Standing on the bow of a boat heading up the flooded forest toward the lake' }, { src: '/images/siemreap/tonle-lake.webp', alt: 'A blue tour boat crossing the open water of the Tonle Sap under a wide grey sky' }, { src: '/images/siemreap/tonle-vendor.webp', alt: 'A vendor’s boat on the Tonle Sap, stacked with snacks and cold boxes' }],
   },
 ];
 
