@@ -1671,6 +1671,28 @@ body.sr {
   .sr .tm-slot-name { font-size: 13px; }
 }
 
+/* Join staff: find your fit. Chips pick a length of stay and a skill; the
+   roles that match light up, the rest dim; each role opens on a tap. */
+.sr .fit { margin-top: 30px; padding: 26px 28px; border: 1px solid #262626; border-radius: 20px; background: var(--sr-raise); display: grid; gap: 18px; }
+.sr .fit-row { display: grid; gap: 10px; }
+.sr .fit-label { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--gp-grey); }
+.sr .fit-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.sr .chip { background: none; border: 1px solid #3a3a3a; color: #fff; border-radius: 999px; padding: 9px 16px; font-family: inherit; font-size: 14px; cursor: pointer; transition: border-color .2s, background .2s, color .2s; }
+.sr .chip:hover { border-color: #fff; }
+.sr .chip.is-on { background: #fff; color: #000; border-color: #fff; }
+.sr .fit-count { margin: 0; font-size: 14px; }
+.sr .roles-item { transition: opacity .3s ease; }
+.sr .roles-item.is-dim { opacity: .28; }
+.sr .roles-item.is-fit .roles-name { color: var(--sr-pink); }
+.sr .roles-dept.is-empty { opacity: .45; }
+.sr .roles-toggle { display: flex; justify-content: space-between; align-items: center; gap: 14px; width: 100%; background: none; border: 0; padding: 0; color: #fff; font-family: inherit; text-align: left; cursor: pointer; }
+.sr .roles-arrow { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid #3a3a3a; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; transition: transform .25s ease, background .2s, color .2s; }
+.sr .roles-toggle:hover .roles-arrow { background: #fff; color: #000; border-color: #fff; }
+.sr .roles-item.is-open .roles-arrow { transform: rotate(45deg); }
+.sr .roles-more { padding-top: 8px; }
+.sr .roles-tags { margin: 8px 0 0; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--gp-grey); }
+.sr .roles-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.sr .roles-btns .btn { padding: 10px 18px; font-size: 13px; }
 /* Join staff: every ministry and school, by department. */
 .sr .roles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 32px; }
 .sr .roles-dept { padding: 30px 30px 26px; }
@@ -1683,4 +1705,6 @@ body.sr {
 @media (max-width: 760px) {
   .sr .roles { grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 24px; }
   .sr .roles-dept { padding: 24px 20px 22px; }
+  .sr .fit { padding: 20px 18px; margin-top: 22px; }
+  .sr .chip { padding: 8px 13px; font-size: 13px; }
 }
