@@ -1641,11 +1641,15 @@ body.sr {
 .sr .tm-stat-l { font-size: 13px; color: #9a9a9a; }
 .sr .tm-head { margin-bottom: 26px; }
 .sr .tm-h2 { margin: 12px 0 0; font-size: clamp(28px, 3.4vw, 44px); font-weight: 500; line-height: 1.1; }
-/* Department names as the big headings over each group of portraits. */
+/* Staff and Leadership as the big headings over the portraits. */
 .sr .tm-h2--dept { margin: 0; font-size: clamp(36px, 5.4vw, 76px); font-weight: 700; line-height: .95; }
 .sr .tm-sec + .tm-sec { padding-top: 0; }
 .sr .tm-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px 18px; grid-auto-flow: dense; }
-.sr .tm-grid--lead { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.sr .tm-grid--lead { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 24px; }
+/* Leadership: families half a row each, everyone else three to a row. */
+.sr .tm-grid--lead .tm-person { grid-column: span 2; }
+.sr .tm-grid--lead .tm-person--wide { grid-column: span 3; }
+.sr .tm-grid--lead .tm-person--wide .tm-photo { aspect-ratio: 5 / 4; }
 .sr .tm-person { margin: 0; }
 .sr .tm-person--wide { grid-column: span 2; }
 .sr .tm-photo { position: relative; aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden; background: #161616; }
@@ -1659,6 +1663,9 @@ body.sr {
 .sr .tm-name { font-size: 17px; font-weight: 500; line-height: 1.15; }
 .sr .tm-role { font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; color: #bdbdbd; }
 .sr .tm-grid--lead .tm-name { font-size: 21px; }
+.sr .tm-kind { justify-self: start; margin-bottom: 4px; padding: 3px 9px; border: 1px solid rgba(255, 255, 255, .35); border-radius: 999px; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #e6e6e6; }
+.sr .tm-with { display: flex; flex-wrap: wrap; gap: 2px 16px; }
+.sr .tm-with b { font-weight: 600; color: #fff; }
 @media (max-width: 760px) {
   /* Join staff: the heading sits low so her face shows above it. */
   .sr .pagehead--staff { align-items: flex-end; padding-bottom: 70px; }
@@ -1674,6 +1681,9 @@ body.sr {
   .sr .tm-grid, .sr .tm-grid--lead { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
   .sr .tm-person--wide { grid-column: span 2; }
   .sr .tm-person--wide .tm-photo { aspect-ratio: 16 / 10; }
+  .sr .tm-grid--lead .tm-person { grid-column: span 1; }
+  .sr .tm-grid--lead .tm-person--wide { grid-column: span 2; }
+  .sr .tm-grid--lead .tm-person--wide .tm-photo { aspect-ratio: 16 / 10; }
   .sr .tm-cap { padding: 40px 14px 12px; }
   .sr .tm-name { font-size: 15px; }
   .sr .tm-grid--lead .tm-name { font-size: 17px; }

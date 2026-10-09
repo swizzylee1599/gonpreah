@@ -1,45 +1,47 @@
-// The YWAM Siem Reap staff, from the team guide. Portraits live in
-// public/images/team. `support` marks Khmer staff who raise support through
-// the site, with what they live on and what they are believing for.
-export type Member = { slug: string; name: string; role: string; group: Group; khmer?: boolean; lead?: boolean; support?: { story: string; now: number; goal: number } };
-// The four departments of the base: what each one holds and who is in it.
-export type Group = 'Serve the community' | 'Educate youth' | 'Develop leaders' | 'Train professionals';
-export const GROUPS: { g: Group; holds: string }[] = [
-  { g: 'Serve the community', holds: 'Teams, the cafe and Siem Reap ministries.' },
-  { g: 'Educate youth', holds: 'Media, the Youth Development Center and GP Music.' },
-  { g: 'Develop leaders', holds: 'The training schools: DTS, DBS, BCS and SMS.' },
-  { g: 'Train professionals', holds: 'Finance, hospitality, kitchen and technical.' },
-];
+// The YWAM Siem Reap staff. Portraits live in public/images/team/portraits
+// as <slug>.webp. Couples and families share one card: `with` lists each
+// person and what they do, since they often serve in different ministries.
+// `support` marks Khmer staff who raise support through the site (Give page).
+export type Member = {
+  slug: string;
+  name: string;
+  role: string;
+  lead?: boolean;
+  khmer?: boolean;
+  kind?: 'couple' | 'family';
+  with?: [string, string][];
+  support?: { story: string; now: number; goal: number };
+};
 
 export const TEAM: Member[] = [
   // Leadership
-  { slug: 'uriah-naomi-lyford', name: 'Uriah & Naomi Lyford', role: 'Base director', group: 'Develop leaders', lead: true },
-  { slug: 'andrew-naomie-lee', name: 'Andrew & Naomie Lee', role: 'Base leader', group: 'Develop leaders', lead: true },
-  { slug: 'sreyleak-rann', name: 'Sreyleak Rann', role: 'Base leader', group: 'Develop leaders', lead: true, khmer: true },
-  { slug: 'chanya-but', name: 'Chanya But', role: 'Base leader & GP Music', group: 'Educate youth', lead: true, khmer: true },
-  { slug: 'sinin-sok', name: 'Sinin Sok', role: 'Training director & base leader', group: 'Develop leaders', lead: true, khmer: true },
-  { slug: 'sreynit-thorn', name: 'Sreynit Thorn', role: 'DTS staff & base leader', group: 'Develop leaders', lead: true, khmer: true },
+  { slug: 'uriah-naomi-lyford', name: 'Uriah & Naomi Lyford', role: 'Base director', lead: true, kind: 'family' },
+  { slug: 'andrew-naomie-lee', name: 'Andrew & Naomie Lee', role: 'Campus leader', lead: true, kind: 'family' },
+  { slug: 'sreyleak-rann', name: 'Sreyleak Rann', role: 'Campus leader', lead: true, khmer: true },
+  { slug: 'chanya-but', name: 'Chanya But', role: 'Campus leader & GP Music', lead: true, khmer: true },
+  { slug: 'sinin-sok', name: 'Sinin Sok', role: 'Training director & campus leader', lead: true, khmer: true },
+  { slug: 'sreynit-thorn', name: 'Sreynit Thorn', role: 'DTS staff & campus leader', lead: true, khmer: true },
+  { slug: 'vannak', name: 'Vannak', role: 'Campus leader & DTS staff', lead: true, khmer: true },
+  { slug: 'thean-tinh', name: 'Thean Tinh', role: 'Campus leader, media & GP Music', lead: true, khmer: true },
   // Staff
-  { slug: 'ith-keth', name: 'Ith Keth', role: 'DTS staff', group: 'Develop leaders', khmer: true },
-  { slug: 'ranie', name: 'Ranie', role: 'DTS staff', group: 'Develop leaders', khmer: true },
-  { slug: 'tinh-thean', name: 'Tinh Thean', role: 'Media & GP Music', group: 'Educate youth', khmer: true },
-  { slug: 'ben-wright', name: 'Ben Wright', role: 'Finance & GP Music', group: 'Train professionals' },
-  { slug: 'kimla-song', name: 'Kimla Song', role: 'Hospitality & media', group: 'Educate youth', khmer: true,
+  { slug: 'tyler-emmy-sullivan', name: 'Tyler & Emmy Sullivan', role: 'Hospitality and teams', kind: 'couple', with: [['Tyler', 'Hospitality'], ['Emmy', 'Teams']] },
+  { slug: 'alexis-munos', name: 'Alexis Munos', role: 'Teams' },
+  { slug: 'kimla-song', name: 'Kimla Song', role: 'GP Cafe', khmer: true,
     support: { story: 'Kimla is a young Cambodian on fire for Jesus. After his DTS in 2024 he joined staff in January 2025, pursuing his passion for media and hospitality, with a heart to reach youth through social media and to serve others well.', now: 0, goal: 200 } },
-  { slug: 'yang-sreyleak', name: 'Yang & Sreyleak', role: 'DTS & DBS staff', group: 'Develop leaders', khmer: true,
+  { slug: 'kimyan', name: 'Kimyan', role: 'Siem Reap ministries', khmer: true },
+  { slug: 'bunnall-bee', name: 'Bunnall Bee', role: 'Media', khmer: true },
+  { slug: 'kami-martz', name: 'Kami Martz', role: 'Worship' },
+  { slug: 'yang-sreyleak', name: 'Yang & Sreyleak', role: 'DTS & DBS staff', khmer: true, kind: 'family',
     support: { story: 'A Cambodian couple serving in Siem Reap since January 2025, with a heart for discipling Khmer youth. They staff DTS and DBS, investing in future leaders through teaching, mentorship and discipleship.', now: 225, goal: 600 } },
-  { slug: 'yi-esther', name: 'Yi & Esther Tuot', role: 'Hospitality & technical', group: 'Train professionals', khmer: true,
+  { slug: 'david', name: 'David', role: 'DTS staff', khmer: true },
+  { slug: 'sophy', name: 'Sophy', role: 'DTS staff', khmer: true },
+  { slug: 'ith-keth', name: 'Ith Keth', role: 'DTS staff', khmer: true },
+  { slug: 'ranie', name: 'Ranie', role: 'DTS staff', khmer: true },
+  { slug: 'nou-eh', name: 'Nou Eh', role: 'DTS staff', khmer: true },
+  { slug: 'sreynouch-pheakdey', name: 'Sreynouch & Pheakdey', role: 'Kitchen and DTS & DBS', khmer: true, kind: 'couple', with: [['Sreynouch', 'Kitchen'], ['Pheakdey', 'DTS & DBS staff']] },
+  { slug: 'vichet-chea', name: 'Vichet Chea', role: 'YDC staff', khmer: true },
+  { slug: 'yi-esther', name: 'Yi & Esther Tuot', role: 'Technical and hospitality', khmer: true, kind: 'family', with: [['Yi', 'Technical'], ['Esther', 'Hospitality']],
     support: { story: 'Yi and Esther equip others through education, hospitality and technical ministries, and travel regularly for teacher training. Esther is pursuing art to inspire and teach; together they plan to launch a kids’ ministry school. They serve with their young daughter, Molika.', now: 300, goal: 600 } },
-  { slug: 'nall-bee', name: 'Nall Bee', role: 'Media', group: 'Educate youth', khmer: true },
-  { slug: 'vichet-chea', name: 'Vichet Chea', role: 'DTS staff & YDC', group: 'Develop leaders', khmer: true },
-  { slug: 'david', name: 'David', role: 'Worship & DTS staff', group: 'Educate youth', khmer: true },
-  { slug: 'chenlen', name: 'Chenlen', role: 'Technical', group: 'Train professionals', khmer: true },
-  { slug: 'no-eh', name: 'No Eh', role: 'DTS staff', group: 'Develop leaders', khmer: true },
-  { slug: 'sophy', name: 'Sophy', role: 'Worship & DTS staff', group: 'Educate youth', khmer: true },
-  { slug: 'vannak', name: 'Vannak', role: 'DTS staff', group: 'Develop leaders', khmer: true },
-  { slug: 'kami-martz', name: 'Kami Martz', role: 'GP Music', group: 'Educate youth' },
-  { slug: 'emmy', name: 'Emmy', role: 'Teams & YDC', group: 'Serve the community' },
-  { slug: 'tyler', name: 'Tyler', role: 'Hospitality & YDC', group: 'Train professionals' },
-  { slug: 'alexis-munos', name: 'Alexis Munos', role: 'DBS & teams', group: 'Serve the community' },
+  { slug: 'ben-wright', name: 'Ben Wright', role: 'Accounting' },
 ];
 export const photo = (m: Member) => `/images/team/${m.slug}.webp`;

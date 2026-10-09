@@ -1,5 +1,5 @@
-// Where staff and volunteers serve, by department. Same four departments
-// as the team page. Edit the one-line notes freely; `dts` marks roles that
+// Where staff and volunteers serve, by department (serve, educate, develop,
+// train). Edit the one-line notes freely; `dts` marks roles that
 // need a completed DTS (staff), the rest are open to volunteers too.
 // `stay` is how long someone can come for and still fit the role: weeks,
 // months (volunteers) or years (staff). `skills` are the chips on the page.
