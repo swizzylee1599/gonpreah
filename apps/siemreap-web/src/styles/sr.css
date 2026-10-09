@@ -1246,6 +1246,8 @@ body.sr {
 .sr .sec--paper { background: #f3efe7; color: #0b0b0b; }
 .sr .sec--paper .body { color: #2b2823; }
 .sr .sec--paper .muted { color: #6f6a62; }
+/* Small labels on cream sections: a warm grey, not the white used on black. */
+.sr .sec--paper .eyebrow { color: #8a7f6a; }
 .sr .sec--paper .btn { border-color: #0b0b0b; color: #0b0b0b; }
 .sr .sec--paper .btn:hover { background: #0b0b0b; color: #f3efe7; border-color: #0b0b0b; }
 .sr .sec--paper .btn--solid { background: #0b0b0b; color: #f3efe7; border-color: #0b0b0b; }
