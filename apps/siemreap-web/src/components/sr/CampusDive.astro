@@ -26,12 +26,18 @@ const hasVideo = existsSync('public' + video);
 const small = (p: string) => p.replace(/\.webp$/, '-800.webp');
 const mobileVideo = video.replace(/\.mp4$/, '-mobile.mp4');
 const hasMobile = existsSync('public' + mobileVideo);
+// A small preview of each clip (-lo) loads first so the turn works within a
+// second or two; the sharp clip fades in over it once it has fully arrived.
+const lo = (v: string) => v.replace(/\.mp4$/, '-lo.mp4');
+const hasLo = existsSync('public' + lo(video));
+const hasMobileLo = hasMobile && existsSync('public' + lo(mobileVideo));
 ---
 <section class="dive-stack" aria-label={title}>
   <div class="dive-pin">
     <div class="dive-photo dive-aerial" style={`background-image:url(${aerial})`} data-small={small(aerial)}></div>
     <div class="dive-photo dive-front" style={`background-image:url(${front})`} data-small={small(front)}></div>
-    {hasVideo && <video class="dive-video" data-src={video} data-src-mobile={hasMobile ? mobileVideo : undefined} muted playsinline webkit-playsinline preload="none" aria-label="The campus, turning from above to its front"></video>}
+    {hasVideo && hasLo && <video class="dive-video" data-tier="lo" data-src={lo(video)} data-src-mobile={hasMobileLo ? lo(mobileVideo) : undefined} muted playsinline webkit-playsinline preload="none" aria-hidden="true"></video>}
+    {hasVideo && <video class="dive-video" data-tier="hi" data-src={video} data-src-mobile={hasMobile ? mobileVideo : undefined} muted playsinline webkit-playsinline preload="none" aria-label="The campus, turning from above to its front"></video>}
     <div class="dive-scrim" aria-hidden="true"></div>
 
     <div class="wrap dive-head" data-stage="0">
@@ -61,6 +67,10 @@ const hasMobile = existsSync('public' + mobileVideo);
 </section>
 
 <script>
+  // Downloads are kept per file for the life of the page, so when the
+  // script starts again (page-load fires after the first run, and on every
+  // visit back) it picks up the download already under way, not a new one.
+  const blobs = new Map<string, Promise<string>>();
   let ctrl: AbortController | null = null;
   const init = () => {
     ctrl?.abort();
@@ -71,7 +81,6 @@ const hasMobile = existsSync('public' + mobileVideo);
     const pin = stack.querySelector<HTMLElement>('.dive-pin')!;
     const aerial = stack.querySelector<HTMLElement>('.dive-aerial')!;
     const front = stack.querySelector<HTMLElement>('.dive-front')!;
-    let video = stack.querySelector<HTMLVideoElement>('.dive-video');
     const black = stack.querySelector<HTMLElement>('.dive-black')!;
     const scrim = stack.querySelector<HTMLElement>('.dive-scrim')!;
     const head = stack.querySelector<HTMLElement>('.dive-head')!;
@@ -79,52 +88,102 @@ const hasMobile = existsSync('public' + mobileVideo);
     const statement = stack.querySelector<HTMLElement>('.dive-statement')!;
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) { stack.classList.add('is-static'); return; }
-    // Pick the clip for this screen: a portrait, lighter one on phones.
-    const phone = matchMedia('(max-width: 760px)').matches;
-    if (video) {
-      const src = (phone && video.dataset.srcMobile) || video.dataset.src;
-      // Fetch the clip only once its section is within a screen of view.
-      const startClip = () => {
-        video.src = `${src}#t=0.001`;
-        video.load();
-      };
-      const near = new IntersectionObserver((en) => { if (en[0].isIntersecting) { near.disconnect(); startClip(); } }, { rootMargin: '100% 0px' });
-      near.observe(video); signal.addEventListener('abort', () => near.disconnect());
-    }
-    let ready = false;
     const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
     const ease = (t: number) => t * t * (3 - 2 * t);
 
-    let seeking = false, latest = 0, dirty = false;
-    const seekTo = (t: number) => {
-      latest = t; dirty = true;
-      if (seeking || !video) return;
-      seeking = true; dirty = false;
+    // The clips. Each one is downloaded whole into memory before it is used,
+    // so scrolling can never seek into a part that has not arrived yet: that
+    // is what used to freeze the turn on a slow connection. The small preview
+    // comes first and takes over from the stills as soon as it is here; the
+    // sharp clip follows and fades in over it. Phones get portrait clips.
+    // With Data Saver on, only the preview is fetched.
+    type Clip = { el: HTMLVideoElement; tier: string; ready: boolean; primed: boolean; priming: boolean; seeking: boolean; latest: number; dirty: boolean };
+    const phone = matchMedia('(max-width: 760px)').matches;
+    const saveData = !!(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+    let clips: Clip[] = [...stack.querySelectorAll<HTMLVideoElement>('.dive-video')].map((el) => ({ el, tier: el.dataset.tier || 'hi', ready: false, primed: false, priming: false, seeking: false, latest: 0, dirty: false }));
+    if (saveData && clips.some((c) => c.tier === 'lo')) clips = clips.filter((c) => { if (c.tier === 'hi') { c.el.remove(); return false; } return true; });
+    let active: Clip | null = null;   // the clip on screen
+    let incoming: Clip | null = null; // the sharp clip, lining up before it takes over
+    let turnNow = 0;
+
+    const seekTo = (c: Clip, t: number) => {
+      c.latest = t; c.dirty = true;
+      if (c.seeking) return;
+      c.seeking = true; c.dirty = false;
       // Exact seeks, not fastSeek: fastSeek snaps to keyframes and the turn stutters.
-      video.currentTime = t;
+      c.el.currentTime = t;
     };
-    if (video) {
-      // iOS only paints seeks once the clip has played, so play then pause it.
-      // The clip has no autoplay attribute: this is the only thing that
-      // starts it, and it stops it straight away so the scroll stays in charge.
-      let primed = false, priming = false;
-      const prime = () => {
-        if (primed || priming || !video) return;
-        const p = video.play();
-        if (!p || !p.then) return;
-        priming = true;
-        p.then(() => { primed = true; ready = true; video?.pause(); onScroll(); }).catch(() => {}).finally(() => { priming = false; });
-      };
-      const onData = () => { ready = true; onScroll(); prime(); };
-      if (video.readyState >= 2) onData(); else video.addEventListener('loadeddata', onData, { once: true, signal });
-      // When autoplay is blocked (Low Power Mode, data saver), a tap or the
-      // first touch counts as a gesture, so iOS lets the clip start then.
-      // Only start a load if none is in progress; reloading on every touch
-      // restarted the download each time on slow connections.
-      const unlock = () => { if (primed || !video) return; if (video.readyState < 2 && video.networkState !== HTMLMediaElement.NETWORK_LOADING && video.src) video.load(); prime(); };
-      for (const ev of ['touchstart', 'touchend', 'click']) window.addEventListener(ev, unlock, { passive: true, signal });
-      video.addEventListener('seeked', () => { seeking = false; if (dirty) seekTo(latest); }, { signal });
-      video.addEventListener('error', () => { video?.remove(); video = null; onScroll(); }, { once: true, signal });
+    const target = (c: Clip) => turnNow * (c.el.duration || 0) * 0.985;
+    // iOS only paints seeks once a clip has played, so play it, then pause it.
+    // Nothing else ever plays the clips: the scroll stays in charge.
+    const prime = (c: Clip) => {
+      if (c.primed || c.priming) return;
+      const p = c.el.play();
+      if (!p || !p.then) { c.primed = true; onReady(c); return; }
+      c.priming = true;
+      p.then(() => { c.primed = true; c.el.pause(); onReady(c); }).catch(() => {}).finally(() => { c.priming = false; });
+    };
+    // A clip goes on screen only once it has played (so iOS will draw it) and
+    // has painted the current frame; until then the stills stay up. The
+    // preview never replaces the sharp clip.
+    const onReady = (c: Clip) => {
+      if (!c.ready || !c.primed || !c.el.duration) return;
+      if (active === c || incoming === c) return;
+      if (c.tier === 'lo' && (active?.tier === 'hi' || incoming?.tier === 'hi')) return;
+      incoming = c;
+      seekTo(c, target(c));
+      onScroll();
+    };
+    const load = async (c: Clip) => {
+      const src = (phone && c.el.dataset.srcMobile) || c.el.dataset.src || '';
+      let job = blobs.get(src);
+      if (!job) {
+        job = fetch(src).then((res) => { if (!res.ok) throw new Error(String(res.status)); return res.blob(); }).then((b) => URL.createObjectURL(b));
+        blobs.set(src, job);
+        job.catch(() => blobs.delete(src));
+      }
+      try {
+        const url = await job;
+        if (signal.aborted) return;
+        c.el.src = url;
+      } catch {
+        if (signal.aborted) return;
+        // If the download fails, let the browser stream it the usual way.
+        c.el.preload = 'auto';
+        c.el.src = src;
+      }
+      c.el.load();
+    };
+    clips.forEach((c) => {
+      c.el.addEventListener('loadeddata', () => { c.ready = true; prime(c); }, { signal });
+      c.el.addEventListener('seeked', () => {
+        c.seeking = false;
+        if (c === incoming) { incoming = null; active = c; clips.forEach((o) => { if (o !== c) o.el.style.opacity = '0'; }); onScroll(); return; }
+        if (c.dirty) seekTo(c, c.latest);
+      }, { signal });
+      c.el.addEventListener('error', () => {
+        if (active === c) active = null;
+        if (incoming === c) incoming = null;
+        c.el.remove(); clips = clips.filter((o) => o !== c); onScroll();
+      }, { once: true, signal });
+    });
+    // When autoplay is blocked (Low Power Mode, data saver), the first touch
+    // counts as a gesture, so iOS lets the clips be primed then.
+    const unlock = () => clips.forEach((c) => { if (c.ready && !c.primed) prime(c); });
+    for (const ev of ['touchstart', 'touchend', 'click']) window.addEventListener(ev, unlock, { passive: true, signal });
+    // Start as soon as the section is within a screen of view: preview first,
+    // then the sharp clip, one after the other so the preview is never slowed.
+    if (clips.length) {
+      const near = new IntersectionObserver(async (en) => {
+        if (!en[0].isIntersecting) return;
+        near.disconnect();
+        for (const c of [...clips].sort((x, y) => (x.tier === 'lo' ? -1 : 1) - (y.tier === 'lo' ? -1 : 1))) {
+          if (signal.aborted) return;
+          await load(c);
+          if (c.tier === 'lo') await new Promise<void>((r) => { if (c.ready) r(); else c.el.addEventListener('loadeddata', () => r(), { once: true, signal }); c.el.addEventListener('error', () => r(), { once: true, signal }); });
+        }
+      }, { rootMargin: '100% 0px' });
+      near.observe(stack); signal.addEventListener('abort', () => near.disconnect());
     }
 
     // Stages: title holds 0–.12 and fades by .3; the turn runs .1–.6; welcome
@@ -142,15 +201,19 @@ const hasMobile = existsSync('public' + mobileVideo);
       const p = measure();
 
       const turn = clamp01((p - 0.08) / 0.44);
-      if (video && ready && video.duration && !Number.isNaN(video.duration)) {
-        if (!video.paused) video.pause();
-        video.style.opacity = '1';
+      turnNow = turn;
+      if (incoming) seekTo(incoming, target(incoming));
+      if (active && active.el.duration) {
+        if (!active.el.paused) active.el.pause();
+        active.el.style.opacity = '1';
         aerial.style.opacity = String(1 - clamp01(turn * 8));
+        aerial.style.transform = '';
         front.style.opacity = '0';
-        seekTo(turn * video.duration * 0.985);
+        front.style.transform = '';
+        seekTo(active, target(active));
       } else {
-        // Until the clip can play (or if it can't), the stills stand in.
-        if (video) video.style.opacity = '0';
+        // Until a clip is here (or if none can play), the stills stand in.
+        clips.forEach((c) => { c.el.style.opacity = '0'; });
         // Stills: push in on the aerial, a short crossfade, then the front settles.
         const x = ease(clamp01((turn - 0.5) / 0.22));
         aerial.style.opacity = String(1 - x);

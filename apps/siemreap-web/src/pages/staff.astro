@@ -5,15 +5,65 @@ import PageHead from '../components/sr/PageHead.astro';
 import CardGrid from '../components/sr/CardGrid.astro';
 import Cta from '../components/sr/Cta.astro';
 import { applyUrl } from '../lib/sr-routes';
+import { DEPARTMENTS, SKILLS } from '../lib/sr-roles';
 ---
 <SrLayout title="Join Staff or Volunteer | YWAM Siem Reap" spacer={false}>
   <PageHead eyebrow="Join staff or volunteer" km="ក្រុមការងារ" title="Serve long term. Or come short term." highlight="short term."
-    lead="Staff here are Khmer and international, some for two years, some for twenty. Volunteers come for a few weeks or a few months. All of them raise their own support, and all of them live in the community."
-    photo="/images/campus/staff-desk.webp" photoPos="70% 30%" photoAlt="A staff member turning from her desk to smile, under wooden signs reading God is good and God is peace" />
+    photo="/images/campus/high-five.webp" photoPos="48% 30%" full mobileFull cls="pagehead--staff" photoAlt="A volunteer high-fiving a girl outside a village house, friends looking on" />
   <CardGrid cols={2} items={[
     ['Joining staff', 'Staff complete a DTS first, then apply to a role on the base. We will talk you through visas, support raising and housing.'],
     ['Volunteering short term', 'A few weeks to a few months. Trades, admin, teaching, media and practical skills — often the most useful people on site. No DTS required.'],
   ]} />
+  <section class="sec" style="padding-top:0;" id="roles">
+    <div class="wrap">
+      <div class="reveal">
+        <h2 class="disp" style="margin:0;font-size:clamp(34px,5vw,72px);font-weight:600;line-height:1;">Where you could serve</h2>
+      </div>
+      <div class="fit reveal">
+        <div class="fit-row">
+          <span class="fit-label">How long can you come?</span>
+          <div class="fit-chips" data-fit="stay">
+            <button type="button" class="chip" data-v="weeks">A few weeks</button>
+            <button type="button" class="chip" data-v="months">A few months</button>
+            <button type="button" class="chip" data-v="years">Two years or more</button>
+          </div>
+        </div>
+        <div class="fit-row">
+          <span class="fit-label">What are you good at?</span>
+          <div class="fit-chips" data-fit="skill">
+            {SKILLS.map((k) => <button type="button" class="chip" data-v={k}>{k}</button>)}
+          </div>
+        </div>
+        <p class="fit-count muted" id="fit-count" aria-live="polite">Pick a length of stay or a skill, and the roles that fit light up.</p>
+      </div>
+      <div class="roles stag">
+        {DEPARTMENTS.map((d) => (
+          <div class="card roles-dept">
+            <p class="eyebrow">{d.name}</p>
+            <ul class="roles-list">
+              {d.roles.map((r) => (
+                <li class="roles-item" data-stay={r.stay.join(' ')} data-skills={r.skills.join('|')}>
+                  <button type="button" class="roles-toggle" aria-expanded="false">
+                    <span class="disp roles-name">{r.name}{r.dts && <span class="roles-dts"> · DTS required</span>}</span>
+                    <span class="roles-arrow" aria-hidden="true">+</span>
+                  </button>
+                  <div class="roles-more" hidden>
+                    <p class="body roles-note">{r.note}</p>
+                    <p class="roles-tags">{r.stay.includes('weeks') ? 'From a few weeks' : r.stay.includes('months') ? 'From a few months' : 'Staff, two years or more'}{r.skills.length ? ' · ' + r.skills.join(', ') : ''}</p>
+                    <div class="roles-btns">
+                      {r.dts
+                        ? <a class="btn btn--solid" href={applyUrl('staff')} target="_blank" rel="noopener">Apply as staff ↗︎</a>
+                        : <><a class="btn btn--solid" href={applyUrl('volunteer')} target="_blank" rel="noopener">Apply as a volunteer ↗︎</a><a class="btn" href={applyUrl('staff')} target="_blank" rel="noopener">Apply as staff ↗︎</a></>}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
   <section class="sec" style="padding-top:0;">
     <div class="wrap" style="display:flex;gap:14px;flex-wrap:wrap;">
       <a class="btn btn--solid" href={applyUrl('staff')} target="_blank" rel="noopener">Staff application ↗︎</a>
@@ -22,10 +72,55 @@ import { applyUrl } from '../lib/sr-routes';
     </div>
   </section>
   <Cta
-    title="Think you might belong here?"
-    body="Tell us what you do and when you are free. We would rather hear from you early than late."
+    title="Come and serve with us."
     primary={['applyStaff', 'Apply to staff or volunteer']}
     secondary={['contact', 'Get in touch']}
   />
   <Footer />
 </SrLayout>
+
+<script>
+  let ctrl: AbortController | null = null;
+  const init = () => {
+    ctrl?.abort(); ctrl = new AbortController(); const { signal } = ctrl;
+    const root = document.getElementById('roles');
+    if (!root) return;
+    const items = [...root.querySelectorAll<HTMLElement>('.roles-item')];
+    const count = document.getElementById('fit-count')!;
+    let stay = '', skill = '';
+    const apply = () => {
+      let fit = 0;
+      for (const it of items) {
+        const okStay = !stay || (it.dataset.stay || '').split(' ').includes(stay);
+        const okSkill = !skill || (it.dataset.skills || '').split('|').includes(skill);
+        const ok = okStay && okSkill;
+        it.classList.toggle('is-dim', !!(stay || skill) && !ok);
+        it.classList.toggle('is-fit', !!(stay || skill) && ok);
+        if (ok) fit += 1;
+      }
+      root.querySelectorAll<HTMLElement>('.roles-dept').forEach((d) => { d.classList.toggle('is-empty', !!(stay || skill) && !d.querySelector('.roles-item:not(.is-dim)')); });
+      count.textContent = !stay && !skill ? 'Pick a length of stay or a skill, and the roles that fit light up.' : fit === 0 ? 'Nothing matches both. Try one at a time, or email us, there is usually a place.' : `${fit} ${fit === 1 ? 'role fits' : 'roles fit'}. Tap one to read more.`;
+    };
+    root.querySelectorAll<HTMLElement>('[data-fit]').forEach((group) => {
+      const kind = group.dataset.fit!;
+      group.querySelectorAll<HTMLButtonElement>('.chip').forEach((b) => b.addEventListener('click', () => {
+        const v = b.dataset.v!;
+        const cur = kind === 'stay' ? stay : skill;
+        const next = cur === v ? '' : v;
+        if (kind === 'stay') stay = next; else skill = next;
+        group.querySelectorAll('.chip').forEach((c) => c.classList.toggle('is-on', (c as HTMLElement).dataset.v === next));
+        apply();
+      }, { signal }));
+    });
+    items.forEach((it) => {
+      const btn = it.querySelector<HTMLButtonElement>('.roles-toggle')!;
+      const more = it.querySelector<HTMLElement>('.roles-more')!;
+      btn.addEventListener('click', () => {
+        const open = more.hidden;
+        more.hidden = !open; btn.setAttribute('aria-expanded', String(open)); it.classList.toggle('is-open', open);
+      }, { signal });
+    });
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

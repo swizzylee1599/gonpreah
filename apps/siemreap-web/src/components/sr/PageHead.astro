@@ -15,12 +15,14 @@ interface Props {
   long?: boolean;
   /** Extra-large title, for a header that is just the title over a photo. */
   big?: boolean;
+  /** Extra class on the section, for one-off tweaks. */
+  cls?: string;
 }
-const { eyebrow, km, lead, title, highlight, photo, photoAlt = '', full = false, photoPos, center = false, mobileFull = false, long = false, big = false } = Astro.props;
+const { eyebrow, km, lead, title, highlight, photo, photoAlt = '', full = false, photoPos, center = false, mobileFull = false, long = false, big = false, cls } = Astro.props;
 const words = title.split(' ');
 const highlightCount = highlight ? highlight.split(' ').length : 0;
 ---
-<section class:list={['pagehead', { 'pagehead--photo': !!photo, 'pagehead--full': full, 'pagehead--center': center, 'pagehead--mfull': mobileFull, 'pagehead--long': long }]} style={photo ? undefined : 'padding:90px 0 0;'}>
+<section class:list={['pagehead', cls, { 'pagehead--photo': !!photo, 'pagehead--full': full, 'pagehead--center': center, 'pagehead--mfull': mobileFull, 'pagehead--long': long }]} style={photo ? undefined : 'padding:90px 0 0;'}>
   {photo && (
     <>
       <img class="pagehead-photo" src={photo} srcset={srcset(photo)} sizes="(max-width: 760px) 100vw, 50vw" alt={photoAlt} loading="eager" decoding="async" style={photoPos ? `object-position:${photoPos}` : undefined} />

@@ -321,7 +321,8 @@ body.sr {
 .sr .pagehead-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .sr .pagehead-scrim {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(11,11,11,.97) 0%, rgba(11,11,11,.72) 45%, rgba(11,11,11,.35) 100%);
+  /* Solid ink at the foot, so the photo melts into the page below it. */
+  background: linear-gradient(to top, rgba(11,11,11,1) 0%, rgba(11,11,11,.9) 14%, rgba(11,11,11,.66) 48%, rgba(11,11,11,.35) 100%);
 }
 .sr .pagehead--photo .wrap { width: 100%; text-shadow: 0 2px 28px rgba(0,0,0,.7), 0 1px 3px rgba(0,0,0,.6); }
 /* Page changes fade through the site's black: the old page dips out
@@ -594,6 +595,8 @@ body.sr {
 .sr .dbs-strip-photos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
 .sr .dbs-strip-photos figure { margin: 0; aspect-ratio: 4 / 3; border-radius: 16px; overflow: hidden; background: var(--sr-raise); }
 .sr .dbs-strip-photos img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sr .dbs-strip-photos--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.sr .dbs-strip-photos--4 figure { aspect-ratio: 16 / 10; }
 .sr .sms-intro-photo { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 60%; border-radius: 16px; margin-top: 30px; }
 .sr .visit-photos { position: relative; height: 440px; }
 .sr .visit-photo-main { position: absolute; inset: 0 60px 0 0; border-radius: 20px; overflow: hidden; }
@@ -665,6 +668,10 @@ body.sr {
 .sr .dive-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
 .sr .dive-photo, .sr .dive-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background-size: cover; background-position: 50% 50%; opacity: 0; will-change: transform, opacity; transform-origin: 50% 50%; }
 .sr .dive-aerial { opacity: 1; }
+/* Clips fade in over the stills, and the sharp clip over the preview. The
+   sharp clip comes later in the page, so it sits above the preview without
+   a z-index (which would lift it over the title and scrim too). */
+.sr .dive-video { transition: opacity .45s ease; }
 .sr .dive-scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(11,11,11,.92) 0%, rgba(11,11,11,.3) 45%, rgba(11,11,11,.45) 100%); opacity: .55; }
 .sr .dive-head { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-shadow: 0 2px 28px rgba(0,0,0,.7), 0 1px 3px rgba(0,0,0,.6); will-change: transform, opacity; }
 .sr .dive-h1 { margin: 20px 0 0; font-size: clamp(48px, 8vw, 110px); font-weight: 500; line-height: 1; letter-spacing: -.01em; }
@@ -729,7 +736,9 @@ body.sr {
 /* Campus Life: Explore Siem Reap loop behind the tuk-tuk */
 .sr .explore { position: relative; z-index: 3; padding: 0; margin-top: -14vh; overflow-x: clip; }
 .sr .explore-card { position: relative; height: 100vh; height: 100svh; overflow: hidden; background: var(--sr-ink); transform-origin: 50% 100%; will-change: transform; box-shadow: 0 -40px 90px rgba(0,0,0,.6); }
-.sr .explore-plates { position: absolute; inset: 0; }
+/* Explicit layers, so Safari never draws the moving street photos over the
+   tuk-tuk: photos, then the tuk-tuk, then the shade, then the words. */
+.sr .explore-plates { position: absolute; inset: 0; z-index: 0; }
 /* The card after Explore flips up over it the same way. Its pivot sits at the
    bottom of the first screen of the card, matching the Explore card. */
 .sr .flipup { position: relative; z-index: 4; margin-top: -14vh; overflow-x: clip; }
@@ -738,9 +747,9 @@ body.sr {
 .sr .explore-plate { position: absolute; inset: -2%; background-size: cover; background-position: 50% 50%; opacity: 0; transform: scale(1); }
 .sr .explore-plate.is-on { opacity: 1; transform: scale(1.06); transition: transform .5s linear; }
 .sr .explore-plate--home, .sr .explore-plate--home.is-on { inset: 0; transform: none; transition: none; background-position: 50% 60%; } /* sits exactly under the cut-out */
-.sr .explore-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; pointer-events: none; }
-.sr .explore-shade { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 70% 60% at 50% 42%, rgba(0,0,0,.28) 0%, rgba(0,0,0,.1) 45%, rgba(0,0,0,.55) 100%); }
-.sr .explore-copy { position: absolute; left: 0; right: 0; top: 40%; transform: translateY(-50%); text-align: center; text-shadow: 0 2px 30px rgba(0,0,0,.8), 0 1px 3px rgba(0,0,0,.7); }
+.sr .explore-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; pointer-events: none; z-index: 1; transform: translateZ(0); }
+.sr .explore-shade { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(ellipse 70% 60% at 50% 42%, rgba(0,0,0,.28) 0%, rgba(0,0,0,.1) 45%, rgba(0,0,0,.55) 100%); }
+.sr .explore-copy { position: absolute; z-index: 3; left: 0; right: 0; top: 40%; transform: translateY(-50%); text-align: center; text-shadow: 0 2px 30px rgba(0,0,0,.8), 0 1px 3px rgba(0,0,0,.7); }
 .sr .explore-title { margin: 14px 0 0; font-size: clamp(46px, 7.4vw, 104px); font-weight: 500; line-height: .98; }
 .sr .explore-lead { margin: 18px auto 0; max-width: 42ch; font-size: 18px; color: #f2f2f2; }
 .sr .explore-btn { margin-top: 26px; text-shadow: none; }
@@ -804,7 +813,7 @@ body.sr {
    the upper part of the photo, over the building, clear of the faces. */
 .sr .about-head--photo { position: relative; min-height: 100vh; min-height: 100svh; display: flex; align-items: flex-start; overflow: hidden; padding: 130px 0 60px; }
 .sr .about-head-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }
-.sr .about-head-scrim { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(11,11,11,.72) 0%, rgba(11,11,11,.35) 34%, rgba(11,11,11,0) 55%, rgba(11,11,11,0) 80%, rgba(11,11,11,.85) 100%); }
+.sr .about-head-scrim { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(11,11,11,.72) 0%, rgba(11,11,11,.35) 34%, rgba(11,11,11,0) 55%, rgba(11,11,11,0) 76%, rgba(11,11,11,1) 100%); }
 .sr .about-head-inner { position: relative; text-shadow: 0 2px 30px rgba(0,0,0,.55); }
 .sr .about-welcome-sec { padding-top: 56px; }
 /* A full-width photo on its own, edge to edge. */
@@ -1237,6 +1246,8 @@ body.sr {
 .sr .sec--paper { background: #f3efe7; color: #0b0b0b; }
 .sr .sec--paper .body { color: #2b2823; }
 .sr .sec--paper .muted { color: #6f6a62; }
+/* Small labels on cream sections: a warm grey, not the white used on black. */
+.sr .sec--paper .eyebrow { color: #8a7f6a; }
 .sr .sec--paper .btn { border-color: #0b0b0b; color: #0b0b0b; }
 .sr .sec--paper .btn:hover { background: #0b0b0b; color: #f3efe7; border-color: #0b0b0b; }
 .sr .sec--paper .btn--solid { background: #0b0b0b; color: #f3efe7; border-color: #0b0b0b; }
@@ -1499,7 +1510,7 @@ body.sr {
    story features, a pull quote, a full-width photo, and the ask. */
 .sr .nl-cover { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; background: var(--sr-ink); }
 .sr .nl-cover-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.sr .nl-cover-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11, 11, 11, .55) 0%, rgba(11, 11, 11, .15) 35%, rgba(11, 11, 11, .88) 100%); }
+.sr .nl-cover-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11, 11, 11, .55) 0%, rgba(11, 11, 11, .15) 35%, rgba(11, 11, 11, .9) 88%, rgba(11, 11, 11, 1) 100%); }
 .sr .nl-cover-copy { position: relative; padding-top: 150px; padding-bottom: clamp(50px, 9vh, 100px); }
 .sr .nl-eyebrow { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .sr .nl-dot { color: var(--gp-grey); }
@@ -1611,3 +1622,115 @@ body.sr {
   .sr .start-blurb { font-size: 15px; }
   .sr .start-req { font-size: 13.5px; }
 }
+
+/* ---------------------------------------------------------------- Our team
+   A group photo up top, the numbers, then portraits by ministry: leaders
+   large, staff in a staggered grid. Name and role sit over the bottom of
+   each portrait. Empty slots stand in until the photos arrive. */
+.sr .tm-hero { position: relative; min-height: 86svh; display: flex; align-items: flex-end; overflow: hidden; background: var(--sr-ink); }
+.sr .tm-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+.sr .tm-hero-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11, 11, 11, .5) 0%, rgba(11, 11, 11, .1) 40%, rgba(11, 11, 11, .9) 88%, rgba(11, 11, 11, 1) 100%); }
+.sr .tm-hero-copy { position: relative; padding-top: 150px; padding-bottom: clamp(44px, 8vh, 90px); }
+.sr .tm-title { margin: 16px 0 0; font-size: clamp(48px, 8vw, 120px); font-weight: 700; line-height: .92; }
+.sr .tm-km { margin: 16px 0 0; font-size: 26px; color: #dcdcdc; }
+.sr .tm-lead { margin: 22px 0 0; max-width: 56ch; font-size: 18px; color: #e6e6e6; }
+.sr .tm-intro-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(30px, 5vw, 80px); align-items: center; }
+.sr .tm-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.sr .tm-stat { display: grid; gap: 6px; padding-top: 14px; border-top: 2px solid var(--sr-pink); }
+.sr .tm-stat-n { font-size: clamp(40px, 4.6vw, 72px); font-weight: 700; line-height: .95; }
+.sr .tm-stat-l { font-size: 13px; color: #9a9a9a; }
+.sr .tm-head { margin-bottom: 26px; }
+.sr .tm-h2 { margin: 12px 0 0; font-size: clamp(28px, 3.4vw, 44px); font-weight: 500; line-height: 1.1; }
+/* Staff and Leadership as the big headings over the portraits. */
+.sr .tm-h2--dept { margin: 0; font-size: clamp(36px, 5.4vw, 76px); font-weight: 700; line-height: .95; }
+.sr .tm-sec + .tm-sec { padding-top: 0; }
+.sr .tm-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px 18px; grid-auto-flow: dense; }
+.sr .tm-grid--lead { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 24px; }
+/* Leadership: families half a row each, everyone else three to a row. */
+.sr .tm-grid--lead .tm-person { grid-column: span 2; }
+.sr .tm-grid--lead .tm-person--wide { grid-column: span 3; }
+.sr .tm-grid--lead .tm-person--wide .tm-photo { aspect-ratio: 5 / 4; }
+.sr .tm-person { margin: 0; }
+.sr .tm-person--wide { grid-column: span 2; }
+.sr .tm-photo { position: relative; aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden; background: #161616; }
+.sr .tm-person--wide .tm-photo { aspect-ratio: 8 / 5; }
+.sr .tm-photo img { display: block; width: 100%; height: 100%; object-fit: cover; filter: saturate(.92); transition: transform .7s cubic-bezier(.16, 1, .3, 1), filter .4s ease; }
+.sr .tm-person:hover .tm-photo img { transform: scale(1.04); filter: saturate(1); }
+.sr .tm-slot { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 1px dashed #3a3a3a; border-radius: 18px; text-align: center; padding: 20px; box-sizing: border-box; background: repeating-linear-gradient(135deg, #151515 0 14px, #171717 14px 28px); }
+.sr .tm-slot-name { font-family: var(--gp-font-display); text-transform: uppercase; letter-spacing: .04em; font-size: 15px; color: #777; }
+.sr .tm-slot-hint { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #4a4a4a; }
+.sr .tm-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 50px 18px 16px; background: linear-gradient(180deg, rgba(11, 11, 11, 0), rgba(11, 11, 11, .88)); display: grid; gap: 3px; }
+.sr .tm-name { font-size: 17px; font-weight: 500; line-height: 1.15; }
+.sr .tm-role { font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; color: #bdbdbd; }
+.sr .tm-grid--lead .tm-name { font-size: 21px; }
+.sr .tm-kind { justify-self: start; margin-bottom: 4px; padding: 3px 9px; border: 1px solid rgba(255, 255, 255, .35); border-radius: 999px; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #e6e6e6; }
+.sr .tm-with { display: flex; flex-wrap: wrap; gap: 2px 16px; }
+.sr .tm-with b { font-weight: 600; color: #fff; }
+@media (max-width: 760px) {
+  /* Join staff: the heading sits low so her face shows above it. */
+  .sr .pagehead--staff { align-items: flex-end; padding-bottom: 70px; }
+  .sr .pagehead--staff .pagehead-photo { object-position: 64% 30% !important; }
+  .sr .tm-hero { min-height: 78svh; }
+  .sr .tm-hero-copy { padding-top: 120px; padding-bottom: 40px; }
+  .sr .tm-title { font-size: clamp(42px, 13vw, 60px); }
+  .sr .tm-km { font-size: 22px; }
+  .sr .tm-lead { font-size: 16px; }
+  .sr .tm-intro-grid { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+  .sr .tm-stats { gap: 12px; }
+  .sr .tm-stat-n { font-size: 40px; }
+  .sr .tm-grid, .sr .tm-grid--lead { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
+  .sr .tm-person--wide { grid-column: span 2; }
+  .sr .tm-person--wide .tm-photo { aspect-ratio: 16 / 10; }
+  .sr .tm-grid--lead .tm-person { grid-column: span 1; }
+  .sr .tm-grid--lead .tm-person--wide { grid-column: span 2; }
+  .sr .tm-grid--lead .tm-person--wide .tm-photo { aspect-ratio: 16 / 10; }
+  .sr .tm-cap { padding: 40px 14px 12px; }
+  .sr .tm-name { font-size: 15px; }
+  .sr .tm-grid--lead .tm-name { font-size: 17px; }
+  .sr .tm-role { font-size: 11px; }
+  .sr .tm-slot-name { font-size: 13px; }
+}
+
+/* Join staff: find your fit. Chips pick a length of stay and a skill; the
+   roles that match light up, the rest dim; each role opens on a tap. */
+.sr .fit { margin-top: 30px; padding: 26px 28px; border: 1px solid #262626; border-radius: 20px; background: var(--sr-raise); display: grid; gap: 18px; }
+.sr .fit-row { display: grid; gap: 10px; }
+.sr .fit-label { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--gp-grey); }
+.sr .fit-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.sr .chip { background: none; border: 1px solid #3a3a3a; color: #fff; border-radius: 999px; padding: 9px 16px; font-family: inherit; font-size: 14px; cursor: pointer; transition: border-color .2s, background .2s, color .2s; }
+.sr .chip:hover { border-color: #fff; }
+.sr .chip.is-on { background: #fff; color: #000; border-color: #fff; }
+.sr .fit-count { margin: 0; font-size: 14px; }
+.sr .roles-item { transition: opacity .3s ease; }
+.sr .roles-item.is-dim { opacity: .28; }
+.sr .roles-item.is-fit .roles-name { color: var(--sr-pink); }
+.sr .roles-dept.is-empty { opacity: .45; }
+.sr .roles-toggle { display: flex; justify-content: space-between; align-items: center; gap: 14px; width: 100%; background: none; border: 0; padding: 0; color: #fff; font-family: inherit; text-align: left; cursor: pointer; }
+.sr .roles-arrow { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid #3a3a3a; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; transition: transform .25s ease, background .2s, color .2s; }
+.sr .roles-toggle:hover .roles-arrow { background: #fff; color: #000; border-color: #fff; }
+.sr .roles-item.is-open .roles-arrow { transform: rotate(45deg); }
+.sr .roles-more { padding-top: 8px; }
+.sr .roles-tags { margin: 8px 0 0; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--gp-grey); }
+.sr .roles-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.sr .roles-btns .btn { padding: 10px 18px; font-size: 13px; }
+/* Join staff: every ministry and school, by department. */
+.sr .roles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 32px; }
+.sr .roles-dept { padding: 30px 30px 26px; }
+.sr .roles-list { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 14px; }
+.sr .roles-item { display: grid; gap: 4px; padding-top: 14px; border-top: 1px solid #262626; }
+.sr .roles-item:first-child { padding-top: 0; border-top: 0; }
+.sr .roles-name { font-size: 17px; font-weight: 500; }
+.sr .roles-dts { font-size: 11px; letter-spacing: .14em; color: var(--gp-grey); font-weight: 400; }
+.sr .roles-note { font-size: 14.5px; color: #cfcfcf; }
+@media (max-width: 760px) {
+  .sr .roles { grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 24px; }
+  .sr .roles-dept { padding: 24px 20px 22px; }
+  .sr .fit { padding: 20px 18px; margin-top: 22px; }
+  .sr .chip { padding: 8px 13px; font-size: 13px; }
+}
+
+/* Footer: YWAM Cambodia, YWAM Gon Preah and the University of the Nations,
+   small white marks at one height. */
+.sr .foot-logos { display: flex; align-items: center; gap: 18px; margin-top: 18px; }
+.sr .foot-logos img { display: block; height: 30px; width: auto; opacity: .7; transition: opacity .2s ease; }
+.sr .foot-logos img:hover { opacity: 1; }
