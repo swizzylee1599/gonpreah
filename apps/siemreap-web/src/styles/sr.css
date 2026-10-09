@@ -1714,3 +1714,9 @@ body.sr {
   .sr .fit { padding: 20px 18px; margin-top: 22px; }
   .sr .chip { padding: 8px 13px; font-size: 13px; }
 }
+
+/* Footer: YWAM Cambodia, YWAM Gon Preah and the University of the Nations,
+   small white marks at one height. */
+.sr .foot-logos { display: flex; align-items: center; gap: 18px; margin-top: 18px; }
+.sr .foot-logos img { display: block; height: 30px; width: auto; opacity: .7; transition: opacity .2s ease; }
+.sr .foot-logos img:hover { opacity: 1; }
