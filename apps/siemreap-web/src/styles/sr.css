@@ -1658,7 +1658,7 @@ body.sr {
 @media (max-width: 760px) {
   /* Join staff: the heading sits low so her face shows above it. */
   .sr .pagehead--staff { align-items: flex-end; padding-bottom: 70px; }
-  .sr .pagehead--staff .pagehead-photo { object-position: 58% 42% !important; }
+  .sr .pagehead--staff .pagehead-photo { object-position: 64% 30% !important; }
   .sr .tm-hero { min-height: 78svh; }
   .sr .tm-hero-copy { padding-top: 120px; padding-bottom: 40px; }
   .sr .tm-title { font-size: clamp(42px, 13vw, 60px); }
