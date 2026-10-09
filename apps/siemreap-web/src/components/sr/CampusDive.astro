@@ -85,6 +85,7 @@ const hasMobile = existsSync('public' + mobileVideo);
       const src = (phone && video.dataset.srcMobile) || video.dataset.src;
       // Fetch the clip only once its section is within a screen of view.
       const startClip = () => {
+        video.preload = 'auto';
         video.src = `${src}#t=0.001`;
         video.load();
       };
@@ -92,6 +93,15 @@ const hasMobile = existsSync('public' + mobileVideo);
       near.observe(video); signal.addEventListener('abort', () => near.disconnect());
     }
     let ready = false;
+    // The clip only takes over from the stills once the whole file is here,
+    // and only at either end of the turn, so a slow connection never leaves
+    // the turn frozen on a seek into a part that has not downloaded yet.
+    let useVideo = false;
+    const fullyBuffered = () => {
+      if (!video || !video.duration || Number.isNaN(video.duration)) return false;
+      const b = video.buffered;
+      return b.length > 0 && b.end(b.length - 1) >= video.duration - 0.35;
+    };
     const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
     const ease = (t: number) => t * t * (3 - 2 * t);
 
@@ -117,6 +127,9 @@ const hasMobile = existsSync('public' + mobileVideo);
       };
       const onData = () => { ready = true; onScroll(); prime(); };
       if (video.readyState >= 2) onData(); else video.addEventListener('loadeddata', onData, { once: true, signal });
+      // As more of the clip arrives, check again whether it can take over.
+      video.addEventListener('progress', () => onScroll(), { signal });
+      video.addEventListener('canplaythrough', () => onScroll(), { signal });
       // When autoplay is blocked (Low Power Mode, data saver), a tap or the
       // first touch counts as a gesture, so iOS lets the clip start then.
       // Only start a load if none is in progress; reloading on every touch
@@ -142,7 +155,8 @@ const hasMobile = existsSync('public' + mobileVideo);
       const p = measure();
 
       const turn = clamp01((p - 0.08) / 0.44);
-      if (video && ready && video.duration && !Number.isNaN(video.duration)) {
+      if (!useVideo && video && ready && fullyBuffered() && (turn < 0.02 || turn > 0.98)) useVideo = true;
+      if (useVideo && video && ready && video.duration && !Number.isNaN(video.duration)) {
         if (!video.paused) video.pause();
         video.style.opacity = '1';
         aerial.style.opacity = String(1 - clamp01(turn * 8));

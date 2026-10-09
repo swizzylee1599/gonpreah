@@ -321,7 +321,8 @@ body.sr {
 .sr .pagehead-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .sr .pagehead-scrim {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(11,11,11,.97) 0%, rgba(11,11,11,.72) 45%, rgba(11,11,11,.35) 100%);
+  /* Solid ink at the foot, so the photo melts into the page below it. */
+  background: linear-gradient(to top, rgba(11,11,11,1) 0%, rgba(11,11,11,.9) 14%, rgba(11,11,11,.66) 48%, rgba(11,11,11,.35) 100%);
 }
 .sr .pagehead--photo .wrap { width: 100%; text-shadow: 0 2px 28px rgba(0,0,0,.7), 0 1px 3px rgba(0,0,0,.6); }
 /* Page changes fade through the site's black: the old page dips out
@@ -806,7 +807,7 @@ body.sr {
    the upper part of the photo, over the building, clear of the faces. */
 .sr .about-head--photo { position: relative; min-height: 100vh; min-height: 100svh; display: flex; align-items: flex-start; overflow: hidden; padding: 130px 0 60px; }
 .sr .about-head-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }
-.sr .about-head-scrim { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(11,11,11,.72) 0%, rgba(11,11,11,.35) 34%, rgba(11,11,11,0) 55%, rgba(11,11,11,0) 80%, rgba(11,11,11,.85) 100%); }
+.sr .about-head-scrim { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(11,11,11,.72) 0%, rgba(11,11,11,.35) 34%, rgba(11,11,11,0) 55%, rgba(11,11,11,0) 76%, rgba(11,11,11,1) 100%); }
 .sr .about-head-inner { position: relative; text-shadow: 0 2px 30px rgba(0,0,0,.55); }
 .sr .about-welcome-sec { padding-top: 56px; }
 /* A full-width photo on its own, edge to edge. */
@@ -1501,7 +1502,7 @@ body.sr {
    story features, a pull quote, a full-width photo, and the ask. */
 .sr .nl-cover { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; background: var(--sr-ink); }
 .sr .nl-cover-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.sr .nl-cover-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11, 11, 11, .55) 0%, rgba(11, 11, 11, .15) 35%, rgba(11, 11, 11, .88) 100%); }
+.sr .nl-cover-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11, 11, 11, .55) 0%, rgba(11, 11, 11, .15) 35%, rgba(11, 11, 11, .9) 88%, rgba(11, 11, 11, 1) 100%); }
 .sr .nl-cover-copy { position: relative; padding-top: 150px; padding-bottom: clamp(50px, 9vh, 100px); }
 .sr .nl-eyebrow { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .sr .nl-dot { color: var(--gp-grey); }
@@ -1620,7 +1621,7 @@ body.sr {
    each portrait. Empty slots stand in until the photos arrive. */
 .sr .tm-hero { position: relative; min-height: 86svh; display: flex; align-items: flex-end; overflow: hidden; background: var(--sr-ink); }
 .sr .tm-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
-.sr .tm-hero-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11, 11, 11, .5) 0%, rgba(11, 11, 11, .1) 40%, rgba(11, 11, 11, .9) 100%); }
+.sr .tm-hero-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11, 11, 11, .5) 0%, rgba(11, 11, 11, .1) 40%, rgba(11, 11, 11, .9) 88%, rgba(11, 11, 11, 1) 100%); }
 .sr .tm-hero-copy { position: relative; padding-top: 150px; padding-bottom: clamp(44px, 8vh, 90px); }
 .sr .tm-title { margin: 16px 0 0; font-size: clamp(48px, 8vw, 120px); font-weight: 700; line-height: .92; }
 .sr .tm-km { margin: 16px 0 0; font-size: 26px; color: #dcdcdc; }
@@ -1649,6 +1650,9 @@ body.sr {
 .sr .tm-role { font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; color: #bdbdbd; }
 .sr .tm-grid--lead .tm-name { font-size: 21px; }
 @media (max-width: 760px) {
+  /* Join staff: the heading sits low so her face shows above it. */
+  .sr .pagehead--staff { align-items: flex-end; padding-bottom: 70px; }
+  .sr .pagehead--staff .pagehead-photo { object-position: 58% 42% !important; }
   .sr .tm-hero { min-height: 78svh; }
   .sr .tm-hero-copy { padding-top: 120px; padding-bottom: 40px; }
   .sr .tm-title { font-size: clamp(42px, 13vw, 60px); }
