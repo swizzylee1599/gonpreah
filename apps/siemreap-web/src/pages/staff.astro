@@ -5,6 +5,7 @@ import PageHead from '../components/sr/PageHead.astro';
 import CardGrid from '../components/sr/CardGrid.astro';
 import Cta from '../components/sr/Cta.astro';
 import { applyUrl } from '../lib/sr-routes';
+import { DEPARTMENTS } from '../lib/sr-roles';
 ---
 <SrLayout title="Join Staff or Volunteer | YWAM Siem Reap" spacer={false}>
   <PageHead eyebrow="Join staff or volunteer" km="ក្រុមការងារ" title="Serve long term. Or come short term." highlight="short term."
@@ -13,6 +14,29 @@ import { applyUrl } from '../lib/sr-routes';
     ['Joining staff', 'Staff complete a DTS first, then apply to a role on the base. We will talk you through visas, support raising and housing.'],
     ['Volunteering short term', 'A few weeks to a few months. Trades, admin, teaching, media and practical skills — often the most useful people on site. No DTS required.'],
   ]} />
+  <section class="sec" style="padding-top:0;" id="roles">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Where you could serve</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;">Every ministry and school on the base.</h2>
+      </div>
+      <div class="roles stag">
+        {DEPARTMENTS.map((d) => (
+          <div class="card roles-dept">
+            <p class="eyebrow">{d.name}</p>
+            <ul class="roles-list">
+              {d.roles.map((r) => (
+                <li class="roles-item">
+                  <span class="disp roles-name">{r.name}{r.dts && <span class="roles-dts"> · DTS required</span>}</span>
+                  <span class="body roles-note">{r.note}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
   <section class="sec" style="padding-top:0;">
     <div class="wrap" style="display:flex;gap:14px;flex-wrap:wrap;">
       <a class="btn btn--solid" href={applyUrl('staff')} target="_blank" rel="noopener">Staff application ↗︎</a>
@@ -22,7 +46,6 @@ import { applyUrl } from '../lib/sr-routes';
   </section>
   <Cta
     title="Come and serve with us."
-    body="Tell us what you do and when you are free. We would rather hear from you early than late."
     primary={['applyStaff', 'Apply to staff or volunteer']}
     secondary={['contact', 'Get in touch']}
   />
