@@ -1639,6 +1639,8 @@ body.sr {
 .sr .tm-stat-l { font-size: 13px; color: #9a9a9a; }
 .sr .tm-head { margin-bottom: 26px; }
 .sr .tm-h2 { margin: 12px 0 0; font-size: clamp(28px, 3.4vw, 44px); font-weight: 500; line-height: 1.1; }
+/* Department names as the big headings over each group of portraits. */
+.sr .tm-h2--dept { margin: 0; font-size: clamp(36px, 5.4vw, 76px); font-weight: 700; line-height: .95; }
 .sr .tm-sec + .tm-sec { padding-top: 0; }
 .sr .tm-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px 18px; grid-auto-flow: dense; }
 .sr .tm-grid--lead { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
