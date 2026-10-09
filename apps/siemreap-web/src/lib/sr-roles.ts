@@ -11,7 +11,7 @@ export const DEPARTMENTS: Department[] = [
       { name: 'Village Impact ministries', note: 'Regular ministry in the villages around Siem Reap: relationships, practical help, the gospel in word and action.' },
       { name: 'Outreach team coordinator', note: 'Host the short-term teams that come through: planning, logistics, and walking with them for the week.' },
       { name: 'GP Cafe', note: 'A safe place for high-school students to hang out and hear about Jesus. Barista, kitchen, and the people behind the counter.' },
-      { name: 'OMT', note: 'Our outreach and ministry team, out in the city and the province through the week.' },
+      { name: 'Oral Mother-tongue Translation (OMT)', note: 'Bringing the Bible into the heart languages of Cambodia\u2019s people groups, told the way they already tell stories.' },
       { name: 'Children’s education', note: 'Free primary education for underprivileged children through GP Education.' },
     ],
   },
