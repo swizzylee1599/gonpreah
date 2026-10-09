@@ -736,7 +736,9 @@ body.sr {
 /* Campus Life: Explore Siem Reap loop behind the tuk-tuk */
 .sr .explore { position: relative; z-index: 3; padding: 0; margin-top: -14vh; overflow-x: clip; }
 .sr .explore-card { position: relative; height: 100vh; height: 100svh; overflow: hidden; background: var(--sr-ink); transform-origin: 50% 100%; will-change: transform; box-shadow: 0 -40px 90px rgba(0,0,0,.6); }
-.sr .explore-plates { position: absolute; inset: 0; }
+/* Explicit layers, so Safari never draws the moving street photos over the
+   tuk-tuk: photos, then the tuk-tuk, then the shade, then the words. */
+.sr .explore-plates { position: absolute; inset: 0; z-index: 0; }
 /* The card after Explore flips up over it the same way. Its pivot sits at the
    bottom of the first screen of the card, matching the Explore card. */
 .sr .flipup { position: relative; z-index: 4; margin-top: -14vh; overflow-x: clip; }
@@ -745,9 +747,9 @@ body.sr {
 .sr .explore-plate { position: absolute; inset: -2%; background-size: cover; background-position: 50% 50%; opacity: 0; transform: scale(1); }
 .sr .explore-plate.is-on { opacity: 1; transform: scale(1.06); transition: transform .5s linear; }
 .sr .explore-plate--home, .sr .explore-plate--home.is-on { inset: 0; transform: none; transition: none; background-position: 50% 60%; } /* sits exactly under the cut-out */
-.sr .explore-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; pointer-events: none; }
-.sr .explore-shade { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 70% 60% at 50% 42%, rgba(0,0,0,.28) 0%, rgba(0,0,0,.1) 45%, rgba(0,0,0,.55) 100%); }
-.sr .explore-copy { position: absolute; left: 0; right: 0; top: 40%; transform: translateY(-50%); text-align: center; text-shadow: 0 2px 30px rgba(0,0,0,.8), 0 1px 3px rgba(0,0,0,.7); }
+.sr .explore-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; pointer-events: none; z-index: 1; transform: translateZ(0); }
+.sr .explore-shade { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(ellipse 70% 60% at 50% 42%, rgba(0,0,0,.28) 0%, rgba(0,0,0,.1) 45%, rgba(0,0,0,.55) 100%); }
+.sr .explore-copy { position: absolute; z-index: 3; left: 0; right: 0; top: 40%; transform: translateY(-50%); text-align: center; text-shadow: 0 2px 30px rgba(0,0,0,.8), 0 1px 3px rgba(0,0,0,.7); }
 .sr .explore-title { margin: 14px 0 0; font-size: clamp(46px, 7.4vw, 104px); font-weight: 500; line-height: .98; }
 .sr .explore-lead { margin: 18px auto 0; max-width: 42ch; font-size: 18px; color: #f2f2f2; }
 .sr .explore-btn { margin-top: 26px; text-shadow: none; }
