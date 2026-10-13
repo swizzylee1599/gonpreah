@@ -103,6 +103,7 @@ const hasDrone = existsSync('public' + DRONE);
 </SrLayout>
 
 <script>
+  import { stableVh } from '../lib/sr-viewport';
   let ctrl: AbortController | null = null;
   const init = () => {
     ctrl?.abort();
@@ -171,7 +172,12 @@ const hasDrone = existsSync('public' + DRONE);
     let ticking = false;
     const update = () => {
       ticking = false;
+      // Read everything first, then write: a read after a style write forces
+      // the phone to lay the page out again inside the same frame.
       const p = measure();
+      const labelTop = label.offsetTop;
+      const vh = stableVh();
+      const cardTops = cards.map(({ el }) => el.getBoundingClientRect().top);
 
       const c = ease(clamp01((p - 0.06) / 0.14));
       color.style.opacity = String(c);
@@ -197,18 +203,20 @@ const hasDrone = existsSync('public' + DRONE);
       // on desktop it stays large on the left while the cards pass on the right.
       const lIn = ease(clamp01((p - 0.12) / 0.08));
       const lUp = phone ? ease(clamp01((p - 0.2) / 0.06)) : 0;
-      const dockY = 96 - label.offsetTop;
+      const dockY = 96 - labelTop;
       label.style.opacity = String(lIn);
       label.style.transform = `translate(${((1 - lIn) * -40).toFixed(1)}px, ${(dockY * lUp).toFixed(1)}px) scale(${(1 - 0.5 * lUp).toFixed(3)})`;
 
       // 2. Each card flips up as it arrives, like the cards on Campus Life,
-      // then sticks while the next one comes up over it.
-      for (const { el, face } of cards) {
-        const t = clamp01(1 - el.getBoundingClientRect().top / window.innerHeight);
-        const e = ease(t);
+      // then sticks while the next one comes up over it. Measured against a
+      // height that ignores the phone's browser bar, so a card doesn't snap
+      // when the bar hides; the corners change in 4px steps since each change
+      // repaints the whole full-screen card.
+      cards.forEach(({ face }, i) => {
+        const e = ease(clamp01(1 - cardTops[i] / vh));
         face.style.transform = e >= 1 ? 'none' : `perspective(1600px) rotateX(${((1 - e) * 24).toFixed(2)}deg) scale(${(0.92 + 0.08 * e).toFixed(3)})`;
-        face.style.borderRadius = `${Math.round((1 - e) * 26)}px`;
-      }
+        face.style.borderRadius = `${Math.min(26, Math.round((1 - e) * 26 / 4) * 4)}px`;
+      });
     };
     const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
     window.addEventListener('scroll', onScroll, { passive: true, signal });

@@ -9,8 +9,8 @@
 :root {
   --gp-siemreap: #ffffff;
   --gp-grey: #8c8c8c;
-  --gp-font-display: 'Jost', sans-serif;
-  --gp-font-body: 'Nunito Sans', sans-serif;
+  --gp-font-display: 'Jost', 'Jost Fallback', sans-serif;
+  --gp-font-body: 'Nunito Sans', 'Nunito Sans Fallback', sans-serif;
   --gp-track-display: 0.01em;
 
   --sr-pink: var(--gp-siemreap);
@@ -40,7 +40,9 @@ body.sr {
   font-weight: 500;
   line-height: 1.15;
 }
-.sr .km { font-family: 'Koulen', sans-serif; font-weight: 400; }
+/* Fixed line height (Koulen's own is 1.8), so the line keeps its height
+   while the font loads instead of changing size when it arrives. */
+.sr .km { font-family: 'Koulen', sans-serif; font-weight: 400; line-height: 1.8; }
 .sr .pagehead .km { padding-left: .12em; }
 .sr .body { font-size: 17px; line-height: 1.7; color: #dcdcdc; }
 .sr .muted { color: var(--gp-grey); }
@@ -99,11 +101,19 @@ body.sr {
   font-size: 13px; line-height: 1.5; padding: 16px; box-sizing: border-box;
 }
 
-@supports (animation-timeline: view()) {
+/* Reveals tied to scroll position run only with a mouse or trackpad. On
+   phones (iOS 26 Safari supports scroll timelines too) they trailed the
+   finger during momentum scrolling and played backwards on the way up,
+   which read as lag and jumping; touch screens get the play-once
+   reveals in the .sr-io block below. The progress bar is small enough
+   to stay scroll-linked everywhere. */
+@supports (animation-timeline: scroll()) {
+  .sr .srbar { animation: sr-prog linear both; animation-timeline: scroll(root block); }
+}
+@media (hover: hover) and (pointer: fine) { @supports (animation-timeline: view()) {
   .sr .reveal { animation: sr-rise linear both; animation-timeline: view(); animation-range: entry 0% entry 62%; }
   .sr .heroimg { animation: sr-zoom linear both; animation-timeline: view(); animation-range: exit 0% exit 100%; }
   .sr .herofade { animation: sr-herofade linear both; animation-timeline: view(); animation-range: exit 0% exit 80%; }
-  .sr .srbar { animation: sr-prog linear both; animation-timeline: scroll(root block); }
   .sr .par { animation: sr-par linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
   .sr .parslow { animation: sr-parslow linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
   .sr .stag > * { animation: sr-slide linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
@@ -118,7 +128,7 @@ body.sr {
   .sr .scaleup { animation: sr-scaleup linear both; animation-timeline: view(); animation-range: entry 0% cover 45%; }
   .sr .linein { animation: sr-linein linear both; animation-timeline: view(); animation-range: entry 5% entry 65%; }
   .sr .riseup { animation: sr-riseup linear both; animation-timeline: view(); animation-range: entry 0% entry 55%; }
-}
+} }
 
 @keyframes sr-prog { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes sr-par { from { transform: translateY(-14%); } to { transform: translateY(14%); } }
@@ -603,7 +613,7 @@ body.sr {
 .sr .visit-photo-small { position: absolute; right: 0; bottom: -30px; width: 42%; aspect-ratio: 4 / 5; border-radius: 16px; overflow: hidden; border: 4px solid var(--sr-ink); box-shadow: 0 24px 60px rgba(0,0,0,.6); }
 
 
-/* Reveal fallback (no scroll-driven animations, e.g. iOS Safari): initial
+/* Play-once reveals (touch screens, and browsers without scroll timelines): initial
    states here, transitions to .is-in. Reduced motion shows everything. */
 @media (prefers-reduced-motion: no-preference) {
   .sr-io .reveal, .sr-io .linein, .sr-io .riseup, .sr-io .io-in { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
@@ -851,9 +861,9 @@ body.sr {
 .sr .about-poipet-photos img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; }
 .sr .about-here { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 40px; align-items: center; padding: 44px 48px; }
 .sr .about-here-photo { height: 320px; }
-@supports (animation-timeline: view()) {
+@media (hover: hover) and (pointer: fine) { @supports (animation-timeline: view()) {
   .sr .road-line i { animation: sr-road-draw linear both; animation-timeline: view(); animation-range: entry 20% exit 60%; }
-}
+} }
 @keyframes sr-road-draw { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 
 /* Campus life page */
@@ -1098,9 +1108,9 @@ body.sr {
    compositor, and backdrop blur on sticky bars is costly while scrolling. */
 @media (max-width: 760px), (pointer: coarse) {
   .sr .par, .sr .parslow, .sr .drift, .sr .driftback, .sr .heroimg { animation: none !important; transform: none !important; }
-  @supports (animation-timeline: view()) {
+  @media (hover: hover) and (pointer: fine) { @supports (animation-timeline: view()) {
     .sr .wipe { animation: sr-fadein linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
-  }
+  } }
   .sr-io .wipe { clip-path: none; opacity: 0; transition: opacity .7s ease; }
   .sr-io .wipe.is-in { opacity: 1; }
   .sr .sr-jump { background: rgba(11,11,11,.97); -webkit-backdrop-filter: none; backdrop-filter: none; }
@@ -1172,6 +1182,9 @@ body.sr {
 .sr .sr-card-extras img { width: clamp(150px, 16vw, 250px); aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; border: 1px solid rgba(255, 255, 255, .35); box-shadow: 0 20px 50px rgba(0, 0, 0, .5); }
 .sr .sr-card-extras img:first-child { transform: rotate(-3deg) translateY(10px); }
 .sr .sr-card-extras img:last-child { transform: rotate(2.5deg); }
+/* Three insets: a little smaller, the middle one lifted. */
+.sr .sr-card-extras:has(img:nth-child(3)) img { width: clamp(130px, 13vw, 210px); }
+.sr .sr-card-extras img:nth-child(2):not(:last-child) { transform: rotate(1deg) translateY(-8px); }
 .sr .sr-card-title { margin: 14px 0 0; font-size: clamp(50px, 8vw, 120px); font-weight: 700; line-height: .92; }
 .sr .sr-card-km { margin: 12px 0 0; font-size: 22px; color: #dcdcdc; }
 .sr .sr-card-body { margin: 18px 0 0; max-width: 56ch; font-size: 17px; }
@@ -1208,6 +1221,8 @@ body.sr {
   .sr .sr-card-copy { padding-bottom: 40px; }
   .sr .sr-card-extras { top: 96px; right: 16px; gap: 10px; }
   .sr .sr-card-extras img { width: 38vw; }
+  .sr .sr-card-extras:has(img:nth-child(3)) { gap: 8px; }
+  .sr .sr-card-extras:has(img:nth-child(3)) img { width: 27vw; }
   .sr .sr-card-title { font-size: clamp(44px, 14vw, 64px); }
   .sr .sr-card-km { font-size: 18px; }
   .sr .sr-card-body { font-size: 15px; }
@@ -1339,11 +1354,12 @@ body.sr {
 .sr .culture-icon { display: inline-flex; width: 52px; height: 52px; align-items: center; justify-content: center; border-radius: 14px; background: rgba(255,255,255,.06); color: var(--sr-pink); }
 .sr .culture-n { position: absolute; top: 22px; right: 22px; font-size: 13px; letter-spacing: .14em; color: #6a6a6a; }
 /* The cards rise in one after another as the grid scrolls into view. */
-@supports (animation-timeline: view()) {
+@media (hover: hover) and (pointer: fine) { @supports (animation-timeline: view()) {
   .sr .culture-item { animation: sr-rise linear both; animation-timeline: view(); animation-range: entry 0% entry 55%; animation-delay: calc(var(--i) * 0ms); }
-}
+} }
 .sr-io .culture-item { opacity: 0; transform: translateY(26px); transition: opacity .6s ease, transform .7s cubic-bezier(.16,1,.3,1); transition-delay: calc(var(--i) * 70ms); }
 .sr-io .culture-item.is-in { opacity: 1; transform: none; }
+.sr-io .road-line.is-in i { transform: scaleY(1); transition: transform 1.6s cubic-bezier(.16,1,.3,1) .2s; }
 @media (max-width: 760px) {
   .sr .people { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 14px; }
   .sr .person-name { font-size: 15px; }
