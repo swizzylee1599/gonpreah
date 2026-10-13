@@ -145,6 +145,7 @@ const FAQ: [string, string][] = [
   </div>
 
   <script>
+    import { stableVh } from '../../lib/sr-viewport';
     // Pinned stepper: the panel stays put while scrolling through the
     // stack. The first 78% of progress flips through the photos and
     // swaps the step copy; the last 22% slides the heading off to the
@@ -197,6 +198,12 @@ const FAQ: [string, string][] = [
         card = null;
         pEnd = HALL_PHASES[HALL_PHASES.length - 1][1] + 0.02;
       }
+      // Phones and touch screens: the hallway video holds as a sticky
+      // backdrop and the intro, copy and photo collages scroll over it as
+      // ordinary blocks (laid out in CSS under the same media condition as
+      // \`lite\`), so nothing is positioned by script and nothing can trail
+      // the finger. The script only plays the walk along with the scroll.
+      const native = lite;
       const copies = [...hall.querySelectorAll('.hall-copy')];
       const rows = [...hall.querySelectorAll('.hall-photos')].map((el) => ({
         el, phase: +el.dataset.phase, items: [...el.querySelectorAll('.hall-photo')],
@@ -227,6 +234,10 @@ const FAQ: [string, string][] = [
 
       const measure = () => {
         const rect = hall.getBoundingClientRect();
+        if (native) {
+          const run = rect.height - stableVh();
+          return run <= 0 ? 0 : clamp01(-rect.top / run) * pEnd;
+        }
         const scrollable = rect.height - (pin ? pin.offsetHeight : window.innerHeight);
         return scrollable <= 0 ? 0 : clamp01((-rect.top / scrollable) * pEnd);
       };
@@ -240,6 +251,7 @@ const FAQ: [string, string][] = [
       const render = (p) => {
         if (video && video.duration && !Number.isNaN(video.duration)) seekTo(p * video.duration * 0.985);
         else if (still) still.style.transform = `translate3d(0, ${(-p * (lite ? 2 : 4)).toFixed(2)}%, 0) scale(${(1 + p * (lite ? 0.45 : 0.9)).toFixed(4)})`;
+        if (native) return;
 
         const io = clamp01((p - INTRO_HOLD) / INTRO_FADE);
         intro.style.opacity = String(1 - io);
@@ -330,6 +342,10 @@ const FAQ: [string, string][] = [
       const n = steps.length;
       if (n < 2) return;
       const jpin = stack.querySelector('.journey-pin');
+      // Phones and touch screens: photos crossfade and the heading fades
+      // out instead of sliding, so nothing moved by script can trail the
+      // finger during a flick.
+      const fadeOnly = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
       const jmeasure = () => {
         const rect = stack.getBoundingClientRect();
         const scrollable = rect.height - (jpin ? jpin.offsetHeight : window.innerHeight);
@@ -345,22 +361,32 @@ const FAQ: [string, string][] = [
           const w = Math.max(0, 1 - Math.abs(d - i));
           const dir = d > i ? -1 : 1;
           // Copy holds while its photo is mostly facing, and hands over in a short window around the midpoint.
-          const tw = Math.min(1, Math.max(0, (w - 0.35) / 0.3));
+          // Phones fade only, so hand over in sequence (the old copy is gone
+          // before the new one appears) rather than overlapping.
+          const tw = fadeOnly ? Math.min(1, Math.max(0, (w - 0.5) / 0.25)) : Math.min(1, Math.max(0, (w - 0.35) / 0.3));
           step.style.opacity = String(tw);
-          step.style.transform = `translateY(${(1 - tw) * 26 * dir}px)`;
+          step.style.transform = fadeOnly ? '' : `translateY(${(1 - tw) * 26 * dir}px)`;
           step.style.pointerEvents = tw > 0.5 ? '' : 'none';
           if (photos[i]) {
             // Card deal: each photo slides in from the right over the one before it, which stays put underneath.
             const t = i === 0 ? 1 : Math.min(1, Math.max(0, d - (i - 1)));
             const e = t * t * (3 - 2 * t);
-            photos[i].style.transform = `translate(${(1 - e) * 108}%, ${(1 - e) * 6}%) rotate(${(1 - e) * 5}deg)`;
+            if (fadeOnly) {
+              photos[i].style.transform = 'none';
+              photos[i].style.opacity = String(e);
+            } else {
+              photos[i].style.transform = `translate(${(1 - e) * 108}%, ${(1 - e) * 6}%) rotate(${(1 - e) * 5}deg)`;
+            }
             photos[i].style.zIndex = String(i + 1);
           }
           if (labels[i]) labels[i].style.opacity = String(0.35 + 0.65 * w);
         });
         if (bar) bar.style.transform = `scaleX(${Math.min(1, p / STEPS_END)})`;
         const ease = exit * exit * (3 - 2 * exit);
-        if (head) head.style.transform = `translateX(${ease * 110}vw)`;
+        if (head) {
+          if (fadeOnly) head.style.opacity = String(1 - ease);
+          else head.style.transform = `translateX(${ease * 110}vw)`;
+        }
         if (grid) grid.style.opacity = String(1 - ease);
         if (rail) rail.style.opacity = String(1 - ease);
       };
