@@ -10,10 +10,12 @@ interface Props {
   photo?: string;
   pos?: string;
   href?: string;
+  /** Position in a deck; phones stack the home page cards with it. */
+  index?: number;
 }
-const { name, abbr, body, when, photo, pos, href = '/schools' } = Astro.props;
+const { name, abbr, body, when, photo, pos, href = '/schools', index } = Astro.props;
 ---
-<a class="schoolcard" href={href}>
+<a class="schoolcard" href={href} style={index !== undefined ? `--k:${index}` : undefined}>
   <span class="schoolcard-photo" style="display:block;position:relative;">
     {photo
       ? <img src={photo} srcset={srcset(photo)} sizes="(max-width: 760px) 100vw, 50vw" alt="" loading="lazy" decoding="async" style={`display:block;width:100%;height:100%;object-fit:cover;${pos ? `object-position:${pos};` : ''}`} />

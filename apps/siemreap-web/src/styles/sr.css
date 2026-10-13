@@ -404,6 +404,42 @@ body.sr {
   .sr .deck .schoolcard-photo { height: 170px; }
   .sr .deck-hint { display: block; }
 }
+/* Phones: the whole "Train here" run is native scrolling, so nothing can
+   lag behind the finger. The video holds (sticky) while it scrubs; the
+   Train here panel then rises over it as an ordinary block; its heading
+   holds while the school cards slide up one at a time and stack on each
+   other (each sticks a little lower than the one before); Bring a team
+   then rises over the stack. Only the video's frame follows the scroll in
+   script. --th-head is the heading's height, measured by the page script. */
+@media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
+  .sr .gonpreah-stack { height: auto; }
+  .sr .gonpreah-stack .th-cover {
+    position: relative; z-index: 5; transform: none; margin-top: 130svh;
+    height: auto; min-height: 0; overflow: visible; display: block; padding: 0;
+  }
+  .sr .gonpreah-stack .th-cover > .wrap:first-child { position: sticky; top: 0; z-index: 1; padding-top: 84px; padding-bottom: 18px; }
+  .sr .gonpreah-stack .schools-deck { margin-top: 0 !important; }
+  .sr .gonpreah-stack .deck { display: block; transform: none; }
+  .sr .gonpreah-stack .deck > * {
+    position: sticky; top: calc(var(--th-head, 190px) + var(--k, 0) * 12px);
+    margin-bottom: 26px; will-change: auto; box-shadow: 0 -14px 40px rgba(0, 0, 0, .55);
+    rotate: calc((var(--k, 0) - 1.5) * 1deg);
+  }
+  .sr .gonpreah-stack .deck > .schoolcard:hover { transform: none; }
+  /* One height for every card, sized to fit under the heading on any
+     phone, so the stack lines up and nothing pokes out below it. */
+  .sr .gonpreah-stack .deck > .schoolcard { height: clamp(270px, calc(100svh - var(--th-head, 190px) - 64px), 430px); }
+  .sr .gonpreah-stack .deck .schoolcard-photo { height: auto; flex: 0 0 42%; }
+  .sr .gonpreah-stack .deck .schoolcard-body { min-height: 0; overflow: hidden; padding: 16px 18px 16px; }
+  .sr .gonpreah-stack .deck .schoolcard-body .body { flex: none !important; display: -webkit-box !important; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-top: 10px !important; }
+  .sr .gonpreah-stack .deck .schoolcard-body > span:last-child { margin-top: auto !important; padding-top: 10px; }
+  /* After the last card: a beat to read it, then the full screen Bring a
+     team rises over. The cards stay stuck under it because the deck runs
+     on underneath (this spacer). */
+  .sr .gonpreah-stack .deck::after { content: ''; display: block; height: calc(100svh + 26svh); }
+  .sr .gonpreah-stack .deck-hint { display: none; }
+  .sr .gonpreah-stack .bat-cover { position: relative; transform: none; margin-top: -100svh; }
+}
 /* What's new */
 .sr .news-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
 .sr .news-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 40px; }
@@ -1108,9 +1144,9 @@ body.sr {
    compositor, and backdrop blur on sticky bars is costly while scrolling. */
 @media (max-width: 760px), (pointer: coarse) {
   .sr .par, .sr .parslow, .sr .drift, .sr .driftback, .sr .heroimg { animation: none !important; transform: none !important; }
-  @media (hover: hover) and (pointer: fine) { @supports (animation-timeline: view()) {
+  @supports (animation-timeline: view()) {
     .sr .wipe { animation: sr-fadein linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
-  } }
+  }
   .sr-io .wipe { clip-path: none; opacity: 0; transition: opacity .7s ease; }
   .sr-io .wipe.is-in { opacity: 1; }
   .sr .sr-jump { background: rgba(11,11,11,.97); -webkit-backdrop-filter: none; backdrop-filter: none; }
@@ -1118,6 +1154,39 @@ body.sr {
   .sr .hall-card .info { backdrop-filter: none; }
 }
 @keyframes sr-fadein { from { opacity: 0; } to { opacity: 1; } }
+
+/* Touch screens: photos fade in as they scroll into view, tied to the
+   scroll. Opacity only, so even a late frame can't make anything jump.
+   (Sections themselves use the play-once reveals.) */
+@media (hover: none), (pointer: coarse) {
+  @supports (animation-timeline: view()) {
+    .sr .reveal img, .sr .stag > * img, .sr .hall-stack .hall-photo {
+      animation: sr-fadein linear both; animation-timeline: view(); animation-range: entry 0% entry 75%;
+    }
+  }
+}
+
+/* DTS hallway on phones and touch screens (the same condition the page
+   script checks): the hallway video is a sticky backdrop, and the intro,
+   each phase's copy and its photo collage scroll over it as ordinary
+   blocks in reading order. Nothing here is positioned by script. Set in
+   CSS rather than by a class so the layout is right from the first paint. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 760px), (prefers-reduced-motion: no-preference) and (pointer: coarse) {
+  .sr section.breakdown.hall-stack { height: auto; }
+  .sr .hall-stack .hall-pin { position: relative; height: auto; overflow: visible; display: flex; flex-direction: column; padding-bottom: 30svh; }
+  .sr .hall-stack .hall-bg { position: sticky; inset: auto; top: 0; height: 100svh; flex: none; }
+  .sr .hall-stack .hall-scrim { position: sticky; inset: auto; top: 0; height: 100svh; margin-top: -100svh; flex: none; }
+  .sr .hall-stack .hall-intro,
+  .sr .hall-stack .hall-copy,
+  .sr .hall-stack .hall-photos { position: relative; left: auto; top: auto; transform: none; z-index: 1; margin-left: auto; margin-right: auto; flex: none; }
+  .sr .hall-stack .hall-intro { order: 2; margin-top: -100svh; min-height: 100svh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; padding: 80px 0 40px; }
+  .sr .hall-stack .hall-copy { opacity: 1; padding: 34svh 0 8svh; }
+  .sr .hall-stack .hall-copy[data-phase="0"] { order: 3; }
+  .sr .hall-stack .hall-photos[data-phase="0"] { order: 4; }
+  .sr .hall-stack .hall-copy[data-phase="1"] { order: 5; }
+  .sr .hall-stack .hall-photos[data-phase="1"] { order: 6; }
+  .sr .hall-stack .hall-photo { opacity: 1; transform: rotate(var(--r, 0deg)); }
+}
 @media (max-width: 760px) {
   /* Centre the driver: he sits a little right of the photo's middle. */
   .sr .explore-frame { object-position: 55% 50%; }
@@ -1234,7 +1303,6 @@ body.sr {
    readable small text, and tap targets a thumb can hit. */
 @media (max-width: 760px) {
   .sr .dbs-intro-grid, .sr .about-uofn-grid, .sr .about-poipet-grid, .sr .values-grid { grid-template-columns: minmax(0, 1fr); gap: 22px; }
-  .sr .gonpreah-stack { height: 540vh; }
   .sr .hall-stack.is-card-out { height: 420vh; }
   .sr .hall-card-sec .info-list dt { font-size: 12px !important; }
   .sr footer a { display: inline-block; padding: 5px 0; }
