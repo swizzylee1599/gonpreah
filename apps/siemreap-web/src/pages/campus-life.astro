@@ -194,6 +194,7 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
 </SrLayout>
 
 <script>
+  import { stableVh } from '../lib/sr-viewport';
   // Counters tick up when the stats strip comes into view, the schedule strip
   // gets arrow buttons, and the Explore Siem Reap loop runs.
   let ctrl = null;
@@ -241,14 +242,20 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
     if (!ex) return;
     const plates = [...ex.querySelectorAll('.explore-plate')];
     const cards = [...document.querySelectorAll('.explore, .flipup')].map((sec) => ({ sec, card: sec.querySelector('.explore-card, .flipup-card') }));
+    // Measured against a viewport height that ignores the phone's browser
+    // bar, so a card doesn't snap when the bar hides mid-flip. All reads
+    // happen before any writes. The corner radius moves in 4px steps: each
+    // change repaints the whole full-screen card, so a few steps instead of
+    // one every frame.
     const flip = () => {
-      const vh = window.innerHeight;
-      cards.forEach(({ sec, card }) => {
-        const t = Math.min(1, Math.max(0, 1 - sec.getBoundingClientRect().top / vh));
+      const vh = stableVh();
+      const tops = cards.map(({ sec }) => sec.getBoundingClientRect().top);
+      cards.forEach(({ card }, i) => {
+        const t = Math.min(1, Math.max(0, 1 - tops[i] / vh));
         const e = t * t * (3 - 2 * t);
         // Flat once it has landed, so nothing inside sits in a 3D layer.
         card.style.transform = e >= 1 ? 'none' : `perspective(1600px) rotateX(${((1 - e) * 24).toFixed(2)}deg) scale(${(0.92 + 0.08 * e).toFixed(3)})`;
-        card.style.borderRadius = `${Math.round((1 - e) * 26)}px`;
+        card.style.borderRadius = `${Math.min(26, Math.round((1 - e) * 26 / 4) * 4)}px`;
       });
     };
     if (!reduce) {
