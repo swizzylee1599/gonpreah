@@ -25,7 +25,7 @@ export const TEAM: Member[] = [
   { slug: 'thean-tinh', name: 'Thean Tinh', role: 'Campus leader, media & GP Music', lead: true, khmer: true },
   // Staff
   { slug: 'tyler-emmy-sullivan', name: 'Tyler & Emmy Sullivan', role: 'Hospitality and teams', kind: 'couple', with: [['Tyler', 'Hospitality'], ['Emmy', 'Teams']] },
-  { slug: 'alexis-munos', name: 'Alexis Munos', role: 'Teams' },
+  { slug: 'alexis-munoz', name: 'Alexis Munoz', role: 'Teams' },
   { slug: 'kimla-song', name: 'Kimla Song', role: 'GP Cafe', khmer: true,
     support: { story: 'Kimla is a young Cambodian on fire for Jesus. After his DTS in 2024 he joined staff in January 2025, pursuing his passion for media and hospitality, with a heart to reach youth through social media and to serve others well.', now: 0, goal: 200 } },
   { slug: 'kimyan', name: 'Kimyan', role: 'Siem Reap ministries', khmer: true },
