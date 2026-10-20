@@ -22,7 +22,7 @@ export const TEAM: Member[] = [
   { slug: 'sinin-sok', name: 'Sinin Sok', role: 'Training director & campus leader', lead: true, khmer: true },
   { slug: 'sreynit-thorn', name: 'Sreynit Thorn', role: 'DTS staff & campus leader', lead: true, khmer: true },
   { slug: 'vannak', name: 'Vannak', role: 'Campus leader & DTS staff', lead: true, khmer: true },
-  { slug: 'thean-tinh', name: 'Thean Tinh', role: 'Campus leader, media & GP Music', lead: true, khmer: true },
+  { slug: 'tinh-thean', name: 'Tinh Thean', role: 'Campus leader, media & GP Music', lead: true, khmer: true },
   // Staff
   { slug: 'tyler-emmy-sullivan', name: 'Tyler & Emmy Sullivan', role: 'Hospitality and teams', kind: 'couple', with: [['Tyler', 'Hospitality'], ['Emmy', 'Teams']] },
   { slug: 'alexis-munoz', name: 'Alexis Munoz', role: 'Teams' },
