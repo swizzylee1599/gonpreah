@@ -11,12 +11,12 @@ import { existsSync } from 'node:fs';
 // be judged before the photos arrive. Drop a photo in as <slug>.webp.
 const PORTRAITS = 'public/images/team/portraits/';
 const portrait = (slug: string) => (existsSync(`${PORTRAITS}${slug}.webp`) ? `/images/team/portraits/${slug}.webp` : null);
-// Everyone together, no departments: couples and families serve in
-// different ministries, so they stay on one wide card with each person's
-// role. Leadership closes the page.
-const SECTIONS: { title: string; id: string; lead?: boolean; members: Member[] }[] = [
-  { title: 'Staff', id: 'staff', members: TEAM.filter((m) => !m.lead) },
-  { title: 'Leadership', id: 'leadership', lead: true, members: TEAM.filter((m) => m.lead) },
+// Everyone in one grid, no departments and no separate leadership section:
+// couples and families serve in different ministries, so they stay on one
+// wide card with each person's role, and leaders (who also serve on staff)
+// are marked with a Leadership tag rather than set apart. Leaders come last.
+const SECTIONS: { title: string; id: string; members: Member[] }[] = [
+  { title: 'Our staff', id: 'staff', members: [...TEAM.filter((m) => !m.lead), ...TEAM.filter((m) => m.lead)] },
 ];
 const KIND = { couple: 'Couple', family: 'Family' } as const;
 const khmer = TEAM.filter((m) => m.khmer).length;
@@ -48,21 +48,26 @@ const nations = 6;
     </div>
   </section>
 
-  {SECTIONS.map(({ title, id, lead, members }) => (
+  {SECTIONS.map(({ title, id, members }) => (
     <section class="sec tm-sec" id={id} style="padding-top:0;">
       <div class="wrap">
         <div class="tm-head reveal">
           <h2 class="disp tm-h2 tm-h2--dept">{title}</h2>
         </div>
-        <div class:list={['tm-grid', 'stag', { 'tm-grid--lead': lead }]}>
+        <div class="tm-grid stag">
           {members.map((m, i) => (
             <figure class:list={['tm-person', { 'tm-person--wide': m.kind }]} style={`--i:${i}`}>
               <div class="tm-photo">
                 {portrait(m.slug)
-                  ? <img src={portrait(m.slug)!} srcset={srcset(portrait(m.slug)!)} sizes={m.kind ? '(max-width: 760px) 100vw, 50vw' : lead ? '(max-width: 760px) 50vw, 33vw' : '(max-width: 760px) 50vw, 25vw'} alt={m.name} loading="lazy" decoding="async" />
+                  ? <img src={portrait(m.slug)!} srcset={srcset(portrait(m.slug)!)} sizes={m.kind ? '(max-width: 760px) 100vw, 50vw' : '(max-width: 760px) 50vw, 25vw'} alt={m.name} loading="lazy" decoding="async" />
                   : <div class="tm-slot"><span class="tm-slot-name">{m.name}</span><span class="tm-slot-hint">Photo coming</span></div>}
                 <figcaption class="tm-cap">
-                  {m.kind && <span class="tm-kind">{KIND[m.kind]}</span>}
+                  {(m.lead || m.kind) && (
+                    <span class="tm-tags">
+                      {m.lead && <span class="tm-kind tm-kind--lead">Leadership</span>}
+                      {m.kind && <span class="tm-kind">{KIND[m.kind]}</span>}
+                    </span>
+                  )}
                   <span class="disp tm-name">{m.name}</span>
                   {m.with
                     ? <span class="tm-with">{m.with.map(([who, what]) => <span class="tm-role"><b>{who}</b> · {what}</span>)}</span>
