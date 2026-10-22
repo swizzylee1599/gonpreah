@@ -43,5 +43,6 @@ export const TEAM: Member[] = [
   { slug: 'vichet-chea', name: 'Vichet Chea', role: 'YDC staff', khmer: true },
   { slug: 'ben-wright', name: 'Ben Wright', role: 'Accounting' },
   { slug: 'christian-mang', name: 'Christian Mang', role: '' },
+  { slug: 'sofia', name: 'Sofia', role: '' },
 ];
 export const photo = (m: Member) => `/images/team/${m.slug}.webp`;
