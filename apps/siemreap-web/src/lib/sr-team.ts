@@ -24,7 +24,8 @@ export const TEAM: Member[] = [
   { slug: 'vannak', name: 'Vannak', role: 'Campus leader & DTS staff', lead: true, khmer: true },
   { slug: 'tinh-thean', name: 'Tinh Thean', role: 'Campus leader, media & GP Music', lead: true, khmer: true },
   // Staff
-  { slug: 'tyler-emmy-sullivan', name: 'Tyler & Emmy Sullivan', role: 'Hospitality and teams', kind: 'couple', with: [['Tyler', 'Hospitality'], ['Emmy', 'Teams']] },
+  { slug: 'yi-esther', name: 'Yi & Esther Tuot', role: 'Technical and hospitality', khmer: true, kind: 'family', with: [['Yi', 'Technical'], ['Esther', 'Hospitality']],
+    support: { story: 'Yi and Esther equip others through education, hospitality and technical ministries, and travel regularly for teacher training. Esther is pursuing art to inspire and teach; together they plan to launch a kids’ ministry school. They serve with their young daughter, Molika.', now: 300, goal: 600 } },
   { slug: 'alexis-munoz', name: 'Alexis Munoz', role: 'Teams' },
   { slug: 'kimla-song', name: 'Kimla Song', role: 'GP Cafe', khmer: true,
     support: { story: 'Kimla is a young Cambodian on fire for Jesus. After his DTS in 2024 he joined staff in January 2025, pursuing his passion for media and hospitality, with a heart to reach youth through social media and to serve others well.', now: 0, goal: 200 } },
@@ -40,8 +41,6 @@ export const TEAM: Member[] = [
   { slug: 'nou-eh', name: 'Nou Eh', role: 'DTS staff', khmer: true },
   { slug: 'sreynouch-pheakdey', name: 'Sreynouch & Pheakdey', role: 'Kitchen and DTS & DBS', khmer: true, kind: 'couple', with: [['Sreynouch', 'Kitchen'], ['Pheakdey', 'DTS & DBS staff']] },
   { slug: 'vichet-chea', name: 'Vichet Chea', role: 'YDC staff', khmer: true },
-  { slug: 'yi-esther', name: 'Yi & Esther Tuot', role: 'Technical and hospitality', khmer: true, kind: 'family', with: [['Yi', 'Technical'], ['Esther', 'Hospitality']],
-    support: { story: 'Yi and Esther equip others through education, hospitality and technical ministries, and travel regularly for teacher training. Esther is pursuing art to inspire and teach; together they plan to launch a kids’ ministry school. They serve with their young daughter, Molika.', now: 300, goal: 600 } },
   { slug: 'ben-wright', name: 'Ben Wright', role: 'Accounting' },
 ];
 export const photo = (m: Member) => `/images/team/${m.slug}.webp`;
