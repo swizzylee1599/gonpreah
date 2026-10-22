@@ -29,7 +29,6 @@ export const TEAM: Member[] = [
   { slug: 'alexis-munoz', name: 'Alexis Munoz', role: 'Teams' },
   { slug: 'kimla-song', name: 'Kimla Song', role: 'GP Cafe', khmer: true,
     support: { story: 'Kimla is a young Cambodian on fire for Jesus. After his DTS in 2024 he joined staff in January 2025, pursuing his passion for media and hospitality, with a heart to reach youth through social media and to serve others well.', now: 0, goal: 200 } },
-  { slug: 'kimyan', name: 'Kimyan', role: 'Siem Reap ministries', khmer: true },
   { slug: 'bunnall-bee', name: 'Bunnall Bee', role: 'Media', khmer: true },
   { slug: 'kami-martz', name: 'Kami Martz', role: 'Worship' },
   { slug: 'yang-sreyleak', name: 'Yang & Sreyleak', role: 'DTS & DBS staff', khmer: true, kind: 'family',
