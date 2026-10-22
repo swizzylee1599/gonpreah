@@ -71,7 +71,7 @@ const nations = 6;
                   <span class="disp tm-name">{m.name}</span>
                   {m.with
                     ? <span class="tm-with">{m.with.map(([who, what]) => <span class="tm-role"><b>{who}</b> · {what}</span>)}</span>
-                    : <span class="tm-role">{m.role}</span>}
+                    : m.role && <span class="tm-role">{m.role}</span>}
                 </figcaption>
               </div>
             </figure>

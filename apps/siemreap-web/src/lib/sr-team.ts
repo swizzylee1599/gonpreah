@@ -39,8 +39,9 @@ export const TEAM: Member[] = [
   { slug: 'ith-keth', name: 'Ith Keth', role: 'DTS staff', khmer: true },
   { slug: 'ranie', name: 'Ranie', role: 'DTS staff', khmer: true },
   { slug: 'nou-eh', name: 'Nou Eh', role: 'DTS staff', khmer: true },
-  { slug: 'sreynouch-pheakdey', name: 'Sreynouch & Pheakdey', role: 'Kitchen and DTS & DBS', khmer: true, kind: 'couple', with: [['Sreynouch', 'Kitchen'], ['Pheakdey', 'DTS & DBS staff']] },
+  { slug: 'sreynoch-pheakdey', name: 'SreyNoch & Pheakdey', role: 'Kitchen and DTS & DBS', khmer: true, kind: 'couple', with: [['SreyNoch', 'Kitchen'], ['Pheakdey', 'DTS & DBS staff']] },
   { slug: 'vichet-chea', name: 'Vichet Chea', role: 'YDC staff', khmer: true },
   { slug: 'ben-wright', name: 'Ben Wright', role: 'Accounting' },
+  { slug: 'christian-mang', name: 'Christian Mang', role: '' },
 ];
 export const photo = (m: Member) => `/images/team/${m.slug}.webp`;
