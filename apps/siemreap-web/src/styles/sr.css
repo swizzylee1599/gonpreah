@@ -1078,7 +1078,12 @@ body.sr {
   .sr .track-body { display: none; }
   .sr .track-tag { display: block; }
   .sr .track-photo img { filter: grayscale(0) brightness(.85); }
-  .sr .track-copy { padding: 22px 20px; }
+  /* Every card's text starts at the same height, so numbers and titles line
+     up across the row whatever the length of the line below them (pinned to
+     the bottom, a longer line pushed the title up). Cards share the tallest
+     card's height. */
+  .sr .track { justify-content: flex-start; }
+  .sr .track-copy { padding: 132px 20px 22px; }
   .sr .values-vision-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .sr .values-vision { padding: 60px 0 20px; }
   .sr .dive-stack { height: 400vh; }
