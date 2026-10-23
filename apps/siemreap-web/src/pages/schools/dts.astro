@@ -1,6 +1,7 @@
 ---
 import { applyUrl } from '../../lib/sr-routes';
 import { srcset } from '../../lib/sr-img';
+import SchoolInfo from '../../components/sr/SchoolInfo.astro';
 import SrLayout from '../../layouts/SrLayout.astro';
 import Footer from '../../components/sr/Footer.astro';
 import PageHead from '../../components/sr/PageHead.astro';
@@ -67,19 +68,7 @@ const PHASES: { eyebrow: string; title: string; body: string[]; photos: Photo[] 
 // is uploaded to public/video the still photo zooms in as a stand-in.
 const HALL_VIDEO: string | null = '/video/dts-hallway.mp4';
 
-const INFO: [string, string][] = [
-  ['Next school', 'January 2027'],
-  ['Location', 'Siem Reap, Cambodia'],
-  ['Arrival day', 'January 3, 2027'],
-  ['Departure day', 'June 10, 2027'],
-  ['Prerequisites', 'Must be 18+'],
-];
 
-const LECTURE_COST: [string, string][] = [
-  ['Country A', '$2,000 USD'],
-  ['Country B', '$1,500 USD'],
-  ['Country C', '$620 USD'],
-];
 
 // Tracks: a skill each student chooses to develop through the school.
 // Culinary and Hospitality lines are drafts to be confirmed.
@@ -103,7 +92,7 @@ const FAQ: [string, string][] = [
   ['What happens after DTS?', 'DTS is the entry point to the University of the Nations. Many students go on to further schools, join staff at a YWAM base, or take what they have learned back into their church, work and city.'],
 ];
 ---
-<SrLayout title="Discipleship Training School | YWAM Siem Reap" spacer={false}
+<SrLayout title="Discipleship Training School | YWAM Siem Reap" spacer={false} accent="#0584f9"
   description="A six-month Discipleship Training School in Siem Reap, Cambodia: three months of lecture, then three months on outreach to the nations. Know God and make Him known.">
   <PageHead eyebrow="Discipleship Training School · DTS" km="អត្តសញ្ញាណ" title="Discover your identity. Know your purpose." highlight="Know your purpose."
     lead="Discover your identity in Christ and know your purpose in the world."
@@ -270,7 +259,7 @@ const FAQ: [string, string][] = [
         else if (still && !lite) still.style.transform = `translate3d(0, ${(-p * (lite ? 2 : 4)).toFixed(2)}%, 0) scale(${(1 + p * (lite ? 0.45 : 0.9)).toFixed(4)})`;
         // Phones: the walk's last stretch dims to black as the information
         // card rises over it.
-        if (lite && fadeout) fadeout.style.opacity = smooth(clamp01((p / pEnd - 0.86) / 0.13)).toFixed(3);
+        if (lite && fadeout) fadeout.style.opacity = smooth(clamp01((p / pEnd - 0.8) / 0.14)).toFixed(3);
 
         const io = clamp01((p - INTRO_HOLD) / INTRO_FADE);
         intro.style.opacity = String(1 - io);
@@ -484,43 +473,11 @@ const FAQ: [string, string][] = [
         </div>
       ))}
       <div class="hall-card" id="info">
-        <div class="card info">
-          <div class="info-grid">
-            <div>
-              <p class="eyebrow">DTS information</p>
-              <dl class="info-list">
-                {INFO.map(([k, v]) => (
-                  <div>
-                    <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">{k}</dt>
-                    <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;">{v}</dd>
-                  </div>
-                ))}
-                <div>
-                  <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">Email</dt>
-                  <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;text-transform:none;letter-spacing:0;"><a href="mailto:dts@ywamsiemreap.org" style="color:inherit;text-decoration:none;">dts@ywamsiemreap.org</a></dd>
-                </div>
-              </dl>
-            </div>
-            <div class="info-cost">
-              <p class="eyebrow">Cost of the school</p>
-              <p class="disp" style="margin:22px 0 0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#dcdcdc;">Lecture phase · 3 months</p>
-              <dl class="cost-list">
-                {LECTURE_COST.map(([k, v]) => (
-                  <div><dt class="body" style="margin:0;font-size:16px;">{k}</dt><dd class="disp" style="margin:0;font-size:20px;font-weight:500;">{v}</dd></div>
-                ))}
-              </dl>
-              <p class="muted" style="margin:12px 0 0;font-size:13px;">Flights are not included.</p>
-              <p class="disp" style="margin:28px 0 0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#dcdcdc;">Outreach phase · 3 months</p>
-              <p class="disp" style="margin:12px 0 0;font-size:20px;font-weight:500;">$1,500 – $2,500 USD</p>
-              <p class="muted" style="margin:6px 0 0;font-size:13px;">Depending on outreach location.</p>
-            </div>
-          </div>
-          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:36px;">
-            <a class="btn btn--solid" href={applyUrl('dts')} target="_blank" rel="noopener">Apply for DTS ↗︎</a>
-            <a class="btn" href="mailto:dts@ywamsiemreap.org">Email the DTS team</a>
-            <a class="btn btn--plain" href="/campus-life">Campus life</a>
-          </div>
-        </div>
+        <SchoolInfo abbr="DTS" apply="dts" email="dts@ywamsiemreap.org"
+          dates={[['Next school', 'January 2027'], ['Arrival', 'January 3, 2027'], ['Departure', 'June 10, 2027'], ['Length', 'Six months']]}
+          cost={[['Lecture · Country A', '$2,000'], ['Lecture · Country B', '$1,500'], ['Lecture · Country C', '$620'], ['Outreach', '$1,500 – $2,500']]}
+          costNote="Lecture phase by passport country (we'll tell you yours). Outreach depends on where your team goes. Flights not included."
+          details={[['Location', 'Siem Reap, Cambodia'], ['Age', '18 and over']]} />
       </div>
     </div>
   </section>
@@ -563,7 +520,7 @@ const FAQ: [string, string][] = [
 
   <CampusTeaser title="Where you will live for six months." />
 
-  <section class="sec faq-sec sec--paper" id="faq">
+  <section class="sec faq-sec sec--paper paper-in" id="faq">
     <div class="wrap">
       <div class="reveal">
         <p class="eyebrow">FAQ</p>

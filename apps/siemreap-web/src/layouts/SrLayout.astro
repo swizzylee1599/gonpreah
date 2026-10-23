@@ -11,6 +11,8 @@ interface Props {
   noindex?: boolean;
   /** Share-preview image (absolute path); default is the campus aerial. */
   image?: string;
+  /** A page's accent colour (labels, highlights, buttons), e.g. DTS blue. */
+  accent?: string;
 }
 const {
   title,
@@ -18,13 +20,14 @@ const {
   spacer = true,
   noindex = false,
   image = '/images/campus/campus-aerial-wide.webp',
+  accent,
 } = Astro.props;
 const pageUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://ywamsiemreap.org').href;
 const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
 ---
 
 <!doctype html>
-<html lang="en" class="sr">
+<html lang="en" class:list={['sr', { 'sr--accent': accent }]} style={accent ? `--sr-pink:${accent}` : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

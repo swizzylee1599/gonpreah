@@ -1,5 +1,6 @@
 ---
 import { applyUrl } from '../../lib/sr-routes';
+import SchoolInfo from '../../components/sr/SchoolInfo.astro';
 import SrLayout from '../../layouts/SrLayout.astro';
 import Footer from '../../components/sr/Footer.astro';
 import PageHead from '../../components/sr/PageHead.astro';
@@ -132,21 +133,7 @@ WEEKS.forEach((w, i) => w.books.forEach((b) => weekOf.set(b, i + 1)));
 const missing = [...OT, ...NT].filter((b) => !weekOf.has(b));
 if (missing.length) throw new Error(`DBS: books not assigned to a week: ${missing.join(', ')}`);
 
-const INFO: [string, string][] = [
-  ['Next school', 'June 2027'],
-  ['Length', '13 weeks'],
-  ['Arrival day', 'June 28, 2027'],
-  ['Departure day', 'September 22, 2027'],
-  ['Location', 'Siem Reap, Cambodia'],
-  ['School leader', 'To be announced'],
-  ['Prerequisites', 'Must have completed a DTS'],
-];
 
-const LECTURE_COST: [string, string][] = [
-  ['Country A', '$2,000 USD'],
-  ['Country B', '$1,500 USD'],
-  ['Country C', '$620 USD'],
-];
 
 const FAQ: [string, string][] = [
   ['Who is DBS for?', 'Anyone who has completed a DTS and has a heart to study the Word of God. You do not need to be a teacher or a scholar — you need hunger and thirteen weeks.'],
@@ -230,42 +217,11 @@ const FAQ: [string, string][] = [
 
   <section class="sec" style="padding-top:0;" id="info">
     <div class="wrap">
-      <div class="card info reveal">
-        <div class="info-grid">
-          <div>
-            <p class="eyebrow">DBS information</p>
-            <dl class="info-list">
-              {INFO.map(([k, v]) => (
-                <div>
-                  <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">{k}</dt>
-                  <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;">{v}</dd>
-                </div>
-              ))}
-              <div>
-                <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">Email</dt>
-                <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;text-transform:none;letter-spacing:0;"><a href={`mailto:${CONTACT.email}`} style="color:inherit;text-decoration:none;">{CONTACT.email}</a></dd>
-              </div>
-            </dl>
-          </div>
-          <div class="info-cost">
-            <p class="eyebrow">Cost of the school</p>
-            <p class="disp" style="margin:22px 0 0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#dcdcdc;">Lecture phase · 13 weeks</p>
-            <dl class="cost-list">
-              {LECTURE_COST.map(([k, v]) => (
-                <div><dt class="body" style="margin:0;font-size:16px;">{k}</dt><dd class="disp" style="margin:0;font-size:20px;font-weight:500;">{v}</dd></div>
-              ))}
-            </dl>
-            <p class="muted" style="margin:12px 0 0;font-size:13px;">Flights and additional transportation are not included.</p>
-            <p class="body" style="margin:22px 0 0;max-width:40ch;font-size:15px;">Not sure which country band you fall under? Email us and we will tell you.</p>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:36px;">
-          <a class="btn btn--solid" href={applyUrl('dbs')} target="_blank" rel="noopener">Apply for DBS ↗︎</a>
-          <a class="btn" href={applyUrl('dts')} target="_blank" rel="noopener">Haven't done a DTS? Apply for DTS</a>
-          <a class="btn btn--plain" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('DBS enquiry')}`}>Email us about DBS</a>
-          <a class="btn btn--plain" href="/campus-life">Campus life</a>
-        </div>
-      </div>
+      <SchoolInfo abbr="DBS" apply="dbs" email={CONTACT.email} needsDts
+        dates={[['Next school', 'June 2027'], ['Arrival', 'June 28, 2027'], ['Departure', 'September 22, 2027'], ['Length', '13 weeks']]}
+        cost={[['Country A', '$2,000'], ['Country B', '$1,500'], ['Country C', '$620']]}
+        costNote="By passport country (we'll tell you yours). Flights and transport not included."
+        details={[['Location', 'Siem Reap, Cambodia'], ['Prerequisite', 'A completed DTS']]} />
     </div>
   </section>
 
