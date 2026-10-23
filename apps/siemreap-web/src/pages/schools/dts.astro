@@ -213,12 +213,9 @@ const FAQ: [string, string][] = [
         card = null;
         pEnd = HALL_PHASES[HALL_PHASES.length - 1][1] + 0.02;
       }
-      // Phones and touch screens: the hallway video holds as a sticky
-      // backdrop and the intro, copy and photo collages scroll over it as
-      // ordinary blocks (laid out in CSS under the same media condition as
-      // \`lite\`), so nothing is positioned by script and nothing can trail
-      // the finger. The script only plays the walk along with the scroll.
-      const native = lite;
+      // Phones and touch screens: the hallway stays pinned and each part
+      // fades away in place as the next fades in. Fades only, never movement
+      // or scale: a fade that lands a frame late can't look like a jump.
       const fadeout = hall.querySelector('.hall-fadeout');
       const copies = [...hall.querySelectorAll('.hall-copy')];
       const rows = [...hall.querySelectorAll('.hall-photos')].map((el) => ({
@@ -256,10 +253,6 @@ const FAQ: [string, string][] = [
 
       const measure = () => {
         const rect = hall.getBoundingClientRect();
-        if (native) {
-          const run = rect.height - stableVh();
-          return run <= 0 ? 0 : clamp01(-rect.top / run) * pEnd;
-        }
         const scrollable = rect.height - (pin ? pin.offsetHeight : window.innerHeight);
         return scrollable <= 0 ? 0 : clamp01((-rect.top / scrollable) * pEnd);
       };
@@ -274,20 +267,17 @@ const FAQ: [string, string][] = [
         if (video && video.duration && !Number.isNaN(video.duration)) seekTo(p * video.duration * 0.985);
         // Phones: the still holds (a script-driven zoom on the pinned backdrop
         // jittered); desktop pushes in on it until the clip is here.
-        else if (still && !native) still.style.transform = `translate3d(0, ${(-p * (lite ? 2 : 4)).toFixed(2)}%, 0) scale(${(1 + p * (lite ? 0.45 : 0.9)).toFixed(4)})`;
-        if (native) {
-          // The walk's last stretch dims to black as the information card rises.
-          if (fadeout) fadeout.style.opacity = smooth(clamp01((p / pEnd - 0.86) / 0.13)).toFixed(3);
-          return;
-        }
+        else if (still && !lite) still.style.transform = `translate3d(0, ${(-p * (lite ? 2 : 4)).toFixed(2)}%, 0) scale(${(1 + p * (lite ? 0.45 : 0.9)).toFixed(4)})`;
+        // Phones: the walk's last stretch dims to black as the information
+        // card rises over it.
+        if (lite && fadeout) fadeout.style.opacity = smooth(clamp01((p / pEnd - 0.86) / 0.13)).toFixed(3);
 
         const io = clamp01((p - INTRO_HOLD) / INTRO_FADE);
         intro.style.opacity = String(1 - io);
-        // Touch screens: no scaling of text. Safari re-rasterises text every
-        // time its scale changes, which reads as a shimmer while scrolling;
-        // whole-pixel movement and a fade are steady.
+        // Touch screens: fade only. Scaled text shimmers in Safari, and
+        // movement trailed the finger during a flick.
         intro.style.transform = lite
-          ? `translate(-50%,-50%) translateY(${Math.round(-io * 40)}px)`
+          ? 'translate(-50%,-50%)'
           : `translate(-50%,-50%) scale(${(1 + io * 0.25).toFixed(3)})`;
         intro.style.filter = (!lite && io) ? `blur(${(io * 6).toFixed(1)}px)` : '';
         intro.style.pointerEvents = io > 0.5 ? 'none' : '';
@@ -304,10 +294,8 @@ const FAQ: [string, string][] = [
           }
           el.style.opacity = String(op);
           if (lite) {
-            // Rise in, hold, lift away; never scale.
-            let y = 0;
-            if (t > 0 && t < 1) { if (t < 0.55) y = 60 * (1 - smooth(t / 0.55)); else if (t >= 0.82) y = -50 * smooth((t - 0.82) / 0.18); }
-            el.style.transform = `translate(-50%,-50%) translateY(${Math.round(y)}px)`;
+            // Fade in, hold, fade out, in place.
+            el.style.transform = 'translate(-50%,-50%)';
           } else {
             el.style.transform = `translate(-50%,-50%) scale(${scale.toFixed(3)})`;
           }
@@ -339,7 +327,10 @@ const FAQ: [string, string][] = [
               else { const v = (tk - 0.86) / 0.14; scale = 1 + 0.18 * v; op = 1 - smooth(v); y = -20 * v; blur = v * 5; }
             }
             item.style.opacity = op.toFixed(3);
-            item.style.transform = `translate3d(0, ${lite ? Math.round(y) : y.toFixed(1)}px, 0) rotate(var(--r, 0deg)) scale(${scale.toFixed(3)})`;
+            // Touch screens: each photo just fades in and out at its spot.
+            item.style.transform = lite
+              ? 'rotate(var(--r, 0deg))'
+              : `translate3d(0, ${y.toFixed(1)}px, 0) rotate(var(--r, 0deg)) scale(${scale.toFixed(3)})`;
             item.style.filter = (!lite && blur) ? `blur(${blur.toFixed(1)}px)` : '';
           });
         });
@@ -447,12 +438,10 @@ const FAQ: [string, string][] = [
           ))}
         </div>
       ))}
-      <div class="hall-intro-hold">
-        <div class="hall-intro">
-          <p class="eyebrow">DTS breakdown</p>
-          <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.6vw,48px);font-weight:500;line-height:1.1;">Three months here. Three months to the nations.</h2>
-          <p class="muted" style="margin:26px 0 0;font-size:12px;letter-spacing:.2em;text-transform:uppercase;">Scroll to walk the hall ↓</p>
-        </div>
+      <div class="hall-intro">
+        <p class="eyebrow">DTS breakdown</p>
+        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.6vw,48px);font-weight:500;line-height:1.1;">Three months here. Three months to the nations.</h2>
+        <p class="muted" style="margin:26px 0 0;font-size:12px;letter-spacing:.2em;text-transform:uppercase;">Scroll to walk the hall ↓</p>
       </div>
       {PHASES.map((phase, p) => (
         <div class="hall-copy" data-phase={p}>
