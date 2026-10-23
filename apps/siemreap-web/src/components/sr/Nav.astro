@@ -20,7 +20,7 @@ const ext = (id: string) => (ROUTE_PATH[id]?.startsWith('http') ? { target: '_bl
               {items.map(([id, t, d]) => (
                 <a class="navdrop-row" href={ROUTE_PATH[id]} {...ext(id)}>
                   <span class="t">{t}</span>
-                  <span class="d">{d}</span>
+                  {d && <span class="d">{d}</span>}
                 </a>
               ))}
             </div>

@@ -340,6 +340,7 @@ body.sr {
 @media (max-width: 900px) { .sr .school-info .si-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
 /* Page accent (DTS blue): solid buttons take white text on the colour. */
 .sr--accent .btn--solid { color: #fff; border-color: var(--sr-pink); }
+.sr--accent .pagehead .eyebrow { color: #fff; }
 .sr .faq { display: flex; flex-direction: column; border-top: 1px solid #232323; }
 .sr .faq-item { border-bottom: 1px solid #232323; }
 .sr .faq-item summary {
@@ -366,6 +367,8 @@ body.sr {
   /* Solid ink at the foot, so the photo melts into the page below it. */
   background: linear-gradient(to top, rgba(11,11,11,1) 0%, rgba(11,11,11,.9) 14%, rgba(11,11,11,.66) 48%, rgba(11,11,11,.35) 100%);
 }
+/* With the hero video: the same overlay as the home page hero. */
+.sr .pagehead--video .pagehead-scrim { background: linear-gradient(to top, rgba(11,11,11,1) 0%, rgba(11,11,11,.96) 4%, rgba(11,11,11,.45) 55%, rgba(11,11,11,.7)); }
 .sr .pagehead--photo .wrap { width: 100%; text-shadow: 0 2px 28px rgba(0,0,0,.7), 0 1px 3px rgba(0,0,0,.6); }
 /* Page changes fade through the site's black: the old page dips out
    (0-.3s), the new one fades up (.3-.8s) while the title words come
@@ -1449,7 +1452,7 @@ body.sr {
 .sr .supporter-body { padding: 20px 22px 24px; display: flex; flex-direction: column; flex: 1; }
 .sr .supporter-body .body { flex: 1; }
 .sr .support-bar { height: 6px; border-radius: 999px; background: rgba(11,11,11,.1); margin-top: 18px; overflow: hidden; }
-.sr .support-bar i { display: block; height: 100%; background: var(--sr-pink); border-radius: 999px; }
+.sr .support-bar i { display: block; height: 100%; background: #0b0b0b; border-radius: 999px; }
 .sr .support-nums { margin: 8px 0 16px; font-size: 13px; color: #6f6a62; }
 .sr .support-nums b { color: #0b0b0b; font-weight: 600; }
 /* Bring a team */

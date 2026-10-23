@@ -1,0 +1,36 @@
+---
+// Support profiles for the Khmer staff who are raising support: portrait,
+// story, progress toward their monthly goal, and a Give button in their
+// name. Used on /give/staff and on the Give page. A staff member appears
+// here once they have a `support` entry in src/lib/sr-team.ts.
+import { existsSync } from 'node:fs';
+import { TEAM, photo, type Member } from '../../lib/sr-team';
+import { GIVE_URL } from '../../lib/sr-routes';
+import { srcset } from '../../lib/sr-img';
+
+const supported = TEAM.filter((m) => m.support);
+// The newer team portraits where there is one; the older photo otherwise.
+const pic = (m: Member) => (existsSync(`public/images/team/portraits/${m.slug}.webp`) ? `/images/team/portraits/${m.slug}.webp` : photo(m));
+// "Kimla", "Yang & Sreyleak", "Yi & Esther"
+const first = (m: Member) => m.name.split(' & ').map((n) => n.split(' ')[0]).join(' & ');
+---
+<div class="supporters stag">
+  {supported.map((m) => {
+    const s = m.support!;
+    const pct = Math.round(Math.min(1, s.now / s.goal) * 100);
+    return (
+      <article class="supporter" id={m.slug}>
+        <img src={pic(m)} srcset={pic(m).includes('/portraits/') ? srcset(pic(m)) : undefined} sizes="(max-width: 760px) 100vw, 33vw" alt={m.name} loading="lazy" decoding="async" />
+        <div class="supporter-body">
+          <p class="eyebrow">{m.role}</p>
+          <h3 class="disp" style="margin:8px 0 0;font-size:24px;font-weight:500;">{m.name}</h3>
+          <p class="body" style="margin:12px 0 0;font-size:15px;">{s.story}</p>
+          <div class="support-bar" role="img" aria-label={`${pct}% of monthly goal`}><i style={`width:${pct}%`}></i></div>
+          <p class="support-nums"><b>${s.now}</b> of <b>${s.goal}</b> a month{s.now === 0 ? ' · just starting' : ''}</p>
+          <a class="btn btn--solid" href={`${GIVE_URL}&memo=${encodeURIComponent(m.name)}`} target="_blank" rel="noopener">Give to {first(m)} ↗︎</a>
+        </div>
+      </article>
+    );
+  })}
+</div>
+<p class="muted" style="margin:26px 0 0;font-size:14px;max-width:64ch;">Giving opens Subsplash in a new tab. Choose a monthly gift and write the staff member's name in the note so it reaches them.</p>
