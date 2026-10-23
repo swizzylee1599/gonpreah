@@ -1,6 +1,6 @@
 ---
 // Support profiles for our Khmer staff: photo, role, name and a Give button
-// in their name. With `all`, every Khmer staff member; otherwise only those
+// that opens their own Subsplash fund (`fund` in sr-team.ts). With `all`, every Khmer staff member; otherwise only those
 // with a `support` entry in src/lib/sr-team.ts. Stories and monthly goals
 // stay in that file but are not shown. Used on /give/staff (all, on black)
 // and the Give page (featured).
@@ -42,7 +42,7 @@ const first = (m: Member) => m.name.split(' & ').map((n) => n.split(' ')[0]).joi
         <div class="supporter-body">
           <p class="eyebrow">{m.role}</p>
           <h3 class="disp" style="margin:8px 0 0;font-size:24px;font-weight:500;">{m.name}</h3>
-          <a class="btn btn--solid" href={`${GIVE_URL}&memo=${encodeURIComponent(m.name)}`} target="_blank" rel="noopener">Give to {first(m)} ↗︎</a>
+          <a class="btn btn--solid" href={m.fund ? `${GIVE_URL}&fund_id=${m.fund}` : `${GIVE_URL}&memo=${encodeURIComponent(m.name)}`} target="_blank" rel="noopener">Give to {first(m)} ↗︎</a>
         </div>
       </article>
     );
@@ -61,4 +61,4 @@ const first = (m: Member) => m.name.split(' & ').map((n) => n.split(' ')[0]).joi
     cards.forEach(function (c) { g.appendChild(c); });
   })();
 </script>
-<p class="muted" style="margin:26px 0 0;font-size:14px;max-width:64ch;">Giving opens Subsplash in a new tab. Choose a monthly gift and write the staff member's name in the note so it reaches them.</p>
+<p class="muted" style="margin:26px 0 0;font-size:14px;max-width:64ch;">Giving opens Subsplash in a new tab, straight to that staff member's own support fund. A monthly gift of any size helps.</p>
