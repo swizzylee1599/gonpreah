@@ -58,6 +58,21 @@ const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
         };
         swap(); document.addEventListener('astro:page-load', swap);
       })();
+      // Lists marked data-shuffle (the Khmer staff profiles) come in a new
+      // order on every visit. The component shuffles its own list as it is
+      // parsed; this covers pages reached by an in-site link, where the new
+      // page is swapped in (and shuffled before it is shown).
+      (function () {
+        var shuffle = function () {
+          document.querySelectorAll('[data-shuffle]:not([data-shuffled])').forEach(function (g) {
+            g.dataset.shuffled = '1';
+            var c = Array.prototype.slice.call(g.children);
+            for (var i = c.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = c[i]; c[i] = c[j]; c[j] = t; }
+            c.forEach(function (n) { g.appendChild(n); });
+          });
+        };
+        document.addEventListener('astro:after-swap', shuffle);
+      })();
     </script>
   </head>
   <body class="sr">

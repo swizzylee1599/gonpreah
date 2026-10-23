@@ -1510,7 +1510,17 @@ body.sr {
 @media (max-width: 760px) {
   .sr .people { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 14px; }
   .sr .person-name { font-size: 15px; }
-  .sr .supporters { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 26px; }
+  /* Two side by side, with everything scaled down to fit a half-width card. */
+  .sr .supporters { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+  .sr .supporter { border-radius: 16px; }
+  .sr .supporter-body { padding: 12px 12px 14px; }
+  .sr .supporter-body .eyebrow { font-size: 9.5px; letter-spacing: .12em; line-height: 1.4; }
+  .sr .supporter-body h3 { font-size: 16px !important; margin-top: 6px !important; line-height: 1.15; }
+  .sr .supporter-body .body { font-size: 12.5px !important; line-height: 1.5; margin-top: 8px !important; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+  .sr .support-bar { margin-top: 12px; }
+  .sr .support-nums { font-size: 11.5px; margin: 6px 0 10px; }
+  .sr .supporter-body .btn { width: 100%; box-sizing: border-box; justify-content: center; padding: 10px 8px; font-size: 12.5px; white-space: normal; text-align: center; line-height: 1.25; }
+  .sr .supporter--short .supporter-body .btn { margin-top: 12px; }
   .sr .prep-grid, .sr .culture-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 22px; }
   .sr .culture-head { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .sr .pack-list { columns: 1; }

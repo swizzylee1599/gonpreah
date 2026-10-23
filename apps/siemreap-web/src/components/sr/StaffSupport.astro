@@ -31,7 +31,7 @@ const pic = (m: Member) => {
 // "Kimla", "Yang & Sreyleak", "Yi & Esther"
 const first = (m: Member) => m.name.split(' & ').map((n) => n.split(' ')[0]).join(' & ');
 ---
-<div class:list={['supporters', 'stag', { 'supporters--dark': dark }]}>
+<div class:list={['supporters', 'stag', { 'supporters--dark': dark }]} data-shuffle>
   {people.map((m) => {
     const s = m.support;
     const pct = s ? Math.round(Math.min(1, s.now / s.goal) * 100) : 0;
@@ -39,7 +39,7 @@ const first = (m: Member) => m.name.split(' & ').map((n) => n.split(' ')[0]).joi
     return (
       <article class:list={['supporter', { 'supporter--short': !s }]} id={m.slug}>
         {src
-          ? <img src={src} srcset={src.includes('/portraits/') ? srcset(src) : undefined} sizes="(max-width: 760px) 100vw, 33vw" alt={m.name} loading="lazy" decoding="async" />
+          ? <img src={src} srcset={src.includes('/portraits/') ? srcset(src) : undefined} sizes="(max-width: 760px) 50vw, 33vw" alt={m.name} loading="lazy" decoding="async" />
           : <div class="supporter-slot" aria-hidden="true"><span>Photo coming</span></div>}
         <div class="supporter-body">
           <p class="eyebrow">{m.role}</p>
@@ -53,4 +53,17 @@ const first = (m: Member) => m.name.split(' & ').map((n) => n.split(' ')[0]).joi
     );
   })}
 </div>
+<script is:inline>
+  // A different order on every visit, so no one is always first or last.
+  // Runs as soon as the cards are parsed, before they are shown.
+  (function () {
+    var grids = document.querySelectorAll('[data-shuffle]');
+    var g = grids[grids.length - 1];
+    if (!g || g.dataset.shuffled) return;
+    g.dataset.shuffled = '1';
+    var cards = Array.prototype.slice.call(g.children);
+    for (var i = cards.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = cards[i]; cards[i] = cards[j]; cards[j] = t; }
+    cards.forEach(function (c) { g.appendChild(c); });
+  })();
+</script>
 <p class="muted" style="margin:26px 0 0;font-size:14px;max-width:64ch;">Giving opens Subsplash in a new tab. Choose a monthly gift and write the staff member's name in the note so it reaches them.</p>
