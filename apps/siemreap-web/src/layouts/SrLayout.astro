@@ -62,7 +62,7 @@ const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
   </head>
   <body class="sr">
     <div class="srbar"></div>
-    <div class="sr-page" style="min-height:100vh;background:var(--sr-ink);">
+    <div style="min-height:100vh;background:var(--sr-ink);">
       <Nav />
       {spacer && <div style="height:109px;"></div>}
       <slot />
@@ -93,36 +93,33 @@ const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
       init();
       document.addEventListener('astro:page-load', init);
 
-      // Cream sections marked .paper-screen turn the page itself cream as you
-      // scroll them into view: the page background moves from black to
-      // cream as the section rises (fully cream once its top is a third of
-      // the way down the screen), and back to black as you scroll past it.
+      // Cream sections marked .paper-screen arrive out of the page black: the
+      // section's own background moves from black to cream as it rises into
+      // view (fully cream once its top is near the top of the screen), so it
+      // reads as its own section turning the screen cream. The sections
+      // around it are untouched. Scroll-linked, colour only.
       let paperOff = null;
       const initPaper = () => {
         if (paperOff) paperOff();
         paperOff = null;
-        const page = document.querySelector('.sr-page');
-        const secs = [...document.querySelectorAll('.paper-screen')];
         document.documentElement.classList.remove('is-paper-focus');
-        if (!page || !secs.length) return;
+        const secs = [...document.querySelectorAll('.paper-screen')];
+        if (!secs.length) return;
         const INK = [11, 11, 11], PAPER = [243, 239, 231];
         const c01 = (v) => Math.min(1, Math.max(0, v));
-        let raf = 0, last = -1;
+        let raf = 0;
         const update = () => {
           raf = 0;
           const vh = innerHeight;
-          let t = 0;
+          let navOver = false;
           for (const el of secs) {
             const r = el.getBoundingClientRect();
-            const inT = c01((vh - r.top) / (vh * 0.67));
-            const outT = c01((r.bottom - vh * 0.3) / (vh * 0.45));
-            t = Math.max(t, Math.min(inT, outT));
+            let t = c01((vh - r.top) / (vh * 0.85));
+            t = t * t * (3 - 2 * t);
+            el.style.backgroundColor = `rgb(${INK.map((v, i) => Math.round(v + (PAPER[i] - v) * t)).join(',')})`;
+            if (t > 0.6 && r.top < 70 && r.bottom > 70) navOver = true;
           }
-          t = t * t * (3 - 2 * t);
-          if (Math.abs(t - last) < 0.002) return;
-          last = t;
-          page.style.backgroundColor = `rgb(${INK.map((v, i) => Math.round(v + (PAPER[i] - v) * t)).join(',')})`;
-          document.documentElement.classList.toggle('is-paper-focus', t > 0.5);
+          document.documentElement.classList.toggle('is-paper-focus', navOver);
         };
         const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
         addEventListener('scroll', onScroll, { passive: true });

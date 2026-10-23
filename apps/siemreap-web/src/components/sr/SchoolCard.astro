@@ -25,6 +25,9 @@ const { name, abbr, body, when, photo, pos, href = '/schools', index } = Astro.p
     <span class="muted" style="font-size:12px;letter-spacing:.2em;">{abbr}</span>
     <span class="disp" style="display:block;font-size:22px;font-weight:500;margin-top:10px;line-height:1.2;">{name}</span>
     <span class="body" style="display:block;font-size:15px;margin-top:14px;flex:1;">{body}</span>
-    <span style="display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--sr-pink);margin-top:22px;">{when}</span>
+    <span class="sc-foot">
+      <span class="sc-when">{when}</span>
+      <span class="sc-more">Learn more <span class="sc-arrow" aria-hidden="true">→</span></span>
+    </span>
   </span>
 </a>

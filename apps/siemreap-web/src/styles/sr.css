@@ -325,9 +325,10 @@ body.sr {
 .sr .si-link { font-size: 14px; color: #dcdcdc; text-decoration: underline; text-underline-offset: 3px; }
 .sr .si-partner { margin: 18px 4px 0; font-size: 14px; line-height: 1.6; color: var(--gp-grey); }
 .sr .si-partner a { color: #fff; text-underline-offset: 3px; }
-/* A cream section that turns the page cream around it as you scroll it into
-   view (.paper-screen; SrLayout's script sets the page colour and
-   html.is-paper-focus once it is mostly cream). */
+/* A cream section that rises out of the page black (.paper-screen): its
+   background moves from black to cream as it scrolls in (SrLayout's script),
+   and it fills at least the screen so it reads as its own section. */
+.sr .paper-screen { min-height: 100vh; min-height: 100svh; box-sizing: border-box; }
 /* Over the cream page the menu bar shows in black (inverted), not white,
    unless the menu is open. */
 .sr nav.sr-nav { transition: transform .42s cubic-bezier(.22,.61,.36,1), background .3s ease, border-color .3s ease, filter .6s ease; }
@@ -466,11 +467,17 @@ body.sr {
   .sr .gonpreah-stack .deck .schoolcard-body { min-height: 0; overflow: hidden; padding: 16px 18px 16px; }
   .sr .gonpreah-stack .deck .schoolcard-body .body { flex: none !important; display: -webkit-box !important; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-top: 10px !important; }
   .sr .gonpreah-stack .deck .schoolcard-body > span:last-child { margin-top: auto !important; padding-top: 10px; }
-  /* Short phones (iPhone SE and the like): a smaller photo share and two
-     lines of description, so the whole card text fits. */
+  /* Room for the bottom row (when it runs + Learn more, which wraps to two
+     lines on these narrow cards): a smaller photo share and two lines of
+     description; short phones (iPhone SE) a smaller photo still. */
+  .sr .gonpreah-stack .deck .schoolcard-photo { flex-basis: 34%; }
+  .sr .gonpreah-stack .deck .schoolcard-body .body { -webkit-line-clamp: 2; }
+  .sr .gonpreah-stack .deck .sc-foot { gap: 6px 10px; }
+  .sr .gonpreah-stack .deck .sc-arrow { width: 24px; height: 24px; font-size: 12px; }
   @media (max-height: 600px) {
-    .sr .gonpreah-stack .deck .schoolcard-photo { flex-basis: 36%; }
-    .sr .gonpreah-stack .deck .schoolcard-body .body { -webkit-line-clamp: 2; }
+    .sr .gonpreah-stack .deck .schoolcard-photo { flex-basis: 26%; }
+    .sr .gonpreah-stack .deck .schoolcard-body > .disp { font-size: 18px !important; }
+    .sr .gonpreah-stack .deck .schoolcard-body .body { -webkit-line-clamp: 1; }
   }
   /* After the last card: a beat to read it, then the full screen Bring a
      team rises over. The cards stay stuck under it because the deck runs
@@ -513,6 +520,12 @@ body.sr {
 .sr .schoolcard:hover { border-color: var(--sr-pink); transform: translateY(-6px); }
 .sr .schoolcard-photo { height: 360px; }
 .sr .schoolcard-body { padding: 30px 28px 34px; min-height: 216px; }
+/* Bottom row of a school card: when it runs, and a Learn more arrow. */
+.sr .sc-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+.sr .sc-when { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--sr-pink); }
+.sr .sc-more { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #fff; white-space: nowrap; }
+.sr .sc-arrow { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .6); font-size: 14px; transition: background .2s ease, color .2s ease, transform .3s ease; }
+@media (hover: hover) { .sr .schoolcard:hover .sc-arrow { background: #fff; color: #000; transform: translateX(4px); } }
 
 .sr nav.sr-nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 40;
