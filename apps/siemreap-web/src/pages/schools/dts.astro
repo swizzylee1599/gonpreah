@@ -204,6 +204,7 @@ const FAQ: [string, string][] = [
       // \`lite\`), so nothing is positioned by script and nothing can trail
       // the finger. The script only plays the walk along with the scroll.
       const native = lite;
+      const fadeout = hall.querySelector('.hall-fadeout');
       const copies = [...hall.querySelectorAll('.hall-copy')];
       const rows = [...hall.querySelectorAll('.hall-photos')].map((el) => ({
         el, phase: +el.dataset.phase, items: [...el.querySelectorAll('.hall-photo')],
@@ -251,7 +252,11 @@ const FAQ: [string, string][] = [
       const render = (p) => {
         if (video && video.duration && !Number.isNaN(video.duration)) seekTo(p * video.duration * 0.985);
         else if (still) still.style.transform = `translate3d(0, ${(-p * (lite ? 2 : 4)).toFixed(2)}%, 0) scale(${(1 + p * (lite ? 0.45 : 0.9)).toFixed(4)})`;
-        if (native) return;
+        if (native) {
+          // The walk's last stretch dims to black as the information card rises.
+          if (fadeout) fadeout.style.opacity = smooth(clamp01((p / pEnd - 0.86) / 0.13)).toFixed(3);
+          return;
+        }
 
         const io = clamp01((p - INTRO_HOLD) / INTRO_FADE);
         intro.style.opacity = String(1 - io);
@@ -383,12 +388,13 @@ const FAQ: [string, string][] = [
         });
         if (bar) bar.style.transform = `scaleX(${Math.min(1, p / STEPS_END)})`;
         const ease = exit * exit * (3 - 2 * exit);
-        if (head) {
-          if (fadeOnly) head.style.opacity = String(1 - ease);
-          else head.style.transform = `translateX(${ease * 110}vw)`;
+        // Phones: no exit fade; the breakdown panel slides up over the stepper
+        // while it stays crisp underneath (a fade here read as a dark smear).
+        if (!fadeOnly) {
+          if (head) head.style.transform = `translateX(${ease * 110}vw)`;
+          if (grid) grid.style.opacity = String(1 - ease);
+          if (rail) rail.style.opacity = String(1 - ease);
         }
-        if (grid) grid.style.opacity = String(1 - ease);
-        if (rail) rail.style.opacity = String(1 - ease);
       };
       const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
       update();
@@ -406,6 +412,7 @@ const FAQ: [string, string][] = [
         {HALL_VIDEO && <video class="hall-video" data-src={HALL_VIDEO} data-src-mobile={HALL_VIDEO.replace(/\.mp4$/, '-mobile.mp4')} muted autoplay playsinline webkit-playsinline preload="none"></video>}
       </div>
       <div class="hall-scrim" aria-hidden="true"></div>
+      <div class="hall-fadeout" aria-hidden="true"></div>
       {PHASES.map((phase, p) => (
         <div class="hall-photos" data-phase={p}>
           {phase.photos.map((photo) => (
@@ -417,10 +424,12 @@ const FAQ: [string, string][] = [
           ))}
         </div>
       ))}
-      <div class="hall-intro">
-        <p class="eyebrow">DTS breakdown</p>
-        <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.6vw,48px);font-weight:500;line-height:1.1;">Three months here. Three months to the nations.</h2>
-        <p class="muted" style="margin:26px 0 0;font-size:12px;letter-spacing:.2em;text-transform:uppercase;">Scroll to walk the hall ↓</p>
+      <div class="hall-intro-hold">
+        <div class="hall-intro">
+          <p class="eyebrow">DTS breakdown</p>
+          <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.6vw,48px);font-weight:500;line-height:1.1;">Three months here. Three months to the nations.</h2>
+          <p class="muted" style="margin:26px 0 0;font-size:12px;letter-spacing:.2em;text-transform:uppercase;">Scroll to walk the hall ↓</p>
+        </div>
       </div>
       {PHASES.map((phase, p) => (
         <div class="hall-copy" data-phase={p}>

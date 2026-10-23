@@ -241,6 +241,10 @@ body.sr {
 .sr .hall-bg img, .sr .hall-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 59%; transform-origin: 50% 50%; will-change: transform; display: block; }
 .sr .hall-still { transition: opacity .6s ease; }
 .sr .hall-scrim { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(11,11,11,.3) 0%, rgba(11,11,11,.7) 55%, rgba(11,11,11,.92) 100%); }
+/* Phones only (below): a hold for the hallway title and a fade to black at
+   the end of the walk. Elsewhere the wrapper adds no box of its own. */
+.sr .hall-intro-hold { display: contents; }
+.sr .hall-fadeout { display: none; }
 .sr .hall-photos {
   position: absolute; left: 50%; top: 49%; transform: translateX(-50%);
   width: min(94vw, 1180px); height: 46vh; pointer-events: none;
@@ -1181,14 +1185,27 @@ body.sr {
    blocks in reading order. Nothing here is positioned by script. Set in
    CSS rather than by a class so the layout is right from the first paint. */
 @media (prefers-reduced-motion: no-preference) and (max-width: 760px), (prefers-reduced-motion: no-preference) and (pointer: coarse) {
-  .sr section.breakdown.hall-stack { height: auto; }
-  .sr .hall-stack .hall-pin { position: relative; height: auto; overflow: visible; display: flex; flex-direction: column; padding-bottom: 30svh; }
+  /* The breakdown rises over "Begin your journey" as a panel with rounded
+     top corners, like the Train here panel on the home page. */
+  .sr section.breakdown.hall-stack { height: auto; overflow: clip; border-radius: 28px 28px 0 0; box-shadow: 0 -30px 70px rgba(0, 0, 0, .6); }
+  .sr .hall-stack .hall-pin { position: relative; height: auto; overflow: visible; display: flex; flex-direction: column; }
+  /* Room after the last collage for the walk to end and dim. A spacer, not
+     padding: sticky elements only hold within their container's content, so
+     with padding the hallway let go at the last photo and left a hard edge. */
+  .sr .hall-stack .hall-pin::after { content: ''; order: 7; flex: none; height: 55svh; }
   .sr .hall-stack .hall-bg { position: sticky; inset: auto; top: 0; height: 100svh; flex: none; }
   .sr .hall-stack .hall-scrim { position: sticky; inset: auto; top: 0; height: 100svh; margin-top: -100svh; flex: none; }
   .sr .hall-stack .hall-intro,
   .sr .hall-stack .hall-copy,
   .sr .hall-stack .hall-photos { position: relative; left: auto; top: auto; transform: none; z-index: 1; margin-left: auto; margin-right: auto; flex: none; }
-  .sr .hall-stack .hall-intro { order: 2; margin-top: -100svh; min-height: 100svh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; padding: 80px 0 40px; }
+  /* The title holds in the middle of the screen for a beat (it is sticky
+     inside a taller wrapper), then moves on with the walk. */
+  .sr .hall-stack .hall-intro-hold { display: block; order: 2; position: relative; z-index: 1; margin-top: -100svh; height: 165svh; flex: none; }
+  .sr .hall-stack .hall-intro { position: sticky; inset: auto; top: 0; height: 100svh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; padding: 80px 0 40px; }
+  /* The end of the walk dims to black (opacity set by the page script), and
+     the DTS information card rises over it: no hard edge, no gap. */
+  .sr .hall-stack .hall-fadeout { display: block; position: sticky; inset: auto; top: 0; height: 100svh; margin-top: -100svh; flex: none; background: var(--sr-ink); opacity: 0; pointer-events: none; }
+  .sr .hall-card-sec { position: relative; z-index: 3; margin-top: -40svh; }
   .sr .hall-stack .hall-copy { opacity: 1; padding: 34svh 0 8svh; }
   .sr .hall-stack .hall-copy[data-phase="0"] { order: 3; }
   .sr .hall-stack .hall-photos[data-phase="0"] { order: 4; }
