@@ -20,7 +20,7 @@ const list: { key: string; name: string; meta: string; body: string; when: strin
     <div class="wrap" style="display:flex;flex-direction:column;gap:20px;">
       {list.map((s) => (
         <div class="card reveal school-row">
-          <img class="school-row-bg" src={s.photo} srcset={srcset(s.photo)} sizes="(max-width: 760px) 100vw, 1240px" alt="" loading="lazy" decoding="async" style={s.pos ? `object-position:${s.pos}` : undefined} />
+          <img class="school-row-bg" src={s.photo} srcset={srcset(s.photo)} sizes="(max-width: 760px) 100vw, 1240px" alt="" loading="lazy" decoding="async" style={[s.pos && `object-position:${s.pos}`, s.key === 'dts' && 'view-transition-name:dts-hero'].filter(Boolean).join(';') || undefined} />
           <div class="school-row-scrim" aria-hidden="true"></div>
           <div class="school-row-copy">
             <p class="eyebrow">{s.meta}</p>

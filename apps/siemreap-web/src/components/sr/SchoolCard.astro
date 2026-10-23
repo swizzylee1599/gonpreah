@@ -12,13 +12,15 @@ interface Props {
   href?: string;
   /** Position in a deck; phones stack the home page cards with it. */
   index?: number;
+  /** Shared page-transition name: the photo grows into the school page header. */
+  vt?: string;
 }
-const { name, abbr, body, when, photo, pos, href = '/schools', index } = Astro.props;
+const { name, abbr, body, when, photo, pos, href = '/schools', index, vt } = Astro.props;
 ---
 <a class="schoolcard" href={href} style={index !== undefined ? `--k:${index}` : undefined}>
   <span class="schoolcard-photo" style="display:block;position:relative;">
     {photo
-      ? <img src={photo} srcset={srcset(photo)} sizes="(max-width: 760px) 100vw, 50vw" alt="" loading="lazy" decoding="async" style={`display:block;width:100%;height:100%;object-fit:cover;${pos ? `object-position:${pos};` : ''}`} />
+      ? <img src={photo} srcset={srcset(photo)} sizes="(max-width: 760px) 100vw, 50vw" alt="" loading="lazy" decoding="async" style={`display:block;width:100%;height:100%;object-fit:cover;${pos ? `object-position:${pos};` : ''}${vt ? `view-transition-name:${vt};` : ''}`} />
       : <PhotoSlot label={`Drop a photo — ${name}`} radius={0} />}
   </span>
   <span class="schoolcard-body" style="display:flex;flex-direction:column;flex:1;">

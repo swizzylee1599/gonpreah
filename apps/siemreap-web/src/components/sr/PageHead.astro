@@ -9,6 +9,8 @@ interface Props {
   rule?: boolean;
   /** Play the home page's hero video over the photo (the photo shows until it can play). */
   video?: boolean;
+  /** Shared page-transition name: a photo elsewhere with the same name grows into this one. */
+  vt?: string;
   title: string;
   highlight?: string;
   photo?: string;
@@ -23,14 +25,14 @@ interface Props {
   /** Extra class on the section, for one-off tweaks. */
   cls?: string;
 }
-const { eyebrow, km, lead, rule = true, video = false, title, highlight, photo, photoAlt = '', full = false, photoPos, center = false, mobileFull = false, long = false, big = false, cls } = Astro.props;
+const { eyebrow, km, lead, rule = true, video = false, vt, title, highlight, photo, photoAlt = '', full = false, photoPos, center = false, mobileFull = false, long = false, big = false, cls } = Astro.props;
 const words = title.split(' ');
 const highlightCount = highlight ? highlight.split(' ').length : 0;
 ---
 <section class:list={['pagehead', cls, { 'pagehead--photo': !!photo, 'pagehead--full': full, 'pagehead--center': center, 'pagehead--mfull': mobileFull, 'pagehead--long': long, 'pagehead--video': video }]} style={photo ? undefined : 'padding:90px 0 0;'}>
   {photo && (
     <>
-      <img class="pagehead-photo" src={photo} srcset={srcset(photo)} sizes="(max-width: 760px) 100vw, 50vw" alt={photoAlt} loading="eager" decoding="async" style={photoPos ? `object-position:${photoPos}` : undefined} />
+      <img class:list={['pagehead-photo', { 'pagehead-photo--vt': vt }]} src={photo} srcset={srcset(photo)} sizes="(max-width: 760px) 100vw, 50vw" alt={photoAlt} loading="eager" decoding="async" style={[photoPos && `object-position:${photoPos}`, vt && `view-transition-name:${vt}`].filter(Boolean).join(';') || undefined} />
       {video && <HeroVideo />}
       <div class="pagehead-scrim"></div>
     </>

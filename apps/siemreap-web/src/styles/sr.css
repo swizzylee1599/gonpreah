@@ -381,6 +381,13 @@ body.sr {
 @keyframes sr-kenburns { from { transform: scale(1.1); } to { transform: none; } }
 @keyframes sr-head-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 .sr .pagehead-photo { transform-origin: 50% 40%; animation: sr-kenburns 1.8s cubic-bezier(.22,.61,.36,1) both; }
+/* A header photo that a card's photo grows into: no zoom of its own, so the
+   two line up exactly as the page changes. */
+.sr .pagehead-photo--vt { animation: none; }
+/* DTS: the school card's photo grows into the DTS page header (the same
+   photo, cropped to fill as it goes), while the rest of the page fades. */
+::view-transition-group(dts-hero) { animation-duration: .75s; animation-timing-function: cubic-bezier(.22, .61, .36, 1); }
+::view-transition-old(dts-hero), ::view-transition-new(dts-hero) { height: 100%; width: 100%; object-fit: cover; animation-duration: .75s; }
 .sr .pagehead--photo .eyebrow { animation: sr-head-in .7s cubic-bezier(.16,1,.3,1) .45s both; }
 .sr .pagehead--photo .km, .sr .pagehead--photo .rule { animation: sr-head-in .7s cubic-bezier(.16,1,.3,1) .85s both; }
 .sr .pagehead--photo .body { animation: sr-head-in .7s cubic-bezier(.16,1,.3,1) .95s both; }
