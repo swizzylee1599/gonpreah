@@ -19,8 +19,11 @@ const SECTIONS: { title: string; id: string; members: Member[] }[] = [
   { title: 'Our staff', id: 'staff', members: [...TEAM.filter((m) => !m.lead), ...TEAM.filter((m) => m.lead)] },
 ];
 const KIND = { couple: 'Couple', family: 'Family' } as const;
-const khmer = TEAM.filter((m) => m.khmer).length;
-const nations = 6;
+// The numbers at the top of the page. People, not cards (a couple is one
+// card), so they are set here by hand: update them when the team changes.
+const campusStaff = 31;
+const khmer = 21;
+const nations = 5;
 ---
 <SrLayout title="Our Team | YWAM Siem Reap" noindex spacer={false}
   description="The Khmer and international staff of YWAM Siem Reap: campus leaders, DTS and DBS staff, media, music, hospitality, technical and teams.">
@@ -37,7 +40,7 @@ const nations = 6;
   <section class="sec tm-intro">
     <div class="wrap tm-intro-grid">
       <div class="tm-stats stag">
-        <div class="tm-stat"><span class="disp tm-stat-n">{TEAM.length}</span><span class="tm-stat-l">staff, couples and families</span></div>
+        <div class="tm-stat"><span class="disp tm-stat-n">{campusStaff}</span><span class="tm-stat-l">campus staff</span></div>
         <div class="tm-stat"><span class="disp tm-stat-n">{khmer}</span><span class="tm-stat-l">Khmer staff</span></div>
         <div class="tm-stat"><span class="disp tm-stat-n">{nations}</span><span class="tm-stat-l">nations represented</span></div>
       </div>

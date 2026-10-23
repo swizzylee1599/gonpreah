@@ -325,16 +325,11 @@ body.sr {
 .sr .si-link { font-size: 14px; color: #dcdcdc; text-decoration: underline; text-underline-offset: 3px; }
 .sr .si-partner { margin: 18px 4px 0; font-size: 14px; line-height: 1.6; color: var(--gp-grey); }
 .sr .si-partner a { color: #fff; text-underline-offset: 3px; }
-/* A cream section that takes the whole screen while you read it (.paper-focus):
-   once it reaches the middle of the screen a cream layer fades over the
-   rest of the page, so only this section shows; once the next section
-   reaches the middle, the layer fades away again. SrLayout's script sets
-   html.is-paper-focus. */
-.sr .paper-focus-layer { position: fixed; inset: 0; z-index: 30; background: #f3efe7; opacity: 0; pointer-events: none; transition: opacity .6s cubic-bezier(.22, .61, .36, 1); }
-.sr.is-paper-focus .paper-focus-layer { opacity: 1; }
-.sr .paper-focus { position: relative; z-index: 31; }
-/* The menu bar sits over the cream then: show it in black (inverted), not
-   white, unless the menu is open. */
+/* A cream section that turns the page cream around it as you scroll it into
+   view (.paper-screen; SrLayout's script sets the page colour and
+   html.is-paper-focus once it is mostly cream). */
+/* Over the cream page the menu bar shows in black (inverted), not white,
+   unless the menu is open. */
 .sr nav.sr-nav { transition: transform .42s cubic-bezier(.22,.61,.36,1), background .3s ease, border-color .3s ease, filter .6s ease; }
 .sr.is-paper-focus nav.sr-nav:not(.is-mobile-open) { filter: invert(1); }
 @media (max-width: 900px) { .sr .school-info .si-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
@@ -673,6 +668,9 @@ body.sr {
 .sr .campus-teaser .eyebrow { color: #fff; }
 .sr .campus-teaser .btn--solid { background: #fff; color: #0b0b0b; border-color: #fff; }
 @media (hover: hover) { .sr .campus-teaser:hover .btn { transform: translateX(4px); } }
+/* Clear space above and below the campus life box, so it stands apart from
+   the photo above it and the section after it. */
+.sr .campus-teaser-sec { padding: clamp(80px, 9vw, 130px) 0 clamp(90px, 10vw, 140px); }
 .sr .campus-teaser-thumbs { display: flex; gap: 10px; justify-content: flex-end; }
 .sr .campus-teaser-thumbs img { width: clamp(80px, 9vw, 130px); aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255,255,255,.18); box-shadow: 0 16px 40px rgba(0,0,0,.5); transition: transform .5s cubic-bezier(.16,1,.3,1); }
 .sr .campus-teaser-thumbs img:nth-child(2) { transform: translateY(-14px); }
@@ -1147,6 +1145,7 @@ body.sr {
   .sr .sms-intro-photo { margin-top: 20px; }
   .sr .visit-photos { height: 300px; margin-bottom: 30px; }
   .sr .visit-photo-main { inset: 0 40px 0 0; }
+  .sr .campus-teaser-sec { padding: 84px 0 92px; }
   .sr .campus-teaser { grid-template-columns: minmax(0, 1fr); min-height: 0; padding: 24px 20px 26px; gap: 18px; align-items: start; }
   .sr .campus-teaser-thumbs { order: -1; justify-content: flex-start; margin-bottom: 4px; }
   .sr .campus-teaser-thumbs img { width: 64px; }
@@ -1231,9 +1230,14 @@ body.sr {
 @media (prefers-reduced-motion: no-preference) and (max-width: 760px), (prefers-reduced-motion: no-preference) and (pointer: coarse) {
   /* inset -1px: no hairline of hallway at the edges once it's black. */
   .sr .hall-stack .hall-fadeout { display: block; position: absolute; inset: -1px; z-index: 6; background: var(--sr-ink); opacity: 0; pointer-events: none; }
-  /* The card arrives on solid black after the hallway has fully dimmed, so
-     nothing of the hallway shows around it. */
-  .sr .hall-card-sec { position: relative; z-index: 3; background: var(--sr-ink); margin-top: -15svh; }
+  /* The card simply follows the hallway once it has fully dimmed, on solid
+     black: no overlap with the pinned hallway, which iPhones redrew
+     unsteadily as you scrolled up and down. */
+  .sr .hall-card-sec { position: relative; background: var(--sr-ink); }
+  /* The pinned hallway fills the whole screen even while Safari's bar is
+     collapsed (lvh, not svh). Sized to the smaller height, it left a strip
+     at the bottom where the card's edge showed and hid as the bar moved. */
+  .sr .hall-pin { height: 100lvh; }
 }
 @media (max-width: 760px) {
   /* Centre the driver: he sits a little right of the photo's middle. */

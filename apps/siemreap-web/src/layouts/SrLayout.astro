@@ -62,7 +62,7 @@ const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
   </head>
   <body class="sr">
     <div class="srbar"></div>
-    <div style="min-height:100vh;background:var(--sr-ink);">
+    <div class="sr-page" style="min-height:100vh;background:var(--sr-ink);">
       <Nav />
       {spacer && <div style="height:109px;"></div>}
       <slot />
@@ -93,29 +93,45 @@ const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
       init();
       document.addEventListener('astro:page-load', init);
 
-      // Cream sections marked .paper-focus take the whole screen while they
-      // sit across the middle of it (see .paper-focus-layer in sr.css).
-      let focusIo = null;
-      const initFocus = () => {
-        if (focusIo) focusIo.disconnect();
+      // Cream sections marked .paper-screen turn the page itself cream as you
+      // scroll them into view: the page background moves from black to
+      // cream as the section rises (fully cream once its top is a third of
+      // the way down the screen), and back to black as you scroll past it.
+      let paperOff = null;
+      const initPaper = () => {
+        if (paperOff) paperOff();
+        paperOff = null;
+        const page = document.querySelector('.sr-page');
+        const secs = [...document.querySelectorAll('.paper-screen')];
         document.documentElement.classList.remove('is-paper-focus');
-        const secs = document.querySelectorAll('.paper-focus');
-        if (!secs.length) return;
-        if (!document.querySelector('.paper-focus-layer')) {
-          const layer = document.createElement('div');
-          layer.className = 'paper-focus-layer';
-          layer.setAttribute('aria-hidden', 'true');
-          document.body.appendChild(layer);
-        }
-        const on = new Set();
-        focusIo = new IntersectionObserver((entries) => {
-          entries.forEach((en) => { if (en.isIntersecting) on.add(en.target); else on.delete(en.target); });
-          document.documentElement.classList.toggle('is-paper-focus', on.size > 0);
-        }, { rootMargin: '-50% 0px -50% 0px' });
-        secs.forEach((el) => focusIo.observe(el));
+        if (!page || !secs.length) return;
+        const INK = [11, 11, 11], PAPER = [243, 239, 231];
+        const c01 = (v) => Math.min(1, Math.max(0, v));
+        let raf = 0, last = -1;
+        const update = () => {
+          raf = 0;
+          const vh = innerHeight;
+          let t = 0;
+          for (const el of secs) {
+            const r = el.getBoundingClientRect();
+            const inT = c01((vh - r.top) / (vh * 0.67));
+            const outT = c01((r.bottom - vh * 0.3) / (vh * 0.45));
+            t = Math.max(t, Math.min(inT, outT));
+          }
+          t = t * t * (3 - 2 * t);
+          if (Math.abs(t - last) < 0.002) return;
+          last = t;
+          page.style.backgroundColor = `rgb(${INK.map((v, i) => Math.round(v + (PAPER[i] - v) * t)).join(',')})`;
+          document.documentElement.classList.toggle('is-paper-focus', t > 0.5);
+        };
+        const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+        addEventListener('scroll', onScroll, { passive: true });
+        addEventListener('resize', onScroll);
+        paperOff = () => { removeEventListener('scroll', onScroll); removeEventListener('resize', onScroll); cancelAnimationFrame(raf); };
+        update();
       };
-      initFocus();
-      document.addEventListener('astro:page-load', initFocus);
+      initPaper();
+      document.addEventListener('astro:page-load', initPaper);
     </script>
   </body>
 </html>
