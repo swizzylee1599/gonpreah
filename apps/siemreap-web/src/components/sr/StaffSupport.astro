@@ -1,9 +1,9 @@
 ---
-// Support profiles for our Khmer staff, each with a Give button in their
-// name. Staff with a `support` entry in src/lib/sr-team.ts (story and
-// monthly goal) come first and show their story and progress; with `all`,
-// every other Khmer staff member follows with their photo, role and Give
-// button. Used on /give/staff (all, on black) and the Give page (featured).
+// Support profiles for our Khmer staff: photo, role, name and a Give button
+// in their name. With `all`, every Khmer staff member; otherwise only those
+// with a `support` entry in src/lib/sr-team.ts. Stories and monthly goals
+// stay in that file but are not shown. Used on /give/staff (all, on black)
+// and the Give page (featured).
 import { existsSync } from 'node:fs';
 import { TEAM, type Member } from '../../lib/sr-team';
 import { GIVE_URL } from '../../lib/sr-routes';
@@ -33,20 +33,15 @@ const first = (m: Member) => m.name.split(' & ').map((n) => n.split(' ')[0]).joi
 ---
 <div class:list={['supporters', 'stag', { 'supporters--dark': dark }]} data-shuffle>
   {people.map((m) => {
-    const s = m.support;
-    const pct = s ? Math.round(Math.min(1, s.now / s.goal) * 100) : 0;
     const src = pic(m);
     return (
-      <article class:list={['supporter', { 'supporter--short': !s }]} id={m.slug}>
+      <article class="supporter supporter--short" id={m.slug}>
         {src
           ? <img src={src} srcset={src.includes('/portraits/') ? srcset(src) : undefined} sizes="(max-width: 760px) 50vw, 33vw" alt={m.name} loading="lazy" decoding="async" />
           : <div class="supporter-slot" aria-hidden="true"><span>Photo coming</span></div>}
         <div class="supporter-body">
           <p class="eyebrow">{m.role}</p>
           <h3 class="disp" style="margin:8px 0 0;font-size:24px;font-weight:500;">{m.name}</h3>
-          {s && <p class="body" style="margin:12px 0 0;font-size:15px;">{s.story}</p>}
-          {s && <div class="support-bar" role="img" aria-label={`${pct}% of monthly goal`}><i style={`width:${pct}%`}></i></div>}
-          {s && <p class="support-nums"><b>${s.now}</b> of <b>${s.goal}</b> a month{s.now === 0 ? ' · just starting' : ''}</p>}
           <a class="btn btn--solid" href={`${GIVE_URL}&memo=${encodeURIComponent(m.name)}`} target="_blank" rel="noopener">Give to {first(m)} ↗︎</a>
         </div>
       </article>
