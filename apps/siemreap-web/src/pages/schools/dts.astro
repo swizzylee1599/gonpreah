@@ -94,7 +94,7 @@ const FAQ: [string, string][] = [
 ---
 <SrLayout title="Discipleship Training School | YWAM Siem Reap" spacer={false} accent="#0584f9"
   description="A six-month Discipleship Training School in Siem Reap, Cambodia: three months of lecture, then three months on outreach to the nations. Know God and make Him known.">
-  <PageHead eyebrow="Discipleship Training School · DTS" km="អត្តសញ្ញាណ" title="Discover your identity. Know your purpose." highlight="Know your purpose." rule={false} video vt="dts-hero"
+  <PageHead eyebrow="Discipleship Training School · DTS" km="អត្តសញ្ញាណ" title="Discover your identity. Know your purpose." highlight="Know your purpose." rule={false} video
     photo="/images/gonpreah-worship-2.webp" photoPos="28% 35%" mobileFull
     photoAlt="Students and staff worshipping on campus with hands raised under string lights" />
 
@@ -150,6 +150,84 @@ const FAQ: [string, string][] = [
     const INTRO_HOLD = 0.08, INTRO_FADE = 0.12;
     const clamp01 = (v) => Math.min(1, Math.max(0, v));
     const smooth = (t) => t * t * (3 - 2 * t);
+    // The hallway walk as still frames (public/video/dts-hallway-frames,
+    // 12 per second of the clip) drawn to fill a canvas like the video did
+    // (object-fit: cover, 50% 59%). Frames load once the hallway is within a
+    // screen of view, coarse first (every 64th, then 32nd, ...) so the walk
+    // works straight away and sharpens as the rest arrive.
+    const FRAME_COUNT = 121;
+    const frameSrc = (i) => `/video/dts-hallway-frames/${String(i).padStart(3, '0')}.webp`;
+    const hallFrames = (hall, still, signal) => {
+      const bg = hall.querySelector('.hall-bg');
+      let canvas = bg.querySelector('.hall-canvas');
+      if (!canvas) {
+        canvas = document.createElement('canvas');
+        canvas.className = 'hall-canvas';
+        canvas.setAttribute('aria-hidden', 'true');
+        bg.appendChild(canvas);
+      }
+      const ctx = canvas.getContext('2d');
+      const imgs = new Array(FRAME_COUNT);
+      let want = 0, shown = -1, width = 0;
+      const nearest = (i) => {
+        for (let d = 0; d < FRAME_COUNT; d++) {
+          if (imgs[i - d]) return i - d;
+          if (imgs[i + d]) return i + d;
+        }
+        return -1;
+      };
+      const draw = () => {
+        const k = nearest(want);
+        if (k < 0 || k === shown || !canvas.width) return;
+        const im = imgs[k];
+        const cw = canvas.width, ch = canvas.height;
+        const sc = Math.max(cw / im.naturalWidth, ch / im.naturalHeight);
+        const w = im.naturalWidth * sc, h = im.naturalHeight * sc;
+        ctx.drawImage(im, (cw - w) * 0.5, (ch - h) * 0.59, w, h);
+        if (shown < 0 && still) still.style.opacity = '0';
+        shown = k;
+      };
+      const size = () => {
+        const r = canvas.getBoundingClientRect();
+        if (!r.width || r.width === width) return;
+        width = r.width;
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        canvas.width = Math.round(r.width * dpr);
+        canvas.height = Math.round(r.height * dpr);
+        shown = -1;
+        draw();
+      };
+      // coarse-to-fine load order
+      const order = [];
+      for (let step = 64; step >= 1; step /= 2) for (let i = 0; i < FRAME_COUNT; i += step) if (!order.includes(i)) order.push(i);
+      if (!order.includes(FRAME_COUNT - 1)) order.splice(1, 0, FRAME_COUNT - 1);
+      const load = async () => {
+        let next = 0;
+        const worker = async () => {
+          while (next < order.length && !signal.aborted) {
+            const i = order[next++];
+            const im = new Image();
+            im.src = frameSrc(i);
+            try { await im.decode(); } catch { continue; }
+            if (signal.aborted) return;
+            imgs[i] = im;
+            draw(); // a nearer frame may have arrived (draw does nothing if not)
+          }
+        };
+        await Promise.all(Array.from({ length: 6 }, worker));
+      };
+      const near = new IntersectionObserver((en) => { if (en[0].isIntersecting) { near.disconnect(); size(); load(); } }, { rootMargin: '100% 0px' });
+      near.observe(hall);
+      signal.addEventListener('abort', () => near.disconnect());
+      window.addEventListener('resize', size, { signal });
+      return {
+        show(t) {
+          want = Math.max(0, Math.min(FRAME_COUNT - 1, Math.round(t * (FRAME_COUNT - 1))));
+          if (!width) size();
+          draw();
+        },
+      };
+    };
     const initHall = (signal) => {
       const hall = document.querySelector('.hall-stack');
       if (!hall || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -158,6 +236,14 @@ const FAQ: [string, string][] = [
       // and no blur filters, which are costly there.
       const lite = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
       let video = hall.querySelector('.hall-video');
+      // Phones and touch screens: the walk is a set of still frames drawn on a
+      // canvas instead of a video. Seeking a video on each scroll step
+      // delivered frames unevenly and the hallway shook; a frame from memory
+      // is instant and always the right one.
+      let frames = null;
+      // (The video stays in the page, unloaded and hidden, so this still works
+      // when the setup runs again after a page change.)
+      if (lite && video) { video.hidden = true; video = null; frames = hallFrames(hall, still, signal); }
       if (video) {
         const phone = matchMedia('(max-width: 760px)').matches;
         // Fetch the clip only once its section is within a screen of view, and
@@ -252,7 +338,8 @@ const FAQ: [string, string][] = [
         render(measure());
       };
       const render = (p) => {
-        if (video && video.duration && !Number.isNaN(video.duration)) seekTo(p * video.duration * 0.985);
+        if (frames) frames.show(p * 0.985);
+        else if (video && video.duration && !Number.isNaN(video.duration)) seekTo(p * video.duration * 0.985);
         // Phones: the still holds (a script-driven zoom on the pinned backdrop
         // jittered); desktop pushes in on it until the clip is here.
         else if (still && !lite) still.style.transform = `translate3d(0, ${(-p * (lite ? 2 : 4)).toFixed(2)}%, 0) scale(${(1 + p * (lite ? 0.45 : 0.9)).toFixed(4)})`;
@@ -473,7 +560,7 @@ const FAQ: [string, string][] = [
       ))}
       <div class="hall-card" id="info">
         <SchoolInfo abbr="DTS" apply="dts" email="dts@ywamsiemreap.org"
-          dates={[['Next school', 'January 2027'], ['Arrival', 'January 3, 2027'], ['Departure', 'June 10, 2027'], ['Length', 'Six months']]}
+          dates={[['Arrival', 'January 3, 2027'], ['Departure', 'June 10, 2027'], ['Length', 'Six months']]}
           cost={[['Lecture · Country A', '$2,000'], ['Lecture · Country B', '$1,500'], ['Lecture · Country C', '$620'], ['Outreach', '$1,500 – $2,500']]}
           costNote="Lecture phase by passport country (we'll tell you yours). Outreach depends on where your team goes. Flights not included."
           details={[['Location', 'Siem Reap, Cambodia'], ['Age', '18 and over']]} />
@@ -519,7 +606,7 @@ const FAQ: [string, string][] = [
 
   <CampusTeaser title="Where you will live for six months." />
 
-  <section class="sec faq-sec sec--paper paper-in" id="faq">
+  <section class="sec faq-sec sec--paper paper-focus" id="faq">
     <div class="wrap">
       <div class="reveal">
         <p class="eyebrow">FAQ</p>

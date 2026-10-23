@@ -88,6 +88,30 @@ const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
       };
       init();
       document.addEventListener('astro:page-load', init);
+
+      // Cream sections marked .paper-focus take the whole screen while they
+      // sit across the middle of it (see .paper-focus-layer in sr.css).
+      let focusIo = null;
+      const initFocus = () => {
+        if (focusIo) focusIo.disconnect();
+        document.documentElement.classList.remove('is-paper-focus');
+        const secs = document.querySelectorAll('.paper-focus');
+        if (!secs.length) return;
+        if (!document.querySelector('.paper-focus-layer')) {
+          const layer = document.createElement('div');
+          layer.className = 'paper-focus-layer';
+          layer.setAttribute('aria-hidden', 'true');
+          document.body.appendChild(layer);
+        }
+        const on = new Set();
+        focusIo = new IntersectionObserver((entries) => {
+          entries.forEach((en) => { if (en.isIntersecting) on.add(en.target); else on.delete(en.target); });
+          document.documentElement.classList.toggle('is-paper-focus', on.size > 0);
+        }, { rootMargin: '-50% 0px -50% 0px' });
+        secs.forEach((el) => focusIo.observe(el));
+      };
+      initFocus();
+      document.addEventListener('astro:page-load', initFocus);
     </script>
   </body>
 </html>
