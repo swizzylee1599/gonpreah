@@ -11,13 +11,15 @@ import StaffSupport from '../../components/sr/StaffSupport.astro';
     photo="/images/campus/campus-group.webp" photoPos="50% 45%" mobileFull
     photoAlt="The YWAM Siem Reap community gathered in the campus courtyard" />
 
-  <section class="sec sec--paper" id="profiles">
+  <!-- On the page black, so the cover photo (which fades to black at its
+       foot) runs straight into the profiles with no edge. -->
+  <section class="sec staff-support-sec" id="profiles">
     <div class="wrap">
       <div class="reveal" style="max-width:60ch;">
-        <p class="eyebrow">Building their support team</p>
+        <p class="eyebrow">Our Khmer staff</p>
         <p class="body" style="margin:14px 0 0;">Every staff member here raises their own support. For Cambodian staff that is the hardest part of the call. A monthly gift of any size goes directly to the person you choose.</p>
       </div>
-      <StaffSupport />
+      <StaffSupport all dark />
     </div>
   </section>
 

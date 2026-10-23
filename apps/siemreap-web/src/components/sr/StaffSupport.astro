@@ -1,32 +1,52 @@
 ---
-// Support profiles for the Khmer staff who are raising support: portrait,
-// story, progress toward their monthly goal, and a Give button in their
-// name. Used on /give/staff and on the Give page. A staff member appears
-// here once they have a `support` entry in src/lib/sr-team.ts.
+// Support profiles for our Khmer staff, each with a Give button in their
+// name. Staff with a `support` entry in src/lib/sr-team.ts (story and
+// monthly goal) come first and show their story and progress; with `all`,
+// every other Khmer staff member follows with their photo, role and Give
+// button. Used on /give/staff (all, on black) and the Give page (featured).
 import { existsSync } from 'node:fs';
-import { TEAM, photo, type Member } from '../../lib/sr-team';
+import { TEAM, type Member } from '../../lib/sr-team';
 import { GIVE_URL } from '../../lib/sr-routes';
 import { srcset } from '../../lib/sr-img';
 
-const supported = TEAM.filter((m) => m.support);
-// The newer team portraits where there is one; the older photo otherwise.
-const pic = (m: Member) => (existsSync(`public/images/team/portraits/${m.slug}.webp`) ? `/images/team/portraits/${m.slug}.webp` : photo(m));
+interface Props {
+  /** Every Khmer staff member, not just those with a support profile. */
+  all?: boolean;
+  /** Dark cards, for a black section. */
+  dark?: boolean;
+}
+const { all = false, dark = false } = Astro.props;
+
+const khmer = TEAM.filter((m) => m.khmer);
+const people = all ? [...khmer.filter((m) => m.support), ...khmer.filter((m) => !m.support)] : TEAM.filter((m) => m.support);
+
+// The newer team portrait where there is one, then the older photo (some
+// were saved under earlier spellings), then none: an empty frame.
+const OLD: Record<string, string> = { 'nou-eh': 'no-eh', 'hannah-thorn': 'sreynit-thorn', 'bunnall-bee': 'nall-bee' };
+const pic = (m: Member) => {
+  if (existsSync(`public/images/team/portraits/${m.slug}.webp`)) return `/images/team/portraits/${m.slug}.webp`;
+  const old = OLD[m.slug] ?? m.slug;
+  return existsSync(`public/images/team/${old}.webp`) ? `/images/team/${old}.webp` : null;
+};
 // "Kimla", "Yang & Sreyleak", "Yi & Esther"
 const first = (m: Member) => m.name.split(' & ').map((n) => n.split(' ')[0]).join(' & ');
 ---
-<div class="supporters stag">
-  {supported.map((m) => {
-    const s = m.support!;
-    const pct = Math.round(Math.min(1, s.now / s.goal) * 100);
+<div class:list={['supporters', 'stag', { 'supporters--dark': dark }]}>
+  {people.map((m) => {
+    const s = m.support;
+    const pct = s ? Math.round(Math.min(1, s.now / s.goal) * 100) : 0;
+    const src = pic(m);
     return (
-      <article class="supporter" id={m.slug}>
-        <img src={pic(m)} srcset={pic(m).includes('/portraits/') ? srcset(pic(m)) : undefined} sizes="(max-width: 760px) 100vw, 33vw" alt={m.name} loading="lazy" decoding="async" />
+      <article class:list={['supporter', { 'supporter--short': !s }]} id={m.slug}>
+        {src
+          ? <img src={src} srcset={src.includes('/portraits/') ? srcset(src) : undefined} sizes="(max-width: 760px) 100vw, 33vw" alt={m.name} loading="lazy" decoding="async" />
+          : <div class="supporter-slot" aria-hidden="true"><span>Photo coming</span></div>}
         <div class="supporter-body">
           <p class="eyebrow">{m.role}</p>
           <h3 class="disp" style="margin:8px 0 0;font-size:24px;font-weight:500;">{m.name}</h3>
-          <p class="body" style="margin:12px 0 0;font-size:15px;">{s.story}</p>
-          <div class="support-bar" role="img" aria-label={`${pct}% of monthly goal`}><i style={`width:${pct}%`}></i></div>
-          <p class="support-nums"><b>${s.now}</b> of <b>${s.goal}</b> a month{s.now === 0 ? ' · just starting' : ''}</p>
+          {s && <p class="body" style="margin:12px 0 0;font-size:15px;">{s.story}</p>}
+          {s && <div class="support-bar" role="img" aria-label={`${pct}% of monthly goal`}><i style={`width:${pct}%`}></i></div>}
+          {s && <p class="support-nums"><b>${s.now}</b> of <b>${s.goal}</b> a month{s.now === 0 ? ' · just starting' : ''}</p>}
           <a class="btn btn--solid" href={`${GIVE_URL}&memo=${encodeURIComponent(m.name)}`} target="_blank" rel="noopener">Give to {first(m)} ↗︎</a>
         </div>
       </article>

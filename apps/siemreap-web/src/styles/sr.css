@@ -1457,6 +1457,20 @@ body.sr {
 .sr .support-bar i { display: block; height: 100%; background: #0b0b0b; border-radius: 999px; }
 .sr .support-nums { margin: 8px 0 16px; font-size: 13px; color: #6f6a62; }
 .sr .support-nums b { color: #0b0b0b; font-weight: 600; }
+.sr .supporter-body .btn { align-self: flex-start; margin-top: auto; }
+.sr .supporter--short .supporter-body .btn { margin-top: 18px; }
+.sr .supporter-slot { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: repeating-linear-gradient(135deg, #ece7dd 0 14px, #e6e0d4 14px 28px); }
+.sr .supporter-slot span { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #9a9184; }
+/* Dark cards (Khmer staff page, on the page black). */
+.sr .staff-support-sec { padding-top: 24px; }
+.sr .supporters--dark .supporter { background: var(--sr-raise); border-color: #232323; color: #fff; }
+.sr .supporters--dark .supporter .eyebrow { color: #9a9a9a; }
+.sr .supporters--dark .support-bar { background: rgba(255, 255, 255, .12); }
+.sr .supporters--dark .support-bar i { background: #fff; }
+.sr .supporters--dark .support-nums { color: #9a9a9a; }
+.sr .supporters--dark .support-nums b { color: #fff; }
+.sr .supporters--dark .supporter-slot { background: repeating-linear-gradient(135deg, #151515 0 14px, #171717 14px 28px); }
+.sr .supporters--dark .supporter-slot span { color: #555; }
 /* Bring a team */
 .sr .prep-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 36px; margin-top: 30px; }
 .sr .prep-item { padding-top: 16px; border-top: 1px solid rgba(11,11,11,.18); }

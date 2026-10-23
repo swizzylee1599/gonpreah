@@ -83,7 +83,11 @@ const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
         const els = document.querySelectorAll('.reveal, .stag, .linein, .wipe, .riseup, .scaleup, .growrule, .io-in, .culture-item, .road-line');
         io = new IntersectionObserver((entries) => {
           entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
-        }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+        // threshold 0: reveal as soon as any of it crosses the line. A share
+        // of the element (it was 8%) can never be reached by a group taller
+        // than about twelve screens' worth, e.g. a long grid of cards on a
+        // phone, which then stayed invisible.
+        }, { rootMargin: '0px 0px -12% 0px', threshold: 0 });
         els.forEach((el) => io.observe(el));
       };
       init();
