@@ -13,7 +13,7 @@ const PORTRAITS = 'public/images/team/portraits/';
 const portrait = (slug: string) => (existsSync(`${PORTRAITS}${slug}.webp`) ? `/images/team/portraits/${slug}.webp` : null);
 // Everyone in one grid, no departments and no separate leadership section:
 // couples and families serve in different ministries, so they stay on one
-// wide card with each person's role, and leaders (who also serve on staff)
+// wide card, and leaders (who also serve on staff)
 // are marked with a Leadership tag rather than set apart. Leaders come last.
 const SECTIONS: { title: string; id: string; members: Member[] }[] = [
   { title: 'Our staff', id: 'staff', members: [...TEAM.filter((m) => !m.lead), ...TEAM.filter((m) => m.lead)] },
@@ -72,9 +72,6 @@ const nations = 5;
                     </span>
                   )}
                   <span class="disp tm-name">{m.name}</span>
-                  {m.with
-                    ? <span class="tm-with">{m.with.map(([who, what]) => <span class="tm-role"><b>{who}</b> · {what}</span>)}</span>
-                    : m.role && <span class="tm-role">{m.role}</span>}
                 </figcaption>
               </div>
             </figure>
