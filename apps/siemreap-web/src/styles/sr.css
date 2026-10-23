@@ -1798,6 +1798,8 @@ body.sr {
   /* Join staff: the heading sits low so her face shows above it. */
   .sr .pagehead--staff { align-items: flex-end; padding-bottom: 70px; }
   .sr .pagehead--staff .pagehead-photo { object-position: 64% 30% !important; }
+  /* DBS: centre the girl in the grey shirt (about 30% across the photo). */
+  .sr .pagehead--dbs .pagehead-photo { object-position: 16% 40% !important; }
   .sr .tm-hero { min-height: 78svh; }
   .sr .tm-hero-copy { padding-top: 120px; padding-bottom: 40px; }
   .sr .tm-title { font-size: clamp(42px, 13vw, 60px); }
