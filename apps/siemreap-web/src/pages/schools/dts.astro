@@ -1,6 +1,7 @@
 ---
 import { applyUrl } from '../../lib/sr-routes';
 import { srcset } from '../../lib/sr-img';
+import SchoolInfo from '../../components/sr/SchoolInfo.astro';
 import SrLayout from '../../layouts/SrLayout.astro';
 import Footer from '../../components/sr/Footer.astro';
 import PageHead from '../../components/sr/PageHead.astro';
@@ -67,19 +68,7 @@ const PHASES: { eyebrow: string; title: string; body: string[]; photos: Photo[] 
 // is uploaded to public/video the still photo zooms in as a stand-in.
 const HALL_VIDEO: string | null = '/video/dts-hallway.mp4';
 
-const INFO: [string, string][] = [
-  ['Next school', 'January 2027'],
-  ['Location', 'Siem Reap, Cambodia'],
-  ['Arrival day', 'January 3, 2027'],
-  ['Departure day', 'June 10, 2027'],
-  ['Prerequisites', 'Must be 18+'],
-];
 
-const LECTURE_COST: [string, string][] = [
-  ['Country A', '$2,000 USD'],
-  ['Country B', '$1,500 USD'],
-  ['Country C', '$620 USD'],
-];
 
 // Tracks: a skill each student chooses to develop through the school.
 // Culinary and Hospitality lines are drafts to be confirmed.
@@ -103,10 +92,9 @@ const FAQ: [string, string][] = [
   ['What happens after DTS?', 'DTS is the entry point to the University of the Nations. Many students go on to further schools, join staff at a YWAM base, or take what they have learned back into their church, work and city.'],
 ];
 ---
-<SrLayout title="Discipleship Training School | YWAM Siem Reap" spacer={false}
+<SrLayout title="Discipleship Training School | YWAM Siem Reap" spacer={false} accent="#0584f9"
   description="A six-month Discipleship Training School in Siem Reap, Cambodia: three months of lecture, then three months on outreach to the nations. Know God and make Him known.">
-  <PageHead eyebrow="Discipleship Training School · DTS" km="អត្តសញ្ញាណ" title="Discover your identity. Know your purpose." highlight="Know your purpose."
-    lead="Discover your identity in Christ and know your purpose in the world."
+  <PageHead eyebrow="Discipleship Training School · DTS" km="អត្តសញ្ញាណ" title="Discover your identity. Know your purpose." highlight="Know your purpose." rule={false} video
     photo="/images/gonpreah-worship-2.webp" photoPos="28% 35%" mobileFull
     photoAlt="Students and staff worshipping on campus with hands raised under string lights" />
 
@@ -162,6 +150,84 @@ const FAQ: [string, string][] = [
     const INTRO_HOLD = 0.08, INTRO_FADE = 0.12;
     const clamp01 = (v) => Math.min(1, Math.max(0, v));
     const smooth = (t) => t * t * (3 - 2 * t);
+    // The hallway walk as still frames (public/video/dts-hallway-frames,
+    // 12 per second of the clip) drawn to fill a canvas like the video did
+    // (object-fit: cover, 50% 59%). Frames load once the hallway is within a
+    // screen of view, coarse first (every 64th, then 32nd, ...) so the walk
+    // works straight away and sharpens as the rest arrive.
+    const FRAME_COUNT = 121;
+    const frameSrc = (i) => `/video/dts-hallway-frames/${String(i).padStart(3, '0')}.webp`;
+    const hallFrames = (hall, still, signal) => {
+      const bg = hall.querySelector('.hall-bg');
+      let canvas = bg.querySelector('.hall-canvas');
+      if (!canvas) {
+        canvas = document.createElement('canvas');
+        canvas.className = 'hall-canvas';
+        canvas.setAttribute('aria-hidden', 'true');
+        bg.appendChild(canvas);
+      }
+      const ctx = canvas.getContext('2d');
+      const imgs = new Array(FRAME_COUNT);
+      let want = 0, shown = -1, width = 0;
+      const nearest = (i) => {
+        for (let d = 0; d < FRAME_COUNT; d++) {
+          if (imgs[i - d]) return i - d;
+          if (imgs[i + d]) return i + d;
+        }
+        return -1;
+      };
+      const draw = () => {
+        const k = nearest(want);
+        if (k < 0 || k === shown || !canvas.width) return;
+        const im = imgs[k];
+        const cw = canvas.width, ch = canvas.height;
+        const sc = Math.max(cw / im.naturalWidth, ch / im.naturalHeight);
+        const w = im.naturalWidth * sc, h = im.naturalHeight * sc;
+        ctx.drawImage(im, (cw - w) * 0.5, (ch - h) * 0.59, w, h);
+        if (shown < 0 && still) still.style.opacity = '0';
+        shown = k;
+      };
+      const size = () => {
+        const r = canvas.getBoundingClientRect();
+        if (!r.width || r.width === width) return;
+        width = r.width;
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        canvas.width = Math.round(r.width * dpr);
+        canvas.height = Math.round(r.height * dpr);
+        shown = -1;
+        draw();
+      };
+      // coarse-to-fine load order
+      const order = [];
+      for (let step = 64; step >= 1; step /= 2) for (let i = 0; i < FRAME_COUNT; i += step) if (!order.includes(i)) order.push(i);
+      if (!order.includes(FRAME_COUNT - 1)) order.splice(1, 0, FRAME_COUNT - 1);
+      const load = async () => {
+        let next = 0;
+        const worker = async () => {
+          while (next < order.length && !signal.aborted) {
+            const i = order[next++];
+            const im = new Image();
+            im.src = frameSrc(i);
+            try { await im.decode(); } catch { continue; }
+            if (signal.aborted) return;
+            imgs[i] = im;
+            draw(); // a nearer frame may have arrived (draw does nothing if not)
+          }
+        };
+        await Promise.all(Array.from({ length: 6 }, worker));
+      };
+      const near = new IntersectionObserver((en) => { if (en[0].isIntersecting) { near.disconnect(); size(); load(); } }, { rootMargin: '100% 0px' });
+      near.observe(hall);
+      signal.addEventListener('abort', () => near.disconnect());
+      window.addEventListener('resize', size, { signal });
+      return {
+        show(t) {
+          want = Math.max(0, Math.min(FRAME_COUNT - 1, Math.round(t * (FRAME_COUNT - 1))));
+          if (!width) size();
+          draw();
+        },
+      };
+    };
     const initHall = (signal) => {
       const hall = document.querySelector('.hall-stack');
       if (!hall || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -170,11 +236,34 @@ const FAQ: [string, string][] = [
       // and no blur filters, which are costly there.
       const lite = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
       let video = hall.querySelector('.hall-video');
+      // Phones and touch screens: the walk is a set of still frames drawn on a
+      // canvas instead of a video. Seeking a video on each scroll step
+      // delivered frames unevenly and the hallway shook; a frame from memory
+      // is instant and always the right one.
+      let frames = null;
+      // (The video stays in the page, unloaded and hidden, so this still works
+      // when the setup runs again after a page change.)
+      if (lite && video) { video.hidden = true; video = null; frames = hallFrames(hall, still, signal); }
       if (video) {
         const phone = matchMedia('(max-width: 760px)').matches;
-        // Fetch the clip only once its section is within a screen of view.
-        const startClip = () => {
-          video.src = `${(phone && video.dataset.srcMobile) || video.dataset.src}#t=0.001`;
+        // Fetch the clip only once its section is within a screen of view, and
+        // fetch it whole, then play it from memory: seeking a streamed clip
+        // waits on the network, so the walk trailed the finger and kept
+        // moving after you stopped. Falls back to streaming if the download
+        // fails.
+        const startClip = async () => {
+          const src = (phone && video.dataset.srcMobile) || video.dataset.src;
+          try {
+            const res = await fetch(src);
+            if (!res.ok) throw new Error(String(res.status));
+            const url = URL.createObjectURL(await res.blob());
+            signal.addEventListener('abort', () => URL.revokeObjectURL(url));
+            if (!video || signal.aborted) return;
+            video.src = url;
+          } catch {
+            if (!video || signal.aborted) return;
+            video.src = `${src}#t=0.001`;
+          }
           video.load();
         };
         const near = new IntersectionObserver((en) => { if (en[0].isIntersecting) { near.disconnect(); startClip(); } }, { rootMargin: '100% 0px' });
@@ -198,12 +287,10 @@ const FAQ: [string, string][] = [
         card = null;
         pEnd = HALL_PHASES[HALL_PHASES.length - 1][1] + 0.02;
       }
-      // Phones and touch screens: the hallway video holds as a sticky
-      // backdrop and the intro, copy and photo collages scroll over it as
-      // ordinary blocks (laid out in CSS under the same media condition as
-      // \`lite\`), so nothing is positioned by script and nothing can trail
-      // the finger. The script only plays the walk along with the scroll.
-      const native = lite;
+      // Phones and touch screens: the hallway stays pinned and each part
+      // fades away in place as the next fades in. Fades only, never movement
+      // or scale: a fade that lands a frame late can't look like a jump.
+      const fadeout = hall.querySelector('.hall-fadeout');
       const copies = [...hall.querySelectorAll('.hall-copy')];
       const rows = [...hall.querySelectorAll('.hall-photos')].map((el) => ({
         el, phase: +el.dataset.phase, items: [...el.querySelectorAll('.hall-photo')],
@@ -219,11 +306,17 @@ const FAQ: [string, string][] = [
       };
       if (video) {
         // The still stays underneath until the clip has decoded a frame, and takes over again if the clip fails.
+        // The walk only ever moves with the scroll: after this one play to wake
+        // the decoder, any playback (an autoplay policy, a resumed tab) is
+        // paused straight away.
+        let primed = false;
         const prime = () => {
           const p = video.play();
-          if (p && p.then) p.then(() => video.pause()).catch(() => {});
+          if (p && p.then) p.then(() => { video.pause(); primed = true; }).catch(() => { primed = true; });
+          else primed = true;
           if (still) still.style.opacity = '0';
         };
+        video.addEventListener('play', () => { if (primed) video.pause(); }, { signal });
         if (video.readyState >= 2) prime(); else video.addEventListener('loadeddata', prime, { once: true, signal });
         // When autoplay is blocked (Low Power Mode, data saver), the first touch starts it.
         const unlock = () => { if (video && video.readyState < 2) { video.load(); prime(); } };
@@ -234,10 +327,6 @@ const FAQ: [string, string][] = [
 
       const measure = () => {
         const rect = hall.getBoundingClientRect();
-        if (native) {
-          const run = rect.height - stableVh();
-          return run <= 0 ? 0 : clamp01(-rect.top / run) * pEnd;
-        }
         const scrollable = rect.height - (pin ? pin.offsetHeight : window.innerHeight);
         return scrollable <= 0 ? 0 : clamp01((-rect.top / scrollable) * pEnd);
       };
@@ -249,17 +338,21 @@ const FAQ: [string, string][] = [
         render(measure());
       };
       const render = (p) => {
-        if (video && video.duration && !Number.isNaN(video.duration)) seekTo(p * video.duration * 0.985);
-        else if (still) still.style.transform = `translate3d(0, ${(-p * (lite ? 2 : 4)).toFixed(2)}%, 0) scale(${(1 + p * (lite ? 0.45 : 0.9)).toFixed(4)})`;
-        if (native) return;
+        if (frames) frames.show(p * 0.985);
+        else if (video && video.duration && !Number.isNaN(video.duration)) seekTo(p * video.duration * 0.985);
+        // Phones: the still holds (a script-driven zoom on the pinned backdrop
+        // jittered); desktop pushes in on it until the clip is here.
+        else if (still && !lite) still.style.transform = `translate3d(0, ${(-p * (lite ? 2 : 4)).toFixed(2)}%, 0) scale(${(1 + p * (lite ? 0.45 : 0.9)).toFixed(4)})`;
+        // Phones: the walk's last stretch dims to black as the information
+        // card rises over it.
+        if (lite && fadeout) fadeout.style.opacity = smooth(clamp01((p / pEnd - 0.78) / 0.14)).toFixed(3);
 
         const io = clamp01((p - INTRO_HOLD) / INTRO_FADE);
         intro.style.opacity = String(1 - io);
-        // Touch screens: no scaling of text. Safari re-rasterises text every
-        // time its scale changes, which reads as a shimmer while scrolling;
-        // whole-pixel movement and a fade are steady.
+        // Touch screens: fade only. Scaled text shimmers in Safari, and
+        // movement trailed the finger during a flick.
         intro.style.transform = lite
-          ? `translate(-50%,-50%) translateY(${Math.round(-io * 40)}px)`
+          ? 'translate(-50%,-50%)'
           : `translate(-50%,-50%) scale(${(1 + io * 0.25).toFixed(3)})`;
         intro.style.filter = (!lite && io) ? `blur(${(io * 6).toFixed(1)}px)` : '';
         intro.style.pointerEvents = io > 0.5 ? 'none' : '';
@@ -276,10 +369,8 @@ const FAQ: [string, string][] = [
           }
           el.style.opacity = String(op);
           if (lite) {
-            // Rise in, hold, lift away; never scale.
-            let y = 0;
-            if (t > 0 && t < 1) { if (t < 0.55) y = 60 * (1 - smooth(t / 0.55)); else if (t >= 0.82) y = -50 * smooth((t - 0.82) / 0.18); }
-            el.style.transform = `translate(-50%,-50%) translateY(${Math.round(y)}px)`;
+            // Fade in, hold, fade out, in place.
+            el.style.transform = 'translate(-50%,-50%)';
           } else {
             el.style.transform = `translate(-50%,-50%) scale(${scale.toFixed(3)})`;
           }
@@ -311,7 +402,10 @@ const FAQ: [string, string][] = [
               else { const v = (tk - 0.86) / 0.14; scale = 1 + 0.18 * v; op = 1 - smooth(v); y = -20 * v; blur = v * 5; }
             }
             item.style.opacity = op.toFixed(3);
-            item.style.transform = `translate3d(0, ${lite ? Math.round(y) : y.toFixed(1)}px, 0) rotate(var(--r, 0deg)) scale(${scale.toFixed(3)})`;
+            // Touch screens: each photo just fades in and out at its spot.
+            item.style.transform = lite
+              ? 'rotate(var(--r, 0deg))'
+              : `translate3d(0, ${y.toFixed(1)}px, 0) rotate(var(--r, 0deg)) scale(${scale.toFixed(3)})`;
             item.style.filter = (!lite && blur) ? `blur(${blur.toFixed(1)}px)` : '';
           });
         });
@@ -329,6 +423,38 @@ const FAQ: [string, string][] = [
       const { signal } = ctrl;
 
       initHall(signal);
+
+      // Tracks on phones: a swipeable row with arrow buttons and a counter.
+      // The arrows slide one card at a time and dim at either end.
+      const row = document.querySelector('.tracks');
+      const prevBtn = document.querySelector('[data-tracks-prev]');
+      const nextBtn = document.querySelector('[data-tracks-next]');
+      const countEl = document.querySelector('[data-tracks-n]');
+      if (row && prevBtn && nextBtn) {
+        const cards = [...row.children];
+        const current = () => {
+          let best = 0, bestD = Infinity;
+          const left = row.getBoundingClientRect().left;
+          cards.forEach((c, i) => { const d = Math.abs(c.getBoundingClientRect().left - left - 20); if (d < bestD) { bestD = d; best = i; } });
+          return best;
+        };
+        const go = (i) => {
+          const c = cards[Math.max(0, Math.min(cards.length - 1, i))];
+          row.scrollTo({ left: c.offsetLeft - row.firstElementChild.offsetLeft, behavior: 'smooth' });
+        };
+        const sync = () => {
+          const i = current();
+          if (countEl) countEl.textContent = String(i + 1).padStart(2, '0');
+          const atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 4;
+          prevBtn.disabled = i === 0 && row.scrollLeft < 4;
+          nextBtn.disabled = atEnd;
+        };
+        prevBtn.addEventListener('click', () => go(current() - 1), { signal });
+        nextBtn.addEventListener('click', () => go(current() + 1), { signal });
+        let sraf = 0;
+        row.addEventListener('scroll', () => { if (!sraf) sraf = requestAnimationFrame(() => { sraf = 0; sync(); }); }, { passive: true, signal });
+        sync();
+      }
 
       const stack = document.querySelector('.journey-stack');
       if (!stack) return;
@@ -383,12 +509,13 @@ const FAQ: [string, string][] = [
         });
         if (bar) bar.style.transform = `scaleX(${Math.min(1, p / STEPS_END)})`;
         const ease = exit * exit * (3 - 2 * exit);
-        if (head) {
-          if (fadeOnly) head.style.opacity = String(1 - ease);
-          else head.style.transform = `translateX(${ease * 110}vw)`;
+        // Phones: no exit fade; the breakdown panel slides up over the stepper
+        // while it stays crisp underneath (a fade here read as a dark smear).
+        if (!fadeOnly) {
+          if (head) head.style.transform = `translateX(${ease * 110}vw)`;
+          if (grid) grid.style.opacity = String(1 - ease);
+          if (rail) rail.style.opacity = String(1 - ease);
         }
-        if (grid) grid.style.opacity = String(1 - ease);
-        if (rail) rail.style.opacity = String(1 - ease);
       };
       const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
       update();
@@ -403,9 +530,10 @@ const FAQ: [string, string][] = [
     <div class="hall-pin">
       <div class="hall-bg" aria-hidden="true">
         <img class="hall-still" src="/images/schools/dts-hallway-start.webp" srcset="/images/schools/dts-hallway-start-800.webp 800w, /images/schools/dts-hallway-start.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="" decoding="async" />
-        {HALL_VIDEO && <video class="hall-video" data-src={HALL_VIDEO} data-src-mobile={HALL_VIDEO.replace(/\.mp4$/, '-mobile.mp4')} muted autoplay playsinline webkit-playsinline preload="none"></video>}
+        {HALL_VIDEO && <video class="hall-video" data-src={HALL_VIDEO} data-src-mobile={HALL_VIDEO.replace(/\.mp4$/, '-mobile.mp4')} muted playsinline webkit-playsinline preload="none"></video>}
       </div>
       <div class="hall-scrim" aria-hidden="true"></div>
+      <div class="hall-fadeout" aria-hidden="true"></div>
       {PHASES.map((phase, p) => (
         <div class="hall-photos" data-phase={p}>
           {phase.photos.map((photo) => (
@@ -431,43 +559,11 @@ const FAQ: [string, string][] = [
         </div>
       ))}
       <div class="hall-card" id="info">
-        <div class="card info">
-          <div class="info-grid">
-            <div>
-              <p class="eyebrow">DTS information</p>
-              <dl class="info-list">
-                {INFO.map(([k, v]) => (
-                  <div>
-                    <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">{k}</dt>
-                    <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;">{v}</dd>
-                  </div>
-                ))}
-                <div>
-                  <dt class="muted" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;">Email</dt>
-                  <dd class="disp" style="margin:8px 0 0;font-size:20px;font-weight:500;line-height:1.3;text-transform:none;letter-spacing:0;"><a href="mailto:dts@ywamsiemreap.org" style="color:inherit;text-decoration:none;">dts@ywamsiemreap.org</a></dd>
-                </div>
-              </dl>
-            </div>
-            <div class="info-cost">
-              <p class="eyebrow">Cost of the school</p>
-              <p class="disp" style="margin:22px 0 0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#dcdcdc;">Lecture phase · 3 months</p>
-              <dl class="cost-list">
-                {LECTURE_COST.map(([k, v]) => (
-                  <div><dt class="body" style="margin:0;font-size:16px;">{k}</dt><dd class="disp" style="margin:0;font-size:20px;font-weight:500;">{v}</dd></div>
-                ))}
-              </dl>
-              <p class="muted" style="margin:12px 0 0;font-size:13px;">Flights are not included.</p>
-              <p class="disp" style="margin:28px 0 0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#dcdcdc;">Outreach phase · 3 months</p>
-              <p class="disp" style="margin:12px 0 0;font-size:20px;font-weight:500;">$1,500 – $2,500 USD</p>
-              <p class="muted" style="margin:6px 0 0;font-size:13px;">Depending on outreach location.</p>
-            </div>
-          </div>
-          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:36px;">
-            <a class="btn btn--solid" href={applyUrl('dts')} target="_blank" rel="noopener">Apply for DTS ↗︎</a>
-            <a class="btn" href="mailto:dts@ywamsiemreap.org">Email the DTS team</a>
-            <a class="btn btn--plain" href="/campus-life">Campus life</a>
-          </div>
-        </div>
+        <SchoolInfo abbr="DTS" apply="dts" email="dts@ywamsiemreap.org"
+          dates={[['Arrival', 'January 3, 2027'], ['Departure', 'June 10, 2027'], ['Length', 'Six months']]}
+          cost={[['Lecture · Country A', '$2,000'], ['Lecture · Country B', '$1,500'], ['Lecture · Country C', '$620'], ['Outreach', '$1,500 – $2,500']]}
+          costNote="Lecture phase by passport country (we'll tell you yours). Outreach depends on where your team goes. Flights not included."
+          details={[['Location', 'Siem Reap, Cambodia'], ['Age', '18 and over']]} />
       </div>
     </div>
   </section>
@@ -481,7 +577,13 @@ const FAQ: [string, string][] = [
         </div>
         <p class="body" style="margin:0;max-width:44ch;">Alongside lectures, every student chooses a track — a practical skill to develop through the six months and carry into the world.</p>
       </div>
-      <p class="muted tracks-hint" aria-hidden="true">Swipe →</p>
+      <div class="tracks-nav" aria-label="Browse tracks">
+        <span class="tracks-count" aria-live="polite"><b data-tracks-n>01</b> / {String(TRACKS.length).padStart(2, '0')}</span>
+        <span class="tracks-btns">
+          <button type="button" class="cl-hs-btn" data-tracks-prev aria-label="Previous track">←</button>
+          <button type="button" class="cl-hs-btn" data-tracks-next aria-label="Next track">→</button>
+        </span>
+      </div>
       <ul class="tracks stag">
         {TRACKS.map((t, i) => (
           <li class="track">
@@ -504,7 +606,7 @@ const FAQ: [string, string][] = [
 
   <CampusTeaser title="Where you will live for six months." />
 
-  <section class="sec faq-sec sec--paper" id="faq">
+  <section class="sec faq-sec sec--paper paper-screen" id="faq">
     <div class="wrap">
       <div class="reveal">
         <p class="eyebrow">FAQ</p>

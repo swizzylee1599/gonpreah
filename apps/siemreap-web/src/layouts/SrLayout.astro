@@ -11,6 +11,8 @@ interface Props {
   noindex?: boolean;
   /** Share-preview image (absolute path); default is the campus aerial. */
   image?: string;
+  /** A page's accent colour (labels, highlights, buttons), e.g. DTS blue. */
+  accent?: string;
 }
 const {
   title,
@@ -18,13 +20,14 @@ const {
   spacer = true,
   noindex = false,
   image = '/images/campus/campus-aerial-wide.webp',
+  accent,
 } = Astro.props;
 const pageUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://ywamsiemreap.org').href;
 const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
 ---
 
 <!doctype html>
-<html lang="en" class="sr">
+<html lang="en" class:list={['sr', { 'sr--accent': accent }]} style={accent ? `--sr-pink:${accent}` : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -55,6 +58,21 @@ const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
         };
         swap(); document.addEventListener('astro:page-load', swap);
       })();
+      // Lists marked data-shuffle (the Khmer staff profiles) come in a new
+      // order on every visit. The component shuffles its own list as it is
+      // parsed; this covers pages reached by an in-site link, where the new
+      // page is swapped in (and shuffled before it is shown).
+      (function () {
+        var shuffle = function () {
+          document.querySelectorAll('[data-shuffle]:not([data-shuffled])').forEach(function (g) {
+            g.dataset.shuffled = '1';
+            var c = Array.prototype.slice.call(g.children);
+            for (var i = c.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = c[i]; c[i] = c[j]; c[j] = t; }
+            c.forEach(function (n) { g.appendChild(n); });
+          });
+        };
+        document.addEventListener('astro:after-swap', shuffle);
+      })();
     </script>
   </head>
   <body class="sr">
@@ -80,11 +98,52 @@ const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
         const els = document.querySelectorAll('.reveal, .stag, .linein, .wipe, .riseup, .scaleup, .growrule, .io-in, .culture-item, .road-line');
         io = new IntersectionObserver((entries) => {
           entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
-        }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+        // threshold 0: reveal as soon as any of it crosses the line. A share
+        // of the element (it was 8%) can never be reached by a group taller
+        // than about twelve screens' worth, e.g. a long grid of cards on a
+        // phone, which then stayed invisible.
+        }, { rootMargin: '0px 0px -12% 0px', threshold: 0 });
         els.forEach((el) => io.observe(el));
       };
       init();
       document.addEventListener('astro:page-load', init);
+
+      // Cream sections marked .paper-screen arrive out of the page black: the
+      // section's own background moves from black to cream as it rises into
+      // view (fully cream once its top is near the top of the screen), so it
+      // reads as its own section turning the screen cream. The sections
+      // around it are untouched. Scroll-linked, colour only.
+      let paperOff = null;
+      const initPaper = () => {
+        if (paperOff) paperOff();
+        paperOff = null;
+        document.documentElement.classList.remove('is-paper-focus');
+        const secs = [...document.querySelectorAll('.paper-screen')];
+        if (!secs.length) return;
+        const INK = [11, 11, 11], PAPER = [243, 239, 231];
+        const c01 = (v) => Math.min(1, Math.max(0, v));
+        let raf = 0;
+        const update = () => {
+          raf = 0;
+          const vh = innerHeight;
+          let navOver = false;
+          for (const el of secs) {
+            const r = el.getBoundingClientRect();
+            let t = c01((vh - r.top) / (vh * 0.85));
+            t = t * t * (3 - 2 * t);
+            el.style.backgroundColor = `rgb(${INK.map((v, i) => Math.round(v + (PAPER[i] - v) * t)).join(',')})`;
+            if (t > 0.6 && r.top < 70 && r.bottom > 70) navOver = true;
+          }
+          document.documentElement.classList.toggle('is-paper-focus', navOver);
+        };
+        const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+        addEventListener('scroll', onScroll, { passive: true });
+        addEventListener('resize', onScroll);
+        paperOff = () => { removeEventListener('scroll', onScroll); removeEventListener('resize', onScroll); cancelAnimationFrame(raf); };
+        update();
+      };
+      initPaper();
+      document.addEventListener('astro:page-load', initPaper);
     </script>
   </body>
 </html>

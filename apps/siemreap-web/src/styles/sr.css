@@ -240,7 +240,10 @@ body.sr {
 .sr .hall-bg { position: absolute; inset: 0; }
 .sr .hall-bg img, .sr .hall-bg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 59%; transform-origin: 50% 50%; will-change: transform; display: block; }
 .sr .hall-still { transition: opacity .6s ease; }
+.sr .hall-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .sr .hall-scrim { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(11,11,11,.3) 0%, rgba(11,11,11,.7) 55%, rgba(11,11,11,.92) 100%); }
+/* Phones only (below): the end of the walk dims to black. */
+.sr .hall-fadeout { display: none; }
 .sr .hall-photos {
   position: absolute; left: 50%; top: 49%; transform: translateX(-50%);
   width: min(94vw, 1180px); height: 46vh; pointer-events: none;
@@ -308,6 +311,32 @@ body.sr {
 .sr .info-list a { word-break: break-all; }
 .sr .cost-list { margin: 14px 0 0; display: flex; flex-direction: column; gap: 10px; }
 .sr .cost-list > div { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; padding-bottom: 10px; border-bottom: 1px solid #232323; }
+/* The information card on every school page (SchoolInfo.astro): Dates,
+   Cost and Details side by side, then Apply. */
+.sr .school-info .si-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px 44px; margin-top: 22px; }
+.sr .si-title { margin: 0 0 6px; font-family: var(--gp-font-display); font-size: 13px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: #fff; }
+.sr .si-list { margin: 0; }
+.sr .si-list > div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 11px 0; border-bottom: 1px solid #232323; }
+.sr .si-list dt { font-size: 14px; color: var(--gp-grey); }
+.sr .si-list dd { margin: 0; font-family: var(--gp-font-display); font-size: 16px; font-weight: 500; text-align: right; overflow-wrap: anywhere; }
+.sr .si-list a { color: inherit; text-decoration: none; font-size: 14px; }
+.sr .si-note { margin: 10px 0 0; font-size: 13px; line-height: 1.5; color: var(--gp-grey); }
+.sr .si-actions { display: flex; align-items: center; gap: 14px 22px; flex-wrap: wrap; margin-top: 30px; }
+.sr .si-link { font-size: 14px; color: #dcdcdc; text-decoration: underline; text-underline-offset: 3px; }
+.sr .si-partner { margin: 18px 4px 0; font-size: 14px; line-height: 1.6; color: var(--gp-grey); }
+.sr .si-partner a { color: #fff; text-underline-offset: 3px; }
+/* A cream section that rises out of the page black (.paper-screen): its
+   background moves from black to cream as it scrolls in (SrLayout's script),
+   and it fills at least the screen so it reads as its own section. */
+.sr .paper-screen { min-height: 100vh; min-height: 100svh; box-sizing: border-box; }
+/* Over the cream page the menu bar shows in black (inverted), not white,
+   unless the menu is open. */
+.sr nav.sr-nav { transition: transform .42s cubic-bezier(.22,.61,.36,1), background .3s ease, border-color .3s ease, filter .6s ease; }
+.sr.is-paper-focus nav.sr-nav:not(.is-mobile-open) { filter: invert(1); }
+@media (max-width: 900px) { .sr .school-info .si-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
+/* Page accent (DTS blue): solid buttons take white text on the colour. */
+.sr--accent .btn--solid { color: #fff; border-color: var(--sr-pink); }
+.sr--accent .pagehead .eyebrow { color: #fff; }
 .sr .faq { display: flex; flex-direction: column; border-top: 1px solid #232323; }
 .sr .faq-item { border-bottom: 1px solid #232323; }
 .sr .faq-item summary {
@@ -334,6 +363,8 @@ body.sr {
   /* Solid ink at the foot, so the photo melts into the page below it. */
   background: linear-gradient(to top, rgba(11,11,11,1) 0%, rgba(11,11,11,.9) 14%, rgba(11,11,11,.66) 48%, rgba(11,11,11,.35) 100%);
 }
+/* With the hero video: the same overlay as the home page hero. */
+.sr .pagehead--video .pagehead-scrim { background: linear-gradient(to top, rgba(11,11,11,1) 0%, rgba(11,11,11,.96) 4%, rgba(11,11,11,.45) 55%, rgba(11,11,11,.7)); }
 .sr .pagehead--photo .wrap { width: 100%; text-shadow: 0 2px 28px rgba(0,0,0,.7), 0 1px 3px rgba(0,0,0,.6); }
 /* Page changes fade through the site's black: the old page dips out
    (0-.3s), the new one fades up (.3-.8s) while the title words come
@@ -429,10 +460,25 @@ body.sr {
   /* One height for every card, sized to fit under the heading on any
      phone, so the stack lines up and nothing pokes out below it. */
   .sr .gonpreah-stack .deck > .schoolcard { height: clamp(270px, calc(100svh - var(--th-head, 190px) - 64px), 430px); }
-  .sr .gonpreah-stack .deck .schoolcard-photo { height: auto; flex: 0 0 42%; }
+  /* min-height: 0 lets a tall (portrait) photo shrink to its share of the
+     card instead of growing to the image's own height and pushing the text
+     out; the image is cropped to fit. */
+  .sr .gonpreah-stack .deck .schoolcard-photo { height: auto; flex: 0 0 42%; min-height: 0; overflow: hidden; }
   .sr .gonpreah-stack .deck .schoolcard-body { min-height: 0; overflow: hidden; padding: 16px 18px 16px; }
   .sr .gonpreah-stack .deck .schoolcard-body .body { flex: none !important; display: -webkit-box !important; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-top: 10px !important; }
   .sr .gonpreah-stack .deck .schoolcard-body > span:last-child { margin-top: auto !important; padding-top: 10px; }
+  /* Room for the bottom row (when it runs + Learn more, which wraps to two
+     lines on these narrow cards): a smaller photo share and two lines of
+     description; short phones (iPhone SE) a smaller photo still. */
+  .sr .gonpreah-stack .deck .schoolcard-photo { flex-basis: 34%; }
+  .sr .gonpreah-stack .deck .schoolcard-body .body { -webkit-line-clamp: 2; }
+  .sr .gonpreah-stack .deck .sc-foot { gap: 6px 10px; }
+  .sr .gonpreah-stack .deck .sc-arrow { width: 24px; height: 24px; font-size: 12px; }
+  @media (max-height: 600px) {
+    .sr .gonpreah-stack .deck .schoolcard-photo { flex-basis: 26%; }
+    .sr .gonpreah-stack .deck .schoolcard-body > .disp { font-size: 18px !important; }
+    .sr .gonpreah-stack .deck .schoolcard-body .body { -webkit-line-clamp: 1; }
+  }
   /* After the last card: a beat to read it, then the full screen Bring a
      team rises over. The cards stay stuck under it because the deck runs
      on underneath (this spacer). */
@@ -474,6 +520,12 @@ body.sr {
 .sr .schoolcard:hover { border-color: var(--sr-pink); transform: translateY(-6px); }
 .sr .schoolcard-photo { height: 360px; }
 .sr .schoolcard-body { padding: 30px 28px 34px; min-height: 216px; }
+/* Bottom row of a school card: when it runs, and a Learn more arrow. */
+.sr .sc-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+.sr .sc-when { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--sr-pink); }
+.sr .sc-more { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #fff; white-space: nowrap; }
+.sr .sc-arrow { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .6); font-size: 14px; transition: background .2s ease, color .2s ease, transform .3s ease; }
+@media (hover: hover) { .sr .schoolcard:hover .sc-arrow { background: #fff; color: #000; transform: translateX(4px); } }
 
 .sr nav.sr-nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 40;
@@ -626,7 +678,12 @@ body.sr {
 .sr .campus-teaser-scrim { position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(11,11,11,.96) 0%, rgba(11,11,11,.7) 45%, rgba(11,11,11,.3) 100%); }
 .sr .campus-teaser-copy { text-shadow: 0 2px 24px rgba(0,0,0,.7); }
 .sr .campus-teaser .btn { transition: background .2s ease, color .2s ease, transform .3s ease; }
-.sr .campus-teaser:hover .btn { background: #fff; border-color: #fff; transform: translateX(4px); }
+.sr .campus-teaser .eyebrow { color: #fff; }
+.sr .campus-teaser .btn--solid { background: #fff; color: #0b0b0b; border-color: #fff; }
+@media (hover: hover) { .sr .campus-teaser:hover .btn { transform: translateX(4px); } }
+/* Clear space above and below the campus life box, so it stands apart from
+   the photo above it and the section after it. */
+.sr .campus-teaser-sec { padding: clamp(80px, 9vw, 130px) 0 clamp(90px, 10vw, 140px); }
 .sr .campus-teaser-thumbs { display: flex; gap: 10px; justify-content: flex-end; }
 .sr .campus-teaser-thumbs img { width: clamp(80px, 9vw, 130px); aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255,255,255,.18); box-shadow: 0 16px 40px rgba(0,0,0,.5); transition: transform .5s cubic-bezier(.16,1,.3,1); }
 .sr .campus-teaser-thumbs img:nth-child(2) { transform: translateY(-14px); }
@@ -686,7 +743,9 @@ body.sr {
 .sr .sched-night img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 14px; }
 .sr .sched-night figcaption { margin-top: 8px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
 .sr .cl-hs-btn { width: 46px; height: 46px; border-radius: 999px; border: 1px solid #3a3a3a; background: none; color: #fff; font-size: 18px; cursor: pointer; transition: border-color .2s ease, background .2s ease, color .2s ease; }
-.sr .cl-hs-btn:hover { background: #fff; color: #000; border-color: #fff; }
+/* Hover fill for mouse only; on phones it stuck on after a tap. */
+@media (hover: hover) { .sr .cl-hs-btn:not(:disabled):hover { background: #fff; color: #000; border-color: #fff; } }
+.sr .cl-hs-btn:not(:disabled):active { background: #fff; color: #000; border-color: #fff; }
 .sr .cl-hs { position: relative; display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: start; padding-left: max(40px, calc((100vw - 1240px) / 2 + 40px)); }
 .sr .cl-hs-label { margin: 0; writing-mode: vertical-rl; transform: rotate(180deg); font-size: 20px; font-weight: 500; line-height: 1.05; color: #fff; align-self: start; padding-bottom: 6px; }
 .sr .cl-hs-track { list-style: none; margin: 0; padding: 0 40px 12px 0; display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
@@ -742,7 +801,11 @@ body.sr {
 
 /* DTS tracks */
 .sr .tracks-sec { position: relative; z-index: 2; background: var(--sr-ink); }
-.sr .tracks-hint { display: none; margin: 14px 0 0; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
+.sr .tracks-nav { display: none; }
+.sr .tracks-count { font-size: 13px; letter-spacing: .16em; color: var(--gp-grey); }
+.sr .tracks-count b { color: #fff; font-weight: 600; }
+.sr .tracks-btns { display: flex; gap: 10px; }
+.sr .cl-hs-btn:disabled { opacity: .3; cursor: default; background: none; color: #fff; border-color: #3a3a3a; }
 .sr .tracks-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; }
 .sr .tracks { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .sr .track { position: relative; border-radius: 20px; overflow: hidden; background: var(--sr-raise); border: 1px solid #232323; min-height: 420px; display: flex; flex-direction: column; justify-content: flex-end; transition: transform .5s cubic-bezier(.16,1,.3,1), border-color .4s ease; }
@@ -1058,14 +1121,20 @@ body.sr {
   .sr .cl-who-card h3 { font-size: 16px !important; }
   .sr .cl-who-card p { font-size: 13px !important; line-height: 1.5; margin-top: 6px !important; }
   .sr .tracks-head { flex-direction: column; align-items: flex-start; gap: 14px; }
-  .sr .tracks { display: flex; gap: 12px; margin: 28px -20px 0; padding: 0 20px 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 20px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .sr .tracks { display: flex; gap: 12px; margin: 16px -20px 0; padding: 0 20px 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 20px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .sr .tracks::-webkit-scrollbar { display: none; }
-  .sr .track { flex: 0 0 66vw; scroll-snap-align: start; min-height: 300px; }
-  .sr .tracks-hint { display: block !important; }
+  /* Each card fills most of the screen, the next one peeking in. */
+  .sr .track { flex: 0 0 84vw; scroll-snap-align: start; min-height: 0; height: max(320px, 60svh); }
+  .sr .tracks-nav { display: flex; align-items: center; justify-content: space-between; margin: 22px 0 0; }
   .sr .track-body { display: none; }
   .sr .track-tag { display: block; }
   .sr .track-photo img { filter: grayscale(0) brightness(.85); }
-  .sr .track-copy { padding: 22px 20px; }
+  /* Every card's text starts at the same height, so numbers and titles line
+     up across the row whatever the length of the line below them (pinned to
+     the bottom, a longer line pushed the title up). Cards share the tallest
+     card's height. */
+  .sr .track { justify-content: flex-start; }
+  .sr .track-copy { padding: calc(max(320px, 60svh) - 186px) 22px 22px; }
   .sr .values-vision-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .sr .values-vision { padding: 60px 0 20px; }
   .sr .dive-stack { height: 400vh; }
@@ -1089,6 +1158,7 @@ body.sr {
   .sr .sms-intro-photo { margin-top: 20px; }
   .sr .visit-photos { height: 300px; margin-bottom: 30px; }
   .sr .visit-photo-main { inset: 0 40px 0 0; }
+  .sr .campus-teaser-sec { padding: 84px 0 92px; }
   .sr .campus-teaser { grid-template-columns: minmax(0, 1fr); min-height: 0; padding: 24px 20px 26px; gap: 18px; align-items: start; }
   .sr .campus-teaser-thumbs { order: -1; justify-content: flex-start; margin-bottom: 4px; }
   .sr .campus-teaser-thumbs img { width: 64px; }
@@ -1160,32 +1230,27 @@ body.sr {
    (Sections themselves use the play-once reveals.) */
 @media (hover: none), (pointer: coarse) {
   @supports (animation-timeline: view()) {
-    .sr .reveal img, .sr .stag > * img, .sr .hall-stack .hall-photo {
+    .sr .reveal img, .sr .stag > * img {
       animation: sr-fadein linear both; animation-timeline: view(); animation-range: entry 0% entry 75%;
     }
   }
 }
 
-/* DTS hallway on phones and touch screens (the same condition the page
-   script checks): the hallway video is a sticky backdrop, and the intro,
-   each phase's copy and its photo collage scroll over it as ordinary
-   blocks in reading order. Nothing here is positioned by script. Set in
-   CSS rather than by a class so the layout is right from the first paint. */
+/* DTS hallway on phones and touch screens: the walk stays pinned and each
+   part fades away in place as the next fades in (the page script sets the
+   opacities; nothing moves). At the end the hallway dims to black and the
+   DTS information card rises over it. */
 @media (prefers-reduced-motion: no-preference) and (max-width: 760px), (prefers-reduced-motion: no-preference) and (pointer: coarse) {
-  .sr section.breakdown.hall-stack { height: auto; }
-  .sr .hall-stack .hall-pin { position: relative; height: auto; overflow: visible; display: flex; flex-direction: column; padding-bottom: 30svh; }
-  .sr .hall-stack .hall-bg { position: sticky; inset: auto; top: 0; height: 100svh; flex: none; }
-  .sr .hall-stack .hall-scrim { position: sticky; inset: auto; top: 0; height: 100svh; margin-top: -100svh; flex: none; }
-  .sr .hall-stack .hall-intro,
-  .sr .hall-stack .hall-copy,
-  .sr .hall-stack .hall-photos { position: relative; left: auto; top: auto; transform: none; z-index: 1; margin-left: auto; margin-right: auto; flex: none; }
-  .sr .hall-stack .hall-intro { order: 2; margin-top: -100svh; min-height: 100svh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; padding: 80px 0 40px; }
-  .sr .hall-stack .hall-copy { opacity: 1; padding: 34svh 0 8svh; }
-  .sr .hall-stack .hall-copy[data-phase="0"] { order: 3; }
-  .sr .hall-stack .hall-photos[data-phase="0"] { order: 4; }
-  .sr .hall-stack .hall-copy[data-phase="1"] { order: 5; }
-  .sr .hall-stack .hall-photos[data-phase="1"] { order: 6; }
-  .sr .hall-stack .hall-photo { opacity: 1; transform: rotate(var(--r, 0deg)); }
+  /* inset -1px: no hairline of hallway at the edges once it's black. */
+  .sr .hall-stack .hall-fadeout { display: block; position: absolute; inset: -1px; z-index: 6; background: var(--sr-ink); opacity: 0; pointer-events: none; }
+  /* The card simply follows the hallway once it has fully dimmed, on solid
+     black: no overlap with the pinned hallway, which iPhones redrew
+     unsteadily as you scrolled up and down. */
+  .sr .hall-card-sec { position: relative; background: var(--sr-ink); }
+  /* The pinned hallway fills the whole screen even while Safari's bar is
+     collapsed (lvh, not svh). Sized to the smaller height, it left a strip
+     at the bottom where the card's edge showed and hid as the bar moved. */
+  .sr .hall-pin { height: 100lvh; }
 }
 @media (max-width: 760px) {
   /* Centre the driver: he sits a little right of the photo's middle. */
@@ -1406,9 +1471,23 @@ body.sr {
 .sr .supporter-body { padding: 20px 22px 24px; display: flex; flex-direction: column; flex: 1; }
 .sr .supporter-body .body { flex: 1; }
 .sr .support-bar { height: 6px; border-radius: 999px; background: rgba(11,11,11,.1); margin-top: 18px; overflow: hidden; }
-.sr .support-bar i { display: block; height: 100%; background: var(--sr-pink); border-radius: 999px; }
+.sr .support-bar i { display: block; height: 100%; background: #0b0b0b; border-radius: 999px; }
 .sr .support-nums { margin: 8px 0 16px; font-size: 13px; color: #6f6a62; }
 .sr .support-nums b { color: #0b0b0b; font-weight: 600; }
+.sr .supporter-body .btn { align-self: flex-start; margin-top: auto; }
+.sr .supporter--short .supporter-body .btn { margin-top: 18px; }
+.sr .supporter-slot { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: repeating-linear-gradient(135deg, #ece7dd 0 14px, #e6e0d4 14px 28px); }
+.sr .supporter-slot span { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #9a9184; }
+/* Dark cards (Khmer staff page, on the page black). */
+.sr .staff-support-sec { padding-top: 24px; }
+.sr .supporters--dark .supporter { background: var(--sr-raise); border-color: #232323; color: #fff; }
+.sr .supporters--dark .supporter .eyebrow { color: #9a9a9a; }
+.sr .supporters--dark .support-bar { background: rgba(255, 255, 255, .12); }
+.sr .supporters--dark .support-bar i { background: #fff; }
+.sr .supporters--dark .support-nums { color: #9a9a9a; }
+.sr .supporters--dark .support-nums b { color: #fff; }
+.sr .supporters--dark .supporter-slot { background: repeating-linear-gradient(135deg, #151515 0 14px, #171717 14px 28px); }
+.sr .supporters--dark .supporter-slot span { color: #555; }
 /* Bring a team */
 .sr .prep-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 36px; margin-top: 30px; }
 .sr .prep-item { padding-top: 16px; border-top: 1px solid rgba(11,11,11,.18); }
@@ -1431,7 +1510,17 @@ body.sr {
 @media (max-width: 760px) {
   .sr .people { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 14px; }
   .sr .person-name { font-size: 15px; }
-  .sr .supporters { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 26px; }
+  /* Two side by side, with everything scaled down to fit a half-width card. */
+  .sr .supporters { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+  .sr .supporter { border-radius: 16px; }
+  .sr .supporter-body { padding: 12px 12px 14px; }
+  .sr .supporter-body .eyebrow { font-size: 9.5px; letter-spacing: .12em; line-height: 1.4; }
+  .sr .supporter-body h3 { font-size: 16px !important; margin-top: 6px !important; line-height: 1.15; }
+  .sr .supporter-body .body { font-size: 12.5px !important; line-height: 1.5; margin-top: 8px !important; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+  .sr .support-bar { margin-top: 12px; }
+  .sr .support-nums { font-size: 11.5px; margin: 6px 0 10px; }
+  .sr .supporter-body .btn { width: 100%; box-sizing: border-box; justify-content: center; padding: 10px 8px; font-size: 12.5px; white-space: normal; text-align: center; line-height: 1.25; }
+  .sr .supporter--short .supporter-body .btn { margin-top: 12px; }
   .sr .prep-grid, .sr .culture-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 22px; }
   .sr .culture-head { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .sr .pack-list { columns: 1; }
@@ -1725,15 +1814,10 @@ body.sr {
 .sr .tm-stat-l { font-size: 13px; color: #9a9a9a; }
 .sr .tm-head { margin-bottom: 26px; }
 .sr .tm-h2 { margin: 12px 0 0; font-size: clamp(28px, 3.4vw, 44px); font-weight: 500; line-height: 1.1; }
-/* Staff and Leadership as the big headings over the portraits. */
+/* The big heading over the team grid. */
 .sr .tm-h2--dept { margin: 0; font-size: clamp(36px, 5.4vw, 76px); font-weight: 700; line-height: .95; }
 .sr .tm-sec + .tm-sec { padding-top: 0; }
 .sr .tm-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px 18px; grid-auto-flow: dense; }
-.sr .tm-grid--lead { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 24px; }
-/* Leadership: families half a row each, everyone else three to a row. */
-.sr .tm-grid--lead .tm-person { grid-column: span 2; }
-.sr .tm-grid--lead .tm-person--wide { grid-column: span 3; }
-.sr .tm-grid--lead .tm-person--wide .tm-photo { aspect-ratio: 5 / 4; }
 .sr .tm-person { margin: 0; }
 .sr .tm-person--wide { grid-column: span 2; }
 .sr .tm-photo { position: relative; aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden; background: #161616; }
@@ -1746,14 +1830,19 @@ body.sr {
 .sr .tm-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 50px 18px 16px; background: linear-gradient(180deg, rgba(11, 11, 11, 0), rgba(11, 11, 11, .88)); display: grid; gap: 3px; }
 .sr .tm-name { font-size: 17px; font-weight: 500; line-height: 1.15; }
 .sr .tm-role { font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; color: #bdbdbd; }
-.sr .tm-grid--lead .tm-name { font-size: 21px; }
 .sr .tm-kind { justify-self: start; margin-bottom: 4px; padding: 3px 9px; border: 1px solid rgba(255, 255, 255, .35); border-radius: 999px; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #e6e6e6; }
+.sr .tm-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+.sr .tm-tags .tm-kind { margin-bottom: 0; }
+/* Leaders are tagged, not set apart: a filled tag so they're easy to spot. */
+.sr .tm-kind--lead { background: #fff; border-color: #fff; color: #0b0b0b; font-weight: 600; }
 .sr .tm-with { display: flex; flex-wrap: wrap; gap: 2px 16px; }
 .sr .tm-with b { font-weight: 600; color: #fff; }
 @media (max-width: 760px) {
   /* Join staff: the heading sits low so her face shows above it. */
   .sr .pagehead--staff { align-items: flex-end; padding-bottom: 70px; }
   .sr .pagehead--staff .pagehead-photo { object-position: 64% 30% !important; }
+  /* DBS: centre the girl in the grey shirt (about 30% across the photo). */
+  .sr .pagehead--dbs .pagehead-photo { object-position: 16% 40% !important; }
   .sr .tm-hero { min-height: 78svh; }
   .sr .tm-hero-copy { padding-top: 120px; padding-bottom: 40px; }
   .sr .tm-title { font-size: clamp(42px, 13vw, 60px); }
@@ -1762,15 +1851,11 @@ body.sr {
   .sr .tm-intro-grid { grid-template-columns: minmax(0, 1fr); gap: 26px; }
   .sr .tm-stats { gap: 12px; }
   .sr .tm-stat-n { font-size: 40px; }
-  .sr .tm-grid, .sr .tm-grid--lead { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
+  .sr .tm-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
   .sr .tm-person--wide { grid-column: span 2; }
   .sr .tm-person--wide .tm-photo { aspect-ratio: 16 / 10; }
-  .sr .tm-grid--lead .tm-person { grid-column: span 1; }
-  .sr .tm-grid--lead .tm-person--wide { grid-column: span 2; }
-  .sr .tm-grid--lead .tm-person--wide .tm-photo { aspect-ratio: 16 / 10; }
   .sr .tm-cap { padding: 40px 14px 12px; }
   .sr .tm-name { font-size: 15px; }
-  .sr .tm-grid--lead .tm-name { font-size: 17px; }
   .sr .tm-role { font-size: 11px; }
   .sr .tm-slot-name { font-size: 13px; }
 }
