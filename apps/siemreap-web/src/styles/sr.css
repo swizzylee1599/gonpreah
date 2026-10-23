@@ -697,7 +697,9 @@ body.sr {
 .sr .sched-night img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 14px; }
 .sr .sched-night figcaption { margin-top: 8px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
 .sr .cl-hs-btn { width: 46px; height: 46px; border-radius: 999px; border: 1px solid #3a3a3a; background: none; color: #fff; font-size: 18px; cursor: pointer; transition: border-color .2s ease, background .2s ease, color .2s ease; }
-.sr .cl-hs-btn:hover { background: #fff; color: #000; border-color: #fff; }
+/* Hover fill for mouse only; on phones it stuck on after a tap. */
+@media (hover: hover) { .sr .cl-hs-btn:not(:disabled):hover { background: #fff; color: #000; border-color: #fff; } }
+.sr .cl-hs-btn:not(:disabled):active { background: #fff; color: #000; border-color: #fff; }
 .sr .cl-hs { position: relative; display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: start; padding-left: max(40px, calc((100vw - 1240px) / 2 + 40px)); }
 .sr .cl-hs-label { margin: 0; writing-mode: vertical-rl; transform: rotate(180deg); font-size: 20px; font-weight: 500; line-height: 1.05; color: #fff; align-self: start; padding-bottom: 6px; }
 .sr .cl-hs-track { list-style: none; margin: 0; padding: 0 40px 12px 0; display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
@@ -753,7 +755,11 @@ body.sr {
 
 /* DTS tracks */
 .sr .tracks-sec { position: relative; z-index: 2; background: var(--sr-ink); }
-.sr .tracks-hint { display: none; margin: 14px 0 0; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
+.sr .tracks-nav { display: none; }
+.sr .tracks-count { font-size: 13px; letter-spacing: .16em; color: var(--gp-grey); }
+.sr .tracks-count b { color: #fff; font-weight: 600; }
+.sr .tracks-btns { display: flex; gap: 10px; }
+.sr .cl-hs-btn:disabled { opacity: .3; cursor: default; background: none; color: #fff; border-color: #3a3a3a; }
 .sr .tracks-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; }
 .sr .tracks { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .sr .track { position: relative; border-radius: 20px; overflow: hidden; background: var(--sr-raise); border: 1px solid #232323; min-height: 420px; display: flex; flex-direction: column; justify-content: flex-end; transition: transform .5s cubic-bezier(.16,1,.3,1), border-color .4s ease; }
@@ -1069,10 +1075,11 @@ body.sr {
   .sr .cl-who-card h3 { font-size: 16px !important; }
   .sr .cl-who-card p { font-size: 13px !important; line-height: 1.5; margin-top: 6px !important; }
   .sr .tracks-head { flex-direction: column; align-items: flex-start; gap: 14px; }
-  .sr .tracks { display: flex; gap: 12px; margin: 28px -20px 0; padding: 0 20px 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 20px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .sr .tracks { display: flex; gap: 12px; margin: 16px -20px 0; padding: 0 20px 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 20px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .sr .tracks::-webkit-scrollbar { display: none; }
-  .sr .track { flex: 0 0 66vw; scroll-snap-align: start; min-height: 300px; }
-  .sr .tracks-hint { display: block !important; }
+  /* Each card fills most of the screen, the next one peeking in. */
+  .sr .track { flex: 0 0 84vw; scroll-snap-align: start; min-height: 0; height: max(320px, 60svh); }
+  .sr .tracks-nav { display: flex; align-items: center; justify-content: space-between; margin: 22px 0 0; }
   .sr .track-body { display: none; }
   .sr .track-tag { display: block; }
   .sr .track-photo img { filter: grayscale(0) brightness(.85); }
@@ -1081,7 +1088,7 @@ body.sr {
      the bottom, a longer line pushed the title up). Cards share the tallest
      card's height. */
   .sr .track { justify-content: flex-start; }
-  .sr .track-copy { padding: 132px 20px 22px; }
+  .sr .track-copy { padding: calc(max(320px, 60svh) - 186px) 22px 22px; }
   .sr .values-vision-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .sr .values-vision { padding: 60px 0 20px; }
   .sr .dive-stack { height: 400vh; }

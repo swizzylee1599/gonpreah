@@ -349,6 +349,38 @@ const FAQ: [string, string][] = [
 
       initHall(signal);
 
+      // Tracks on phones: a swipeable row with arrow buttons and a counter.
+      // The arrows slide one card at a time and dim at either end.
+      const row = document.querySelector('.tracks');
+      const prevBtn = document.querySelector('[data-tracks-prev]');
+      const nextBtn = document.querySelector('[data-tracks-next]');
+      const countEl = document.querySelector('[data-tracks-n]');
+      if (row && prevBtn && nextBtn) {
+        const cards = [...row.children];
+        const current = () => {
+          let best = 0, bestD = Infinity;
+          const left = row.getBoundingClientRect().left;
+          cards.forEach((c, i) => { const d = Math.abs(c.getBoundingClientRect().left - left - 20); if (d < bestD) { bestD = d; best = i; } });
+          return best;
+        };
+        const go = (i) => {
+          const c = cards[Math.max(0, Math.min(cards.length - 1, i))];
+          row.scrollTo({ left: c.offsetLeft - row.firstElementChild.offsetLeft, behavior: 'smooth' });
+        };
+        const sync = () => {
+          const i = current();
+          if (countEl) countEl.textContent = String(i + 1).padStart(2, '0');
+          const atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 4;
+          prevBtn.disabled = i === 0 && row.scrollLeft < 4;
+          nextBtn.disabled = atEnd;
+        };
+        prevBtn.addEventListener('click', () => go(current() - 1), { signal });
+        nextBtn.addEventListener('click', () => go(current() + 1), { signal });
+        let sraf = 0;
+        row.addEventListener('scroll', () => { if (!sraf) sraf = requestAnimationFrame(() => { sraf = 0; sync(); }); }, { passive: true, signal });
+        sync();
+      }
+
       const stack = document.querySelector('.journey-stack');
       if (!stack) return;
       const head = stack.querySelector('.jp-head');
@@ -502,7 +534,13 @@ const FAQ: [string, string][] = [
         </div>
         <p class="body" style="margin:0;max-width:44ch;">Alongside lectures, every student chooses a track — a practical skill to develop through the six months and carry into the world.</p>
       </div>
-      <p class="muted tracks-hint" aria-hidden="true">Swipe →</p>
+      <div class="tracks-nav" aria-label="Browse tracks">
+        <span class="tracks-count" aria-live="polite"><b data-tracks-n>01</b> / {String(TRACKS.length).padStart(2, '0')}</span>
+        <span class="tracks-btns">
+          <button type="button" class="cl-hs-btn" data-tracks-prev aria-label="Previous track">←</button>
+          <button type="button" class="cl-hs-btn" data-tracks-next aria-label="Next track">→</button>
+        </span>
+      </div>
       <ul class="tracks stag">
         {TRACKS.map((t, i) => (
           <li class="track">
