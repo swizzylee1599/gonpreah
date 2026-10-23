@@ -429,10 +429,19 @@ body.sr {
   /* One height for every card, sized to fit under the heading on any
      phone, so the stack lines up and nothing pokes out below it. */
   .sr .gonpreah-stack .deck > .schoolcard { height: clamp(270px, calc(100svh - var(--th-head, 190px) - 64px), 430px); }
-  .sr .gonpreah-stack .deck .schoolcard-photo { height: auto; flex: 0 0 42%; }
+  /* min-height: 0 lets a tall (portrait) photo shrink to its share of the
+     card instead of growing to the image's own height and pushing the text
+     out; the image is cropped to fit. */
+  .sr .gonpreah-stack .deck .schoolcard-photo { height: auto; flex: 0 0 42%; min-height: 0; overflow: hidden; }
   .sr .gonpreah-stack .deck .schoolcard-body { min-height: 0; overflow: hidden; padding: 16px 18px 16px; }
   .sr .gonpreah-stack .deck .schoolcard-body .body { flex: none !important; display: -webkit-box !important; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-top: 10px !important; }
   .sr .gonpreah-stack .deck .schoolcard-body > span:last-child { margin-top: auto !important; padding-top: 10px; }
+  /* Short phones (iPhone SE and the like): a smaller photo share and two
+     lines of description, so the whole card text fits. */
+  @media (max-height: 600px) {
+    .sr .gonpreah-stack .deck .schoolcard-photo { flex-basis: 36%; }
+    .sr .gonpreah-stack .deck .schoolcard-body .body { -webkit-line-clamp: 2; }
+  }
   /* After the last card: a beat to read it, then the full screen Bring a
      team rises over. The cards stay stuck under it because the deck runs
      on underneath (this spacer). */
