@@ -172,9 +172,24 @@ const FAQ: [string, string][] = [
       let video = hall.querySelector('.hall-video');
       if (video) {
         const phone = matchMedia('(max-width: 760px)').matches;
-        // Fetch the clip only once its section is within a screen of view.
-        const startClip = () => {
-          video.src = `${(phone && video.dataset.srcMobile) || video.dataset.src}#t=0.001`;
+        // Fetch the clip only once its section is within a screen of view, and
+        // fetch it whole, then play it from memory: seeking a streamed clip
+        // waits on the network, so the walk trailed the finger and kept
+        // moving after you stopped. Falls back to streaming if the download
+        // fails.
+        const startClip = async () => {
+          const src = (phone && video.dataset.srcMobile) || video.dataset.src;
+          try {
+            const res = await fetch(src);
+            if (!res.ok) throw new Error(String(res.status));
+            const url = URL.createObjectURL(await res.blob());
+            signal.addEventListener('abort', () => URL.revokeObjectURL(url));
+            if (!video || signal.aborted) return;
+            video.src = url;
+          } catch {
+            if (!video || signal.aborted) return;
+            video.src = `${src}#t=0.001`;
+          }
           video.load();
         };
         const near = new IntersectionObserver((en) => { if (en[0].isIntersecting) { near.disconnect(); startClip(); } }, { rootMargin: '100% 0px' });
@@ -220,11 +235,17 @@ const FAQ: [string, string][] = [
       };
       if (video) {
         // The still stays underneath until the clip has decoded a frame, and takes over again if the clip fails.
+        // The walk only ever moves with the scroll: after this one play to wake
+        // the decoder, any playback (an autoplay policy, a resumed tab) is
+        // paused straight away.
+        let primed = false;
         const prime = () => {
           const p = video.play();
-          if (p && p.then) p.then(() => video.pause()).catch(() => {});
+          if (p && p.then) p.then(() => { video.pause(); primed = true; }).catch(() => { primed = true; });
+          else primed = true;
           if (still) still.style.opacity = '0';
         };
+        video.addEventListener('play', () => { if (primed) video.pause(); }, { signal });
         if (video.readyState >= 2) prime(); else video.addEventListener('loadeddata', prime, { once: true, signal });
         // When autoplay is blocked (Low Power Mode, data saver), the first touch starts it.
         const unlock = () => { if (video && video.readyState < 2) { video.load(); prime(); } };
@@ -251,7 +272,9 @@ const FAQ: [string, string][] = [
       };
       const render = (p) => {
         if (video && video.duration && !Number.isNaN(video.duration)) seekTo(p * video.duration * 0.985);
-        else if (still) still.style.transform = `translate3d(0, ${(-p * (lite ? 2 : 4)).toFixed(2)}%, 0) scale(${(1 + p * (lite ? 0.45 : 0.9)).toFixed(4)})`;
+        // Phones: the still holds (a script-driven zoom on the pinned backdrop
+        // jittered); desktop pushes in on it until the clip is here.
+        else if (still && !native) still.style.transform = `translate3d(0, ${(-p * (lite ? 2 : 4)).toFixed(2)}%, 0) scale(${(1 + p * (lite ? 0.45 : 0.9)).toFixed(4)})`;
         if (native) {
           // The walk's last stretch dims to black as the information card rises.
           if (fadeout) fadeout.style.opacity = smooth(clamp01((p / pEnd - 0.86) / 0.13)).toFixed(3);
@@ -409,7 +432,7 @@ const FAQ: [string, string][] = [
     <div class="hall-pin">
       <div class="hall-bg" aria-hidden="true">
         <img class="hall-still" src="/images/schools/dts-hallway-start.webp" srcset="/images/schools/dts-hallway-start-800.webp 800w, /images/schools/dts-hallway-start.webp 1600w" sizes="(max-width: 760px) 100vw, 50vw" alt="" decoding="async" />
-        {HALL_VIDEO && <video class="hall-video" data-src={HALL_VIDEO} data-src-mobile={HALL_VIDEO.replace(/\.mp4$/, '-mobile.mp4')} muted autoplay playsinline webkit-playsinline preload="none"></video>}
+        {HALL_VIDEO && <video class="hall-video" data-src={HALL_VIDEO} data-src-mobile={HALL_VIDEO.replace(/\.mp4$/, '-mobile.mp4')} muted playsinline webkit-playsinline preload="none"></video>}
       </div>
       <div class="hall-scrim" aria-hidden="true"></div>
       <div class="hall-fadeout" aria-hidden="true"></div>

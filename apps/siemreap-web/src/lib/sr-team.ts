@@ -26,12 +26,12 @@ export const TEAM: Member[] = [
   // Staff
   { slug: 'yi-esther', name: 'Yi & Esther Tuot', role: 'Technical and hospitality', khmer: true, kind: 'family', with: [['Yi', 'Technical'], ['Esther', 'Hospitality']],
     support: { story: 'Yi and Esther equip others through education, hospitality and technical ministries, and travel regularly for teacher training. Esther is pursuing art to inspire and teach; together they plan to launch a kids’ ministry school. They serve with their young daughter, Molika.', now: 300, goal: 600 } },
-  { slug: 'tyler-emmy-sullivan', name: 'Tyler & Emmy Sullivan', role: 'Hospitality and teams', kind: 'couple', with: [['Tyler', 'Hospitality'], ['Emmy', 'Teams']] },
   { slug: 'alexis-munoz', name: 'Alexis Munoz', role: 'Teams' },
   { slug: 'kimla-song', name: 'Kimla Song', role: 'GP Cafe', khmer: true,
     support: { story: 'Kimla is a young Cambodian on fire for Jesus. After his DTS in 2024 he joined staff in January 2025, pursuing his passion for media and hospitality, with a heart to reach youth through social media and to serve others well.', now: 0, goal: 200 } },
   { slug: 'bunnall-bee', name: 'Bunnall Bee', role: 'Media', khmer: true },
   { slug: 'kami-martz', name: 'Kami Martz', role: 'Worship' },
+  { slug: 'tyler-emmy-sullivan', name: 'Tyler & Emmy Sullivan', role: 'Hospitality and teams', kind: 'couple', with: [['Tyler', 'Hospitality'], ['Emmy', 'Teams']] },
   { slug: 'yang-sreyleak', name: 'Yang & Sreyleak', role: 'DTS & DBS staff', khmer: true, kind: 'family',
     support: { story: 'A Cambodian couple serving in Siem Reap since January 2025, with a heart for discipling Khmer youth. They staff DTS and DBS, investing in future leaders through teaching, mentorship and discipleship.', now: 225, goal: 600 } },
   { slug: 'david', name: 'David', role: 'DTS staff', khmer: true },

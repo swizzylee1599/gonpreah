@@ -1190,9 +1190,9 @@ body.sr {
    blocks in reading order. Nothing here is positioned by script. Set in
    CSS rather than by a class so the layout is right from the first paint. */
 @media (prefers-reduced-motion: no-preference) and (max-width: 760px), (prefers-reduced-motion: no-preference) and (pointer: coarse) {
-  /* The breakdown rises over "Begin your journey" as a panel with rounded
-     top corners, like the Train here panel on the home page. */
-  .sr section.breakdown.hall-stack { height: auto; overflow: clip; border-radius: 28px 28px 0 0; box-shadow: 0 -30px 70px rgba(0, 0, 0, .6); }
+  /* No rounded clip on the section: clipping around the pinned video made
+     iPhones redraw it unsteadily while scrolling. */
+  .sr section.breakdown.hall-stack { height: auto; }
   .sr .hall-stack .hall-pin { position: relative; height: auto; overflow: visible; display: flex; flex-direction: column; }
   /* Room after the last collage for the walk to end and dim. A spacer, not
      padding: sticky elements only hold within their container's content, so
