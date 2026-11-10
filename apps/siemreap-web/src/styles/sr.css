@@ -323,7 +323,47 @@ body.sr {
 .sr .si-list dt { font-size: 14px; color: var(--gp-grey); }
 .sr .si-list dd { margin: 0; font-family: var(--gp-font-display); font-size: 16px; font-weight: 500; text-align: right; overflow-wrap: anywhere; }
 .sr .si-list a { color: inherit; text-decoration: none; font-size: 14px; }
+.sr .si-box { margin-top: 12px; padding: 12px 14px 10px; border: 1px solid #2a2a2a; border-radius: 14px; background: rgba(255, 255, 255, .025); }
+.sr .si-box:first-of-type { margin-top: 4px; }
+.sr .si-box .si-list > div:last-child { border-bottom: 0; }
+.sr .si-box .si-note { margin-top: 4px; }
+.sr .si-sub { margin: 0 0 2px; font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--sr-pink); }
 .sr .si-note { margin: 10px 0 0; font-size: 13px; line-height: 1.5; color: var(--gp-grey); }
+/* "Which category is my country?" (FeeFinder.astro) */
+.sr .ff-open { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; padding: 10px 16px; border: 1px solid rgba(255, 255, 255, .38); border-radius: 999px; background: none; color: #fff; font: inherit; font-size: 14px; cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+@media (hover: hover) { .sr .ff-open:hover { background: #fff; color: #000; border-color: #fff; } }
+.sr .ff-open:active { background: #fff; color: #000; }
+.sr .ff { width: min(420px, calc(100% - 32px)); max-height: calc(100svh - 40px); box-sizing: border-box; padding: 26px 22px 24px; border: 1px solid #2a2a2a; border-radius: 20px; background: #141414; color: #fff; box-shadow: 0 30px 80px rgba(0, 0, 0, .6); overflow: visible; }
+.sr .ff::backdrop { background: rgba(0, 0, 0, .65); }
+.sr .ff[open] { animation: sr-ff-in .28s cubic-bezier(.22, .61, .36, 1); }
+@keyframes sr-ff-in { from { opacity: 0; transform: translateY(12px) scale(.98); } }
+.sr .ff-close-form { position: absolute; top: 10px; right: 10px; margin: 0; }
+.sr .ff-close { width: 38px; height: 38px; border-radius: 999px; border: 0; background: none; color: #bbb; font-size: 26px; line-height: 1; cursor: pointer; }
+.sr .ff-title { margin: 8px 0 0; font-size: 24px; font-weight: 500; }
+.sr .ff-help { margin: 8px 0 0; font-size: 14px; color: #bdbdbd; }
+.sr .ff-field { position: relative; margin-top: 14px; }
+.sr .ff-input { width: 100%; box-sizing: border-box; padding: 13px 14px; border: 1px solid #3a3a3a; border-radius: 12px; background: #0b0b0b; color: #fff; font: inherit; font-size: 16px; }
+.sr .ff-input:focus { outline: none; border-color: var(--sr-pink); }
+.sr .ff-list { list-style: none; margin: 6px 0 0; padding: 4px; border: 1px solid #2a2a2a; border-radius: 12px; background: #0f0f0f; }
+.sr .ff-list li { padding: 10px 12px; border-radius: 8px; font-size: 15px; cursor: pointer; }
+.sr .ff-list li:first-child { background: #1d1d1d; }
+@media (hover: hover) { .sr .ff-list li:hover { background: #222; } }
+.sr .ff-result { margin-top: 18px; padding: 16px 16px 14px; border: 1px solid #2a2a2a; border-radius: 14px; background: rgba(255, 255, 255, .03); }
+.sr .ff-country { margin: 0; font-size: 15px; color: #dcdcdc; }
+.sr .ff-cat { margin: 6px 0 0; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--sr-pink); }
+.sr .ff-cat b { font-size: 15px; }
+.sr .ff-price { margin: 10px 0 0; font-size: 34px; font-weight: 500; line-height: 1; }
+.sr .ff-label { margin: 6px 0 0; font-size: 13px; color: #9a9a9a; }
+.sr .ff-extra { margin: 12px 0 0; padding-top: 10px; border-top: 1px solid #262626; font-size: 13px; line-height: 1.5; color: #bdbdbd; }
+.sr .ff-more { margin-top: 18px; padding-top: 14px; border-top: 1px solid #262626; }
+.sr .ff-more summary { list-style: none; cursor: pointer; font-size: 13px; color: #dcdcdc; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(255, 255, 255, .35); }
+.sr .ff-more summary::-webkit-details-marker { display: none; }
+.sr .ff-more-close, .sr .ff-more[open] .ff-more-open { display: none; }
+.sr .ff-more[open] .ff-more-close { display: inline; }
+.sr .ff-more p { margin: 10px 0 0; font-size: 13px; line-height: 1.6; color: #bdbdbd; }
+.sr .ff { overflow-y: auto; }
+.sr .ff-none { margin: 14px 0 0; font-size: 14px; color: #bdbdbd; }
+.sr .ff-none a { color: #fff; }
 .sr .si-actions { display: flex; align-items: center; gap: 14px 22px; flex-wrap: wrap; margin-top: 30px; }
 .sr .si-link { font-size: 14px; color: #dcdcdc; text-decoration: underline; text-underline-offset: 3px; }
 .sr .si-partner { margin: 18px 4px 0; font-size: 14px; line-height: 1.6; color: var(--gp-grey); }
@@ -343,6 +383,17 @@ body.sr {
 /* Page accent (DTS blue): solid buttons take white text on the colour. */
 .sr--accent .btn--solid { color: #fff; border-color: var(--sr-pink); }
 .sr--accent .pagehead .eyebrow { color: #fff; }
+/* Blue accent text: a very light white edge (a 1px halo and a soft glow) so
+   it reads crisply on black. Over the header video it keeps its dark shadow
+   too; text on cream sections is left alone. */
+.sr--accent .eyebrow, .sr--accent .si-sub, .sr--accent .track-n, .sr--accent [style*="color:var(--sr-pink)"] {
+  text-shadow: 0 0 1px rgba(255, 255, 255, .55), 0 0 9px rgba(255, 255, 255, .16);
+}
+.sr--accent .pagehead [style*="color:var(--sr-pink)"] {
+  text-shadow: 0 0 1px rgba(255, 255, 255, .6), 0 0 12px rgba(255, 255, 255, .16), 0 2px 28px rgba(0, 0, 0, .7);
+}
+.sr--accent .pagehead .eyebrow { text-shadow: 0 2px 28px rgba(0, 0, 0, .7), 0 1px 3px rgba(0, 0, 0, .6); }
+.sr--accent .sec--paper .eyebrow { text-shadow: none; }
 .sr .faq { display: flex; flex-direction: column; border-top: 1px solid #232323; }
 .sr .faq-item { border-bottom: 1px solid #232323; }
 .sr .faq-item summary {
@@ -468,7 +519,12 @@ body.sr {
   .sr .gonpreah-stack .deck .sc-arrow { width: 26px; height: 26px; font-size: 12px; }
   .sr .gonpreah-stack .deck-nav { display: flex; }
   .sr .gonpreah-stack .deck-hint { display: none; }
-  .sr .gonpreah-stack .bat-cover { position: relative; transform: none; margin-top: 0 !important; }
+  /* Bring a team: its own section, square on top (rounded corners showed
+     what was behind them), with a hairline and a label to set it apart. */
+  .sr .gonpreah-stack .bat-cover {
+    position: relative; transform: none; margin-top: 0 !important;
+    border-radius: 0; box-shadow: none; background: var(--sr-ink); border-top: 1px solid #222; padding-top: 64px;
+  }
 }
 /* What's new */
 .sr .news-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }

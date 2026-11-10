@@ -220,7 +220,8 @@ const FAQ: [string, string][] = [
       <SchoolInfo abbr="DBS" apply="dbs" email={CONTACT.email} needsDts
         dates={[['Next school', 'June 2027'], ['Arrival', 'June 28, 2027'], ['Departure', 'September 22, 2027'], ['Length', '13 weeks']]}
         cost={[['Country A', '$2,000'], ['Country B', '$1,500'], ['Country C', '$620']]}
-        costNote="By passport country (we'll tell you yours). Flights and transport not included."
+        costNote="By passport country. Flights and transport not included."
+        finder={{ prices: { A: '$2,000', B: '$1,500', C: '$620' }, label: 'DBS school fee · 13 weeks', extra: 'Flights and transport are not included.' }}
         details={[['Location', 'Siem Reap, Cambodia'], ['Prerequisite', 'A completed DTS']]} />
     </div>
   </section>

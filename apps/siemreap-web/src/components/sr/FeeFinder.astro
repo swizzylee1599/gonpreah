@@ -1,0 +1,122 @@
+---
+// "Which category is my country?": a button that opens a small pop-up. Type
+// a country, pick it from the suggestions, and it shows the country's
+// financial category (A, B or C) and the school's price for it. The list is
+// src/lib/sr-nations.ts.
+import { NATIONS } from '../../lib/sr-nations';
+
+interface Props {
+  /** e.g. "DTS". */
+  abbr: string;
+  /** The price for each category. */
+  prices: { A: string; B: string; C: string };
+  /** What the price covers, e.g. "Lecture phase · 3 months". */
+  label: string;
+  /** A line under the result, e.g. outreach costs. */
+  extra?: string;
+  email: string;
+}
+const { abbr, prices, label, extra, email } = Astro.props;
+const data = JSON.stringify({ nations: NATIONS, prices, label, extra: extra ?? '', abbr });
+---
+<button type="button" class="ff-open" data-ff-open>Which category is my country? <span aria-hidden="true">→</span></button>
+<dialog class="ff" aria-labelledby="ff-title">
+  <form method="dialog" class="ff-close-form"><button class="ff-close" aria-label="Close">×</button></form>
+  <p class="eyebrow">{abbr} cost</p>
+  <h3 class="disp ff-title" id="ff-title">Find your country</h3>
+  <p class="ff-help">The fee depends on your passport country. Start typing it:</p>
+  <div class="ff-field">
+    <input class="ff-input" type="text" inputmode="search" autocomplete="off" autocorrect="off" spellcheck="false"
+      placeholder="e.g. Philippines" aria-label="Country" aria-controls="ff-list" aria-autocomplete="list" />
+    <ul class="ff-list" id="ff-list" role="listbox" hidden></ul>
+  </div>
+  <div class="ff-result" aria-live="polite" hidden>
+    <p class="ff-country"></p>
+    <p class="ff-cat">Category <b></b></p>
+    <p class="disp ff-price"></p>
+    <p class="ff-label">{label}</p>
+    {extra && <p class="ff-extra">{extra}</p>}
+  </div>
+  <p class="ff-none" hidden>We couldn't find that country. <a href={`mailto:${email}?subject=${encodeURIComponent(`${abbr} cost`)}`}>Email us</a> and we'll tell you your category.</p>
+  <details class="ff-more">
+    <summary><span class="ff-more-open">Read more about the categories</span><span class="ff-more-close">Show less</span></summary>
+    <p>The categories are based on financial data from three of the most recognised international sources. This data is averaged to provide as clear a picture as possible of each nation’s financial circumstances.</p>
+    <p>The data is carefully and prayerfully reviewed to identify the three groupings of nations into A, B and C categories. It will be reviewed regularly and adjusted to reflect changes in financial conditions in each nation. This may result in one or more nations moving from one category to another.</p>
+  </details>
+  <script type="application/json" data-ff-data set:html={data} />
+</dialog>
+
+<script>
+  type Data = { nations: [string, 'A' | 'B' | 'C', string[]?][]; prices: Record<'A' | 'B' | 'C', string>; label: string; extra: string; abbr: string };
+  // Lower case, accents and punctuation removed: "Côte d’Ivoire" → "cote d ivoire".
+  const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  let ctrl: AbortController | null = null;
+  const init = () => {
+    ctrl?.abort();
+    ctrl = new AbortController();
+    const { signal } = ctrl;
+    const dlg = document.querySelector<HTMLDialogElement>('dialog.ff');
+    const open = document.querySelector<HTMLButtonElement>('[data-ff-open]');
+    const dataEl = dlg?.querySelector('[data-ff-data]');
+    if (!dlg || !open || !dataEl) return;
+    const data: Data = JSON.parse(dataEl.textContent || '{}');
+    const input = dlg.querySelector<HTMLInputElement>('.ff-input')!;
+    const list = dlg.querySelector<HTMLUListElement>('.ff-list')!;
+    const result = dlg.querySelector<HTMLElement>('.ff-result')!;
+    const none = dlg.querySelector<HTMLElement>('.ff-none')!;
+    const entries = data.nations.map(([name, cat, alt]) => ({ name, cat, keys: [name, ...(alt ?? [])].map(norm) }));
+
+    const search = (q: string) => {
+      const n = norm(q);
+      if (!n) return [];
+      const scored: { e: (typeof entries)[number]; s: number }[] = [];
+      for (const e of entries) {
+        let best = 9;
+        for (const k of e.keys) {
+          if (k === n) best = Math.min(best, 0);
+          else if (k.startsWith(n)) best = Math.min(best, 1);
+          else if (k.split(' ').some((w) => w.startsWith(n))) best = Math.min(best, 2);
+          else if (n.length > 2 && k.includes(n)) best = Math.min(best, 3);
+        }
+        if (best < 9) scored.push({ e, s: best });
+      }
+      return scored.sort((a, b) => a.s - b.s || a.e.name.localeCompare(b.e.name)).slice(0, 6).map((x) => x.e);
+    };
+    const show = (e: (typeof entries)[number]) => {
+      input.value = e.name;
+      list.hidden = true;
+      none.hidden = true;
+      result.hidden = false;
+      result.querySelector('.ff-country')!.textContent = e.name;
+      result.querySelector('.ff-cat b')!.textContent = e.cat;
+      result.querySelector('.ff-price')!.textContent = `${data.prices[e.cat]} USD`;
+    };
+    let shown: (typeof entries)[number][] = [];
+    const render = () => {
+      shown = search(input.value);
+      result.hidden = true;
+      none.hidden = !(norm(input.value).length > 1 && !shown.length);
+      list.hidden = !shown.length;
+      list.replaceChildren(...shown.map((e, i) => {
+        const li = document.createElement('li');
+        li.role = 'option';
+        li.id = `ff-opt-${i}`;
+        li.textContent = e.name;
+        li.addEventListener('click', () => show(e));
+        return li;
+      }));
+    };
+    input.addEventListener('input', render, { signal });
+    input.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' && shown[0]) { ev.preventDefault(); show(shown[0]); } }, { signal });
+    open.addEventListener('click', () => {
+      input.value = ''; list.hidden = true; result.hidden = true; none.hidden = true;
+      dlg.querySelector('details')?.removeAttribute('open');
+      dlg.showModal();
+      input.focus();
+    }, { signal });
+    // A tap on the dimmed backdrop closes it.
+    dlg.addEventListener('click', (ev) => { if (ev.target === dlg) dlg.close(); }, { signal });
+  };
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

@@ -3,6 +3,7 @@
 // each school: Dates, Cost and Details side by side (stacked on phones),
 // then the Apply button. Keep each list short; the FAQ holds the rest.
 import { applyUrl } from '../../lib/sr-routes';
+import FeeFinder from './FeeFinder.astro';
 
 type Row = [string, string];
 interface Props {
@@ -15,12 +16,16 @@ interface Props {
   cost: Row[];
   /** A line under the cost (what's not included, how bands work). */
   costNote?: string;
+  /** Cost in separate boxes, one per phase (shown instead of `cost`). */
+  costGroups?: { title: string; rows: Row[]; note?: string }[];
+  /** Adds "Which category is my country?" under the cost. */
+  finder?: { prices: { A: string; B: string; C: string }; label: string; extra?: string };
   details: Row[];
   email: string;
   /** Schools that need a DTS first get a small link to apply for DTS. */
   needsDts?: boolean;
 }
-const { abbr, apply, dates, cost, costNote, details, email, needsDts = false } = Astro.props;
+const { abbr, apply, dates, cost, costNote, costGroups, finder, details, email, needsDts = false } = Astro.props;
 const groups: [string, Row[], string?][] = [
   ['Dates', dates],
   ['Cost', cost.length ? cost : [['Fees', 'To be announced']], costNote],
@@ -33,11 +38,22 @@ const groups: [string, Row[], string?][] = [
     {groups.map(([title, rows, note]) => (
       <div class="si-group">
         <h3 class="si-title">{title}</h3>
-        <dl class="si-list">
-          {rows.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
-          {title === 'Details' && <div><dt>Email</dt><dd><a href={`mailto:${email}`}>{email}</a></dd></div>}
-        </dl>
+        {title === 'Cost' && costGroups
+          ? costGroups.map((g) => (
+              <div class="si-box">
+                <p class="si-sub">{g.title}</p>
+                <dl class="si-list">{g.rows.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+                {g.note && <p class="si-note">{g.note}</p>}
+              </div>
+            ))
+          : (
+            <dl class="si-list">
+              {rows.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+              {title === 'Details' && <div><dt>Email</dt><dd><a href={`mailto:${email}`}>{email}</a></dd></div>}
+            </dl>
+          )}
         {note && <p class="si-note">{note}</p>}
+        {title === 'Cost' && finder && <FeeFinder abbr={abbr} email={email} {...finder} />}
       </div>
     ))}
   </div>
