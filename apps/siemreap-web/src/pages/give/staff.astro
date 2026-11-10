@@ -1,0 +1,32 @@
+---
+import SrLayout from '../../layouts/SrLayout.astro';
+import Footer from '../../components/sr/Footer.astro';
+import PageHead from '../../components/sr/PageHead.astro';
+import Cta from '../../components/sr/Cta.astro';
+import StaffSupport from '../../components/sr/StaffSupport.astro';
+---
+<SrLayout title="Support our Khmer staff | YWAM Siem Reap" spacer={false}
+  description="Meet the Khmer staff of YWAM Siem Reap who are building their support team, and give monthly to one of them by name.">
+  <PageHead eyebrow="Support our Khmer staff" km="គាំទ្របុគ្គលិក" title="Invest in the next generation of Khmer missionaries." highlight="Khmer missionaries."
+    photo="/images/campus/campus-group.webp" photoPos="50% 45%" mobileFull
+    photoAlt="The YWAM Siem Reap community gathered in the campus courtyard" />
+
+  <!-- On the page black, so the cover photo (which fades to black at its
+       foot) runs straight into the profiles with no edge. -->
+  <section class="sec staff-support-sec" id="profiles">
+    <div class="wrap">
+      <div class="reveal" style="max-width:60ch;">
+        <p class="eyebrow">Our Khmer staff</p>
+        <p class="body" style="margin:14px 0 0;">Every staff member here raises their own support. For Cambodian staff that is the hardest part of the call. A monthly gift of any size goes directly to the person you choose.</p>
+      </div>
+      <StaffSupport all dark />
+    </div>
+  </section>
+
+  <Cta
+    title="Other ways to give"
+    primary={['giveOnline', 'Give now']}
+    secondary={['give', 'All giving options']}
+  />
+  <Footer />
+</SrLayout>

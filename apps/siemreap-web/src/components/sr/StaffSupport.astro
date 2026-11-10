@@ -1,0 +1,64 @@
+---
+// Support profiles for our Khmer staff: photo, role, name and a Give button
+// that opens their own Subsplash fund (`fund` in sr-team.ts). With `all`, every Khmer staff member; otherwise only those
+// with a `support` entry in src/lib/sr-team.ts. Stories and monthly goals
+// stay in that file but are not shown. Used on /give/staff (all, on black)
+// and the Give page (featured).
+import { existsSync } from 'node:fs';
+import { TEAM, type Member } from '../../lib/sr-team';
+import { GIVE_URL } from '../../lib/sr-routes';
+import { srcset } from '../../lib/sr-img';
+
+interface Props {
+  /** Every Khmer staff member, not just those with a support profile. */
+  all?: boolean;
+  /** Dark cards, for a black section. */
+  dark?: boolean;
+}
+const { all = false, dark = false } = Astro.props;
+
+const khmer = TEAM.filter((m) => m.khmer);
+const people = all ? [...khmer.filter((m) => m.support), ...khmer.filter((m) => !m.support)] : TEAM.filter((m) => m.support);
+
+// The newer team portrait where there is one, then the older photo (some
+// were saved under earlier spellings), then none: an empty frame.
+const OLD: Record<string, string> = { 'nou-eh': 'no-eh', 'hannah-thorn': 'sreynit-thorn', 'bunnall-bee': 'nall-bee' };
+const pic = (m: Member) => {
+  if (existsSync(`public/images/team/portraits/${m.slug}.webp`)) return `/images/team/portraits/${m.slug}.webp`;
+  const old = OLD[m.slug] ?? m.slug;
+  return existsSync(`public/images/team/${old}.webp`) ? `/images/team/${old}.webp` : null;
+};
+// "Kimla", "Yang & Sreyleak", "Yi & Esther"
+const first = (m: Member) => m.name.split(' & ').map((n) => n.split(' ')[0]).join(' & ');
+---
+<div class:list={['supporters', 'stag', { 'supporters--dark': dark }]} data-shuffle>
+  {people.map((m) => {
+    const src = pic(m);
+    return (
+      <article class="supporter supporter--short" id={m.slug}>
+        {src
+          ? <img src={src} srcset={src.includes('/portraits/') ? srcset(src) : undefined} sizes="(max-width: 760px) 50vw, 33vw" alt={m.name} loading="lazy" decoding="async" />
+          : <div class="supporter-slot" aria-hidden="true"><span>Photo coming</span></div>}
+        <div class="supporter-body">
+          <p class="eyebrow">{m.role}</p>
+          <h3 class="disp" style="margin:8px 0 0;font-size:24px;font-weight:500;">{m.name}</h3>
+          <a class="btn btn--solid" href={m.fund ? `${GIVE_URL}&fund_id=${m.fund}` : `${GIVE_URL}&memo=${encodeURIComponent(m.name)}`} target="_blank" rel="noopener">Give to {first(m)} ↗︎</a>
+        </div>
+      </article>
+    );
+  })}
+</div>
+<script is:inline>
+  // A different order on every visit, so no one is always first or last.
+  // Runs as soon as the cards are parsed, before they are shown.
+  (function () {
+    var grids = document.querySelectorAll('[data-shuffle]');
+    var g = grids[grids.length - 1];
+    if (!g || g.dataset.shuffled) return;
+    g.dataset.shuffled = '1';
+    var cards = Array.prototype.slice.call(g.children);
+    for (var i = cards.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = cards[i]; cards[i] = cards[j]; cards[j] = t; }
+    cards.forEach(function (c) { g.appendChild(c); });
+  })();
+</script>
+<p class="muted" style="margin:26px 0 0;font-size:14px;max-width:64ch;">Giving opens Subsplash in a new tab, straight to that staff member's own support fund. A monthly gift of any size helps.</p>

@@ -10,7 +10,7 @@
   playsinline
   preload="metadata"
   aria-hidden="true"
-  style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .9s ease;"
+  style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity 1.4s cubic-bezier(.22,.61,.36,1);"
 ></video>
 
 <script>
@@ -23,9 +23,11 @@
     // Phones get a portrait, much lighter clip.
     const phone = matchMedia('(max-width: 760px)').matches;
     video.src = (phone && video.dataset.srcMobile) || video.dataset.src || '';
+    // Fade in only once the footage is actually moving, so the photo under
+    // it dissolves straight into motion (no frozen first frame).
     const show = () => { video.style.opacity = '1'; };
-    if (video.readyState >= 3) show();
-    video.addEventListener('canplay', show);
+    if (!video.paused && video.readyState >= 3) show();
+    video.addEventListener('playing', show, { once: true });
     video.addEventListener('error', () => { video.remove(); });
   };
   init();

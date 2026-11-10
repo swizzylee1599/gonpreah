@@ -44,7 +44,6 @@ const hasMobileLo = hasMobile && existsSync('public' + lo(mobileVideo));
       <p class="eyebrow">{eyebrow}</p>
       <h1 class="disp dive-h1">{title}</h1>
       {km && <p class="km" style="font-size:28px;margin:14px 0 0;color:#dcdcdc;">{km}</p>}
-      <p class="muted dive-cue" aria-hidden="true">Scroll ↓</p>
     </div>
 
     <div class="wrap dive-welcome" data-stage="1" aria-hidden="true">
@@ -67,6 +66,7 @@ const hasMobileLo = hasMobile && existsSync('public' + lo(mobileVideo));
 </section>
 
 <script>
+  import { frameSequence } from '../../lib/sr-frames';
   // Downloads are kept per file for the life of the page, so when the
   // script starts again (page-load fires after the first run, and on every
   // visit back) it picks up the download already under way, not a new one.
@@ -100,8 +100,15 @@ const hasMobileLo = hasMobile && existsSync('public' + lo(mobileVideo));
     type Clip = { el: HTMLVideoElement; tier: string; ready: boolean; primed: boolean; priming: boolean; seeking: boolean; latest: number; dirty: boolean };
     const phone = matchMedia('(max-width: 760px)').matches;
     const saveData = !!(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
-    let clips: Clip[] = [...stack.querySelectorAll<HTMLVideoElement>('.dive-video')].map((el) => ({ el, tier: el.dataset.tier || 'hi', ready: false, primed: false, priming: false, seeking: false, latest: 0, dirty: false }));
+    let clips: Clip[] = [...stack.querySelectorAll<HTMLVideoElement>('video.dive-video')].map((el) => ({ el, tier: el.dataset.tier || 'hi', ready: false, primed: false, priming: false, seeking: false, latest: 0, dirty: false }));
     if (saveData && clips.some((c) => c.tier === 'lo')) clips = clips.filter((c) => { if (c.tier === 'hi') { c.el.remove(); return false; } return true; });
+    // Phones: the turn is drawn from still frames (src/lib/sr-frames.ts)
+    // instead of seeking the clips, which delivered frames unevenly and lagged
+    // behind the finger. The clips are never loaded there.
+    const frames = phone && clips.length
+      ? frameSequence({ host: pin, dir: '/video/campus-orbit-frames', count: 80, before: scrim, className: 'dive-frames', watch: stack, signal, onFirst: () => onScroll() })
+      : null;
+    if (frames) { clips.forEach((c) => { c.el.hidden = true; }); clips = []; }
     let active: Clip | null = null;   // the clip on screen
     let incoming: Clip | null = null; // the sharp clip, lining up before it takes over
     let turnNow = 0;
@@ -203,7 +210,14 @@ const hasMobileLo = hasMobile && existsSync('public' + lo(mobileVideo));
       const turn = clamp01((p - 0.08) / 0.44);
       turnNow = turn;
       if (incoming) seekTo(incoming, target(incoming));
-      if (active && active.el.duration) {
+      if (frames) frames.show(turn * 0.985);
+      if (frames && frames.ready()) {
+        frames.canvas.style.opacity = '1';
+        aerial.style.opacity = String(1 - clamp01(turn * 8));
+        aerial.style.transform = '';
+        front.style.opacity = '0';
+        front.style.transform = '';
+      } else if (active && active.el.duration) {
         if (!active.el.paused) active.el.pause();
         active.el.style.opacity = '1';
         aerial.style.opacity = String(1 - clamp01(turn * 8));
@@ -231,7 +245,7 @@ const hasMobileLo = hasMobile && existsSync('public' + lo(mobileVideo));
       const wIn = clamp01((p - 0.46) / 0.1);
       const wOut = clamp01((p - 0.58) / 0.07);
       welcome.style.opacity = String(ease(wIn) * (1 - wOut));
-      welcome.style.transform = `translateY(${((1 - ease(wIn)) * 24).toFixed(1)}px)`;
+      welcome.style.transform = phone ? '' : `translateY(${((1 - ease(wIn)) * 24).toFixed(1)}px)`;
 
       // Dim the front of the campus under the statement rather than going to black.
       const dim = clamp01((p - 0.56) / 0.12);
@@ -239,12 +253,13 @@ const hasMobileLo = hasMobile && existsSync('public' + lo(mobileVideo));
 
       const sIn = clamp01((p - 0.62) / 0.1);
       statement.style.opacity = String(ease(sIn));
-      statement.style.transform = `translateY(calc(-50% + ${((1 - ease(sIn)) * 30).toFixed(1)}px)) scale(${(0.96 + 0.04 * ease(sIn)).toFixed(3)})`;
+      // Phones: fade only (movement trailed the finger).
+      statement.style.transform = phone ? 'translateY(-50%)' : `translateY(calc(-50% + ${((1 - ease(sIn)) * 30).toFixed(1)}px)) scale(${(0.96 + 0.04 * ease(sIn)).toFixed(3)})`;
       const pIn = clamp01((p - 0.68) / 0.1);
       statement.querySelectorAll<HTMLElement>('.dive-photos img').forEach((img, i) => {
         const k = clamp01((pIn - i * 0.12) / 0.6);
         img.style.opacity = String(ease(k));
-        img.style.transform = `translateY(${((1 - ease(k)) * 24).toFixed(1)}px) rotate(${((i % 2 ? 1 : -1) * (1 - ease(k)) * 4).toFixed(2)}deg)`;
+        img.style.transform = phone ? '' : `translateY(${((1 - ease(k)) * 24).toFixed(1)}px) rotate(${((i % 2 ? 1 : -1) * (1 - ease(k)) * 4).toFixed(2)}deg)`;
       });
     };
     const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };

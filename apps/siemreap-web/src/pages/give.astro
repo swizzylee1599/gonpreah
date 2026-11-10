@@ -3,8 +3,7 @@ import SrLayout from '../layouts/SrLayout.astro';
 import Footer from '../components/sr/Footer.astro';
 import PageHead from '../components/sr/PageHead.astro';
 import Cta from '../components/sr/Cta.astro';
-import { TEAM, photo } from '../lib/sr-team';
-const supported = TEAM.filter((m) => m.support);
+import StaffSupport from '../components/sr/StaffSupport.astro';
 import { GIVE_URL } from '../lib/sr-routes';
 ---
 <SrLayout title="Give | YWAM Siem Reap" spacer={false}
@@ -15,15 +14,17 @@ import { GIVE_URL } from '../lib/sr-routes';
   <section class="sec">
     <div class="wrap grid3 reveal">
       {[
-        ['Train a student', "Cover part or all of a Cambodian student's DTS fees."],
-        ['Support the base', 'General giving — buildings, vehicles, running costs.'],
-        ['Back a staff member', "Give directly to a named missionary's support."],
-      ].map(([t, d]) => (
+        ['Train a student', "Cover part or all of a Cambodian student's DTS fees.", GIVE_URL],
+        ['Support the base', 'General giving — buildings, vehicles, running costs.', GIVE_URL],
+        ['Back a staff member', "Give directly to a named missionary's support.", '/give/staff'],
+      ].map(([t, d, href]) => (
         <div class="card">
           <h3 class="disp" style="margin:0;font-size:21px;font-weight:500;">{t}</h3>
           <span class="rule" style="margin:18px 0;"></span>
           <p class="body" style="margin:0;font-size:16px;">{d}</p>
-          <a class="btn btn--solid" style="margin-top:26px;display:inline-flex;" href={GIVE_URL} target="_blank" rel="noopener">Give</a>
+          {href.startsWith('http')
+            ? <a class="btn btn--solid" style="margin-top:26px;display:inline-flex;" href={href} target="_blank" rel="noopener">Give ↗︎</a>
+            : <a class="btn btn--solid" style="margin-top:26px;display:inline-flex;" href={href}>Meet our Khmer staff</a>}
         </div>
       ))}
     </div>
@@ -38,25 +39,8 @@ import { GIVE_URL } from '../lib/sr-routes';
         <h2 class="disp" style="margin:14px 0 0;font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;">Invest in the next generation of Khmer missionaries.</h2>
         <p class="body" style="margin:18px 0 0;">Every staff member here raises their own support. For Cambodian staff that is the hardest part of the call. These are the ones building their support team right now; a monthly gift of any size goes directly to them.</p>
       </div>
-      <div class="supporters stag">
-        {supported.map((m) => {
-          const s = m.support!; const pct = Math.round(Math.min(1, s.now / s.goal) * 100);
-          return (
-            <article class="supporter">
-              <img src={photo(m)} alt={m.name} loading="lazy" decoding="async" width="640" height="800" />
-              <div class="supporter-body">
-                <p class="eyebrow">{m.role}</p>
-                <h3 class="disp" style="margin:8px 0 0;font-size:24px;font-weight:500;">{m.name}</h3>
-                <p class="body" style="margin:12px 0 0;font-size:15px;">{s.story}</p>
-                <div class="support-bar" role="img" aria-label={`${pct}% of monthly goal`}><i style={`width:${pct}%`}></i></div>
-                <p class="support-nums"><b>${s.now}</b> of <b>${s.goal}</b> a month{s.now === 0 ? ' · just starting' : ''}</p>
-                <a class="btn btn--solid" href={`${GIVE_URL}&memo=${encodeURIComponent(m.name)}`} target="_blank" rel="noopener">Give to {m.name.split(' ')[0]}{m.name.includes('&') ? ' & ' + m.name.split('& ')[1].split(' ')[0] : ''}</a>
-              </div>
-            </article>
-          );
-        })}
-      </div>
-      <p class="muted" style="margin:26px 0 0;font-size:14px;max-width:64ch;">Giving opens Subsplash. Choose a monthly gift and write the staff member's name in the note so it reaches them.</p>
+      <StaffSupport />
+      <a class="btn" style="margin-top:22px;display:inline-flex;" href="/give/staff">Meet all our Khmer staff</a>
     </div>
   </section>
 

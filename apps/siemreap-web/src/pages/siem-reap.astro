@@ -25,7 +25,6 @@ const hasDrone = existsSync('public' + DRONE);
 
       <div class="wrap aw-head">
         <h1 class="disp aw-title">Explore<br /><span style="color:var(--sr-pink);">Siem Reap.</span></h1>
-        <p class="muted aw-cue" aria-hidden="true">Scroll ↓</p>
       </div>
 
       <div class="wrap aw-label" aria-hidden="true">
@@ -55,9 +54,10 @@ const hasDrone = existsSync('public' + DRONE);
 
   <!-- 2. Each day trip is its own full-screen card that flips up over the
        one before and stays put while the next arrives; Good to know last. -->
-  <div class="sr-cards">
+  <div class="sr-cards" style={`timeline-scope:${Array.from({ length: NATURE.length + 1 }, (_, k) => `--sr-flip-${k + 1}`).join(",")}`}>
     {NATURE.map((n, i) => (
-      <div class="sr-card" style={`--i:${i + 1}`}>
+      <i class="sr-card-mark" aria-hidden="true" style={`view-timeline:--sr-flip-${i + 1} block`}></i>
+      <div class="sr-card" style={`--i:${i + 1};--flip:--sr-flip-${i + 1}`}>
         <section class="sr-card-face sr-card--photo" aria-label={n.name}>
           <img class="sr-card-bg" src={n.photo} srcset={srcset(n.photo)} sizes="100vw" alt={n.alt} loading="lazy" decoding="async" style={n.pos ? `object-position:${n.pos}` : undefined} />
           <div class="sr-card-scrim" aria-hidden="true"></div>
@@ -75,7 +75,8 @@ const hasDrone = existsSync('public' + DRONE);
         </section>
       </div>
     ))}
-    <div class="sr-card sr-card--tall" style={`--i:${NATURE.length + 1}`} id="sr-know">
+    <i class="sr-card-mark" aria-hidden="true" style={`view-timeline:--sr-flip-${NATURE.length + 1} block`}></i>
+    <div class="sr-card sr-card--tall" style={`--i:${NATURE.length + 1};--flip:--sr-flip-${NATURE.length + 1}`} id="sr-know">
       <section class="sr-card-face sr-card--paper sec--paper" aria-label="Good to know">
         <div class="wrap">
           <p class="eyebrow">3 · Good to know</p>
@@ -104,6 +105,7 @@ const hasDrone = existsSync('public' + DRONE);
 
 <script>
   import { stableVh } from '../lib/sr-viewport';
+  import { frameSequence } from '../lib/sr-frames';
   let ctrl: AbortController | null = null;
   const init = () => {
     ctrl?.abort();
@@ -117,10 +119,11 @@ const hasDrone = existsSync('public' + DRONE);
     const scrim = stack.querySelector<HTMLElement>('.aw-scrim')!;
     const head = stack.querySelector<HTMLElement>('.aw-head')!;
     const label = stack.querySelector<HTMLElement>('.aw-label')!;
-    let video = stack.querySelector<HTMLVideoElement>('.aw-video');
+    let video = stack.querySelector<HTMLVideoElement>('video.aw-video');
     const cards = [...document.querySelectorAll<HTMLElement>('.sr-card')].map((el) => ({ el, face: el.querySelector<HTMLElement>('.sr-card-face')! }));
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const phone = matchMedia('(max-width: 760px)').matches;
+    const cssFlip = CSS.supports('animation-timeline: view()');
     if (reduce) { stack.classList.add('is-static'); video?.remove(); return; }
 
     const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
@@ -135,6 +138,14 @@ const hasDrone = existsSync('public' + DRONE);
       seeking = true; dirty = false;
       video.currentTime = t;
     };
+    // Phones: the drone flight is drawn from still frames (src/lib/sr-frames.ts)
+    // instead of seeking the clip, which lagged behind the finger on iPhones.
+    // The clip is never loaded there.
+    const frames = phone && video
+      ? frameSequence({ host: pin, dir: '/video/angkor-drone-frames', count: 181, before: video.nextSibling, className: 'aw-frames', watch: stack, signal, onFirst: () => onScroll() })
+      : null;
+    // (hidden, not removed, so this still works when the setup runs again)
+    if (frames && video) { video.hidden = true; video = null; }
     if (video) {
       // Fetch the clip only once its section is within a screen of view.
       const startClip = () => {
@@ -184,7 +195,10 @@ const hasDrone = existsSync('public' + DRONE);
       muted.style.opacity = String(1 - c * 0.999);
 
       const fly = clamp01((p - 0.2) / 0.75);
-      if (video && ready && video.duration && !Number.isNaN(video.duration)) {
+      if (frames) {
+        frames.show(fly * 0.99);
+        frames.canvas.style.opacity = frames.ready() && p > 0.19 ? '1' : '0';
+      } else if (video && ready && video.duration && !Number.isNaN(video.duration)) {
         video.style.opacity = p > 0.19 ? '1' : '0';
         if (p > 0.19) seekTo(fly * video.duration * 0.99);
       } else if (video) {
@@ -201,18 +215,25 @@ const hasDrone = existsSync('public' + DRONE);
       // "1. Angkor Wat" slides in from the left. On phones it then docks
       // small in the top-left corner before the temple cards scroll through;
       // on desktop it stays large on the left while the cards pass on the right.
-      const lIn = ease(clamp01((p - 0.12) / 0.08));
-      const lUp = phone ? ease(clamp01((p - 0.2) / 0.06)) : 0;
+      // Phones: it fades in already docked; moving it (it slid in, then rose
+      // and shrank faster than the page scrolled) trailed the finger.
       const dockY = 96 - labelTop;
-      label.style.opacity = String(lIn);
-      label.style.transform = `translate(${((1 - lIn) * -40).toFixed(1)}px, ${(dockY * lUp).toFixed(1)}px) scale(${(1 - 0.5 * lUp).toFixed(3)})`;
+      if (phone) {
+        label.style.opacity = String(ease(clamp01((p - 0.14) / 0.1)));
+        label.style.transform = `translate(0px, ${dockY}px) scale(0.5)`;
+      } else {
+        const lIn = ease(clamp01((p - 0.12) / 0.08));
+        label.style.opacity = String(lIn);
+        label.style.transform = `translate(${((1 - lIn) * -40).toFixed(1)}px, 0px)`;
+      }
 
       // 2. Each card flips up as it arrives, like the cards on Campus Life,
       // then sticks while the next one comes up over it. Measured against a
       // height that ignores the phone's browser bar, so a card doesn't snap
       // when the bar hides; the corners change in 4px steps since each change
       // repaints the whole full-screen card.
-      cards.forEach(({ face }, i) => {
+      // (Run by the browser instead where scroll-linked CSS animations exist.)
+      if (!cssFlip) cards.forEach(({ face }, i) => {
         const e = ease(clamp01(1 - cardTops[i] / vh));
         face.style.transform = e >= 1 ? 'none' : `perspective(1600px) rotateX(${((1 - e) * 24).toFixed(2)}deg) scale(${(0.92 + 0.08 * e).toFixed(3)})`;
         face.style.borderRadius = `${Math.min(26, Math.round((1 - e) * 26 / 4) * 4)}px`;

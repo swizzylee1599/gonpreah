@@ -1,0 +1,48 @@
+---
+// The information card on every school page, laid out the same way for
+// each school: Dates, Cost and Details side by side (stacked on phones),
+// then the Apply button. Keep each list short; the FAQ holds the rest.
+import { applyUrl } from '../../lib/sr-routes';
+
+type Row = [string, string];
+interface Props {
+  /** Short name, e.g. "DTS". */
+  abbr: string;
+  /** Apply key on the GP Portal (dts, dbs, bcs, sms). */
+  apply: string;
+  dates: Row[];
+  /** Cost rows; an empty list shows "To be announced". */
+  cost: Row[];
+  /** A line under the cost (what's not included, how bands work). */
+  costNote?: string;
+  details: Row[];
+  email: string;
+  /** Schools that need a DTS first get a small link to apply for DTS. */
+  needsDts?: boolean;
+}
+const { abbr, apply, dates, cost, costNote, details, email, needsDts = false } = Astro.props;
+const groups: [string, Row[], string?][] = [
+  ['Dates', dates],
+  ['Cost', cost.length ? cost : [['Fees', 'To be announced']], costNote],
+  ['Details', details],
+];
+---
+<div class="card info school-info">
+  <p class="eyebrow">{abbr} information</p>
+  <div class="si-grid">
+    {groups.map(([title, rows, note]) => (
+      <div class="si-group">
+        <h3 class="si-title">{title}</h3>
+        <dl class="si-list">
+          {rows.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+          {title === 'Details' && <div><dt>Email</dt><dd><a href={`mailto:${email}`}>{email}</a></dd></div>}
+        </dl>
+        {note && <p class="si-note">{note}</p>}
+      </div>
+    ))}
+  </div>
+  <div class="si-actions">
+    <a class="btn btn--solid" href={applyUrl(apply)} target="_blank" rel="noopener">Apply for {abbr} ↗︎</a>
+    {needsDts && <a class="si-link" href={applyUrl('dts')} target="_blank" rel="noopener">Haven't done a DTS? Apply for DTS ↗︎</a>}
+  </div>
+</div>

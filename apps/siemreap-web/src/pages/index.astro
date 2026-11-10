@@ -91,6 +91,13 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
               Train here. <span aria-hidden="true">G<GlobeO /></span><span class="vh">Go</span> anywhere.
             </h2>
           </div>
+          <div class="wrap deck-nav" aria-label="Browse schools">
+            <span class="tracks-count"><b data-deck-n>01</b> / {String(SCHOOL_ROWS.length).padStart(2, '0')}</span>
+            <span class="tracks-btns">
+              <button type="button" class="cl-hs-btn" data-deck-prev aria-label="Previous school">←</button>
+              <button type="button" class="cl-hs-btn" data-deck-next aria-label="Next school">→</button>
+            </span>
+          </div>
           <div class="schools-deck" style="margin-top:40px;">
             <div class="deck">
               {SCHOOL_ROWS.map((school, i) => <SchoolCard {...school} index={i} />)}
@@ -167,6 +174,8 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
 
       <script>
         import { stableVh } from '../lib/sr-viewport';
+        import { frameSequence } from '../lib/sr-frames';
+        import { initSlider } from '../lib/sr-slider';
         // Re-runs after every client-side navigation: the DOM is swapped
         // but hoisted scripts only execute once. The previous page's
         // window listeners are dropped through the abort signal.
@@ -189,8 +198,16 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
           // paint the first frame during preload.
           const phone = matchMedia('(max-width: 760px)').matches;
           const lite = phone || matchMedia('(pointer: coarse)').matches;
+          // Phones: the footage is drawn from still frames instead (see
+          // src/lib/sr-frames.ts); the video is never loaded, so it can't
+          // autoplay or lag behind the scroll.
+          const frames = phone && !matchMedia('(prefers-reduced-motion: reduce)').matches
+            ? frameSequence({ host: video.parentElement, dir: '/video/gonpreah-3d-frames', count: 61, before: video.nextSibling, watch: stack, signal })
+            : null;
+          if (frames) { video.autoplay = false; video.removeAttribute('autoplay'); video.pause(); video.hidden = true; }
           // Fetch the clip only once its section is within a screen of view.
           const startClip = () => {
+            if (frames) return;
             video.src = `${(phone && video.dataset.srcMobile) || video.dataset.src}#t=0.001`;
             video.load();
           };
@@ -209,7 +226,7 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
           if (video.readyState >= 2) primeVideo();
           else video.addEventListener('loadeddata', primeVideo, { once: true, signal });
           // When autoplay is blocked (Low Power Mode, data saver), the first touch starts it.
-          const unlock = () => { if (video.readyState < 2) { video.load(); primeVideo(); } };
+          const unlock = () => { if (frames) return; if (video.readyState < 2) { video.load(); primeVideo(); } };
           for (const ev of ['touchstart', 'touchend', 'click']) window.addEventListener(ev, unlock, { passive: true, signal, once: true });
 
           let seeking = false;
@@ -245,17 +262,16 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
             lastW = window.innerWidth;
             widthFns.forEach((fn) => fn());
           }, { signal });
-          // Phones lay the covers and cards out natively in CSS (sticky, no
-          // script positioning, so nothing trails the finger); the script
-          // only scrubs the video and fades its text, and measures the
-          // Train here heading so the cards stack just below it.
+          // Phones lay the covers and cards out natively in CSS (no script
+          // positioning, so nothing trails the finger); the script only plays
+          // the footage along with the scroll and fades its text.
           const native = phone && !matchMedia('(prefers-reduced-motion: reduce)').matches;
-          const head = cover?.querySelector(':scope > .wrap');
-          if (native && cover && head) {
-            const setHead = () => cover.style.setProperty('--th-head', `${head.offsetHeight}px`);
-            setHead();
-            onWidth(setHead);
-            if (document.fonts) document.fonts.ready.then(setHead);
+          // Phones: the schools are a swipeable row with arrows.
+          if (native) {
+            const row = stack.querySelector('.deck');
+            const prev = stack.querySelector('[data-deck-prev]');
+            const next = stack.querySelector('[data-deck-next]');
+            if (row && prev && next) initSlider(row, prev, next, stack.querySelector('[data-deck-n]'), signal);
           }
           if (cover && !native) {
             const setCoverMargin = () => { cover.style.marginTop = `-${cover.offsetHeight}px`; };
@@ -299,7 +315,8 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
             ticking = false;
             const scrub = cover ? cover.offsetTop - stableVh() : 0;
             const videoProgress = scrub <= 0 ? 1 : Math.min(1, Math.max(0, -stack.getBoundingClientRect().top / scrub));
-            if (video.duration && !Number.isNaN(video.duration)) seekTo(videoProgress * video.duration);
+            if (frames) frames.show(videoProgress);
+            else if (video.duration && !Number.isNaN(video.duration)) seekTo(videoProgress * video.duration);
             if (scrim) scrim.style.opacity = String(1 - videoProgress);
             if (text) {
               const fade = Math.min(1, Math.max(0, (videoProgress - 0.72) / 0.28));
