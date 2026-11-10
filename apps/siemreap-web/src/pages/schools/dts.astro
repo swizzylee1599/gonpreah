@@ -467,10 +467,11 @@ const FAQ: [string, string][] = [
         <SchoolInfo abbr="DTS" apply="dts" email="dts@ywamsiemreap.org"
           dates={[['Arrival', 'January 3, 2027'], ['Departure', 'June 10, 2027'], ['Length', 'Six months']]}
           cost={[]} costGroups={[
-            { title: 'Lecture phase · 3 months', rows: [['Country A', '$2,000'], ['Country B', '$1,500'], ['Country C', '$620']], note: "By passport country. We'll tell you yours." },
+            { title: 'Lecture phase · 3 months', rows: [['Country A', '$2,000'], ['Country B', '$1,500'], ['Country C', '$620']], note: 'By passport country.' },
             { title: 'Outreach phase · 3 months', rows: [['Outreach', '$1,500 – $2,500']], note: 'Depends on where your team goes.' },
           ]}
           costNote="Flights are not included."
+          finder={{ prices: { A: '$2,000', B: '$1,500', C: '$620' }, label: 'DTS lecture phase · 3 months', extra: 'Outreach is $1,500 – $2,500 on top, depending on where your team goes. Flights are not included.' }}
           details={[['Location', 'Siem Reap, Cambodia'], ['Age', '18 and over']]} />
       </div>
     </div>

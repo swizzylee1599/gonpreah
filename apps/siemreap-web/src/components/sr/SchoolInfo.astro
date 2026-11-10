@@ -3,6 +3,7 @@
 // each school: Dates, Cost and Details side by side (stacked on phones),
 // then the Apply button. Keep each list short; the FAQ holds the rest.
 import { applyUrl } from '../../lib/sr-routes';
+import FeeFinder from './FeeFinder.astro';
 
 type Row = [string, string];
 interface Props {
@@ -17,12 +18,14 @@ interface Props {
   costNote?: string;
   /** Cost in separate boxes, one per phase (shown instead of `cost`). */
   costGroups?: { title: string; rows: Row[]; note?: string }[];
+  /** Adds "Which category is my country?" under the cost. */
+  finder?: { prices: { A: string; B: string; C: string }; label: string; extra?: string };
   details: Row[];
   email: string;
   /** Schools that need a DTS first get a small link to apply for DTS. */
   needsDts?: boolean;
 }
-const { abbr, apply, dates, cost, costNote, costGroups, details, email, needsDts = false } = Astro.props;
+const { abbr, apply, dates, cost, costNote, costGroups, finder, details, email, needsDts = false } = Astro.props;
 const groups: [string, Row[], string?][] = [
   ['Dates', dates],
   ['Cost', cost.length ? cost : [['Fees', 'To be announced']], costNote],
@@ -50,6 +53,7 @@ const groups: [string, Row[], string?][] = [
             </dl>
           )}
         {note && <p class="si-note">{note}</p>}
+        {title === 'Cost' && finder && <FeeFinder abbr={abbr} email={email} {...finder} />}
       </div>
     ))}
   </div>
