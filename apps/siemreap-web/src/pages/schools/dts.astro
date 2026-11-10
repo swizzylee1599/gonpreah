@@ -466,8 +466,11 @@ const FAQ: [string, string][] = [
       <div class="hall-card" id="info">
         <SchoolInfo abbr="DTS" apply="dts" email="dts@ywamsiemreap.org"
           dates={[['Arrival', 'January 3, 2027'], ['Departure', 'June 10, 2027'], ['Length', 'Six months']]}
-          cost={[['Lecture · Country A', '$2,000'], ['Lecture · Country B', '$1,500'], ['Lecture · Country C', '$620'], ['Outreach', '$1,500 – $2,500']]}
-          costNote="Lecture phase by passport country (we'll tell you yours). Outreach depends on where your team goes. Flights not included."
+          cost={[]} costGroups={[
+            { title: 'Lecture phase · 3 months', rows: [['Country A', '$2,000'], ['Country B', '$1,500'], ['Country C', '$620']], note: "By passport country. We'll tell you yours." },
+            { title: 'Outreach phase · 3 months', rows: [['Outreach', '$1,500 – $2,500']], note: 'Depends on where your team goes.' },
+          ]}
+          costNote="Flights are not included."
           details={[['Location', 'Siem Reap, Cambodia'], ['Age', '18 and over']]} />
       </div>
     </div>

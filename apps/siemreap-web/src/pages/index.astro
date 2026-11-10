@@ -115,7 +115,8 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
               </div>
             </div>
             <div class="bat-text">
-              <h2 class="disp" style="margin:0;font-size:clamp(30px,4.2vw,56px);font-weight:500;">Bring a team</h2>
+              <p class="eyebrow">Short-term teams</p>
+              <h2 class="disp" style="margin:12px 0 0;font-size:clamp(30px,4.2vw,56px);font-weight:500;">Bring a team</h2>
               <p class="body" style="margin:26px 0 0;max-width:48ch;">
                 We host international teams year round. You'll work alongside the Cambodian community rather than around it — on their invitation, on their terms, in their language.
               </p>
@@ -311,8 +312,14 @@ const SCHOOL_ROWS: { name: string; abbr: string; body: string; when: string; pho
           // Phones: the video scrubs while it holds, finishing as the Train
           // here panel starts to rise over it; the text fades (no movement)
           // over the last quarter.
+          // Once the Train here panel covers the screen, the held footage
+          // behind it is hidden: it showed at the panels' corners, and as it
+          // let go at the end of Bring a team it shifted behind it.
+          let pinHidden = false;
           const updateNative = () => {
             ticking = false;
+            const covered = !!cover && cover.getBoundingClientRect().top <= 0;
+            if (pin && covered !== pinHidden) { pinHidden = covered; pin.style.visibility = covered ? 'hidden' : ''; }
             const scrub = cover ? cover.offsetTop - stableVh() : 0;
             const videoProgress = scrub <= 0 ? 1 : Math.min(1, Math.max(0, -stack.getBoundingClientRect().top / scrub));
             if (frames) frames.show(videoProgress);
