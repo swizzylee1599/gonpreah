@@ -134,6 +134,8 @@ const FAQ: [string, string][] = [
 
   <script>
     import { stableVh } from '../../lib/sr-viewport';
+    import { frameSequence } from '../../lib/sr-frames';
+    import { initSlider } from '../../lib/sr-slider';
     // Pinned stepper: the panel stays put while scrolling through the
     // stack. The first 78% of progress flips through the photos and
     // swaps the step copy; the last 22% slides the heading off to the
@@ -150,84 +152,6 @@ const FAQ: [string, string][] = [
     const INTRO_HOLD = 0.08, INTRO_FADE = 0.12;
     const clamp01 = (v) => Math.min(1, Math.max(0, v));
     const smooth = (t) => t * t * (3 - 2 * t);
-    // The hallway walk as still frames (public/video/dts-hallway-frames,
-    // 12 per second of the clip) drawn to fill a canvas like the video did
-    // (object-fit: cover, 50% 59%). Frames load once the hallway is within a
-    // screen of view, coarse first (every 64th, then 32nd, ...) so the walk
-    // works straight away and sharpens as the rest arrive.
-    const FRAME_COUNT = 121;
-    const frameSrc = (i) => `/video/dts-hallway-frames/${String(i).padStart(3, '0')}.webp`;
-    const hallFrames = (hall, still, signal) => {
-      const bg = hall.querySelector('.hall-bg');
-      let canvas = bg.querySelector('.hall-canvas');
-      if (!canvas) {
-        canvas = document.createElement('canvas');
-        canvas.className = 'hall-canvas';
-        canvas.setAttribute('aria-hidden', 'true');
-        bg.appendChild(canvas);
-      }
-      const ctx = canvas.getContext('2d');
-      const imgs = new Array(FRAME_COUNT);
-      let want = 0, shown = -1, width = 0;
-      const nearest = (i) => {
-        for (let d = 0; d < FRAME_COUNT; d++) {
-          if (imgs[i - d]) return i - d;
-          if (imgs[i + d]) return i + d;
-        }
-        return -1;
-      };
-      const draw = () => {
-        const k = nearest(want);
-        if (k < 0 || k === shown || !canvas.width) return;
-        const im = imgs[k];
-        const cw = canvas.width, ch = canvas.height;
-        const sc = Math.max(cw / im.naturalWidth, ch / im.naturalHeight);
-        const w = im.naturalWidth * sc, h = im.naturalHeight * sc;
-        ctx.drawImage(im, (cw - w) * 0.5, (ch - h) * 0.59, w, h);
-        if (shown < 0 && still) still.style.opacity = '0';
-        shown = k;
-      };
-      const size = () => {
-        const r = canvas.getBoundingClientRect();
-        if (!r.width || r.width === width) return;
-        width = r.width;
-        const dpr = Math.min(2, window.devicePixelRatio || 1);
-        canvas.width = Math.round(r.width * dpr);
-        canvas.height = Math.round(r.height * dpr);
-        shown = -1;
-        draw();
-      };
-      // coarse-to-fine load order
-      const order = [];
-      for (let step = 64; step >= 1; step /= 2) for (let i = 0; i < FRAME_COUNT; i += step) if (!order.includes(i)) order.push(i);
-      if (!order.includes(FRAME_COUNT - 1)) order.splice(1, 0, FRAME_COUNT - 1);
-      const load = async () => {
-        let next = 0;
-        const worker = async () => {
-          while (next < order.length && !signal.aborted) {
-            const i = order[next++];
-            const im = new Image();
-            im.src = frameSrc(i);
-            try { await im.decode(); } catch { continue; }
-            if (signal.aborted) return;
-            imgs[i] = im;
-            draw(); // a nearer frame may have arrived (draw does nothing if not)
-          }
-        };
-        await Promise.all(Array.from({ length: 6 }, worker));
-      };
-      const near = new IntersectionObserver((en) => { if (en[0].isIntersecting) { near.disconnect(); size(); load(); } }, { rootMargin: '100% 0px' });
-      near.observe(hall);
-      signal.addEventListener('abort', () => near.disconnect());
-      window.addEventListener('resize', size, { signal });
-      return {
-        show(t) {
-          want = Math.max(0, Math.min(FRAME_COUNT - 1, Math.round(t * (FRAME_COUNT - 1))));
-          if (!width) size();
-          draw();
-        },
-      };
-    };
     const initHall = (signal) => {
       const hall = document.querySelector('.hall-stack');
       if (!hall || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -243,7 +167,14 @@ const FAQ: [string, string][] = [
       let frames = null;
       // (The video stays in the page, unloaded and hidden, so this still works
       // when the setup runs again after a page change.)
-      if (lite && video) { video.hidden = true; video = null; frames = hallFrames(hall, still, signal); }
+      if (lite && video) {
+        video.hidden = true; video = null;
+        frames = frameSequence({
+          host: hall.querySelector('.hall-bg'), dir: '/video/dts-hallway-frames', count: 121, posY: 0.59,
+          className: 'hall-canvas', watch: hall, signal,
+          onFirst: () => { if (still) still.style.opacity = '0'; },
+        });
+      }
       if (video) {
         const phone = matchMedia('(max-width: 760px)').matches;
         // Fetch the clip only once its section is within a screen of view, and
@@ -425,36 +356,10 @@ const FAQ: [string, string][] = [
       initHall(signal);
 
       // Tracks on phones: a swipeable row with arrow buttons and a counter.
-      // The arrows slide one card at a time and dim at either end.
       const row = document.querySelector('.tracks');
       const prevBtn = document.querySelector('[data-tracks-prev]');
       const nextBtn = document.querySelector('[data-tracks-next]');
-      const countEl = document.querySelector('[data-tracks-n]');
-      if (row && prevBtn && nextBtn) {
-        const cards = [...row.children];
-        const current = () => {
-          let best = 0, bestD = Infinity;
-          const left = row.getBoundingClientRect().left;
-          cards.forEach((c, i) => { const d = Math.abs(c.getBoundingClientRect().left - left - 20); if (d < bestD) { bestD = d; best = i; } });
-          return best;
-        };
-        const go = (i) => {
-          const c = cards[Math.max(0, Math.min(cards.length - 1, i))];
-          row.scrollTo({ left: c.offsetLeft - row.firstElementChild.offsetLeft, behavior: 'smooth' });
-        };
-        const sync = () => {
-          const i = current();
-          if (countEl) countEl.textContent = String(i + 1).padStart(2, '0');
-          const atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 4;
-          prevBtn.disabled = i === 0 && row.scrollLeft < 4;
-          nextBtn.disabled = atEnd;
-        };
-        prevBtn.addEventListener('click', () => go(current() - 1), { signal });
-        nextBtn.addEventListener('click', () => go(current() + 1), { signal });
-        let sraf = 0;
-        row.addEventListener('scroll', () => { if (!sraf) sraf = requestAnimationFrame(() => { sraf = 0; sync(); }); }, { passive: true, signal });
-        sync();
-      }
+      if (row && prevBtn && nextBtn) initSlider(row, prevBtn, nextBtn, document.querySelector('[data-tracks-n]'), signal);
 
       const stack = document.querySelector('.journey-stack');
       if (!stack) return;

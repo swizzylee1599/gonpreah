@@ -255,10 +255,17 @@ const WEEK: { day: string; full: string; slots: Slot[] }[] = [
         const e = t * t * (3 - 2 * t);
         // Flat once it has landed, so nothing inside sits in a 3D layer.
         card.style.transform = e >= 1 ? 'none' : `perspective(1600px) rotateX(${((1 - e) * 24).toFixed(2)}deg) scale(${(0.92 + 0.08 * e).toFixed(3)})`;
+        // Its own graphics layer only while it moves: kept on, the tall card
+        // (stats and the swipeable schedule) was heavy for phones to scroll.
+        card.style.willChange = e >= 1 ? 'auto' : 'transform';
         card.style.borderRadius = `${Math.min(26, Math.round((1 - e) * 26 / 4) * 4)}px`;
       });
     };
-    if (!reduce) {
+    // Browsers with scroll-linked CSS animations (iOS 26 Safari, current
+    // Chrome) run the flip themselves, in step with the scroll (sr.css,
+    // sr-flip); the script is the fallback for the rest.
+    const cssFlip = CSS.supports('animation-timeline: view()');
+    if (!reduce && !cssFlip) {
       let fr = 0;
       const onFlip = () => { if (!fr) fr = requestAnimationFrame(() => { fr = 0; flip(); }); };
       window.addEventListener('scroll', onFlip, { passive: true, signal });
