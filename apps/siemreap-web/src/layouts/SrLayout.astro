@@ -50,6 +50,60 @@ const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
     <link rel="preload" href="/fonts/koulen-khmer.woff2" as="font" type="font/woff2" crossorigin />
     <ViewTransitions />
     <script is:inline>
+      // Khmer / English switch (the EN · ខ្មែរ buttons in the nav). Khmer is
+      // Google's automatic translation: choosing it sets Google's own
+      // `googtrans` cookie and reloads; Google's script then translates each
+      // page as it opens. English clears the cookie, so English visitors
+      // never load Google's script.
+      (function () {
+        var KM = /(?:^|;\s*)googtrans=\/en\/km(?:;|$)/;
+        var setLang = function (km) {
+          var host = location.hostname, base = host.replace(/^www\./, '');
+          if (km) document.cookie = 'googtrans=/en/km; path=/; max-age=31536000; SameSite=Lax';
+          else ['', '; domain=' + host, '; domain=.' + base].forEach(function (d) {
+            document.cookie = 'googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT' + d;
+          });
+          location.reload();
+        };
+        document.addEventListener('click', function (e) {
+          var b = e.target instanceof Element && e.target.closest('[data-lang]');
+          if (!b) return;
+          var km = b.getAttribute('data-lang') === 'km';
+          if (km !== KM.test(document.cookie)) setLang(km);
+        });
+        var mark = function () {
+          var km = KM.test(document.cookie);
+          document.querySelectorAll('.langsw [data-lang]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String((b.getAttribute('data-lang') === 'km') === km));
+          });
+        };
+        document.addEventListener('DOMContentLoaded', mark);
+        document.addEventListener('astro:page-load', mark);
+        if (!KM.test(document.cookie)) return;
+        document.documentElement.classList.add('sr-km');
+        // While in Khmer every link is a full page load (no in-page swap), so
+        // Google translates each new page from the start.
+        window.addEventListener('click', function (e) {
+          var a = e.target instanceof Element && e.target.closest('a[href]');
+          if (a) a.setAttribute('data-astro-reload', '');
+        }, true);
+        document.addEventListener('astro:after-swap', function () { location.reload(); });
+        window.srGT = function () {
+          new google.translate.TranslateElement({ pageLanguage: 'en', includedLanguages: 'km', autoDisplay: false }, 'sr-gt');
+        };
+        var load = function () {
+          // Words already in Khmer stay as they are.
+          document.querySelectorAll('.km, [lang="km"]').forEach(function (el) { el.classList.add('notranslate'); });
+          var d = document.createElement('div');
+          d.id = 'sr-gt';
+          document.body.appendChild(d);
+          var s = document.createElement('script');
+          s.src = 'https://translate.google.com/translate_a/element.js?cb=srGT';
+          s.async = true;
+          document.head.appendChild(s);
+        };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', load); else load();
+      })();
       // Phones: background photos marked data-small use their 800px copy.
       (function () {
         var swap = function () {
