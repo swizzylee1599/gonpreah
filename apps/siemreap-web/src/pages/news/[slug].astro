@@ -3,6 +3,7 @@ import SrLayout from '../../layouts/SrLayout.astro';
 import Footer from '../../components/sr/Footer.astro';
 import { srcset } from '../../lib/sr-img';
 import { ISSUES, issueUrl, type Issue } from '../../lib/sr-newsletters';
+import { ORG_ID, SITE } from '../../lib/sr-seo';
 
 export function getStaticPaths() {
   return ISSUES.map((issue) => ({ params: { slug: issue.slug }, props: { issue } }));
@@ -14,7 +15,8 @@ const newer = ISSUES[idx - 1];
 const no = String(issue.number).padStart(2, '0');
 const ext = (href: string) => (href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {});
 ---
-<SrLayout title={`${issue.title} | YWAM Siem Reap newsletter`} description={issue.deck} spacer={false} image={issue.cover}>
+<SrLayout title={`${issue.title} | YWAM Siem Reap newsletter`} description={issue.deck} spacer={false} image={issue.cover}
+  schema={[{ '@type': 'Article', headline: issue.title, description: issue.deck, datePublished: issue.dateISO, image: `${SITE}${issue.cover}`, url: `${SITE}/news/${issue.slug}/`, author: { '@id': ORG_ID, '@type': 'Organization', name: 'YWAM Siem Reap' }, publisher: { '@id': ORG_ID, '@type': 'Organization', name: 'YWAM Siem Reap', logo: { '@type': 'ImageObject', url: `${SITE}/images/sr-logo.png` } } }]}>
   <article class="nl">
     <header class="nl-cover">
       <img class="nl-cover-bg" src={issue.cover} srcset={srcset(issue.cover)} sizes="100vw" alt={issue.coverAlt} loading="eager" decoding="async" fetchpriority="high" style={issue.coverPos ? `object-position:${issue.coverPos}` : undefined} />

@@ -1,4 +1,5 @@
 ---
+import { course } from '../../lib/sr-seo';
 import { applyUrl } from '../../lib/sr-routes';
 import { srcset } from '../../lib/sr-img';
 import SchoolInfo from '../../components/sr/SchoolInfo.astro';
@@ -26,7 +27,7 @@ const PHOTOS: { src: string; alt: string; pos?: string }[] = [
 ];
 
 ---
-<SrLayout title="Bible Counseling School | YWAM Siem Reap" spacer={false}
+<SrLayout title="Bible Counseling School (BCS) in Cambodia | YWAM Siem Reap" schema={[course('Bible Counseling School', 'BCS', 'The Bible Counseling School at YWAM Siem Reap: a three-month journey of discipleship and inner healing, with practical tools to walk alongside others in Christian ministry.', '/schools/bcs/')]} spacer={false}
   description="The Bible Counseling School at YWAM Siem Reap: a three-month journey of discipleship and inner healing, with practical tools to walk alongside others in Christian ministry."
   image="/images/schools/bcs-class.webp">
   <PageHead eyebrow="Bible Counseling School · BCS" km="ការប្រឹក្សា" title="Healed first. Then sent to heal." highlight="Then sent to heal."
