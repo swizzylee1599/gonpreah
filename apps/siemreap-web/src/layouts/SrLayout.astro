@@ -3,6 +3,7 @@ import { ViewTransitions } from 'astro:transitions';
 import '../styles/sr-fonts.css';
 import '../styles/sr.css';
 import Nav from '../components/sr/Nav.astro';
+import { GOOGLE_SITE_VERIFICATION, ORGANIZATION, WEBSITE, SECTION_NAMES, SITE } from '../lib/sr-seo';
 
 interface Props {
   title: string;
@@ -13,17 +14,38 @@ interface Props {
   image?: string;
   /** A page's accent colour (labels, highlights, buttons), e.g. DTS blue. */
   accent?: string;
+  /** Extra structured data for Google (e.g. a school's Course). */
+  schema?: Record<string, unknown>[];
 }
 const {
   title,
   description = 'YWAM Siem Reap empowers the next generation to transform their nation and the world. A Youth With A Mission training base in Siem Reap, Cambodia.',
   spacer = true,
   noindex = false,
-  image = '/images/campus/campus-aerial-wide.webp',
+  image = '/images/og/ywam-siem-reap.jpg',
   accent,
+  schema = [],
 } = Astro.props;
 const pageUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://ywamsiemreap.org').href;
 const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
+// Structured data for Google: the base and the website on the home page,
+// a breadcrumb trail (Home > Schools > DTS) on pages below the top level,
+// plus whatever the page adds.
+const pathname = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const parts = pathname.split('/').filter(Boolean);
+const pageName = title.split(' | ')[0].replace(/ in Cambodia$/, '');
+const crumbs = parts.length > 1
+  ? [['Home', '/'], ...parts.slice(0, -1).map((p, i) => [SECTION_NAMES[p] ?? p, `/${parts.slice(0, i + 1).join('/')}/`]), [pageName, pathname]]
+  : [];
+const graph = [
+  ...(pathname === '/' ? [ORGANIZATION, WEBSITE] : []),
+  ...(crumbs.length ? [{
+    '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map(([name, path], i) => ({ '@type': 'ListItem', position: i + 1, name, item: `${SITE}${path}` })),
+  }] : []),
+  ...schema,
+];
+const jsonLd = graph.length && !noindex ? JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c') : '';
 ---
 
 <!doctype html>
@@ -41,6 +63,9 @@ const imageUrl = new URL(image, Astro.site ?? 'https://ywamsiemreap.org').href;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={pageUrl} />
     <meta property="og:image" content={imageUrl} />
+    <meta property="og:locale" content="en_US" />
+    {GOOGLE_SITE_VERIFICATION && <meta name="google-site-verification" content={GOOGLE_SITE_VERIFICATION} />}
+    {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
     <meta name="twitter:card" content="summary_large_image" />
     <!-- Fonts are served from this site (src/styles/sr-fonts.css). The three
          every page needs first are preloaded so they usually arrive before

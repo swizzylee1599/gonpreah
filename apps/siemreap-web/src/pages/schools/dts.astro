@@ -1,4 +1,5 @@
 ---
+import { course } from '../../lib/sr-seo';
 import { applyUrl } from '../../lib/sr-routes';
 import { srcset } from '../../lib/sr-img';
 import SchoolInfo from '../../components/sr/SchoolInfo.astro';
@@ -92,7 +93,7 @@ const FAQ: [string, string][] = [
   ['What happens after DTS?', 'DTS is the entry point to the University of the Nations. Many students go on to further schools, join staff at a YWAM base, or take what they have learned back into their church, work and city.'],
 ];
 ---
-<SrLayout title="Discipleship Training School | YWAM Siem Reap" spacer={false} accent="#0584f9"
+<SrLayout title="Discipleship Training School (DTS) in Cambodia | YWAM Siem Reap" schema={[course('Discipleship Training School', 'DTS', 'A six-month Discipleship Training School in Siem Reap, Cambodia: three months of lecture, then three months on outreach to the nations. Know God and make Him known.', '/schools/dts/')]} spacer={false} accent="#0584f9"
   description="A six-month Discipleship Training School in Siem Reap, Cambodia: three months of lecture, then three months on outreach to the nations. Know God and make Him known.">
   <PageHead eyebrow="Discipleship Training School · DTS" km="អត្តសញ្ញាណ" title="Discover your identity. Know your purpose." highlight="Know your purpose." rule={false} video
     photo="/images/gonpreah-worship-2.webp" photoPos="28% 35%" mobileFull
