@@ -13,9 +13,10 @@ export const NOT_IN_SITEMAP = ['/team/', '/404/'];
 
 export const ORG_ID = `${SITE}/#organization`;
 
-/** The base, as Google reads it (shown on the home page). */
+/** The base, as Google reads it (shown on the home page): an NGO that
+    runs schools. */
 export const ORGANIZATION = {
-  '@type': 'EducationalOrganization',
+  '@type': ['NGO', 'EducationalOrganization'],
   '@id': ORG_ID,
   name: 'YWAM Siem Reap',
   alternateName: ['Youth With A Mission Siem Reap', 'YWAM Cambodia Siem Reap'],
@@ -23,7 +24,7 @@ export const ORGANIZATION = {
   logo: `${SITE}/images/sr-logo.png`,
   image: `${SITE}/images/og/ywam-siem-reap.jpg`,
   description:
-    'A Youth With A Mission training base in Siem Reap, Cambodia: Discipleship Training School (DTS), Bible schools, short-term teams and missions.',
+    'YWAM Siem Reap is a non-governmental organisation (NGO) and Youth With A Mission training base in Siem Reap, Cambodia: Discipleship Training School (DTS), Bible schools, short-term teams and missions.',
   email: CONTACT.email,
   telephone: CONTACT.phoneDisplay.replace(/\s+/g, ' '),
   address: { '@type': 'PostalAddress', addressLocality: 'Siem Reap', addressRegion: 'Siem Reap', addressCountry: 'KH' },
@@ -47,7 +48,7 @@ export const course = (name: string, abbr: string, description: string, path: st
   name: `${name} (${abbr})`,
   description,
   url: `${SITE}${path}`,
-  provider: { '@id': ORG_ID, '@type': 'EducationalOrganization', name: 'YWAM Siem Reap', sameAs: `${SITE}/` },
+  provider: { '@id': ORG_ID, '@type': ['NGO', 'EducationalOrganization'], name: 'YWAM Siem Reap', sameAs: `${SITE}/` },
   inLanguage: 'en',
   hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'onsite', location: { '@type': 'Place', name: 'YWAM Siem Reap', address: ORGANIZATION.address } },
 });
